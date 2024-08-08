@@ -54,6 +54,7 @@ function Home() {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
 
+	// @ts-ignore
 	const checkLoggedIn = () => {
 		setIsLoggedIn(true);
 	};
