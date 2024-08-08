@@ -1,0 +1,30 @@
+/* login.css */
+
+.login-container {
+  background-image: url("../images/Banner.png");
+  background-size: cover;
+  background-position: center;
+  padding: 30px;
+}
+
+@media (max-width: 768px) {
+
+  .card {
+    margin: auto;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .row > .col-md-6:nth-child(1) {
+    text-align: left;
+  }
+
+  .d-flex.justify-content-between {
+    justify-content: right !important;
+  }
+
+  .btn-link {
+    position: absolute;
+    left: 9%;
+  }
+}

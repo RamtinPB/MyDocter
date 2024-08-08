@@ -1,0 +1,15 @@
+//--------------------------------------------------------------------------------------------------
+
++run website front-end for examination:
+npm run dev
+
+
++install mock-server json-server:
+npm install -g json-server
+
+//--------------------------------------------------------------------------------------------------
+
++run mock-server:
+json-server --watch db.json --port 3001
+
++update url example:   const response = await axios.get<Service[]>('http://localhost:3001/services');

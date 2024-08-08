@@ -1,0 +1,54 @@
+.custom-bg-1 {
+	background: rgb(124,175,243);
+background: radial-gradient(circle, rgba(124,175,243,1) 0%, rgba(24,55,136,1) 100%);
+}
+
+.custom-bg-2 {
+	background: rgb(24,55,136);
+	background: linear-gradient(146deg, rgba(24,55,136,1) 0%, rgba(162,192,238,1) 50%, rgba(124,175,243,1) 100%);
+}
+
+.custom-bg-3 {
+	background: rgb(178,211,255);
+background: radial-gradient(circle, rgba(178,211,255,1) 0%, rgba(255,255,255,1) 100%);
+}
+
+.custom-bg-4 {
+	background: rgb(177,218,218);
+background: linear-gradient(90deg, rgba(177,218,218,1) 0%, rgba(255,255,255,1) 50%, rgba(181,221,221,1) 100%);
+}
+
+
+.custom-bg-nongradient-1 {
+	background-color: #183788;
+}
+
+.custom-bg-nongradient-2 {
+	background-color: #7CAFF3;
+}
+
+.custom-bg-nongradient-3 {
+	background-color: #A2C0EE;
+}
+
+.custom-bg-nongradient-4 {
+	background-color: #b5dddd;
+}
+
+
+.custom-border-1 {
+	border-color: #183788;
+}
+
+.custom-border-2 {
+	border-color: #7CAFF3;
+}
+
+.custom-border-3 {
+	border-color: #A2C0EE;
+}
+
+.custom-border-4 {
+	border-color: #b5dddd;
+}
+

@@ -1,0 +1,10 @@
+
+/* Apply font to all heading elements */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Amiri', sans-serif;
+}
+
+/* Apply font to all other elements */
+body, p, a, span, div, button, input, textarea {
+    font-family: 'Noto Sans Arabic', sans-serif;
+}

@@ -1,0 +1,316 @@
+import { useState, useEffect } from "react";
+import { FaUser } from "react-icons/fa";
+import axios from "axios";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import "../cssFiles/customColors.css";
+
+interface UserFormData {
+	[key: string]: any;
+}
+
+const initialFormData: UserFormData = {};
+
+const UserInformation = () => {
+	const [formFields, setFormFields] = useState<any[]>([]);
+	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
+	useEffect(() => {
+		// Fetch user data from the backend
+		axios
+			.get("http://localhost:3001/userinf")
+			.then((response) => {
+				formik.setValues(response.data);
+				if (response.data.profilePicture) {
+					setProfilePicture(response.data.profilePicture);
+				}
+			})
+			.catch((error) => {
+				console.error("Error fetching user data:", error);
+			});
+	}, []);
+
+	useEffect(() => {
+		// Fetch form fields from the backend
+		axios
+			.get("http://localhost:3001/formFields")
+			.then((response) => {
+				setFormFields(response.data);
+			})
+			.catch((error) => {
+				console.error("Error fetching form fields:", error);
+			});
+	}, []);
+
+	const validationSchema = Yup.object().shape({
+		firstName: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا نام خود را وارد کنید"),
+		lastName: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا نام خانوادگی خود را وارد کنید"),
+		email: Yup.string()
+			.email("ایمیل نامعتبر است")
+			.required("لطفا ایمیل خود را وارد کنید"),
+		phoneNumber: Yup.string()
+			.matches(/^[0-9]{11}$/, "شماره همراه باید 11 رقمی باشد")
+			.required("لطفا شماره همراه خود را وارد کنید"),
+		userGender: Yup.string().required("لطفا جنسیت خود را انتخاب کنید"),
+		fixedPhone: Yup.string()
+			.optional()
+			.matches(
+				/^[0-9]{11}$/,
+				"شماره ثابت باید 11 رقمی و همراه با کد منطقه باشد"
+			),
+		fatherName: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا نام پدر خود را وارد کنید"),
+		birthDate: Yup.date().required("لطفا تاریخ تولد خود را وارد کنید"),
+		nationalId: Yup.string().when("hasNationalId", {
+			is: false,
+			then: (schema) =>
+				schema
+					.matches(/^[0-9]{10}$/, "کد ملی باید 10 رقمی باشد")
+					.required("لطفا کد ملی خود را وارد کنید"),
+			otherwise: (schema) => schema.notRequired(),
+		}),
+		nationality: Yup.string().required("لطفا ملیت خود را انتخاب کنید"),
+		insuranceType: Yup.string().when("hasInsurance", {
+			is: true,
+			then: (schema) => schema.notRequired(),
+			otherwise: (schema) => schema.required("لطفا نوع بیمه را وارد کنید"),
+		}),
+		supplementaryInsuranceType: Yup.string().when("hasSupplementaryInsurance", {
+			is: true,
+			then: (schema) => schema.notRequired(),
+			otherwise: (schema) =>
+				schema.required("لطفا نوع بیمه تکمیلی را وارد کنید"),
+		}),
+		province: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا استان خود را وارد کنید"),
+		postalCode: Yup.string()
+			.matches(/^[0-9]{10}$/, "کد پستی باید 10 رقمی باشد")
+			.required("لطفا کد پستی خود را وارد کنید"),
+		city: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا شهر خود را وارد کنید"),
+		address: Yup.string()
+			.matches(/^[ا-ی]/, "از حروف فارسی استفاده کنید")
+			.required("لطفا آدرس خود را وارد کنید"),
+		maritalStatus: Yup.string().required("لطفا وضعیت تاهل خود را انتخاب کنید"),
+		educationLevel: Yup.string().required(
+			"لطفا سطح تحصیلات خود را انتخاب کنید"
+		),
+	});
+
+	const formik = useFormik({
+		initialValues: initialFormData,
+		validationSchema,
+		onSubmit: (values) => {
+			axios
+				.post("http://localhost:3001/submit", values)
+				.then((response) => {
+					console.log("User information updated successfully:", response.data);
+				})
+				.catch((error) => {
+					console.error("Error updating user information:", error);
+				});
+		},
+		validateOnBlur: true,
+		validateOnChange: false,
+	});
+
+	const handleProfilePictureChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (e.target.files && e.target.files[0]) {
+			setProfilePicture(URL.createObjectURL(e.target.files[0]));
+
+			const formData = new FormData();
+			formData.append("profilePicture", e.target.files[0]);
+
+			axios
+				.post("/api/upload-profile-picture", formData)
+				.then((response) => {
+					console.log("Profile picture uploaded successfully:", response.data);
+				})
+				.catch((error) => {
+					console.error("Error uploading profile picture:", error);
+				});
+		}
+	};
+
+	const handleSubmit = async () => {
+		await formik.validateForm();
+		formik.setTouched(
+			Object.keys(formik.values).reduce((acc, key) => {
+				acc[key] = true;
+				return acc;
+			}, {} as { [key: string]: boolean })
+		);
+		formik.handleSubmit();
+	};
+
+	useEffect(() => {
+		if (formik.values.hasNationalId) {
+			formik.setFieldValue("nationalId", "");
+			formik.setFieldTouched("nationalId", false);
+			formik.setFieldError("nationalId", "");
+		}
+	}, [formik.values.hasNationalId]);
+
+	return (
+		<div className="custom-bg-4">
+			<div className="container d-flex flex-column">
+				<form onSubmit={formik.handleSubmit} className="mt-5">
+					<div className="custom-bg-1 d-flex justify-content-evenly rounded-5 shadow gap-5 mb-4">
+						<div>
+							<button
+								type="button"
+								className="btn btn-light btn-sm shadow rounded-pill px-1 py-2 my-4"
+								style={{ width: "150px" }}
+								onClick={() => setProfilePicture(null)}
+							>
+								حذف عکس
+							</button>
+						</div>
+						<div>
+							{profilePicture ? (
+								<img
+									src={profilePicture}
+									alt="Profile"
+									className="rounded-circle border border-3 border-light my-4"
+									style={{ width: "200px", height: "200px" }}
+								/>
+							) : (
+								<FaUser
+									className="text-light rounded-circle border border-3 border-light p-3 my-4"
+									style={{ width: "200px", height: "200px" }}
+								/>
+							)}
+						</div>
+						<div>
+							<label
+								className="btn btn-light btn-sm shadow rounded-pill px-1 py-2 my-4"
+								style={{ cursor: "pointer", width: "150px" }}
+							>
+								انتخاب عکس
+								<input
+									type="file"
+									accept="image/*"
+									onChange={handleProfilePictureChange}
+									style={{ display: "none" }}
+								/>
+							</label>
+						</div>
+					</div>
+				</form>
+				<form
+					onSubmit={formik.handleSubmit}
+					className="needs-validation"
+					noValidate
+				>
+					<div className="text-end bg-white shadow rounded-5 px-5 py-5 mb-3">
+						<h2>اطلاعات کاربر</h2>
+						<div className="row row-cols-2 g-5 my-1">
+							{formFields.map((field, index) => {
+								const isSelect = field.type === "select";
+
+								return (
+									<div key={index} className="col mb-2">
+										<label htmlFor={field.name} className="form-label">
+											{field.label}
+										</label>
+										{isSelect ? (
+											<select
+												id={field.name}
+												name={field.name}
+												value={formik.values[field.name]}
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												className={`form-select text-end shadow-sm ${
+													formik.touched[field.name] &&
+													formik.errors[field.name]
+														? "is-invalid"
+														: ""
+												}`}
+												required={field.required}
+												disabled={formik.values[field.checkboxName]}
+											>
+												<option value="">...</option>
+												{field.options.map((option: string, i: number) => (
+													<option key={i} value={option}>
+														{option}
+													</option>
+												))}
+											</select>
+										) : (
+											<input
+												type={field.type}
+												id={field.name}
+												name={field.name}
+												value={formik.values[field.name]}
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												className={`form-control text-end shadow-sm ${
+													formik.touched[field.name] &&
+													formik.errors[field.name]
+														? "is-invalid"
+														: ""
+												}`}
+												required={field.required}
+												disabled={formik.values[field.checkboxName]}
+												placeholder={field.placeholder || ""}
+											/>
+										)}
+										{field.checkboxLabel && (
+											<div className="text-end mt-2">
+												<input
+													type="checkbox"
+													id={field.checkboxName}
+													name={field.checkboxName}
+													checked={Boolean(formik.values[field.checkboxName])}
+													onChange={(e) => {
+														formik.setFieldValue(
+															field.checkboxName,
+															e.target.checked
+														);
+													}}
+													className="form-check-input shadow-sm"
+												/>
+												<label
+													htmlFor={field.checkboxName}
+													className="form-check-label ms-3"
+												>
+													{field.checkboxLabel}
+												</label>
+											</div>
+										)}
+										{formik.touched[field.name] &&
+											formik.errors[field.name] && (
+												<div className="invalid-feedback">
+													{formik.errors[field.name] as string}
+												</div>
+											)}
+									</div>
+								);
+							})}
+						</div>
+						<div className="d-flex justify-content-center mt-5">
+							<button
+								type="button"
+								onClick={handleSubmit}
+								className="btn btn-primary rounded-pill px-3 py-2"
+							>
+								ذخیره
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
+};
+
+export default UserInformation;

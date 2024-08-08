@@ -1,0 +1,593 @@
+{
+	"services": [
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"id": "123456789",
+			"purchaseDate": "***-**-**",
+			"link": "/servicesName123456",
+			"status": "complete"
+		},
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"id": "123456",
+			"purchaseDate": "***-**-**",
+			"link": "/servicesName123456",
+			"status": "error"
+		},
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"id": "123456",
+			"purchaseDate": "***-**-**",
+			"link": "/servicesName123456",
+			"status": "processing"
+		},
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"id": "123456",
+			"purchaseDate": "***-**-**",
+			"link": "/servicesName123456",
+			"status": "complete"
+		}
+	],
+
+	"userinfo": {
+		"firstName": "علی",
+		"lastName": "هاشمی",
+		"profilePicture": "",
+		"email": "example@gmail.com",
+		"phoneNumber": "09169325459",
+		"userGender": "مرد",
+		"userHeight": "170cm",
+		"userAge": "40",
+		"userWeight": "70kg",
+		"fixedPhone": "06142590637",
+		"fatherName": "عبدالله",
+		"birthDate": "",
+		"nationalId": "",
+		"nationality": "",
+		"insuranceType": "",
+		"supplementaryInsuranceType": "",
+		"province": "",
+		"postalCode": "",
+		"city": "",
+		"address": "",
+		"maritalStatus": "",
+		"educationLevel": ""
+	},
+
+	"formFields": [
+		{
+			"name": "firstName",
+			"type": "text",
+			"label": "نام",
+			"required": true
+		},
+		{
+			"name": "lastName",
+			"type": "text",
+			"label": "نام خانوادگی",
+			"required": true
+		},
+		{
+			"name": "phoneNumber",
+			"type": "text",
+			"label": "شماره همراه",
+			"required": true
+		},
+		{
+			"name": "email",
+			"type": "email",
+			"label": "ایمیل",
+			"required": true
+		},
+		{
+			"name": "fixedPhone",
+			"type": "text",
+			"label": "شماره ثابت",
+			"required": false
+		},
+		{
+			"name": "userGender",
+			"type": "select",
+			"label": "جنسیت",
+			"required": true,
+			"options": ["مرد", "زن"]
+		},
+		{
+			"name": "birthDate",
+			"type": "date",
+			"label": "تاریخ تولد",
+			"required": true
+		},
+		{
+			"name": "fatherName",
+			"type": "text",
+			"label": "نام پدر",
+			"required": true
+		},
+		{
+			"name": "nationality",
+			"type": "select",
+			"options": ["ایرانی", "غیر ایرانی"],
+			"label": "ملیت",
+			"required": true
+		},
+		{
+			"name": "nationalId",
+			"type": "text",
+			"label": "کد ملی",
+			"required": true,
+			"checkboxName": "hasNationalId",
+			"checkboxLabel": "فاقد کد ملی"
+		},
+		{
+			"name": "insuranceType",
+			"type": "select",
+			"options": ["بیمه سلامت", "بیمه تامین  اجتماعی"],
+			"label": "نوع بیمه",
+			"required": false,
+			"checkboxName": "hasInsurance",
+			"checkboxLabel": "فاقد بیمه"
+		},
+		{
+			"name": "supplementaryInsuranceType",
+			"type": "select",
+			"options": ["بیمه الف", "بیمه ب"],
+			"label": "نوع بیمه تکمیلی",
+			"required": false,
+			"checkboxName": "hasSupplementaryInsurance",
+			"checkboxLabel": "فاقد بیمه تکمیلی"
+		},
+		{
+			"name": "province",
+			"type": "text",
+			"label": "استان",
+			"required": true
+		},
+		{
+			"name": "city",
+			"type": "text",
+			"label": "شهر",
+			"required": true
+		},
+		{
+			"name": "address",
+			"type": "text",
+			"label": "آدرس",
+			"required": true
+		},
+		{
+			"name": "postalCode",
+			"type": "text",
+			"label": "کد پستی",
+			"required": true
+		},
+		{
+			"name": "educationLevel",
+			"type": "select",
+			"label": "سطح تحصیلات",
+			"required": true,
+			"options": ["دیپلم", "کارشناسی", "کارشناسی ارشد", "دکترا"]
+		},
+		{
+			"name": "maritalStatus",
+			"type": "select",
+			"label": "وضعیت تاهل",
+			"required": true,
+			"options": ["مجرد", "متاهل"]
+		}
+	],
+
+	"userinfoIE": {
+		"example1": "علی",
+		"example2": "هاشمی"
+	},
+
+	"formFieldsIE": [
+		{
+			"اطلاعات پایه": [
+				{
+					"name": "userWeight",
+					"type": "string",
+					"label": "وزن",
+					"required": true
+				},
+				{
+					"name": "userHeight",
+					"type": "string",
+					"label": "قد",
+					"required": true
+				},
+				{
+					"name": "userAge",
+					"type": "string",
+					"label": "سن",
+					"required": true
+				},
+				{
+					"name": "userBodyMassIndex",
+					"type": "string",
+					"label": "(اختیاری) BMI نمایه توده بدنی",
+					"optional": true
+				}
+			],
+			"تاریخچه سلامتی و بیماری": [
+				{
+					"name": "illnessRecordNameSelf",
+					"type": "string",
+					"label": "سابقه بیماری (جسمی / روانی / اختلال مادرزادی)",
+					"placeholder": "ذکر بیماری",
+					"required": true,
+					"checkboxName": "hasIllnessRecordself",
+					"checkboxLabel": "سابقه بیماری ندارم"
+				},
+				{
+					"name": "illnessRecordNameFamily",
+					"type": "string",
+					"label": "سابقه بیماری در خانواده",
+					"placeholder": "ذکر بیماری",
+					"required": true,
+					"checkboxName": "hasIllnessRecordFamily",
+					"checkboxLabel": "سابقه بیماری در خانواده ندارم"
+				},
+				{
+					"name": "userFamilyMemberRelation",
+					"type": "string",
+					"label": "نسبت کاربر با بیمار ذکر شده",
+					"optional": true,
+					"checkboxName": "hasIllnessRecordFamily"
+				},
+				{
+					"type": "placeholder"
+				},
+				{
+					"name": "hasBloodTransfusion",
+					"type": "select",
+					"label": "سابقه تزریق خون و فرآورده های خونی",
+					"required": true,
+					"options": ["ندارم", "دارم"]
+				},
+				{
+					"name": "hasBloodTransfusionReaction",
+					"type": "select",
+					"label": "سابقه واکنش به تزریق خون و فرآورده های خونی",
+					"required": true,
+					"options": ["ندارم", "دارم"]
+				},
+				{
+					"type": "checkmenu",
+					"name": "riskFactors",
+					"label": "عادات و عوامل خطر",
+					"options": [
+						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
+						{ "label": "سوء مصرف مواد مخدر", "name": "substanceAbuse" },
+						{ "label": "مصرف سیگار", "name": "smoking" },
+						{ "label": "مصرف قلیان", "name": "hookah" }
+					]
+				},
+				{
+					"type": "checkmenu",
+					"name": "riskFactors",
+					"label": "",
+					"options": [
+						{ "label": "مصرف الکل", "name": "alcohol" },
+						{ "label": "سابقه کار در معدن", "name": "miningExperience" },
+						{
+							"label": "سابقه کار با مواد شیمیائی",
+							"name": "chemicalExposure"
+						}
+					]
+				},
+				{
+					"name": "userPet",
+					"type": "string",
+					"label": "داشتن حیوان خانگی",
+					"placeholder": "نوع و گونه حیوان",
+					"required": true,
+					"checkboxName": "hasPet",
+					"checkboxLabel": "حیوان خانگی ندارم"
+				},
+				{
+					"type": "radio",
+					"name": "sleepStatus",
+					"label": "وضعیت خواب و استراحت",
+					"options": [
+						{
+							"label": "کمتر از حد طبیعی (کمتر از 5 ساعت)",
+							"value": "belowAverageSleep"
+						},
+						{ "label": "طبیعی", "value": "averageSleep" },
+						{
+							"label": "بیشتر از حد طبیعی (کمتر از 5 ساعت)",
+							"value": "aboveAverageSleep"
+						}
+					]
+				}
+			],
+			"حساسیت ها": [
+				{
+					"name": "allergyDrugName",
+					"type": "string",
+					"label": "(به ترتیب) حساسیت دارویی",
+					"required": true,
+					"placeholder": "،نام دارو، نام دارو",
+					"checkboxName": "hasAllergyDrug",
+					"checkboxLabel": "حساسیت دارویی ندارم"
+				},
+				{
+					"name": "allergyDrugReaction",
+					"type": "string",
+					"label": "(به ترتیب) نوع واکنش ها ",
+					"optional": true,
+					"placeholder": "،واکنش، واکنش",
+					"checkboxName": "hasAllergyDrug"
+				},
+				{
+					"name": "allergyFoodName",
+					"type": "string",
+					"label": "(به ترتیب) حساسیت غذایی",
+					"required": true,
+					"placeholder": "،نام غذا، نام غذا",
+					"checkboxName": "hasAllergyFood",
+					"checkboxLabel": "حساسیت غذایی ندارم"
+				},
+				{
+					"name": "allergyFoodReaction",
+					"type": "string",
+					"label": "(به ترتیب) نوع واکنش ها ",
+					"optional": true,
+					"placeholder": "،واکنش، واکنش",
+					"checkboxName": "hasAllergyFood"
+				}
+			],
+			"محدودیت ها و توانایی ها": [
+				{
+					"name": "hearingLimitations",
+					"type": "string",
+					"label": "محدودیت شنوایی",
+					"required": true,
+					"placeholder": "ذکر محدودیت و گوش مبتلا",
+					"checkboxName": "hasHearingLimitations",
+					"checkboxLabel": "محدودیت شنوایی ندارم"
+				},
+				{
+					"name": "sightLimitations",
+					"type": "string",
+					"label": "محدودیت بینایی",
+					"required": true,
+					"placeholder": "ذکر محدودیت و چشم مبتلا",
+					"checkboxName": "hasSightLimitations",
+					"checkboxLabel": "محدودیت بینایی ندارم"
+				},
+				{
+					"name": "disabilityOrAmputaion",
+					"type": "string",
+					"label": "نقص و قطع عضو ",
+					"required": true,
+					"placeholder": "ذکر نوع نقص و اندام مربوطه",
+					"checkboxName": "hasDisabilityOrAmputaion",
+					"checkboxLabel": "نقص و قطعی عضو ندارم"
+				}
+			],
+			"سابقه مصرف دارو (اختیاری)": [
+				{
+					"name": "rugularDrugNames",
+					"type": "string",
+					"label": "نام دارو ها (به ترتیب)",
+					"optional": true
+				}
+			]
+		}
+	],
+
+	"validationSchemaDataIE": [
+		{
+			"name": "userAge",
+			"type": "string",
+			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
+			"required": "لطفا سن خود را وارد کنید"
+		},
+		{
+			"name": "userWeight",
+			"type": "string",
+			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
+			"required": "لطفا وزن خود را وارد کنید"
+		},
+		{
+			"name": "userHeight",
+			"type": "string",
+			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
+			"required": "لطفا قد خود را وارد کنید"
+		}
+	],
+
+	"validationSchemaData": [
+		{
+			"name": "firstName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام خود را وارد کنید"
+		},
+		{
+			"name": "lastName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام خانوادگی خود را وارد کنید"
+		},
+		{
+			"name": "email",
+			"type": "string",
+			"email": "ایمیل نامعتبر است",
+			"required": "لطفا ایمیل خود را وارد کنید"
+		},
+		{
+			"name": "phoneNumber",
+			"type": "string",
+			"matches": ["^[0-9]{11}$", "شماره همراه باید 11 رقمی باشد"],
+			"required": "لطفا شماره همراه خود را وارد کنید"
+		},
+		{
+			"name": "userGender",
+			"type": "string",
+			"required": "لطفا جنسیت خود را انتخاب کنید"
+		},
+		{
+			"name": "fixedPhone",
+			"type": "string",
+			"optional": true,
+			"matches": [
+				"^[0-9]{11}$",
+				"شماره ثابت باید 11 رقمی و همراه با کد منطقه باشد"
+			]
+		},
+		{
+			"name": "fatherName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام پدر خود را وارد کنید"
+		},
+		{
+			"name": "birthDate",
+			"type": "date",
+			"required": "لطفا تاریخ تولد خود را وارد کنید"
+		},
+		{
+			"name": "nationalId",
+			"type": "string",
+			"when": [
+				"hasNationalId",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[0-9]{10}$", "کد ملی باید 10 رقمی باشد"],
+						"required": "لطفا کد ملی خود را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "nationality",
+			"type": "string",
+			"required": "لطفا ملیت خود را انتخاب کنید"
+		},
+		{
+			"name": "insuranceType",
+			"type": "string",
+			"when": [
+				"hasInsurance",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"required": "لطفا نوع بیمه را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "supplementaryInsuranceType",
+			"type": "string",
+			"when": [
+				"hasSupplementaryInsurance",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"required": "لطفا نوع بیمه تکمیلی را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "province",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا استان خود را وارد کنید"
+		},
+		{
+			"name": "postalCode",
+			"type": "string",
+			"matches": ["^[0-9]{10}$", "کد پستی باید 10 رقمی باشد"],
+			"required": "لطفا کد پستی خود را وارد کنید"
+		},
+		{
+			"name": "city",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا شهر خود را وارد کنید"
+		},
+		{
+			"name": "address",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا آدرس خود را وارد کنید"
+		},
+		{
+			"name": "maritalStatus",
+			"type": "string",
+			"required": "لطفا وضعیت تاهل خود را انتخاب کنید"
+		},
+		{
+			"name": "educationLevel",
+			"type": "string",
+			"required": "لطفا سطح تحصیلات خود را انتخاب کنید"
+		}
+	],
+
+	"questions": [
+		{
+			"title": "سوال",
+			"description": "پاسخ سوال"
+		},
+		{
+			"title": "سوال",
+			"description": "پاسخ سوال"
+		},
+		{
+			"title": "سوال",
+			"description": "پاسخ سوال"
+		},
+		{
+			"title": "سوال",
+			"description": "پاسخ سوال"
+		},
+		{
+			"title": "سوال",
+			"description": "پاسخ سوال"
+		}
+	],
+
+	"homeTextData": [
+		{
+			"openingQuoteTitle": "شعار سایت",
+			"openingQuoteDescription": "توضیح مختصر  و خیلی کوتاه در حد دو خط",
+
+			"servicesLeftCardTitle": "خدمات پزشکی متخصص و فوق تخصص",
+			"servicesLeftCardDescription": "توضیحات مربوط به این سرویس",
+			"servicesLeftCardImage": "src/images/پزشک ارتوپد.jpg",
+
+			"servicesRightCardTitle": "خدمات پزشکی عمومی",
+			"servicesRightCardDescription": "توضیحات مربوط به این سرویس",
+			"servicesRightCardImage": "src/images/پزشک ارتوپد.jpg",
+
+			"docTitle": "همه نتایج توسط پزشک های معتبر تایید می شوند",
+			"docImage": "src/images/mrDoc.png",
+			"docDescription": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی"
+		}
+	]
+}

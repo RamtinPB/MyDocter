@@ -1,0 +1,27 @@
+
+
+.custom-banner-text {
+    top: 25%;
+    left: 70%; /* Adjust this value to move it more to the right */
+  }
+  
+@media (max-width: 768px) {
+    .custom-banner-text{
+      position: static;
+      text-align: center;
+      display: inline-block;
+      
+    }
+}
+
+#doc {
+    background-image: url("../images/docBackground.png");
+    background-size: cover;
+    background-position: center;
+    
+}
+
+.doc-image {
+  max-width: auto;
+  max-height: auto;
+}

@@ -1,0 +1,219 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
+import axios from "axios";
+import "../cssFiles/myheader.css";
+import "../cssFiles/customColors.css";
+
+interface UserProfile {
+	firstName: string;
+	lastName: string;
+	email: string;
+	phoneNumber: string;
+	userAge: string;
+	userHeight: string;
+	userWeight: string;
+	userGender: string;
+	profilePicture: string;
+}
+
+function MyHeader() {
+	const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+	useEffect(() => {
+		const fetchUserProfile = async () => {
+			try {
+				const response = await axios.get<UserProfile>(
+					"http://localhost:3001/userinfo"
+				);
+				setUserProfile(response.data);
+				setLoading(false);
+			} catch (err) {
+				setError("Failed to fetch user information");
+				setLoading(false);
+			}
+		};
+
+		fetchUserProfile();
+	}, []);
+
+	if (loading) {
+		return <div className="text-center my-5">Loading...</div>;
+	}
+
+	if (error) {
+		return <div className="text-center my-5 text-danger">{error}</div>;
+	}
+
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
+
+	const checkLoggedIn = () => {
+		setIsLoggedIn(true);
+	};
+
+	const username = userProfile
+		? `${userProfile.firstName} ${userProfile.lastName}`
+		: "";
+
+	return (
+		<nav className="navbar navbar-expand-lg custom-header shadow-lg sticky-top ">
+			<div className="container d-flex justify-content-between  py-1">
+				{isLoggedIn ? (
+					<>
+						{isMenuOpen ? (
+							<div>
+								<button
+									className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-bg-2 border border-2 rounded-pill ps-0 ms-0"
+									onClick={toggleMenu}
+								>
+									<img
+										src="src\images\x-noBorder.png"
+										className="rounded-circle"
+										style={{ width: "40px", height: "40px" }}
+									/>
+									<span className="text-white text-end pe-2 ps-4">
+										داشبورد کاربر
+									</span>
+								</button>
+								<div className=" dropdown-menu show shadow full-width-dropdown text-end p-0 m-0 ">
+									<div className=" custom-bg-2 shadow-sm py-4 m-0">
+										<div className="container d-flex justify-content-between px-0">
+											{userProfile && userProfile.profilePicture ? (
+												<img
+													src={userProfile.profilePicture}
+													alt="Profile"
+													className="img-fluid rounded-circle border border-2 border-light"
+													style={{ width: "150px", height: "150px" }}
+												/>
+											) : (
+												<FaUser
+													className="text-light rounded-circle border border-2 border-light p-1"
+													style={{ width: "150px", height: "150px" }}
+												/>
+											)}
+											<div className="container text-center text-white ms-5 ps-5 pe-0">
+												<div className="row justify-content-end gap-5 my-3 py-1">
+													<span className="col d-sm-none d-md-block custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.userHeight} :قد
+													</span>
+													<span className="col d-sm-none d-md-block custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.userAge} :سن
+													</span>
+													<span className="col custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.phoneNumber} :شماره همراه
+													</span>
+													<span className="col custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.firstName}
+													</span>
+												</div>
+												<div className="row justify-content-end gap-5 my-3 py-1">
+													<span className="col d-sm-none d-md-block custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.userWeight}
+													</span>
+													<span className="col d-sm-none d-md-block custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.userGender}
+													</span>
+													<span className="col custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.email}
+													</span>
+													<span className="col custom-bg-nongradient-1 rounded-pill py-2 px-2 mx-2">
+														{userProfile?.lastName}
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div className="d-flex flex-column custom-bg-4 p-3 gap-3">
+										<Link to="#!" className="dropdown-item rounded-pill">
+											ویرایش اطلاعات کاربر
+										</Link>
+										<Link to="#!" className="dropdown-item rounded-pill">
+											فرم ارزیابی اولیه کاربر
+										</Link>
+										<Link to="#!" className="dropdown-item rounded-pill">
+											خدمات
+										</Link>
+									</div>
+								</div>
+							</div>
+						) : (
+							<button
+								className="d-flex align-items-center justify-content-between custom-loggedin-btn custom-bg-2 border border-2 rounded-pill ps-0 ms-0"
+								onClick={toggleMenu}
+							>
+								{userProfile && userProfile.profilePicture ? (
+									<img
+										src={userProfile.profilePicture}
+										alt="Profile"
+										className="img-fluid rounded-circle border border-2 border-light"
+										style={{ width: "40px", height: "40px" }}
+									/>
+								) : (
+									<FaUser
+										className="text-light rounded-circle border border-2 border-light p-1"
+										style={{ width: "40px", height: "40px" }}
+									/>
+								)}
+								<span className="text-white text-end pe-2 ps-4">
+									{username}
+								</span>
+							</button>
+						)}
+					</>
+				) : (
+					<Link to="/login">
+						<img
+							src="src\images\Login Button.png"
+							alt="Login"
+							className="d-inline-block custom-login-btn rounded-pill"
+						/>
+					</Link>
+				)}
+				<Link className="nav-link" to="/">
+					<img
+						src="src/images/Logo.png"
+						className="d-inline-block align-top img-fluid custom-logo"
+						alt="Logo"
+					/>
+				</Link>
+			</div>
+		</nav>
+	);
+}
+
+export default MyHeader;
+
+
+
+.custom-login-btn {
+    width: 140px;
+    height: 40px;
+}
+
+.custom-loggedin-btn {
+    height: 40px;
+}
+
+.custom-logo {
+    width: 135px;
+    height: 45px;
+}
+
+.custom-header {
+    background: rgb(25,25,25);
+background: radial-gradient(circle, rgba(25,25,25,1) 0%, rgba(24,55,136,1) 55%);
+}
+
+.full-width-dropdown {
+    width: 1645px;
+    top: 67px;
+    left: 0 !important; /* Ensure it starts from the very left of the viewport */
+    right: 0  !important; /* Ensure it spans to the very right of the viewport */
+    border-radius: 0 !important; /* Remove border radius if any to make it consistent across the viewport */
+}

@@ -1,0 +1,14 @@
+.btn-toggle {
+  transition: transform 0.3s ease;
+}
+  
+.btn-toggle.rotate {
+  transform: rotate(45deg);
+}
+
+.custom-btn {
+  width: 60px;
+  height: 60px;
+}
+
+  

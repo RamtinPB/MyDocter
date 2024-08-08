@@ -1,0 +1,39 @@
+.custom-login-btn {
+    width: 140px;
+    height: 40px;
+}
+
+.custom-loggedin-btn {
+    height: 40px;
+}
+
+.custom-logo {
+    width: 135px;
+    height: 45px;
+}
+
+.custom-header {
+    background: rgb(25,25,25);
+background: radial-gradient(circle, rgba(25,25,25,1) 0%, rgba(24,55,136,1) 55%);
+}
+
+.custom-bg-sidebar-1{
+    background: rgb(0,0,0);
+background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(24,55,136,1) 100%);
+}
+.custom-bg-sidebar-2 {
+    background: rgb(24,55,136);
+background: linear-gradient(90deg, rgba(24,55,136,1) 0%, rgba(0,0,0,1) 50%, rgba(24,55,136,1) 100%);
+}
+
+.custom-bg-sidebar-3 {
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%);
+}
+
+.full-width-dropdown {
+    width: 1645px;
+    top: 67px;
+    left: 0 !important; /* Ensure it starts from the very left of the viewport */
+    right: 0  !important; /* Ensure it spans to the very right of the viewport */
+    border-radius: 0 !important; /* Remove border radius if any to make it consistent across the viewport */
+}
