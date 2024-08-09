@@ -14,7 +14,7 @@ import UserHistory from "./pages/UserHistory";
 
 function App() {
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename="/MyDocter">
 			<Routes>
 				{/* Routes with the header */}
 				<Route path="/" element={<MainLayout />}>
