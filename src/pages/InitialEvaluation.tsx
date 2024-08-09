@@ -37,6 +37,7 @@ function UserIEInformation() {
 			.then((response) => {
 				const sections = response.data[0];
 				setFormSections(sections);
+				console.log(sections);
 			})
 			.catch((error) => {
 				console.error("Error fetching form fields:", error);
@@ -53,6 +54,8 @@ function UserIEInformation() {
 				console.error("Error fetching custom validation schema:", error);
 			});
 	}, []);
+
+	// Function to clean form sections by filtering out unwanted properties
 
 	const validationSchema = Yup.object().shape(
 		validationSchemaData.reduce((acc, rule) => {
