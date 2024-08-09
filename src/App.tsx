@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,7 +14,7 @@ import UserHistory from "./pages/UserHistory";
 
 function App() {
 	return (
-		<BrowserRouter basename="/MyDocter">
+		<HashRouter basename="/MyDocter">
 			<Routes>
 				{/* Routes with the header */}
 				<Route path="/" element={<MainLayout />}>
@@ -38,7 +38,7 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/signin" element={<SignIn />} />
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
 
