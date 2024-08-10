@@ -16,6 +16,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "../cssFiles/myheader.css";
 import "../cssFiles/customColors.css";
 import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
+import Logo from "../images/Logo.png";
 
 interface UserProfile {
 	firstName: string;
@@ -119,7 +120,7 @@ function MyHeader() {
 					)}
 					<Link className="nav-link" to="/">
 						<img
-							src="src/images/Logo.png"
+							src={Logo}
 							className="d-inline-block align-top img-fluid custom-logo"
 							alt="Logo"
 						/>

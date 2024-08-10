@@ -41,9 +41,19 @@
 			"status": "complete",
 			"files": [
 				{
+					"fileName": "example.zip",
+					"fileType": "zip",
+					"fileUrl": "http://yourserver.com/files/example.zip"
+				},
+				{
 					"fileName": "example.txt",
 					"fileType": "txt",
 					"fileUrl": "http://yourserver.com/files/example.txt"
+				},
+				{
+					"fileName": "example.jpeg",
+					"fileType": "jpeg",
+					"fileUrl": "http://yourserver.com/files/example.jpeg"
 				},
 				{
 					"fileName": "document.pdf",
