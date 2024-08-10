@@ -3,6 +3,7 @@ import FormRender from "../components/FormRender";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "../cssFiles/customColors.css";
 
 interface Service {
 	name: string;
@@ -69,10 +70,10 @@ function ServicePage() {
 	};
 
 	return (
-		<div className="container mt-4">
+		<div className="container custom-bg-4 rounded-5 ">
 			{/* Header Section with Back Button and Service Name */}
-			<div className="row align-items-center mb-4">
-				<div className="col-2">
+			<div className="row custom-bg-1 align-items-center rounded-5 mb-4 mt-4 p-3">
+				<div className="col-2 text-white">
 					<button className="btn btn-link p-0">
 						<FaCaretLeft
 							onClick={handleBackClick}
@@ -81,119 +82,95 @@ function ServicePage() {
 						/>
 					</button>
 				</div>
-				<div className="col-8 text-center">
-					<h3>{"{نام سرویس}"}</h3>
+				<div className="col-8 text-center text-white">
+					<h3>{service.name}</h3>
 				</div>
 			</div>
 
 			{/* Image and Description Section */}
-			<div className="row mb-4">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-body d-flex align-items-center justify-content-between">
-							<p className="mb-0 flex-grow-1 text-end">
-								{"توضیحات تکمیلی مربوط به سرویس"}
-							</p>
-							<img
-								src="path_to_image.jpg"
-								alt="Service"
-								className="img-fluid rounded ms-3"
-								style={{ width: "150px" }}
-							/>
-						</div>
-					</div>
-				</div>
+			<div
+				className="d-flex justify-content-between bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4"
+				style={{ direction: "rtl" }}
+			>
+				<p className="pe-4 me-1">فایل های انتقال شده</p>
+				<img
+					src="path_to_image.jpg"
+					alt="Service"
+					className="img-fluid rounded ms-3"
+					style={{ width: "150px" }}
+				/>
 			</div>
 
 			{/* File Upload Section */}
-			<div className="row mb-4">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-body">
-							<p className="text-end mb-2">{"انتقال فایل"}</p>
-							<div className="d-flex flex-wrap justify-content-end">
-								{/* Example of a file link */}
-								<a href="path_to_uploaded_file" className="d-block me-3 mb-3">
-									<img
-										src="path_to_file_icon"
-										alt="File Icon"
-										style={{ width: "50px" }}
-									/>
-								</a>
-								{/* Add multiple <a> tags here for additional files */}
-								<button
-									type="button"
-									className="btn btn-outline-secondary ms-2"
-								>
-									<i className="fas fa-file-upload"></i> {"آپلود فایل"}
-								</button>
-							</div>
-						</div>
+			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
+				<h5 className="pe-4 me-1">انتقال فایل</h5>
+				<div className="border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
+					<div className="d-flex flex-wrap justify-content-end">
+						{/* Example of a file link */}
+						<a href="path_to_uploaded_file" className="d-block me-3 mb-3">
+							<img
+								src="path_to_file_icon"
+								alt="File Icon"
+								style={{ width: "50px" }}
+							/>
+						</a>
+						{/* Add multiple <a> tags here for additional files */}
+						<button type="button" className="btn btn-outline-secondary ms-2">
+							<i className="fas fa-file-upload"></i> {"آپلود فایل"}
+						</button>
 					</div>
 				</div>
 			</div>
 
 			{/* Form Render Section */}
-			<div className="row mb-4">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-body">
-							<h5 className="card-title text-center">{"فرم سرویس"}</h5>
-							<FormRender /> {/* Replace with your actual form component */}
+			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
+				<h5 className="pe-4 me-1">فرم تکمیل شده</h5>
+				<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
+					{true ? (
+						<FormRender />
+					) : (
+						<div className="text-center py-3">
+							<p>اطلاعات فرم یافت نشد</p>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 
 			{/* User Input Section */}
-			<div className="row mb-4">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-body">
-							<label htmlFor="userInput" className="form-label text-end w-100">
-								{"شرح حال کاربر"}
-							</label>
-							<textarea
-								id="userInput"
-								className="form-control text-end"
-								rows={3}
-								placeholder="متن خود را وارد کنید"
-							></textarea>
-						</div>
-					</div>
-				</div>
+			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
+				<h5 className="pe-4 me-1">شرح حال کاربر</h5>
+				<textarea
+					id="userInput"
+					className="form-control text-end"
+					rows={3}
+					placeholder="متن خود را وارد کنید"
+				></textarea>
 			</div>
 
 			{/* Pricing Table Section */}
-			<div className="row mb-4">
-				<div className="col-12">
-					<div className="card">
-						<div className="card-body">
-							<div className="table-responsive">
-								<table className="table text-center">
-									<thead>
-										<tr>
-											<th>{"نام بیمه"}</th>
-											<th>{"قیمت سرویس"}</th>
-											<th>{"سهم بیمه"}</th>
-											<th>{"سهم بیمه تکمیلی"}</th>
-											<th>{"مبالغ بازپرداخت"}</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>{"بیمه سلامت"}</td>
-											<td>{"...ریال"}</td>
-											<td>{"...ریال"}</td>
-											<td>{"...ریال"}</td>
-											<td>{"...ریال"}</td>
-										</tr>
-										{/* Add more rows as needed */}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
+			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
+				<div className="table-responsive">
+					<table className="table text-center">
+						<thead>
+							<tr>
+								<th>{"نام بیمه"}</th>
+								<th>{"قیمت سرویس"}</th>
+								<th>{"سهم بیمه"}</th>
+								<th>{"سهم بیمه تکمیلی"}</th>
+								<th>{"مبالغ بازپرداخت"}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{"بیمه سلامت"}</td>
+								<td>{"...ریال"}</td>
+								<td>{"...ریال"}</td>
+								<td>{"...ریال"}</td>
+								<td>{"...ریال"}</td>
+							</tr>
+							{/* Add more rows as needed */}
+						</tbody>
+					</table>
 				</div>
 			</div>
 
