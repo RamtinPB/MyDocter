@@ -9,6 +9,7 @@ interface Service {
 	description: string;
 	image: string;
 	id: string;
+	category: string;
 }
 
 function ServicePage() {
@@ -58,7 +59,13 @@ function ServicePage() {
 	}
 
 	const handleBackClick = () => {
-		navigate("/");
+		if (service?.category.toLocaleLowerCase() === "specialist") {
+			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
+		} else if (service?.category.toLocaleLowerCase() === "general") {
+			navigate("/GeneralDoctorPrescription"); // Replace with actual route
+		} else {
+			navigate("/"); // Default fallback
+		}
 	};
 
 	return (

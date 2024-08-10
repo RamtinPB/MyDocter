@@ -4,6 +4,7 @@
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "specialist",
 			"id": "1",
 			"link": "/services/1"
 		},
@@ -11,6 +12,7 @@
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "specialist",
 			"id": "2",
 			"link": "/services/2"
 		},
@@ -18,6 +20,7 @@
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "specialist",
 			"id": "3",
 			"link": "/services/3"
 		},
@@ -25,8 +28,26 @@
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "general",
 			"id": "4",
 			"link": "/services/4"
+		},
+
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "general",
+			"id": "5",
+			"link": "/services/5"
+		},
+		{
+			"name": "نام سرویس",
+			"description": "توضیحات کوتاه مربوط به سرویس",
+			"image": "src/images/پزشک ارتوپد.jpg",
+			"category": "general",
+			"id": "6",
+			"link": "/services/6"
 		}
 	],
 
