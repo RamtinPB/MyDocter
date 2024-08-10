@@ -15,7 +15,7 @@ function UserHistory() {
 		const fetchServices = async () => {
 			try {
 				const response = await axios.get<ServiceInfo[]>(
-					"http://localhost:3001/services"
+					"http://localhost:3001/userPerchasedServices"
 				);
 				setServiceInfo(response.data);
 				setLoading(false);
@@ -70,7 +70,11 @@ function UserHistory() {
 							{serviceInfo.map((service, index) => (
 								<tr
 									key={service.id}
-									onClick={() => (window.location.href = service.link)}
+									onClick={() =>
+										(window.location.href = `/services/${encodeURIComponent(
+											service.name
+										)}-${service.id}`)
+									}
 								>
 									<th scope="row" className="align-middle">
 										{index + 1}

@@ -11,6 +11,7 @@ import GeneralDoctorPrescription from "./pages/GeneralDoctorPrescription";
 import SpecialistDoctorPrescription from "./pages/SpecialistDoctorPrescription";
 import InitialEvaluation from "./pages/InitialEvaluation";
 import UserHistory from "./pages/UserHistory";
+import UserHistoryExtended from "./pages/UserHistoryExtended";
 
 function App() {
 	return (
@@ -21,6 +22,10 @@ function App() {
 					<Route index element={<Home />} />
 					<Route path="/UserInformation" element={<UserInformation />} />
 					<Route path="/UserHistory" element={<UserHistory />} />
+					<Route
+						path="/services/:serviceId"
+						element={<UserHistoryExtended />}
+					/>
 					<Route
 						path="/GeneralDoctorPrescription"
 						element={<GeneralDoctorPrescription />}
