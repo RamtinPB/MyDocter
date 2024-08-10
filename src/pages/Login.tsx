@@ -83,7 +83,9 @@ function Login() {
 								<div className="mb-3 p-1 text-end">
 									<div className="d-flex justify-content-between">
 										<div className="text-start">
-											<a href="#!">رمز عبور را فراموش کرده اید؟</a>
+											<a href="/PasswordRecovery">
+												رمز عبور را فراموش کرده اید؟
+											</a>
 										</div>
 										<div className="">
 											<label htmlFor="password" className="form-label">
@@ -111,17 +113,17 @@ function Login() {
 									</div>
 								</div>
 								<div className="form-check mb-3 text-end d-flex justify-content-end align-items-center">
-									<label className="form-check-label me-5" htmlFor="rememberMe">
-										مرا به خاطر بسپارید
-									</label>
 									<input
 										type="checkbox"
-										className="form-check-input me-1"
+										className="form-check-input me-2"
 										id="rememberMe"
 										name="rememberMe"
 										checked={formData.rememberMe}
 										onChange={handleInputChange}
 									/>
+									<label className="form-check-label me-1" htmlFor="rememberMe">
+										مرا به خاطر بسپارید
+									</label>
 								</div>
 								<div className="p-1 text-center">
 									<button

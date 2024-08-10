@@ -31,7 +31,7 @@ function FormRender() {
 	};
 
 	return (
-		<div className="container text-start mt-5">
+		<div className="container text-center mt-5">
 			<h3>Loaded Form:</h3>
 			{schema ? (
 				<Form

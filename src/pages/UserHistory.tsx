@@ -71,9 +71,7 @@ function UserHistory() {
 								<tr
 									key={service.id}
 									onClick={() =>
-										(window.location.href = `/services/${encodeURIComponent(
-											service.name
-										)}-${service.id}`)
+										(window.location.href = `/purchased-services/${service.purchaseId}`)
 									}
 								>
 									<th scope="row" className="align-middle">

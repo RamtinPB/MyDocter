@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
+import { FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../cssFiles/login.css"; // Assuming you have a separate CSS file for additional styles
 
-function SignIn() {
+function PasswordRecovery() {
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
 		rememberMe: false,
 	});
-	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,10 +23,6 @@ function SignIn() {
 		e.preventDefault();
 		// Add your login logic here
 		console.log("Submitted form:", formData);
-	};
-
-	const togglePasswordVisibility = () => {
-		setShowPassword(!showPassword);
 	};
 
 	const handleBackClick = () => {
@@ -53,7 +48,7 @@ function SignIn() {
 								>
 									<FaCaretLeft size={27} color="black" />
 								</button>
-								<h2 className="mb-0">ثبت نام در پزشک من</h2>
+								<h2 className="mb-0">بازیابی رمز عبور</h2>
 							</div>
 							<form onSubmit={handleSubmit}>
 								<div className="mb-4 p-1 text-end">
@@ -70,52 +65,12 @@ function SignIn() {
 										onChange={handleInputChange}
 									/>
 								</div>
-								<div className="mb-4 p-1 text-end">
-									<div className="d-flex justify-content-end">
-										<div className="">
-											<label htmlFor="password" className="form-label">
-												رمز عبور
-											</label>
-										</div>
-									</div>
-									<div className="input-group">
-										<span
-											onClick={togglePasswordVisibility}
-											className="input-group-text eye-icon"
-											style={{ cursor: "pointer" }}
-										>
-											{showPassword ? <FaEyeSlash /> : <FaEye />}
-										</span>
-										<input
-											type={showPassword ? "text" : "password"}
-											className="form-control text-end"
-											id="password"
-											name="password"
-											placeholder="********"
-											value={formData.password}
-											onChange={handleInputChange}
-										/>
-									</div>
-								</div>
-								<div className="form-check mb-3 text-end d-flex justify-content-end">
-									<input
-										type="checkbox"
-										className="form-check-input me-2"
-										id="rememberMe"
-										name="rememberMe"
-										checked={formData.rememberMe}
-										onChange={handleInputChange}
-									/>
-									<label className="form-check-label me-1" htmlFor="rememberMe">
-										مرا به خاطر بسپارید
-									</label>
-								</div>
 								<div className="p-1 text-center">
 									<button
 										type="submit"
 										className="btn btn-primary rounded-pill"
 									>
-										ثبت نام
+										بازیابی رمز عبور
 									</button>
 								</div>
 							</form>
@@ -127,4 +82,4 @@ function SignIn() {
 	);
 }
 
-export default SignIn;
+export default PasswordRecovery;

@@ -12,6 +12,8 @@ import SpecialistDoctorPrescription from "./pages/SpecialistDoctorPrescription";
 import InitialEvaluation from "./pages/InitialEvaluation";
 import UserHistory from "./pages/UserHistory";
 import UserHistoryExtended from "./pages/UserHistoryExtended";
+import PasswordRecovery from "./pages/PasswordRecovery";
+import ServicePage from "./pages/ServicePage";
 
 function App() {
 	return (
@@ -23,9 +25,10 @@ function App() {
 					<Route path="/UserInformation" element={<UserInformation />} />
 					<Route path="/UserHistory" element={<UserHistory />} />
 					<Route
-						path="/services/:serviceId"
+						path="/purchased-services/:purchaseId"
 						element={<UserHistoryExtended />}
 					/>
+					<Route path="/services/:id" element={<ServicePage />} />
 					<Route
 						path="/GeneralDoctorPrescription"
 						element={<GeneralDoctorPrescription />}
@@ -42,6 +45,7 @@ function App() {
 				{/* Route without the header */}
 				<Route path="/login" element={<Login />} />
 				<Route path="/signin" element={<SignIn />} />
+				<Route path="/PasswordRecovery" element={<PasswordRecovery />} />
 			</Routes>
 		</BrowserRouter>
 	);

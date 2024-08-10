@@ -6,6 +6,7 @@ interface Service {
 	name: string;
 	description: string;
 	image: string;
+	id: string;
 }
 
 function SpecialistDoctorPrescription() {
@@ -62,7 +63,12 @@ function SpecialistDoctorPrescription() {
 										<p className="card-text my-3 mx-3 text-end">
 											{service.description}
 										</p>
-										<button className="btn btn-primary rounded-pill my-3">
+										<button
+											className="btn btn-primary rounded-pill my-3"
+											onClick={() =>
+												(window.location.href = `/services/${service.id}`)
+											}
+										>
 											مشاهده
 										</button>
 									</div>

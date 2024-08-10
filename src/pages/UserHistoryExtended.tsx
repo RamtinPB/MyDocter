@@ -41,7 +41,7 @@ const getIconForFileType = (fileName: string) => {
 };
 
 function UserHistoryExtended() {
-	const { serviceId } = useParams<{ serviceId: string }>();
+	const { purchaseId } = useParams<{ purchaseId: string }>();
 	const [service, setService] = useState<Service | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -54,8 +54,11 @@ function UserHistoryExtended() {
 					`http://localhost:3001/userPerchasedServices`
 				);
 				const selectedService = response.data.find(
-					(s) => `${s.name}-${s.id}` === serviceId
+					(s) => `${s.purchaseId}` === purchaseId
 				);
+				console.log("Fetched services:", response.data);
+				console.log("Purchase ID from URL:", purchaseId);
+
 				if (selectedService) {
 					setService(selectedService);
 				} else {
@@ -69,7 +72,7 @@ function UserHistoryExtended() {
 		};
 
 		fetchService();
-	}, [serviceId]);
+	}, [purchaseId]);
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
