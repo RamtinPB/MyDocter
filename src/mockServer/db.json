@@ -1,8 +1,24 @@
 {
+	"insurance": [
+		{
+			"insuranceType": "بیمه سلامت",
+			"insuranceContribution": "70"
+		}
+	],
+
+	"supplementaryInsurance": [
+		{
+			"supplementaryInsuranceType": "بیمه",
+			"supplementaryInsuranceContribution": "20"
+		}
+	],
+
 	"services": [
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "1000",
+			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "1",
@@ -11,6 +27,8 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "2000",
+			"subsidy": "500",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "2",
@@ -19,6 +37,8 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "1.000",
+			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "3",
@@ -27,6 +47,8 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "1000",
+			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "4",
@@ -36,6 +58,8 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "1000",
+			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "5",
@@ -44,6 +68,8 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"price": "1000",
+			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "6",
@@ -56,7 +82,7 @@
 			"name": "نام سرویس",
 			"id": "1",
 			"purchaseDate": "***-**-**",
-			"finalPurchaseAmount": "100t",
+			"finalPurchaseAmount": "1000",
 			"purchaseId": "1",
 			"link": "/purchased-services/1",
 			"status": "complete",
@@ -88,7 +114,7 @@
 			"name": "نام سرویس",
 			"id": "2",
 			"purchaseDate": "***-**-**",
-			"finalPurchaseAmount": "100t",
+			"finalPurchaseAmount": "100",
 			"purchaseId": "2",
 			"link": "/purchased-services/2",
 			"status": "processing"
@@ -97,7 +123,7 @@
 			"name": "نام سرویس",
 			"id": "3",
 			"purchaseDate": "***-**-**",
-			"finalPurchaseAmount": "100t",
+			"finalPurchaseAmount": "100",
 			"purchaseId": "3",
 			"link": "/purchased-services/3",
 			"status": "complete"
@@ -106,14 +132,14 @@
 			"name": "نام سرویس",
 			"id": "4",
 			"purchaseDate": "***-**-**",
-			"finalPurchaseAmount": "100t",
+			"finalPurchaseAmount": "100",
 			"purchaseId": "4",
 			"link": "/purchased-services/4",
 			"status": "error"
 		}
 	],
 
-	"userinfo": {
+	"userInfo": {
 		"firstName": "علی",
 		"lastName": "هاشمی",
 		"profilePicture": "",
@@ -128,8 +154,8 @@
 		"birthDate": "",
 		"nationalId": "",
 		"nationality": "",
-		"insuranceType": "",
-		"supplementaryInsuranceType": "",
+		"insuranceType": "بیمه سلامت",
+		"supplementaryInsuranceType": "بیمه",
 		"province": "",
 		"postalCode": "",
 		"city": "",
@@ -261,7 +287,147 @@
 		}
 	],
 
-	"userinfoIE": {
+	"validationSchemaData": [
+		{
+			"name": "firstName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام خود را وارد کنید"
+		},
+		{
+			"name": "lastName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام خانوادگی خود را وارد کنید"
+		},
+		{
+			"name": "email",
+			"type": "string",
+			"email": "ایمیل نامعتبر است",
+			"required": "لطفا ایمیل خود را وارد کنید"
+		},
+		{
+			"name": "phoneNumber",
+			"type": "string",
+			"matches": ["^[0-9]{11}$", "شماره همراه باید 11 رقمی باشد"],
+			"required": "لطفا شماره همراه خود را وارد کنید"
+		},
+		{
+			"name": "userGender",
+			"type": "string",
+			"required": "لطفا جنسیت خود را انتخاب کنید"
+		},
+		{
+			"name": "fixedPhone",
+			"type": "string",
+			"optional": true,
+			"matches": [
+				"^[0-9]{11}$",
+				"شماره ثابت باید 11 رقمی و همراه با کد منطقه باشد"
+			]
+		},
+		{
+			"name": "fatherName",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا نام پدر خود را وارد کنید"
+		},
+		{
+			"name": "birthDate",
+			"type": "date",
+			"required": "لطفا تاریخ تولد خود را وارد کنید"
+		},
+		{
+			"name": "nationalId",
+			"type": "string",
+			"when": [
+				"hasNationalId",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[0-9]{10}$", "کد ملی باید 10 رقمی باشد"],
+						"required": "لطفا کد ملی خود را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "nationality",
+			"type": "string",
+			"required": "لطفا ملیت خود را انتخاب کنید"
+		},
+		{
+			"name": "insuranceType",
+			"type": "string",
+			"when": [
+				"hasInsurance",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"required": "لطفا نوع بیمه را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "supplementaryInsuranceType",
+			"type": "string",
+			"when": [
+				"hasSupplementaryInsurance",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"required": "لطفا نوع بیمه تکمیلی را وارد کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "province",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا استان خود را وارد کنید"
+		},
+		{
+			"name": "postalCode",
+			"type": "string",
+			"matches": ["^[0-9]{10}$", "کد پستی باید 10 رقمی باشد"],
+			"required": "لطفا کد پستی خود را وارد کنید"
+		},
+		{
+			"name": "city",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا شهر خود را وارد کنید"
+		},
+		{
+			"name": "address",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"required": "لطفا آدرس خود را وارد کنید"
+		},
+		{
+			"name": "maritalStatus",
+			"type": "string",
+			"required": "لطفا وضعیت تاهل خود را انتخاب کنید"
+		},
+		{
+			"name": "educationLevel",
+			"type": "string",
+			"required": "لطفا سطح تحصیلات خود را انتخاب کنید"
+		}
+	],
+
+	"userInfoIE": {
 		"example1": "علی",
 		"example2": "هاشمی"
 	},
@@ -481,146 +647,6 @@
 			"type": "string",
 			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
 			"required": "لطفا قد خود را وارد کنید"
-		}
-	],
-
-	"validationSchemaData": [
-		{
-			"name": "firstName",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام خود را وارد کنید"
-		},
-		{
-			"name": "lastName",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام خانوادگی خود را وارد کنید"
-		},
-		{
-			"name": "email",
-			"type": "string",
-			"email": "ایمیل نامعتبر است",
-			"required": "لطفا ایمیل خود را وارد کنید"
-		},
-		{
-			"name": "phoneNumber",
-			"type": "string",
-			"matches": ["^[0-9]{11}$", "شماره همراه باید 11 رقمی باشد"],
-			"required": "لطفا شماره همراه خود را وارد کنید"
-		},
-		{
-			"name": "userGender",
-			"type": "string",
-			"required": "لطفا جنسیت خود را انتخاب کنید"
-		},
-		{
-			"name": "fixedPhone",
-			"type": "string",
-			"optional": true,
-			"matches": [
-				"^[0-9]{11}$",
-				"شماره ثابت باید 11 رقمی و همراه با کد منطقه باشد"
-			]
-		},
-		{
-			"name": "fatherName",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام پدر خود را وارد کنید"
-		},
-		{
-			"name": "birthDate",
-			"type": "date",
-			"required": "لطفا تاریخ تولد خود را وارد کنید"
-		},
-		{
-			"name": "nationalId",
-			"type": "string",
-			"when": [
-				"hasNationalId",
-				{
-					"is": true,
-					"then": {
-						"optional": true
-					},
-					"otherwise": {
-						"matches": ["^[0-9]{10}$", "کد ملی باید 10 رقمی باشد"],
-						"required": "لطفا کد ملی خود را وارد کنید"
-					}
-				}
-			]
-		},
-		{
-			"name": "nationality",
-			"type": "string",
-			"required": "لطفا ملیت خود را انتخاب کنید"
-		},
-		{
-			"name": "insuranceType",
-			"type": "string",
-			"when": [
-				"hasInsurance",
-				{
-					"is": true,
-					"then": {
-						"optional": true
-					},
-					"otherwise": {
-						"required": "لطفا نوع بیمه را وارد کنید"
-					}
-				}
-			]
-		},
-		{
-			"name": "supplementaryInsuranceType",
-			"type": "string",
-			"when": [
-				"hasSupplementaryInsurance",
-				{
-					"is": true,
-					"then": {
-						"optional": true
-					},
-					"otherwise": {
-						"required": "لطفا نوع بیمه تکمیلی را وارد کنید"
-					}
-				}
-			]
-		},
-		{
-			"name": "province",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا استان خود را وارد کنید"
-		},
-		{
-			"name": "postalCode",
-			"type": "string",
-			"matches": ["^[0-9]{10}$", "کد پستی باید 10 رقمی باشد"],
-			"required": "لطفا کد پستی خود را وارد کنید"
-		},
-		{
-			"name": "city",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا شهر خود را وارد کنید"
-		},
-		{
-			"name": "address",
-			"type": "string",
-			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا آدرس خود را وارد کنید"
-		},
-		{
-			"name": "maritalStatus",
-			"type": "string",
-			"required": "لطفا وضعیت تاهل خود را انتخاب کنید"
-		},
-		{
-			"name": "educationLevel",
-			"type": "string",
-			"required": "لطفا سطح تحصیلات خود را انتخاب کنید"
 		}
 	],
 

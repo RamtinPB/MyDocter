@@ -9,7 +9,6 @@ import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
-import FormBuilder from "../components/FormBuilder";
 
 interface FileData {
 	fileName: string;
@@ -20,10 +19,24 @@ interface FileData {
 interface Service {
 	name: string;
 	description: string;
+	price: string;
+	subsidy: string;
 	image: string;
 	id: string;
 	category: string;
 	files?: FileData[]; // File data interface
+}
+interface UserInfo {
+	insuranceType: string;
+	supplementaryInsuranceType: string;
+}
+
+interface Insurance {
+	insuranceContribution: string;
+}
+
+interface SupplementaryInsurance {
+	supplementaryInsuranceContribution: string;
 }
 
 const icons = {
@@ -49,6 +62,12 @@ function ServicePage() {
 	const { id } = useParams<{ id: string }>();
 
 	const [service, setService] = useState<Service | null>(null);
+	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+	const [insurance, setInsurance] = useState<Insurance | null>(null);
+	const [supplementaryInsurance, setsupplementaryInsurance] =
+		useState<SupplementaryInsurance | null>(null);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -58,15 +77,64 @@ function ServicePage() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		const fetchUserInfo = async () => {
+			try {
+				const response = await axios.get<UserInfo>(
+					"http://localhost:3001/userInfo"
+				);
+				setUserInfo(response.data);
+				console.log(response.data);
+				setLoading(false);
+			} catch (err) {
+				setError("Failed to fetch UserInfo");
+				setLoading(false);
+			}
+		};
+
+		fetchUserInfo();
+	}, []);
+
+	useEffect(() => {
+		const fetchInsurance = async () => {
+			try {
+				const response = await axios.get<Insurance[]>(
+					"http://localhost:3001/insurance"
+				);
+				setInsurance(response.data[0]);
+				setLoading(false);
+			} catch (err) {
+				setError("Failed to fetch Insurance");
+				setLoading(false);
+			}
+		};
+
+		fetchInsurance();
+	}, []);
+
+	useEffect(() => {
+		const fetchSupplementaryInsurance = async () => {
+			try {
+				const response = await axios.get<SupplementaryInsurance[]>(
+					"http://localhost:3001/supplementaryInsurance"
+				);
+				setsupplementaryInsurance(response.data[0]);
+				setLoading(false);
+			} catch (err) {
+				setError("Failed to fetch SupplementaryInsurance");
+				setLoading(false);
+			}
+		};
+
+		fetchSupplementaryInsurance();
+	}, []);
+
+	useEffect(() => {
 		const fetchService = async () => {
 			try {
 				const response = await axios.get<Service[]>(
 					`http://localhost:3001/services`
 				);
 				const selectedService = response.data.find((s) => `${s.id}` === id);
-				console.log("Fetched services:", response.data);
-				console.log("Purchase ID from URL:", id);
-				console.log(response.data[0].image);
 
 				if (selectedService) {
 					setService(selectedService);
@@ -113,6 +181,12 @@ function ServicePage() {
 		setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
 	};
 
+	const handleFileDelete = (fileIndex: number) => {
+		setUploadedFiles((prevFiles) =>
+			prevFiles.filter((_, index) => index !== fileIndex)
+		);
+	};
+
 	const handleBackClick = () => {
 		if (service?.category.toLocaleLowerCase() === "specialist") {
 			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
@@ -121,6 +195,36 @@ function ServicePage() {
 		} else {
 			navigate("/"); // Default fallback
 		}
+	};
+
+	const handleFinalPurchaseAmount = () => {
+		if (!service || !insurance || !supplementaryInsurance) {
+			return "N/A"; // Return a default value if any required data is missing
+		}
+
+		const servicePrice = parseFloat(service.price) || 0;
+		const insuranceContribution =
+			parseFloat(insurance.insuranceContribution) || 0;
+		const supplementaryContribution =
+			parseFloat(supplementaryInsurance.supplementaryInsuranceContribution) ||
+			0;
+		const serviceSubsidy = parseFloat(service.subsidy) || 0;
+
+		// Step 1: Calculate the price after insurance contribution
+		let amountAfterInsurance = servicePrice * (insuranceContribution / 100);
+
+		// Step 2: Apply supplementary insurance contribution
+		let amountAfterSupplementary =
+			amountAfterInsurance * (supplementaryContribution / 100);
+
+		// Step 3: Subtract the service subsidy
+		let finalAmount = amountAfterSupplementary - serviceSubsidy;
+
+		// Ensure the final amount is not negative
+		finalAmount = finalAmount < 0 ? 0 : finalAmount;
+
+		// Return the final amount formatted as currency
+		return finalAmount.toFixed(0); // This will round the result to two decimal places
 	};
 
 	return (
@@ -158,23 +262,32 @@ function ServicePage() {
 			{/* File Upload Section */}
 			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
 				<h5 className="pe-4 me-1">انتقال فایل</h5>
-				<div className="d-flex  justify-content-between border border-1 shadow-sm rounded-4 px-2 mx-4 py-2">
+				<div className="d-flex justify-content-between border border-1 shadow-sm rounded-4 px-2 mx-4 py-2">
 					<div className="d-flex flex-wrap justify-content-start align-items-center">
 						{/* Display uploaded files with icons */}
 						{uploadedFiles.map((file, index) => (
-							<a
-								href={file.fileUrl}
-								key={index}
-								className="d-flex flex-column justify-content-center align-items-center d-block me-3 mb-3"
-								download
-							>
-								<img
-									src={getIconForFileType(file.fileName)}
-									alt={`${file.fileName} Icon`}
-									style={{ width: "50px", height: "50px" }}
-								/>
-								<p className="text-end mt-2">{file.fileName}</p>
-							</a>
+							<div className="d-flex flex-column p-1 mx-1">
+								<a
+									href={file.fileUrl}
+									key={index}
+									className="d-flex flex-column justify-content-center align-items-center d-block "
+									download
+								>
+									<img
+										src={getIconForFileType(file.fileName)}
+										alt={`${file.fileName} Icon`}
+										style={{ width: "50px", height: "50px" }}
+									/>
+									<p className="text-end mt-1">{file.fileName}</p>
+								</a>
+								{/* Delete Button */}
+								<button
+									className="btn btn-danger mt-1"
+									onClick={() => handleFileDelete(index)}
+								>
+									Delete
+								</button>
+							</div>
 						))}
 					</div>
 					<div className="d-flex flex-wrap justify-content-end align-items-center">
@@ -229,20 +342,24 @@ function ServicePage() {
 					<table className="table text-center">
 						<thead>
 							<tr>
-								<th>{"نام بیمه"}</th>
-								<th>{"قیمت سرویس"}</th>
+								<th>{"نوع بیمه"}</th>
 								<th>{"سهم بیمه"}</th>
+								<th>{"نوع بیمه تکمیلی"}</th>
 								<th>{"سهم بیمه تکمیلی"}</th>
-								<th>{"مبالغ بازپرداخت"}</th>
+								<th>{"قیمت سرویس"}</th>
+								<th>{"مبالغ یارانه"}</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>{"بیمه سلامت"}</td>
-								<td>{"...ریال"}</td>
-								<td>{"...ریال"}</td>
-								<td>{"...ریال"}</td>
-								<td>{"...ریال"}</td>
+								<td>{userInfo?.insuranceType}</td>
+								<td>{insurance?.insuranceContribution}</td>
+								<td>{userInfo?.supplementaryInsuranceType}</td>
+								<td>
+									{supplementaryInsurance?.supplementaryInsuranceContribution}
+								</td>
+								<td>{service.price}</td>
+								<td>{service.subsidy}</td>
 							</tr>
 							{/* Add more rows as needed */}
 						</tbody>
@@ -253,7 +370,7 @@ function ServicePage() {
 			{/* Purchase Button Section */}
 			<div className="d-flex justify-content-center mb-4 mt-5">
 				<div className="bg-white border border-2 shadow text-end rounded-5 ">
-					<span className=" mx-3 ">{"قیمت نهایی: ...ریال"}</span>
+					<span className=" mx-3 ">{`مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`}</span>
 					<button className="btn btn-success rounded-pill px-4 py-2">
 						{"خریداری سرویس"}
 					</button>

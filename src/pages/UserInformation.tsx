@@ -18,7 +18,7 @@ function UserInformation() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/userinfo")
+			.get("http://localhost:3001/userInfo")
 			.then((response) => {
 				formik.setValues(response.data);
 				if (response.data.profilePicture) {

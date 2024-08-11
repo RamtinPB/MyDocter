@@ -42,7 +42,7 @@ function MyHeader() {
 		const fetchUserProfile = async () => {
 			try {
 				const response = await axios.get<UserProfile>(
-					"http://localhost:3001/userinfo"
+					"http://localhost:3001/userInfo"
 				);
 				setUserProfile(response.data);
 				setLoading(false);
@@ -141,7 +141,7 @@ function MyHeader() {
 						aria-label="Close"
 					>
 						<img
-							src="src\images\x-noBorder.png"
+							src="\src\images\x-noBorder.png"
 							className="rounded-circle"
 							style={{ width: "40px", height: "40px" }}
 						/>

@@ -19,7 +19,7 @@ function UserIEInformation() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/userinfoIE")
+			.get("http://localhost:3001/userInfoIE")
 			.then((response) => {
 				formik.setValues(response.data);
 				if (response.data.profilePicture) {
