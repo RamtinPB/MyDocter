@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // Assuming you're using react-router for navigation
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 
 function FormRender() {
 	const [schema, setSchema] = useState<any>(null);
+	const { id } = useParams<{ id: string }>(); // Get the service ID from URL
 
 	useEffect(() => {
-		const savedSchema = localStorage.getItem("customFormSchema");
-		if (savedSchema) {
-			setSchema(JSON.parse(savedSchema));
+		const storedForms = JSON.parse(localStorage.getItem("customForms") || "{}");
+		if (storedForms[id as string]) {
+			setSchema(storedForms[id as string]);
 		}
-	}, []);
+	}, [id]);
 
 	const handleSubmit = ({ formData }: any) => {
 		// Send formData to backend
