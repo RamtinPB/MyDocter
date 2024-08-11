@@ -3,6 +3,10 @@
 		{
 			"insuranceType": "بیمه سلامت",
 			"insuranceContribution": "70"
+		},
+		{
+			"insuranceType": "بیمه تامین اجتماعی",
+			"insuranceContribution": "60"
 		}
 	],
 
@@ -10,6 +14,10 @@
 		{
 			"supplementaryInsuranceType": "بیمه",
 			"supplementaryInsuranceContribution": "20"
+		},
+		{
+			"supplementaryInsuranceType": "بیمه تکمیلی",
+			"supplementaryInsuranceContribution": "10"
 		}
 	],
 

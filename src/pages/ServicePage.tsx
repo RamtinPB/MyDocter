@@ -32,10 +32,12 @@ interface UserInfo {
 }
 
 interface Insurance {
+	insuranceType: string;
 	insuranceContribution: string;
 }
 
 interface SupplementaryInsurance {
+	supplementaryInsuranceType: string;
 	supplementaryInsuranceContribution: string;
 }
 
@@ -65,7 +67,7 @@ function ServicePage() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
 	const [insurance, setInsurance] = useState<Insurance | null>(null);
-	const [supplementaryInsurance, setsupplementaryInsurance] =
+	const [supplementaryInsurance, setSupplementaryInsurance] =
 		useState<SupplementaryInsurance | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
@@ -100,7 +102,12 @@ function ServicePage() {
 				const response = await axios.get<Insurance[]>(
 					"http://localhost:3001/insurance"
 				);
-				setInsurance(response.data[0]);
+				if (userInfo) {
+					const matchedInsurance = response.data.find(
+						(ins) => ins.insuranceType === userInfo.insuranceType
+					);
+					setInsurance(matchedInsurance || null);
+				}
 				setLoading(false);
 			} catch (err) {
 				setError("Failed to fetch Insurance");
@@ -108,8 +115,10 @@ function ServicePage() {
 			}
 		};
 
-		fetchInsurance();
-	}, []);
+		if (userInfo) {
+			fetchInsurance();
+		}
+	}, [userInfo]);
 
 	useEffect(() => {
 		const fetchSupplementaryInsurance = async () => {
@@ -117,16 +126,25 @@ function ServicePage() {
 				const response = await axios.get<SupplementaryInsurance[]>(
 					"http://localhost:3001/supplementaryInsurance"
 				);
-				setsupplementaryInsurance(response.data[0]);
+				if (userInfo) {
+					const matchedSupplementaryInsurance = response.data.find(
+						(suppIns) =>
+							suppIns.supplementaryInsuranceType ===
+							userInfo.supplementaryInsuranceType
+					);
+					setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+				}
 				setLoading(false);
 			} catch (err) {
-				setError("Failed to fetch SupplementaryInsurance");
+				setError("Failed to fetch Supplementary Insurance");
 				setLoading(false);
 			}
 		};
 
-		fetchSupplementaryInsurance();
-	}, []);
+		if (userInfo) {
+			fetchSupplementaryInsurance();
+		}
+	}, [userInfo]);
 
 	useEffect(() => {
 		const fetchService = async () => {
@@ -211,10 +229,12 @@ function ServicePage() {
 		const serviceSubsidy = parseFloat(service.subsidy) || 0;
 
 		// Step 1: Calculate the price after insurance contribution
-		let amountAfterInsurance = servicePrice * (insuranceContribution / 100);
+		let amountAfterInsurance =
+			servicePrice - servicePrice * (insuranceContribution / 100);
 
 		// Step 2: Apply supplementary insurance contribution
 		let amountAfterSupplementary =
+			amountAfterInsurance -
 			amountAfterInsurance * (supplementaryContribution / 100);
 
 		// Step 3: Subtract the service subsidy
