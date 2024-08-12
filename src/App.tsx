@@ -14,6 +14,7 @@ import UserHistory from "./pages/UserHistory";
 import UserHistoryExtended from "./pages/UserHistoryExtended";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import ServicePage from "./pages/ServicePage";
+import FormRenderFilled from "./components/ForRenderFilled";
 
 function App() {
 	return (
@@ -40,6 +41,10 @@ function App() {
 					<Route path="/InitialEvaluation" element={<InitialEvaluation />} />
 					<Route path="/formBuilder" element={<FormBuilder />} />
 					<Route path="/formRender" element={<FormRender />} />
+					<Route
+						path="/form-filled/:id/:purchaseId"
+						element={<FormRenderFilled />}
+					/>
 				</Route>
 
 				{/* Route without the header */}

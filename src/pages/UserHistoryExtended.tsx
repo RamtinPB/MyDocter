@@ -8,7 +8,7 @@ import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import "../cssFiles/customColors.css";
 import { FaCaretLeft } from "react-icons/fa";
-import FormRender from "../components/FormRender";
+import FormRenderFilled from "../components/ForRenderFilled";
 
 interface Service {
 	name: string;
@@ -178,7 +178,7 @@ function UserHistoryExtended() {
 					<h5 className="pe-4 me-1">فرم تکمیل شده</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
-							<FormRender />
+							<FormRenderFilled />
 						) : (
 							<div className="text-center py-3">
 								<p>اطلاعات فرم یافت نشد</p>

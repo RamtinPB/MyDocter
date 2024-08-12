@@ -116,6 +116,7 @@
 					"fileUrl": "http://yourserver.com/files/document.pdf"
 				}
 			],
+			"serviceFormData": [],
 			"userInput": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی"
 		},
 		{
@@ -475,7 +476,7 @@
 					"label": "سابقه بیماری (جسمی / روانی / اختلال مادرزادی)",
 					"placeholder": "ذکر بیماری",
 					"required": true,
-					"checkboxName": "hasIllnessRecordself",
+					"checkboxName": "hasIllnessRecordSelf",
 					"checkboxLabel": "سابقه بیماری ندارم"
 				},
 				{
@@ -495,7 +496,8 @@
 					"checkboxName": "hasIllnessRecordFamily"
 				},
 				{
-					"type": "placeholder"
+					"type": "placeholder",
+					"name": ""
 				},
 				{
 					"name": "hasBloodTransfusion",
@@ -505,16 +507,19 @@
 					"options": ["ندارم", "دارم"]
 				},
 				{
-					"name": "hasBloodTransfusionReaction",
-					"type": "select",
+					"name": "bloodTransfusionReaction",
+					"type": "string",
+					"placeholder": "ذکر واکنش",
 					"label": "سابقه واکنش به تزریق خون و فرآورده های خونی",
 					"required": true,
-					"options": ["ندارم", "دارم"]
+					"checkboxName": "hasBloodTransfusionReaction",
+					"checkboxLabel": "سابقه واکنش ندارم"
 				},
 				{
-					"type": "checkmenu",
 					"name": "riskFactors",
+					"type": "checkmenu",
 					"label": "عادات و عوامل خطر",
+					"optional": true,
 					"options": [
 						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
 						{ "label": "سوء مصرف مواد مخدر", "name": "substanceAbuse" },
@@ -523,8 +528,8 @@
 					]
 				},
 				{
-					"type": "checkmenu",
 					"name": "riskFactors",
+					"type": "checkmenu",
 					"label": "",
 					"options": [
 						{ "label": "مصرف الکل", "name": "alcohol" },
@@ -545,8 +550,12 @@
 					"checkboxLabel": "حیوان خانگی ندارم"
 				},
 				{
-					"type": "radio",
+					"type": "placeholder",
+					"name": ""
+				},
+				{
 					"name": "sleepStatus",
+					"type": "radio",
 					"label": "وضعیت خواب و استراحت",
 					"options": [
 						{
@@ -559,6 +568,15 @@
 							"value": "aboveAverageSleep"
 						}
 					]
+				},
+				{
+					"name": "sleepIssues",
+					"type": "string",
+					"placeholder": "ذکر مشکلات",
+					"label": "مشکلات خواب",
+					"required": true,
+					"checkboxName": "hasSleepIssues",
+					"checkboxLabel": "مشکلی در خصوص خواب ندارم"
 				}
 			],
 			"حساسیت ها": [
@@ -624,6 +642,117 @@
 					"placeholder": "ذکر نوع نقص و اندام مربوطه",
 					"checkboxName": "hasDisabilityOrAmputaion",
 					"checkboxLabel": "نقص و قطعی عضو ندارم"
+				},
+				{
+					"name": "assistiveDevicesProsthetics",
+					"type": "checkmenu",
+					"label": "در صورت داشتن وسایل کمکی و پروتز بر اساس موارد زیر مشخص کنید",
+					"options": [
+						{ "label": "عصا", "name": "cane" },
+						{ "label": "واکر", "name": "walker" },
+						{
+							"label": "ویلچر",
+							"name": "wheelChair"
+						},
+						{
+							"label": "چوب زیر بغل",
+							"name": "armpitStick"
+						},
+						{
+							"label": "پروتز اندام",
+							"name": "prostheticLimb"
+						},
+						{
+							"label": "دندان مصنوعی",
+							"name": "denture"
+						},
+						{
+							"label": "سمعک",
+							"name": "hearingAid"
+						},
+						{
+							"label": "عینک",
+							"name": "glasses"
+						},
+						{
+							"label": "پروتز چشم",
+							"name": "prostheticEye"
+						}
+					]
+				},
+				{
+					"type": "placeholder",
+					"name": "انجام فعالیت های روزانه زندگی"
+				},
+				{
+					"type": "placeholder",
+					"name": ""
+				},
+				{
+					"name": "ableToEat",
+					"type": "radio",
+					"label": "غذا خوردن",
+					"options": [
+						{
+							"label": "مستقل",
+							"value": "ableToEatIndependent"
+						},
+						{ "label": "وابسته (نیازمند کمک)", "value": "ableToEatDependent" }
+					]
+				},
+				{
+					"name": "ableToDress",
+					"type": "radio",
+					"label": "لباس پوشیدن",
+					"options": [
+						{
+							"label": "مستقل",
+							"value": "ableToDressIndependent"
+						},
+						{ "label": "وابسته (نیازمند کمک)", "value": "ableToDressDependent" }
+					]
+				},
+				{
+					"name": "ableToBathe",
+					"type": "radio",
+					"label": "استحمام",
+					"options": [
+						{
+							"label": "مستقل",
+							"value": "belowAverableToBatheIndependentageSleep"
+						},
+						{ "label": "وابسته (نیازمند کمک)", "value": "ableToBatheDependent" }
+					]
+				},
+				{
+					"name": "ableToGoToBathroom",
+					"type": "radio",
+					"label": "دست شویی رفتن",
+					"options": [
+						{
+							"label": "مستقل",
+							"value": "ableToGoToBathroomIndependent"
+						},
+						{
+							"label": "وابسته (نیازمند کمک)",
+							"value": "ableToGoToBathroomDependent"
+						}
+					]
+				},
+				{
+					"name": "ableToFreelyMove",
+					"type": "radio",
+					"label": "تحرک و جابجایی",
+					"options": [
+						{
+							"label": "مستقل",
+							"value": "ableToFreelyMoveIndependent"
+						},
+						{
+							"label": "وابسته (نیازمند کمک)",
+							"value": "ableToFreelyMoveDependent"
+						}
+					]
 				}
 			],
 			"سابقه مصرف دارو (اختیاری)": [
@@ -631,6 +760,7 @@
 					"name": "rugularDrugNames",
 					"type": "string",
 					"label": "نام دارو ها (به ترتیب)",
+					"placeholder": "،نام دارو، نام دارو",
 					"optional": true
 				}
 			]
@@ -639,22 +769,264 @@
 
 	"validationSchemaDataIE": [
 		{
-			"name": "userAge",
-			"type": "string",
-			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
-			"required": "لطفا سن خود را وارد کنید"
-		},
-		{
 			"name": "userWeight",
 			"type": "string",
 			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
 			"required": "لطفا وزن خود را وارد کنید"
 		},
 		{
+			"name": "userAge",
+			"type": "string",
+			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
+			"required": "لطفا سن خود را وارد کنید"
+		},
+		{
 			"name": "userHeight",
 			"type": "string",
 			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
 			"required": "لطفا قد خود را وارد کنید"
+		},
+		{
+			"name": "userBodyMassIndex",
+			"type": "string",
+			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
+			"optional": true
+		},
+		{
+			"name": "illnessRecordNameSelf",
+			"type": "string",
+			"when": [
+				"hasIllnessRecordSelf",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا بیماری خود ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "illnessRecordNameFamily",
+			"type": "string",
+			"when": [
+				"hasIllnessRecordFamily",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا بیماری خود ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "userFamilyMemberRelation",
+			"type": "string",
+			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"optional": true
+		},
+		{
+			"name": "hasBloodTransfusion",
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
+		},
+		{
+			"name": "bloodTransfusionReaction",
+			"type": "string",
+			"when": [
+				"hasBloodTransfusionReaction",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا واکنش خود ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "riskFactors",
+			"type": "checkmenu",
+			"optional": true
+		},
+		{
+			"name": "userPet",
+			"type": "string",
+			"when": [
+				"hasPet",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا نوع و گونه حیوان خود ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "sleepStatus",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "sleepIssues",
+			"type": "string",
+			"when": [
+				"hasSleepIssues",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا در خصوص خواب مشکلات خود را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "allergyDrugName",
+			"type": "string",
+			"when": [
+				"hasAllergyDrug",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا نام دارو ها را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "allergyDrugReaction",
+			"type": "string",
+			"optional": true
+		},
+		{
+			"name": "allergyFoodName",
+			"type": "string",
+			"when": [
+				"hasAllergyFood",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا نام غذا ها را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "allergyFoodReaction",
+			"type": "string",
+			"optional": true
+		},
+		{
+			"name": "hearingLimitations",
+			"type": "string",
+			"when": [
+				"hasHearingLimitations",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا محدودیت و گوش مبتلا را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "sightLimitations",
+			"type": "string",
+			"when": [
+				"hasSightLimitations",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا محدودیت و چشم مبتلا را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "disabilityOrAmputaion",
+			"type": "string",
+			"when": [
+				"hasDisabilityOrAmputaion",
+				{
+					"is": true,
+					"then": {
+						"optional": true
+					},
+					"otherwise": {
+						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+						"required": "لطفا نوع نقص و اندام مربوطه را ذکر کنید"
+					}
+				}
+			]
+		},
+		{
+			"name": "assistiveDevicesProsthetics",
+			"type": "checkmenu",
+			"optional": true
+		},
+		{
+			"name": "ableToEat",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "ableToDress",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "ableToBathe",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "ableToGoToBathroom",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "ableToFreelyMove",
+			"type": "radio",
+			"optional": true
+		},
+		{
+			"name": "rugularDrugNames",
+			"type": "string",
+			"optional": true
 		}
 	],
 

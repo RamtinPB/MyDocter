@@ -15,13 +15,22 @@ function FormRender() {
 	}, [id]);
 
 	const handleSubmit = ({ formData }: any) => {
-		// Send formData to backend
+		const purchaseId = `${id}_${Date.now()}`; // Creating a unique purchase ID
+		const storedData = JSON.parse(localStorage.getItem("formData") || "{}");
+
+		// Store the data under the service ID and purchase ID
+		storedData[id as string] = storedData[id as string] || {}; // Ensure service ID exists
+		storedData[id as string][purchaseId] = formData;
+
+		localStorage.setItem("formData", JSON.stringify(storedData));
+
+		// Optionally send formData to backend
 		fetch("/api/submit-form", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(formData),
+			body: JSON.stringify({ id, purchaseId, formData }),
 		})
 			.then((response) => response.json())
 			.then((data) => {
@@ -30,6 +39,8 @@ function FormRender() {
 			.catch((error) => {
 				console.error("Error submitting form:", error);
 			});
+
+		alert("Form submitted successfully!");
 	};
 
 	return (

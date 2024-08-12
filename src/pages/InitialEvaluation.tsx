@@ -61,6 +61,7 @@ function UserIEInformation() {
 		validationSchemaData.reduce((acc, rule) => {
 			let fieldSchema: Yup.AnySchema = Yup.mixed();
 
+			// Determine the type of the field
 			switch (rule.type) {
 				case "string":
 					fieldSchema = Yup.string();
@@ -72,6 +73,7 @@ function UserIEInformation() {
 					fieldSchema = Yup.mixed();
 			}
 
+			// Apply common rules
 			if (rule.matches && rule.type === "string") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
 					new RegExp(rule.matches[0]),
@@ -82,6 +84,7 @@ function UserIEInformation() {
 				fieldSchema = (fieldSchema as Yup.StringSchema).email(rule.email);
 			}
 
+			// Apply conditional rules
 			if (rule.when) {
 				const [depField, conditions] = rule.when;
 				fieldSchema = fieldSchema.when(depField, {
@@ -104,6 +107,12 @@ function UserIEInformation() {
 					otherwise: (schema) => {
 						let otherwiseSchema = schema;
 						if (conditions.otherwise.matches) {
+							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
+								new RegExp(conditions.otherwise.matches[0]),
+								conditions.otherwise.matches[1]
+							);
+						}
+						if (conditions.otherwise.required === false) {
 							otherwiseSchema = otherwiseSchema.notRequired();
 						} else if (conditions.otherwise.required) {
 							otherwiseSchema = otherwiseSchema.required(
@@ -114,6 +123,7 @@ function UserIEInformation() {
 					},
 				});
 			} else {
+				// Apply default required rule if no 'when' condition is specified
 				if (rule.required) {
 					fieldSchema = fieldSchema.required(rule.required);
 				} else if (rule.optional) {
@@ -121,6 +131,7 @@ function UserIEInformation() {
 				}
 			}
 
+			// Assign the field schema to the accumulator object
 			acc[rule.name] = fieldSchema as Yup.Schema<any>;
 			return acc;
 		}, {} as Yup.ObjectSchema<any>)
@@ -131,7 +142,7 @@ function UserIEInformation() {
 		validationSchema,
 		onSubmit: (values) => {
 			axios
-				.post("http://localhost:3001/submit", values)
+				.post("http://localhost:3001/submitInitialEvaluation", values)
 				.then((response) => {
 					console.log(
 						"UserIE information updated successfully:",
@@ -163,218 +174,239 @@ function UserIEInformation() {
 					noValidate
 				>
 					<div className="accordion">
-						{Object.keys(formSections).map((section, index) => (
-							<div
-								className="accordion-item shadow-sm rounded-5 mb-5"
-								key={index}
-							>
-								<div
-									className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
-									id={`heading${index}`}
-								>
-									<h3 className="mb-0 ms-auto me-4">{section}</h3>
-									<img
-										src="src/images/plus-border.png"
-										alt="+"
-										className={`img-fluid m-0 p-0 btn-toggle ${
-											openIndexes.includes(index) ? "rotate" : ""
-										}`}
-										onClick={() => toggleForm(index)}
-										data-bs-toggle="collapse"
-										data-bs-target={`#collapse${index}`}
-										itemType="button"
-										aria-expanded={openIndexes.includes(index)}
-										aria-controls={`collapse${index}`}
-										style={{ width: "50px", height: "50px" }}
-									/>
-								</div>
-								<div
-									id={`collapse${index}`}
-									className={`collapse ${
-										openIndexes.includes(index) ? "show" : ""
-									}`}
-									aria-labelledby={`heading${index}`}
-								>
-									<div className="accordion-body text-end pt-0 mb-1">
+						{Object.keys(formSections).map(
+							(section, index) =>
+								!(section === "id") && (
+									<div
+										className="accordion-item shadow-sm rounded-5 mb-5"
+										key={index}
+									>
 										<div
-											className="row row-cols-2 g-5 my-1"
-											style={{ direction: "rtl" }}
+											className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
+											id={`heading${index}`}
 										>
-											{Array.isArray(formSections[section]) &&
-												formSections[section].map((field: any, idx: number) => {
-													if (field.type === "placeholder") {
-														return <div key={idx} className="col mb-2"></div>; // Empty column for placeholder
-													}
-													const isSelect = field.type === "select";
-													const isCheckbox = field.checkboxName;
-													const isCheckMenu = field.type === "checkmenu";
-													const isRadio = field.type === "radio";
+											<h3 className="mb-0 ms-auto me-4">{section}</h3>
+											<img
+												src="src/images/plus-border.png"
+												alt="+"
+												className={`img-fluid m-0 p-0 btn-toggle ${
+													openIndexes.includes(index) ? "rotate" : ""
+												}`}
+												onClick={() => toggleForm(index)}
+												data-bs-toggle="collapse"
+												data-bs-target={`#collapse${index}`}
+												itemType="button"
+												aria-expanded={openIndexes.includes(index)}
+												aria-controls={`collapse${index}`}
+												style={{ width: "50px", height: "50px" }}
+											/>
+										</div>
+										<div
+											id={`collapse${index}`}
+											className={`collapse ${
+												openIndexes.includes(index) ? "show" : ""
+											}`}
+											aria-labelledby={`heading${index}`}
+										>
+											<div className="accordion-body text-end pt-0 mb-1">
+												<div
+													className="row row-cols-2 g-5 my-1"
+													style={{ direction: "rtl" }}
+												>
+													{Array.isArray(formSections[section]) &&
+														formSections[section].map(
+															(field: any, idx: number) => {
+																if (field.type === "placeholder") {
+																	return (
+																		<h5 key={idx} className="col mb-2">
+																			{field.name}
+																			{field.name && <hr />}
+																		</h5>
+																	); // Empty column for placeholder
+																}
+																const isSelect = field.type === "select";
+																const isCheckbox = field.checkboxName;
+																const isCheckMenu = field.type === "checkmenu";
+																const isRadio = field.type === "radio";
 
-													return (
-														<div
-															key={idx}
-															className="col mb-2"
-															style={{ direction: "ltr" }}
-														>
-															<label
-																htmlFor={field.name}
-																className="form-label"
-															>
-																{field.label}
-															</label>
-															{isSelect ? (
-																<select
-																	id={field.name}
-																	name={field.name}
-																	value={formik.values[field.name]}
-																	onChange={formik.handleChange}
-																	onBlur={formik.handleBlur}
-																	className={`form-select text-end shadow-sm ${
-																		formik.touched[field.name] &&
-																		formik.errors[field.name]
-																			? "is-invalid"
-																			: ""
-																	}`}
-																	required={field.required}
-																	disabled={formik.values[field.checkboxName]}
-																>
-																	<option value="" disabled>
-																		{field.placeholder || "..."}
-																	</option>
-																	{field.options.map(
-																		(option: string, i: number) => (
-																			<option key={i} value={option}>
-																				{option}
-																			</option>
-																		)
-																	)}
-																</select>
-															) : isCheckMenu ? (
-																<div
-																	className="checkmenu "
-																	style={{ direction: "rtl" }}
-																>
-																	{field.options.map(
-																		(option: any, i: number) => (
-																			<div key={i} className=" form-check ">
-																				<label
-																					htmlFor={option.name}
-																					className="form-check-label"
-																				>
-																					{option.label}
-																				</label>
+																return (
+																	<div
+																		key={idx}
+																		className="col mb-2"
+																		style={{ direction: "ltr" }}
+																	>
+																		<label
+																			htmlFor={field.name}
+																			className="form-label"
+																		>
+																			{field.label}
+																		</label>
+																		{isSelect ? (
+																			<select
+																				id={field.name}
+																				name={field.name}
+																				value={formik.values[field.name]}
+																				onChange={formik.handleChange}
+																				onBlur={formik.handleBlur}
+																				className={`form-select text-end shadow-sm ${
+																					formik.touched[field.name] &&
+																					formik.errors[field.name]
+																						? "is-invalid"
+																						: ""
+																				}`}
+																				required={field.required}
+																				disabled={
+																					formik.values[field.checkboxName]
+																				}
+																			>
+																				<option value="" disabled>
+																					{field.placeholder || "..."}
+																				</option>
+																				{field.options.map(
+																					(option: string, i: number) => (
+																						<option key={i} value={option}>
+																							{option}
+																						</option>
+																					)
+																				)}
+																			</select>
+																		) : isCheckMenu ? (
+																			<div
+																				className="checkmenu "
+																				style={{ direction: "rtl" }}
+																			>
+																				{field.options.map(
+																					(option: any, i: number) => (
+																						<div
+																							key={i}
+																							className=" form-check "
+																						>
+																							<label
+																								htmlFor={option.name}
+																								className="form-check-label"
+																							>
+																								{option.label}
+																							</label>
+																							<input
+																								type="checkbox"
+																								id={option.name}
+																								name={option.name}
+																								checked={
+																									formik.values[option.name] ||
+																									false
+																								}
+																								onChange={formik.handleChange}
+																								onBlur={formik.handleBlur}
+																								className={`form-check-input ${
+																									formik.touched[option.name] &&
+																									formik.errors[option.name]
+																										? "is-invalid"
+																										: ""
+																								}`}
+																							/>
+																						</div>
+																					)
+																				)}
+																			</div>
+																		) : isRadio ? (
+																			field.options.map(
+																				(option: any, i: number) => (
+																					<div key={i} className="form-check">
+																						<input
+																							type="radio"
+																							id={`${field.name}-${i}`}
+																							name={field.name}
+																							value={option.value}
+																							checked={
+																								formik.values[field.name] ===
+																								option.value
+																							}
+																							onChange={formik.handleChange}
+																							onBlur={formik.handleBlur}
+																							className={`form-check-input ${
+																								formik.touched[field.name] &&
+																								formik.errors[field.name]
+																									? "is-invalid"
+																									: ""
+																							}`}
+																						/>
+																						<label
+																							htmlFor={`${field.name}-${i}`}
+																							className="form-check-label"
+																						>
+																							{option.label}
+																						</label>
+																					</div>
+																				)
+																			)
+																		) : (
+																			<input
+																				type={field.type}
+																				id={field.name}
+																				name={field.name}
+																				value={formik.values[field.name]}
+																				onChange={formik.handleChange}
+																				onBlur={formik.handleBlur}
+																				className={`form-control text-end shadow-sm ${
+																					formik.touched[field.name] &&
+																					formik.errors[field.name]
+																						? "is-invalid"
+																						: ""
+																				}`}
+																				required={field.required}
+																				disabled={
+																					formik.values[field.checkboxName]
+																				}
+																				placeholder={field.placeholder || ""}
+																			/>
+																		)}
+																		{isCheckbox && field.checkboxLabel && (
+																			<div className="text-end mt-2">
 																				<input
 																					type="checkbox"
-																					id={option.name}
-																					name={option.name}
+																					id={field.checkboxName}
+																					name={field.checkboxName}
 																					checked={
-																						formik.values[option.name] || false
+																						formik.values[field.checkboxName] ||
+																						false
 																					}
-																					onChange={formik.handleChange}
-																					onBlur={formik.handleBlur}
-																					className={`form-check-input ${
-																						formik.touched[option.name] &&
-																						formik.errors[option.name]
-																							? "is-invalid"
-																							: ""
-																					}`}
+																					onChange={(e) => {
+																						formik.setFieldValue(
+																							field.checkboxName,
+																							e.target.checked
+																						);
+																					}}
+																					className="form-check-input shadow-sm"
 																				/>
+																				<label
+																					htmlFor={field.checkboxName}
+																					className="form-check-label ms-3"
+																				>
+																					{field.checkboxLabel}
+																				</label>
 																			</div>
-																		)
-																	)}
-																</div>
-															) : isRadio ? (
-																field.options.map((option: any, i: number) => (
-																	<div key={i} className="form-check">
-																		<input
-																			type="radio"
-																			id={`${field.name}-${i}`}
-																			name={field.name}
-																			value={option.value}
-																			checked={
-																				formik.values[field.name] ===
-																				option.value
-																			}
-																			onChange={formik.handleChange}
-																			onBlur={formik.handleBlur}
-																			className={`form-check-input ${
-																				formik.touched[field.name] &&
-																				formik.errors[field.name]
-																					? "is-invalid"
-																					: ""
-																			}`}
-																		/>
-																		<label
-																			htmlFor={`${field.name}-${i}`}
-																			className="form-check-label"
-																		>
-																			{option.label}
-																		</label>
+																		)}
+																		{formik.touched[field.name] &&
+																			formik.errors[field.name] && (
+																				<div className="invalid-feedback">
+																					{formik.errors[field.name] as string}
+																				</div>
+																			)}
 																	</div>
-																))
-															) : (
-																<input
-																	type={field.type}
-																	id={field.name}
-																	name={field.name}
-																	value={formik.values[field.name]}
-																	onChange={formik.handleChange}
-																	onBlur={formik.handleBlur}
-																	className={`form-control text-end shadow-sm ${
-																		formik.touched[field.name] &&
-																		formik.errors[field.name]
-																			? "is-invalid"
-																			: ""
-																	}`}
-																	required={field.required}
-																	disabled={formik.values[field.checkboxName]}
-																	placeholder={field.placeholder || ""}
-																/>
-															)}
-															{isCheckbox && field.checkboxLabel && (
-																<div className="text-end mt-2">
-																	<input
-																		type="checkbox"
-																		id={field.checkboxName}
-																		name={field.checkboxName}
-																		checked={
-																			formik.values[field.checkboxName] || false
-																		}
-																		onChange={(e) => {
-																			formik.setFieldValue(
-																				field.checkboxName,
-																				e.target.checked
-																			);
-																		}}
-																		className="form-check-input shadow-sm"
-																	/>
-																	<label
-																		htmlFor={field.checkboxName}
-																		className="form-check-label ms-3"
-																	>
-																		{field.checkboxLabel}
-																	</label>
-																</div>
-															)}
-															{formik.touched[field.name] &&
-																formik.errors[field.name] && (
-																	<div className="invalid-feedback">
-																		{formik.errors[field.name] as string}
-																	</div>
-																)}
-														</div>
-													);
-												})}
+																);
+															}
+														)}
+												</div>
+											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-						))}
+								)
+						)}
 					</div>
 					<div className="d-flex justify-content-center my-3">
 						<button
 							type="submit"
-							className="btn btn-primary rounded-pill text-white fs-4 px-5 py-2 shadow-sm"
+							className="btn btn-primary rounded-pill text-white fs-4 px-4 py-2 shadow-sm"
 						>
 							ذخیره
 						</button>

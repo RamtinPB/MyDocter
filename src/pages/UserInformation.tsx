@@ -137,7 +137,7 @@ function UserInformation() {
 		validationSchema,
 		onSubmit: (values) => {
 			axios
-				.post("http://localhost:3001/submit", values)
+				.post("http://localhost:3001/submitUserInformation", values)
 				.then((response) => {
 					console.log("User information updated successfully:", response.data);
 				})
