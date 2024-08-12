@@ -188,7 +188,7 @@ function MyHeader() {
 						</Link>
 						<hr className="m-0 p-0" />
 						<Link
-							to="/InitialEvaluation"
+							to="/UserIEInformation"
 							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
 						>
 							<span className="pe-2"> فرم ارزیابی اولیه کاربر</span>

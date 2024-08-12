@@ -149,12 +149,12 @@
 	],
 
 	"userInfo": {
-		"firstName": "علی",
-		"lastName": "هاشمی",
+		"firstName": "فاطمه",
+		"lastName": "محمدی",
 		"profilePicture": "",
 		"email": "example@gmail.com",
 		"phoneNumber": "09169325459",
-		"userGender": "مرد",
+		"userGender": "زن",
 		"userHeight": "170cm",
 		"userAge": "40",
 		"userWeight": "70kg",
@@ -516,31 +516,6 @@
 					"checkboxLabel": "سابقه واکنش ندارم"
 				},
 				{
-					"name": "riskFactors",
-					"type": "checkmenu",
-					"label": "عادات و عوامل خطر",
-					"optional": true,
-					"options": [
-						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
-						{ "label": "سوء مصرف مواد مخدر", "name": "substanceAbuse" },
-						{ "label": "مصرف سیگار", "name": "smoking" },
-						{ "label": "مصرف قلیان", "name": "hookah" }
-					]
-				},
-				{
-					"name": "riskFactors",
-					"type": "checkmenu",
-					"label": "",
-					"options": [
-						{ "label": "مصرف الکل", "name": "alcohol" },
-						{ "label": "سابقه کار در معدن", "name": "miningExperience" },
-						{
-							"label": "سابقه کار با مواد شیمیائی",
-							"name": "chemicalExposure"
-						}
-					]
-				},
-				{
 					"name": "userPet",
 					"type": "string",
 					"label": "داشتن حیوان خانگی",
@@ -550,23 +525,32 @@
 					"checkboxLabel": "حیوان خانگی ندارم"
 				},
 				{
-					"type": "placeholder",
-					"name": ""
+					"name": "riskFactors",
+					"type": "checkmenu",
+					"label": "عادات و عوامل خطر",
+					"optional": true,
+					"options": [
+						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
+						{ "label": "سوء مصرف مواد مخدر", "name": "substanceAbuse" },
+						{ "label": "مصرف سیگار", "name": "smoking" },
+						{ "label": "مصرف قلیان", "name": "hookah" },
+						{ "label": "مصرف الکل", "name": "alcohol" },
+						{ "label": "سابقه کار در معدن", "name": "miningExperience" },
+						{
+							"label": "سابقه کار با مواد شیمیائی",
+							"name": "chemicalExposure"
+						}
+					]
 				},
 				{
 					"name": "sleepStatus",
-					"type": "radio",
+					"type": "select",
 					"label": "وضعیت خواب و استراحت",
+					"required": true,
 					"options": [
-						{
-							"label": "کمتر از حد طبیعی (کمتر از 5 ساعت)",
-							"value": "belowAverageSleep"
-						},
-						{ "label": "طبیعی", "value": "averageSleep" },
-						{
-							"label": "بیشتر از حد طبیعی (کمتر از 5 ساعت)",
-							"value": "aboveAverageSleep"
-						}
+						"کمتر از حد طبیعی (کمتر از 5 ساعت)",
+						"طبیعی",
+						"بیشتر از حد طبیعی (کمتر از 5 ساعت)"
 					]
 				},
 				{
@@ -690,69 +674,38 @@
 				},
 				{
 					"name": "ableToEat",
-					"type": "radio",
+					"type": "select",
 					"label": "غذا خوردن",
-					"options": [
-						{
-							"label": "مستقل",
-							"value": "ableToEatIndependent"
-						},
-						{ "label": "وابسته (نیازمند کمک)", "value": "ableToEatDependent" }
-					]
+					"required": true,
+					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
 				{
 					"name": "ableToDress",
-					"type": "radio",
+					"type": "select",
 					"label": "لباس پوشیدن",
-					"options": [
-						{
-							"label": "مستقل",
-							"value": "ableToDressIndependent"
-						},
-						{ "label": "وابسته (نیازمند کمک)", "value": "ableToDressDependent" }
-					]
+					"required": true,
+					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
 				{
 					"name": "ableToBathe",
-					"type": "radio",
+					"type": "select",
 					"label": "استحمام",
-					"options": [
-						{
-							"label": "مستقل",
-							"value": "belowAverableToBatheIndependentageSleep"
-						},
-						{ "label": "وابسته (نیازمند کمک)", "value": "ableToBatheDependent" }
-					]
+					"required": true,
+					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
 				{
 					"name": "ableToGoToBathroom",
-					"type": "radio",
+					"type": "select",
 					"label": "دست شویی رفتن",
-					"options": [
-						{
-							"label": "مستقل",
-							"value": "ableToGoToBathroomIndependent"
-						},
-						{
-							"label": "وابسته (نیازمند کمک)",
-							"value": "ableToGoToBathroomDependent"
-						}
-					]
+					"required": true,
+					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
 				{
 					"name": "ableToFreelyMove",
-					"type": "radio",
+					"type": "select",
 					"label": "تحرک و جابجایی",
-					"options": [
-						{
-							"label": "مستقل",
-							"value": "ableToFreelyMoveIndependent"
-						},
-						{
-							"label": "وابسته (نیازمند کمک)",
-							"value": "ableToFreelyMoveDependent"
-						}
-					]
+					"required": true,
+					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				}
 			],
 			"سابقه مصرف دارو (اختیاری)": [
@@ -762,6 +715,22 @@
 					"label": "نام دارو ها (به ترتیب)",
 					"placeholder": "،نام دارو، نام دارو",
 					"optional": true
+				}
+			],
+			"بیماران خانم": [
+				{
+					"name": "pregnancyStatus",
+					"type": "select",
+					"label": "وضعیت بارداری",
+					"required": true,
+					"options": ["بله", "خیر"]
+				},
+				{
+					"name": "lactationStatus",
+					"type": "select",
+					"label": "وضعیت شیردهی",
+					"required": true,
+					"options": ["بله", "خیر"]
 				}
 			]
 		}
@@ -878,8 +847,8 @@
 		},
 		{
 			"name": "sleepStatus",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "sleepIssues",
@@ -1000,33 +969,43 @@
 		},
 		{
 			"name": "ableToEat",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "ableToDress",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "ableToBathe",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "ableToGoToBathroom",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "ableToFreelyMove",
-			"type": "radio",
-			"optional": true
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		},
 		{
 			"name": "rugularDrugNames",
 			"type": "string",
 			"optional": true
+		},
+		{
+			"name": "pregnancyStatus",
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
+		},
+		{
+			"name": "lactationStatus",
+			"type": "select",
+			"required": "لطفا گزینه ای را انتخاب کنید"
 		}
 	],
 

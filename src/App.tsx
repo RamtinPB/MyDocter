@@ -9,12 +9,12 @@ import SignIn from "./pages/SignIn";
 import UserInformation from "./pages/UserInformation";
 import GeneralDoctorPrescription from "./pages/GeneralDoctorPrescription";
 import SpecialistDoctorPrescription from "./pages/SpecialistDoctorPrescription";
-import InitialEvaluation from "./pages/InitialEvaluation";
 import UserHistory from "./pages/UserHistory";
 import UserHistoryExtended from "./pages/UserHistoryExtended";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import ServicePage from "./pages/ServicePage";
 import FormRenderFilled from "./components/ForRenderFilled";
+import UserIEInformation from "./pages/UserIEInformation";
 
 function App() {
 	return (
@@ -38,7 +38,7 @@ function App() {
 						path="/SpecialistDoctorPrescription"
 						element={<SpecialistDoctorPrescription />}
 					/>
-					<Route path="/InitialEvaluation" element={<InitialEvaluation />} />
+					<Route path="/UserIEInformation" element={<UserIEInformation />} />
 					<Route path="/formBuilder" element={<FormBuilder />} />
 					<Route path="/formRender" element={<FormRender />} />
 					<Route

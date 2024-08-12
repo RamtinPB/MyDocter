@@ -4,6 +4,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../cssFiles/customColors.css";
 
+interface UserInfo {
+	userGender: string;
+}
+
 interface UserIEFormData {
 	[key: string]: any;
 }
@@ -11,6 +15,7 @@ interface UserIEFormData {
 const initialFormData: UserIEFormData = {};
 
 function UserIEInformation() {
+	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 	const [formSections, setFormSections] = useState<{ [key: string]: any[] }>(
 		{}
 	);
@@ -19,12 +24,20 @@ function UserIEInformation() {
 
 	useEffect(() => {
 		axios
+			.get("http://localhost:3001/userInfo")
+			.then((response) => {
+				setUserInfo(response.data);
+			})
+			.catch((error) => {
+				console.log("Error fetching userInfo data:", error);
+			});
+	}, []);
+
+	useEffect(() => {
+		axios
 			.get("http://localhost:3001/userInfoIE")
 			.then((response) => {
 				formik.setValues(response.data);
-				if (response.data.profilePicture) {
-					// Handle profile picture if needed
-				}
 			})
 			.catch((error) => {
 				console.error("Error fetching userIE data:", error);
@@ -37,7 +50,6 @@ function UserIEInformation() {
 			.then((response) => {
 				const sections = response.data[0];
 				setFormSections(sections);
-				console.log(sections);
 			})
 			.catch((error) => {
 				console.error("Error fetching form fields:", error);
@@ -176,7 +188,10 @@ function UserIEInformation() {
 					<div className="accordion">
 						{Object.keys(formSections).map(
 							(section, index) =>
-								!(section === "id") && (
+								!(section === "id") &&
+								!(
+									userInfo?.userGender === "مرد" && section === "بیماران خانم"
+								) && (
 									<div
 										className="accordion-item shadow-sm rounded-5 mb-5"
 										key={index}
@@ -295,7 +310,12 @@ function UserIEInformation() {
 																									formik.values[option.name] ||
 																									false
 																								}
-																								onChange={formik.handleChange}
+																								onChange={() => {
+																									formik.setFieldValue(
+																										option.name,
+																										!formik.values[option.name] // Toggle the value
+																									);
+																								}}
 																								onBlur={formik.handleBlur}
 																								className={`form-check-input ${
 																									formik.touched[option.name] &&
