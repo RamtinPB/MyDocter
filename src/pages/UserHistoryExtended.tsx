@@ -51,7 +51,7 @@ function UserHistoryExtended() {
 		const fetchService = async () => {
 			try {
 				const response = await axios.get<Service[]>(
-					`http://localhost:3001/userPerchasedServices`
+					`http://localhost:3001/userPurchasedServices`
 				);
 				const selectedService = response.data.find(
 					(s) => `${s.purchaseId}` === purchaseId

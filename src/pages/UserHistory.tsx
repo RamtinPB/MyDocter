@@ -15,7 +15,7 @@ function UserHistory() {
 		const fetchServices = async () => {
 			try {
 				const response = await axios.get<ServiceInfo[]>(
-					"http://localhost:3001/userPerchasedServices"
+					"http://localhost:3001/userPurchasedServices"
 				);
 				setServiceInfo(response.data);
 				setLoading(false);

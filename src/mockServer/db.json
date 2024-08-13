@@ -85,7 +85,7 @@
 		}
 	],
 
-	"userPerchasedServices": [
+	"userPurchasedServices": [
 		{
 			"name": "نام سرویس",
 			"id": "1",
@@ -116,7 +116,6 @@
 					"fileUrl": "http://yourserver.com/files/document.pdf"
 				}
 			],
-			"serviceFormData": [],
 			"userInput": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی"
 		},
 		{
@@ -135,7 +134,7 @@
 			"finalPurchaseAmount": "100",
 			"purchaseId": "3",
 			"link": "/purchased-services/3",
-			"status": "complete"
+			"status": "error"
 		},
 		{
 			"name": "نام سرویس",
@@ -145,6 +144,24 @@
 			"purchaseId": "4",
 			"link": "/purchased-services/4",
 			"status": "error"
+		},
+		{
+			"name": "نام سرویس",
+			"id": "1",
+			"purchaseDate": "***-**-**",
+			"finalPurchaseAmount": "100",
+			"purchaseId": "5",
+			"link": "/purchased-services/5",
+			"status": "error"
+		},
+		{
+			"name": "نام سرویس",
+			"id": "1",
+			"purchaseDate": "***-**-**",
+			"finalPurchaseAmount": "100",
+			"purchaseId": "6",
+			"link": "/purchased-services/6",
+			"status": "complete"
 		}
 	],
 
