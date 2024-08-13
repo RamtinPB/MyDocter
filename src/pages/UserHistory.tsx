@@ -61,7 +61,7 @@ function UserHistory() {
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">نام سرویس</th>
-								<th scope="col">شماره سریال</th>
+								<th scope="col">شماره سریال خرید</th>
 								<th scope="col">تاریخ خریداری</th>
 								<th scope="col">وضعیت پیگیری</th>
 							</tr>
@@ -69,7 +69,7 @@ function UserHistory() {
 						<tbody>
 							{serviceInfo.map((service, index) => (
 								<tr
-									key={service.id}
+									key={service.purchaseId}
 									onClick={() =>
 										(window.location.href = `/purchased-services/${service.purchaseId}`)
 									}
@@ -78,7 +78,7 @@ function UserHistory() {
 										{index + 1}
 									</th>
 									<td className="align-middle">{service.name}</td>
-									<td className="align-middle">{service.id}</td>
+									<td className="align-middle">{service.purchaseId}</td>
 									<td className="align-middle">{service.purchaseDate}</td>
 									<td className="align-middle">
 										<span
