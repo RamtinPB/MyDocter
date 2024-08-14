@@ -1,6 +1,6 @@
 .custom-bg-1 {
 	background: rgb(124,175,243);
-background: radial-gradient(circle, rgba(124,175,243,1) 0%, rgba(24,55,136,1) 100%);
+	background: radial-gradient(circle, rgba(124,175,243,1) 0%, rgba(24,55,136,1) 100%);
 }
 
 .custom-bg-2 {
@@ -10,12 +10,17 @@ background: radial-gradient(circle, rgba(124,175,243,1) 0%, rgba(24,55,136,1) 10
 
 .custom-bg-3 {
 	background: rgb(178,211,255);
-background: radial-gradient(circle, rgba(178,211,255,1) 0%, rgba(255,255,255,1) 100%);
+	background: radial-gradient(circle, rgba(178,211,255,1) 0%, rgba(255,255,255,1) 100%);
 }
 
 .custom-bg-4 {
 	background: rgb(177,218,218);
-background: linear-gradient(90deg, rgba(177,218,218,1) 0%, rgba(255,255,255,1) 50%, rgba(181,221,221,1) 100%);
+	background: linear-gradient(90deg, rgba(177,218,218,1) 0%, rgba(255,255,255,1) 50%, rgba(181,221,221,1) 100%);
+}
+
+.custom-bg-5 {
+	background: rgb(25,25,25);
+	background: radial-gradient(circle, rgba(25,25,25,1) 0%, rgba(24,55,136,1) 55%);
 }
 
 

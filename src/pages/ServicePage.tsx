@@ -250,7 +250,7 @@ function ServicePage() {
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-5">
 			{/* Header Section with Back Button and Service Name */}
-			<div className="row custom-bg-1 shadow align-items-center rounded-5 mb-4 mt-5 p-3">
+			<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-5 p-3">
 				<div className="col-2 text-white">
 					<button className="btn btn-link p-0">
 						<FaCaretLeft
@@ -282,7 +282,7 @@ function ServicePage() {
 			{/* File Upload Section */}
 			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
 				<h5 className="pe-4 me-1">انتقال فایل</h5>
-				<div className="d-flex justify-content-between border border-1 shadow-sm rounded-4 px-2 mx-4 py-2">
+				<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 px-2 mx-4 py-2">
 					<div className="d-flex flex-wrap justify-content-start align-items-center">
 						{/* Display uploaded files with icons */}
 						{uploadedFiles.map((file, index) => (

@@ -27,7 +27,7 @@ function MyHeader() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
-	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(false);
+	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(true);
 
 	useEffect(() => {
 		const fetchUserProfile = async () => {
@@ -62,7 +62,7 @@ function MyHeader() {
 		<>
 			<nav className="navbar navbar-expand-lg custom-header shadow-lg sticky-top">
 				<div className="container d-flex justify-content-between py-1">
-					<div className="d-flex justify-content-between gap-3">
+					<div className="d-flex justify-content-between align-items-center gap-3">
 						{isLoggedIn ? (
 							<button
 								className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-bg-2 border border-1 rounded-pill ps-0 ms-0"

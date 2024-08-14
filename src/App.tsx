@@ -15,6 +15,7 @@ import PasswordRecovery from "./pages/PasswordRecovery";
 import ServicePage from "./pages/ServicePage";
 import FormRenderFilled from "./components/ForRenderFilled";
 import UserIEInformation from "./pages/UserIEInformation";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
 	return (
@@ -25,6 +26,8 @@ function App() {
 					<Route index element={<Home />} />
 					<Route path="/UserInformation" element={<UserInformation />} />
 					<Route path="/UserHistory" element={<UserHistory />} />
+					<Route path="/UserIEInformation" element={<UserIEInformation />} />
+					<Route path="/AdminDashboard" element={<AdminDashboard />} />
 					<Route
 						path="/purchased-services/:purchaseId"
 						element={<UserHistoryExtended />}
@@ -38,7 +41,6 @@ function App() {
 						path="/SpecialistDoctorPrescription"
 						element={<SpecialistDoctorPrescription />}
 					/>
-					<Route path="/UserIEInformation" element={<UserIEInformation />} />
 					<Route path="/formBuilder" element={<FormBuilder />} />
 					<Route path="/formRender" element={<FormRender />} />
 					<Route

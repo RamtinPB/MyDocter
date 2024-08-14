@@ -46,7 +46,7 @@ function SpecialistDoctorPrescription() {
 				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-4 my-5">
 					<h3>خدمات پزشک متخصص و فوق تخصص</h3>
 				</div>
-				<div className="text-end bg-white shadow rounded-5 px-5 py-5 mb-3">
+				<div className="text-end bg-white border border-2 shadow rounded-5 px-5 py-5 mb-3">
 					<div className="row mx-1 row-cols-2 g-5" style={{ direction: "rtl" }}>
 						{services.map(
 							(service, index) =>
