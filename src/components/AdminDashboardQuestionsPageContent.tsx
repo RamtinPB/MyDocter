@@ -25,6 +25,10 @@ function AdminDashboardQuestionsPageContent() {
 		setSections(updatedSections);
 	};
 
+	const handleSubmit = () => {};
+
+	const handleCancel = () => {};
+
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-5">
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
@@ -102,6 +106,21 @@ function AdminDashboardQuestionsPageContent() {
 						/>
 					</button>
 				</div>
+			</div>
+			{/* Submit and Cancel buttons */}
+			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+				<button
+					className="btn btn-secondary rounded-pill px-3"
+					onClick={handleCancel}
+				>
+					{"حذف"}
+				</button>
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={handleSubmit}
+				>
+					{"ذخیره"}
+				</button>
 			</div>
 		</div>
 	);
