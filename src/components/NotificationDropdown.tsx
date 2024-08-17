@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaBell, FaRegBell } from "react-icons/fa";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "/src/cssFiles/myheader.css";
 
 interface PurchasedService {
 	name: string;
@@ -93,12 +94,12 @@ const NotificationDropdown = () => {
 	};
 
 	return (
-		<div className="position-relative">
+		<div>
 			<button className="btn rounded-circle m-0 p-0" onClick={toggleDropdown}>
 				{hasNewNotification ? (
-					<FaBell style={{ width: "28px", height: "28px" }} color="white" />
+					<FaBell className="custom-notification-btn" color="white" />
 				) : (
-					<FaRegBell style={{ width: "28px", height: "28px" }} color="white" />
+					<FaRegBell className="custom-notification-btn" color="white" />
 				)}
 			</button>
 			{dropdownVisible && notifications.length > 0 && (

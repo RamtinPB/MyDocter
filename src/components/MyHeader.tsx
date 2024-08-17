@@ -61,7 +61,7 @@ function MyHeader() {
 	return (
 		<>
 			<nav className="navbar navbar-expand-lg custom-header shadow-lg sticky-top">
-				<div className="container d-flex justify-content-between py-1">
+				<div className="container d-flex justify-content-between py-lg-1 py-0">
 					<div className="d-flex justify-content-between align-items-center gap-3">
 						{isLoggedIn ? (
 							<button
@@ -75,13 +75,11 @@ function MyHeader() {
 									<img
 										src={userProfile.profilePicture}
 										alt="Profile"
-										className="img-fluid rounded-circle border border-3 border-light"
-										style={{ width: "40px", height: "40px" }}
+										className="img-fluid custom-user-img-icon rounded-circle border border-3 border-light"
 									/>
 								) : (
 									<FaUser
-										className="rounded-circle border border-2 border-light p-1"
-										style={{ width: "40px", height: "40px" }}
+										className="rounded-circle custom-user-img-icon border border-2 border-light p-1"
 										color="white"
 									/>
 								)}
@@ -103,7 +101,7 @@ function MyHeader() {
 					<Link className="nav-link" to="/">
 						<img
 							src={Logo}
-							className="d-inline-block align-top img-fluid custom-logo"
+							className="img-fluid custom-logo d-inline-block align-top "
 							alt="Logo"
 						/>
 					</Link>

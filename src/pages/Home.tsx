@@ -66,7 +66,7 @@ function Home() {
 				id="banner"
 				className="d-flex justify-content-center justify-content-lg-end shadow p-5"
 			>
-				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 mx-md-3 px-md-3 ">
+				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 mx-md-4 px-md-4 ">
 					<div className="custom-banner-text-bg rounded-5 p-3 m-md-2">
 						<h2>{homeText?.openingQuoteTitle}</h2>
 						<p className="p-1">{homeText?.openingQuoteDescription}</p>
@@ -84,12 +84,12 @@ function Home() {
 
 			{/* Services Section */}
 			<section id="services" className="bg-white pb-4 pt-3 mt-4 mb-5 px-">
-				<div className="container px-4 px-md-2">
+				<div className="container px-4 px-md-5 px-lg-4">
 					<h2 className="text-center mb-4 pb-2">خدمات</h2>
 					<div className="row justify-content-center gap-5">
 						<div className="col-lg-5 col-12">
-							<div className="card rounded-5 shadow mb-4">
-								<div className="card-body text-center">
+							<div className="card rounded-5 shadow p-3 mb-4">
+								<div className="card-body text-center p-md-3 p-2">
 									<h5 className="card-title custom-bg-3 rounded-top-4 mb-2 p-2">
 										{homeText?.servicesLeftCardTitle}
 									</h5>
@@ -111,8 +111,8 @@ function Home() {
 							</div>
 						</div>
 						<div className="col-lg-5 col-12">
-							<div className="card rounded-5 shadow mb-4">
-								<div className="card-body text-center">
+							<div className="card rounded-5 shadow p-3 mb-4">
+								<div className="card-body text-center p-md-3 p-2">
 									<h5 className="card-title custom-bg-3 rounded-top-4 mb-2 p-2">
 										{homeText?.servicesRightCardTitle}
 									</h5>
