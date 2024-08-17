@@ -1,27 +1,30 @@
 
+@media (max-width: 992px) {
+    .custom-banner-text-bg{	
+      background-color: rgba(24, 55, 136, 0.5); /* 0.5 represents 50% opacity */
 
-.custom-banner-text {
-    top: 25%;
-    left: 70%; /* Adjust this value to move it more to the right */
-  }
-  
-@media (max-width: 768px) {
-    .custom-banner-text{
-      position: static;
-      text-align: center;
-      display: inline-block;
-      
     }
 }
 
+@media (width: 768px) {
+  .custom-service-img{
+    max-width: 95% !important;
+  }
+}
+
+#banner {
+  width: 100vw; /* Full width of the viewport */
+  height: 100vh; /* Adjust the height as needed */
+  background-image: url("/src/images/Banner.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0; /* Ensure no margin */
+}
+
 #doc {
-    background-image: url("../images/docBackground.png");
+    background-image: url("/src/images/docBackground.png");
     background-size: cover;
     background-position: center;
     
-}
-
-.doc-image {
-  max-width: auto;
-  max-height: auto;
 }

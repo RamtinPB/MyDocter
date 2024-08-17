@@ -7,8 +7,15 @@
 }
 
 .custom-btn {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
+}
+
+@media (max-width:768px){
+  .custom-btn {
+    width: 40px;
+    height: 40px;
+  }
 }
 
   

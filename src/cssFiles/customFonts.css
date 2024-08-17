@@ -1,10 +1,101 @@
 
 /* Apply font to all heading elements */
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Amiri', sans-serif;
+    font-family: 'Amiri', sans-serif !important;
 }
 
 /* Apply font to all other elements */
 body, p, a, span, div, button, input, textarea {
-    font-family: 'Noto Sans Arabic', sans-serif;
+    font-family: 'Noto Sans Arabic', sans-serif !important;
+}
+
+/* Base font sizes for larger screens (desktop and tablets) */
+h1 {
+    font-size: 2.5rem !important; /* Large heading size */
+}
+
+h2 {
+    font-size: 2rem !important;
+}
+
+h3 {
+    font-size: 1.75rem !important;
+}
+
+h4 {
+    font-size: 1.5rem !important;
+}
+
+h5 {
+    font-size: 1.25rem !important;
+}
+
+h6 {
+    font-size: 1rem !important;
+}
+
+body, p, a, span, div, button, input, textarea {
+    font-size: 1rem !important; /* Base font size */
+}
+
+/* Responsive font sizes for mobile devices (phones and smaller tablets) */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem !important; /* Slightly smaller for phones */
+    }
+
+    h2 {
+        font-size: 1.75rem !important;
+    }
+
+    h3 {
+        font-size: 1.5rem !important;
+    }
+
+    h4 {
+        font-size: 1.25rem !important;
+    }
+
+    h5 {
+        font-size: 1.1rem !important;
+    }
+
+    h6 {
+        font-size: 1rem !important;
+    }
+
+    body, p, a, span, div, button, input, textarea {
+        font-size: 0.95rem !important; /* Smaller base font size on mobile */
+    }
+}
+
+/* Even smaller screens (like very small phones) */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.75rem !important; /* Further reduction for very small screens */
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    h3 {
+        font-size: 1.25rem !important;
+    }
+
+    h4 {
+        font-size: 1.1rem !important;
+    }
+
+    h5 {
+        font-size: 1rem !important;
+    }
+
+    h6 {
+        font-size: 0.9rem !important;
+    }
+
+    body, p, a, span, div, button, input, textarea {
+        font-size: 0.9rem !important; /* Even smaller base font size */
+    }
 }

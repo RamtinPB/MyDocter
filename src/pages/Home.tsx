@@ -27,7 +27,7 @@ function Home() {
 	const [homeText, setHomeTextData] = useState<homeTextData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
 		const fetchHomeTextData = async () => {
@@ -61,27 +61,33 @@ function Home() {
 
 	return (
 		<div>
-			<section id="banner" className="position-relative shadow">
-				<img
-					src="src\images\Banner.png"
-					alt="Hero"
-					className="img-fluid w-100 h-100"
-				/>
-				<div className="custom-banner-text d-flex flex-column align-items-center text-center text-white position-absolute mx-sm-auto">
-					<h1>{homeText?.openingQuoteTitle}</h1>
-					<p>{homeText?.openingQuoteDescription}</p>
-					{!isLoggedIn && (
-						<Link to="/SignIn" className="btn btn-light rounded-pill w-50">
-							ثبت نام
-						</Link>
-					)}
+			{/* Banner Section */}
+			<section
+				id="banner"
+				className="d-flex justify-content-center justify-content-lg-end shadow p-5"
+			>
+				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 mx-md-3 px-md-3 ">
+					<div className="custom-banner-text-bg rounded-5 p-3 m-md-2">
+						<h2>{homeText?.openingQuoteTitle}</h2>
+						<p className="p-1">{homeText?.openingQuoteDescription}</p>
+						{!isLoggedIn && (
+							<Link
+								to="/SignIn"
+								className="btn btn-sm btn-light rounded-pill w-50"
+							>
+								ثبت نام
+							</Link>
+						)}
+					</div>
 				</div>
 			</section>
-			<section id="services" className="pb-4 pt-3 mt-4 mb-5 bg-white">
-				<div className="container">
+
+			{/* Services Section */}
+			<section id="services" className="bg-white pb-4 pt-3 mt-4 mb-5 px-">
+				<div className="container px-4 px-md-2">
 					<h2 className="text-center mb-4 pb-2">خدمات</h2>
 					<div className="row justify-content-center gap-5">
-						<div className="col">
+						<div className="col-lg-5 col-12">
 							<div className="card rounded-5 shadow mb-4">
 								<div className="card-body text-center">
 									<h5 className="card-title custom-bg-3 rounded-top-4 mb-2 p-2">
@@ -89,10 +95,10 @@ function Home() {
 									</h5>
 									<img
 										src={homeText?.servicesLeftCardImage}
-										className="img-fluid rounded-4 shadow-sm m-0"
+										className="img-fluid custom-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
-									<p className="card-text text-end my-3 mx-3">
+									<p className="card-text text-end m-3">
 										{homeText?.servicesLeftCardDescription}
 									</p>
 									<a
@@ -104,7 +110,7 @@ function Home() {
 								</div>
 							</div>
 						</div>
-						<div className="col">
+						<div className="col-lg-5 col-12">
 							<div className="card rounded-5 shadow mb-4">
 								<div className="card-body text-center">
 									<h5 className="card-title custom-bg-3 rounded-top-4 mb-2 p-2">
@@ -112,10 +118,10 @@ function Home() {
 									</h5>
 									<img
 										src={homeText?.servicesRightCardImage}
-										className="img-fluid rounded-4 shadow-sm m-0"
+										className="img-fluid custom-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
-									<p className="card-text text-end my-3 mx-3">
+									<p className="card-text text-end m-3">
 										{homeText?.servicesRightCardDescription}
 									</p>
 									<a
@@ -130,12 +136,12 @@ function Home() {
 					</div>
 				</div>
 			</section>
+			{/* Doc Section */}
 			<section id="doc" className=" d-flex justify-content-between shadow">
 				<img
 					src={homeText?.docImage}
 					alt="Mr Doc"
-					className="img-fluid"
-					style={{ height: "235px" }}
+					className="img-fluid d-none d-lg-block"
 				/>
 				<div className="text-end text-white p-5 ">
 					<h4>{homeText?.docTitle}</h4>

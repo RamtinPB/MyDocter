@@ -60,7 +60,7 @@ function MyQuestions() {
 							<img
 								src="src\images\plus-border.png"
 								alt="+"
-								className={` img-fluid m-0 p-0 btn-toggle ${
+								className={`custom-btn img-fluid m-0 p-0 btn-toggle ${
 									openIndexes.includes(index) ? "rotate" : ""
 								}`}
 								onClick={() => toggleQuestion(index)}
@@ -69,7 +69,6 @@ function MyQuestions() {
 								itemType="button"
 								aria-expanded={openIndexes.includes(index)}
 								aria-controls={`collapse${index}`}
-								style={{ width: "60px", height: "60px" }}
 							/>
 						</div>
 						<div
