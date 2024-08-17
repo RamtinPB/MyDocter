@@ -66,9 +66,9 @@ function Home() {
 				id="banner"
 				className="d-flex justify-content-center justify-content-lg-end shadow p-5"
 			>
-				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 mx-md-4 px-md-4 ">
+				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 my-md-2 mx-md-4 px-md-4 mx-xl-5 px-xl-5 ">
 					<div className="custom-banner-text-bg rounded-5 p-3 m-md-2">
-						<h2>{homeText?.openingQuoteTitle}</h2>
+						<h3>{homeText?.openingQuoteTitle}</h3>
 						<p className="p-1">{homeText?.openingQuoteDescription}</p>
 						{!isLoggedIn && (
 							<Link

@@ -4,21 +4,35 @@
 }
 
 .custom-footer-logo {
-    width: 165px;
-    height: 55px;
+  width: 135px;
+  height: 45px;
 }
 
-.custom-hr {
-    width: 85%;
+.custom-socials-icon {
+  width: 30px;
+  height: 30px;
 }
 
-.icon-container {
-    width: 100%; /* Full width to ensure the content aligns to the left */
-    padding-left: 10%; /* Adjust padding as needed to space from the left edge */
+@media (max-width: 768px) {
+  .custom-footer-logo {
+    width: 80px;
+    height: 30px;
   }
 
-  @media (max-width: 768px) {
-    .custom-hr {
-      width: 75%; /* Adjust the width for smaller screens if needed */
-    }
+  .custom-socials-icon {
+    width: 20px;
+    height: 20px;
   }
+}
+
+@media (max-width: 576px){
+  .custom-footer-logo {
+      width: 70px;
+      height: 25px;
+  }
+
+  .custom-socials-icon {
+    width: 15px;
+    height: 15px;
+  }
+}

@@ -96,6 +96,6 @@ body, p, a, span, div, button, input, textarea {
     }
 
     body, p, a, span, div, button, input, textarea {
-        font-size: 0.7rem !important; /* Even smaller base font size */
+        font-size: 0.6rem !important; /* Even smaller base font size */
     }
 }
