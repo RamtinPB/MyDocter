@@ -26,7 +26,6 @@ const NotificationDropdown = () => {
 	>([]);
 	const [notifications, setNotifications] = useState<any[]>([]);
 	const [hasNewNotification, setHasNewNotification] = useState(false);
-	const [dropdownVisible, setDropdownVisible] = useState(false);
 
 	useEffect(() => {
 		// Fetch user purchased services from the server
@@ -89,35 +88,35 @@ const NotificationDropdown = () => {
 		setHasNewNotification(updatedNotifications.some((notif) => !notif.seen));
 	};
 
-	const toggleDropdown = () => {
-		setDropdownVisible(!dropdownVisible);
-	};
-
 	return (
-		<div>
-			<button className="btn rounded-circle m-0 p-0" onClick={toggleDropdown}>
+		<div className="dropdown position relative">
+			<button
+				className="btn rounded-circle m-0 p-0"
+				type="button"
+				data-bs-toggle="dropdown"
+				aria-expanded={false}
+			>
 				{hasNewNotification ? (
 					<FaBell className="custom-notification-btn" color="white" />
 				) : (
 					<FaRegBell className="custom-notification-btn" color="white" />
 				)}
 			</button>
-			{dropdownVisible && notifications.length > 0 && (
-				<div className="dropdown-menu dropdown-menu-end mt-3 shadow-sm show">
-					{notifications.map((notification) => (
-						<Link
-							to={notification.link}
-							key={notification.id} // Using purchaseId-status for unique keys
-							className={`dropdown-item ${
-								notification.seen ? "text-muted" : "font-weight-bold"
-							}`}
-							onClick={() => handleNotificationClick(notification.id)}
-						>
-							{notification.message}
-						</Link>
-					))}
-				</div>
-			)}
+
+			<div className="dropdown-menu dropdown-menu-center position-absolute top-100 start-50 translate-middle-x mt-3 shadow-sm">
+				{notifications.map((notification) => (
+					<Link
+						to={notification.link}
+						key={notification.id} // Using purchaseId-status for unique keys
+						className={`dropdown-item ${
+							notification.seen ? "text-muted" : "font-weight-bold"
+						}`}
+						onClick={() => handleNotificationClick(notification.id)}
+					>
+						{notification.message}
+					</Link>
+				))}
+			</div>
 		</div>
 	);
 };

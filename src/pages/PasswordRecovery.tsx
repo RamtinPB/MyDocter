@@ -32,8 +32,8 @@ function PasswordRecovery() {
 	return (
 		<div className="d-flex justify-content-center align-items-center vh-100 login-container">
 			<div className="container">
-				<div className="d-flex justify-content-end">
-					<div className="col-lg-4 col-md-6 col-sm-8 col-10">
+				<div className="d-flex justify-content-center justify-content-xl-end">
+					<div className="col-12 col-xl-4 col-lg-5 col-md-6">
 						<div
 							className="card p-4 shadow"
 							style={{
@@ -41,14 +41,14 @@ function PasswordRecovery() {
 								borderRadius: "15px",
 							}}
 						>
-							<div className="d-flex justify-content-between mb-3 pb-4">
+							<div className="d-flex justify-content-end justify-content-lg-between mb-3 pb-4">
 								<button
 									onClick={handleBackClick}
 									className="btn btn-link p-0 m-0"
 								>
 									<FaCaretLeft size={27} color="black" />
 								</button>
-								<h2 className="mb-0">بازیابی رمز عبور</h2>
+								<h3 className="mb-0">بازیابی رمز عبور</h3>
 							</div>
 							<form onSubmit={handleSubmit}>
 								<div className="mb-4 p-1 text-end">

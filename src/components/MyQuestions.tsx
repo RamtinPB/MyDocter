@@ -49,7 +49,7 @@ function MyQuestions() {
 
 	return (
 		<section id="questions" className="container">
-			<div className="accordion">
+			<div className="accordion" id="accordionExample">
 				{questions.map((question, index) => (
 					<div className="accordion-item shadow-sm rounded-5 my-5" key={index}>
 						<div
@@ -60,22 +60,21 @@ function MyQuestions() {
 							<img
 								src="src\images\plus-border.png"
 								alt="+"
-								className={`custom-btn img-fluid m-0 p-0 btn-toggle ${
+								className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
 									openIndexes.includes(index) ? "rotate" : ""
 								}`}
 								onClick={() => toggleQuestion(index)}
 								data-bs-toggle="collapse"
 								data-bs-target={`#collapse${index}`}
 								itemType="button"
-								aria-expanded={openIndexes.includes(index)}
+								aria-expanded={false}
 								aria-controls={`collapse${index}`}
 							/>
 						</div>
 						<div
 							id={`collapse${index}`}
-							className={` collapse ${
-								openIndexes.includes(index) ? "show" : ""
-							}`}
+							className={`accordion-collapse collapse`}
+							data-bs-parent="accordionExample"
 						>
 							<div className="accordion-body text-end">
 								<p className="mb-0 ">{question.description}</p>

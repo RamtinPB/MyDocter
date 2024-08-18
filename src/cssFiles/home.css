@@ -13,7 +13,6 @@
 }
 
 #banner {
-  width: 100vw; /* Full width of the viewport */
   height: 100vh; /* Adjust the height as needed */
   background-image: url("/src/images/Banner.png");
   background-size: cover;

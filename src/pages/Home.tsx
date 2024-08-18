@@ -66,8 +66,8 @@ function Home() {
 				id="banner"
 				className="d-flex justify-content-center justify-content-lg-end shadow p-5"
 			>
-				<div className="d-flex flex-column align-items-center text-center text-white my-4 py-4 my-md-2 mx-md-4 px-md-4 mx-xl-5 px-xl-5 ">
-					<div className="custom-banner-text-bg rounded-5 p-3 m-md-2">
+				<div className="d-flex flex-column align-items-center text-center text-white m-auto py-4 mx-md-4 px-md-4 mx-xl-5 px-xl-5 ">
+					<div className="custom-banner-text-bg rounded-5 p-3 m-auto mx-md-2 mx-lg-4">
 						<h3>{homeText?.openingQuoteTitle}</h3>
 						<p className="p-1">{homeText?.openingQuoteDescription}</p>
 						{!isLoggedIn && (
@@ -84,7 +84,7 @@ function Home() {
 
 			{/* Services Section */}
 			<section id="services" className="bg-white pb-4 pt-3 mt-4 mb-5 px-">
-				<div className="container px-4 px-md-5 px-lg-4">
+				<div className="container px-5 px-md-5 px-lg-4">
 					<h2 className="text-center mb-4 pb-2">خدمات</h2>
 					<div className="row justify-content-center gap-5">
 						<div className="col-lg-5 col-12">
