@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/customColors.css";
+import "/src/cssFiles/userIEInformation.css";
 
 interface UserInfo {
 	userGender: string;
@@ -185,7 +186,7 @@ function UserIEInformation() {
 					className="needs-validation my-5"
 					noValidate
 				>
-					<div className="accordion">
+					<div className="accordion" id="accordionExample">
 						{Object.keys(formSections).map(
 							(section, index) =>
 								!(section === "id") &&
@@ -200,28 +201,26 @@ function UserIEInformation() {
 											className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
 											id={`heading${index}`}
 										>
-											<h3 className="mb-0 ms-auto me-4">{section}</h3>
+											<h4 className="mb-0 ms-auto me-2 me-md-3 me-lg-4">
+												{section}
+											</h4>
 											<img
-												src="src/images/plus-border.png"
+												src="/src/images/plus-border.png"
 												alt="+"
-												className={`img-fluid m-0 p-0 btn-toggle ${
+												className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
 													openIndexes.includes(index) ? "rotate" : ""
 												}`}
 												onClick={() => toggleForm(index)}
 												data-bs-toggle="collapse"
 												data-bs-target={`#collapse${index}`}
 												itemType="button"
-												aria-expanded={openIndexes.includes(index)}
+												aria-expanded={false}
 												aria-controls={`collapse${index}`}
-												style={{ width: "50px", height: "50px" }}
 											/>
 										</div>
 										<div
 											id={`collapse${index}`}
-											className={`collapse ${
-												openIndexes.includes(index) ? "show" : ""
-											}`}
-											aria-labelledby={`heading${index}`}
+											className={`accordion-collapse collapse `}
 										>
 											<div className="accordion-body text-end pt-0 mb-1">
 												<div
@@ -233,10 +232,10 @@ function UserIEInformation() {
 															(field: any, idx: number) => {
 																if (field.type === "placeholder") {
 																	return (
-																		<h5 key={idx} className="col mb-2">
+																		<h6 key={idx} className="col mb-2">
 																			{field.name}
 																			{field.name && <hr />}
-																		</h5>
+																		</h6>
 																	); // Empty column for placeholder
 																}
 																const isSelect = field.type === "select";
@@ -423,10 +422,10 @@ function UserIEInformation() {
 								)
 						)}
 					</div>
-					<div className="d-flex justify-content-center my-3">
+					<div className="d-flex justify-content-center mt-4 mt-md-5">
 						<button
 							type="submit"
-							className="btn btn-primary rounded-pill text-white fs-4 px-4 py-2 shadow-sm"
+							className="btn btn-primary rounded-pill fs-6 px-4 py-2"
 						>
 							ذخیره
 						</button>

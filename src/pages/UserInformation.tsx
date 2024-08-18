@@ -3,7 +3,8 @@ import { FaUser } from "react-icons/fa";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/customColors.css";
+import "/src/cssFiles/userInformation.css";
 
 interface UserFormData {
 	[key: string]: any;
@@ -172,48 +173,38 @@ function UserInformation() {
 	return (
 		<div className="custom-bg-4">
 			<div className="container d-flex flex-column">
-				<form onSubmit={formik.handleSubmit} className="mt-5">
-					<div className="custom-bg-1 d-flex justify-content-evenly rounded-5 shadow gap-5 mb-4">
-						<div>
-							<button
-								type="button"
-								className="btn btn-light btn-sm shadow rounded-pill px-1 py-2 my-4"
-								style={{ width: "150px" }}
-								onClick={() => setProfilePicture(null)}
-							>
-								حذف عکس
-							</button>
-						</div>
-						<div>
-							{profilePicture ? (
-								<img
-									src={profilePicture}
-									alt="Profile"
-									className="rounded-circle border border-3 border-light my-4"
-									style={{ width: "200px", height: "200px" }}
-								/>
-							) : (
-								<FaUser
-									className=" rounded-circle border border-3 border-light p-3 my-4"
-									style={{ width: "200px", height: "200px" }}
-									color="white"
-								/>
-							)}
-						</div>
-						<div>
-							<label
-								className="btn btn-light btn-sm shadow rounded-pill px-1 py-2 my-4"
-								style={{ cursor: "pointer", width: "150px" }}
-							>
-								انتخاب عکس
-								<input
-									type="file"
-									accept="image/*"
-									onChange={handleProfilePictureChange}
-									style={{ display: "none" }}
-								/>
-							</label>
-						</div>
+				<form onSubmit={formik.handleSubmit} className="mt-4 mt-md-5">
+					<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">
+						<button
+							className="btn btn-light shadow rounded-pill  my-auto"
+							onClick={() => setProfilePicture(null)}
+						>
+							<span> حذف عکس</span>
+						</button>
+						{profilePicture ? (
+							<img
+								src={profilePicture}
+								alt="Profile"
+								className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
+							/>
+						) : (
+							<FaUser
+								className="custom-user-icon-pic rounded-circle border border-3 border-light p-3 my-auto"
+								color="white"
+							/>
+						)}
+						<button
+							className="btn btn-light shadow rounded-pill my-auto"
+							style={{ cursor: "pointer" }}
+						>
+							<span> انتخاب عکس</span>
+							<input
+								type="file"
+								accept="image/*"
+								onChange={handleProfilePictureChange}
+								style={{ display: "none" }}
+							/>
+						</button>
 					</div>
 				</form>
 				<form
@@ -221,10 +212,10 @@ function UserInformation() {
 					className="needs-validation"
 					noValidate
 				>
-					<div className="text-end bg-white shadow rounded-5 px-5 py-5 mb-3">
+					<div className="text-end bg-white shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-3">
 						<h2>اطلاعات کاربر</h2>
 						<div
-							className="row row-cols-2 g-5 my-1"
+							className="row row-cols-2 g-4 g-md-5 my-1"
 							style={{ direction: "rtl" }}
 						>
 							{formFields.map((field, index) => {
@@ -235,7 +226,7 @@ function UserInformation() {
 									<div
 										key={index}
 										className="col mb-2"
-										style={{ direction: "ltr" }}
+										style={{ direction: "rtl" }}
 									>
 										<label htmlFor={field.name} className="form-label">
 											{field.label}
@@ -258,7 +249,7 @@ function UserInformation() {
 											>
 												<option value="">...</option>
 												{field.options.map((option: string, i: number) => (
-													<option key={i} value={option}>
+													<option className="" key={i} value={option}>
 														{option}
 													</option>
 												))}
@@ -284,6 +275,12 @@ function UserInformation() {
 										)}
 										{isCheckbox && (
 											<div className="text-end mt-2">
+												<label
+													htmlFor={field.checkboxName}
+													className="form-check-label ms-2"
+												>
+													{field.checkboxLabel}
+												</label>
 												<input
 													type="checkbox"
 													id={field.checkboxName}
@@ -297,12 +294,6 @@ function UserInformation() {
 													}}
 													className="form-check-input shadow-sm"
 												/>
-												<label
-													htmlFor={field.checkboxName}
-													className="form-check-label ms-3"
-												>
-													{field.checkboxLabel}
-												</label>
 											</div>
 										)}
 										{formik.touched[field.name] &&
@@ -315,7 +306,7 @@ function UserInformation() {
 								);
 							})}
 						</div>
-						<div className="d-flex justify-content-center mt-5">
+						<div className="d-flex justify-content-center mt-4 mt-md-5">
 							<button
 								type="submit"
 								className="btn btn-primary rounded-pill px-3 py-2"

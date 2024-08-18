@@ -1,0 +1,18 @@
+.custom-user-icon-pic {
+    width: 170px;
+    height: 170px;
+}
+
+@media (max-width: 768px) {
+    .custom-user-icon-pic {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-user-icon-pic {
+        width: 90px;
+        height: 90px;
+    }
+}
