@@ -62,9 +62,9 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 						style={{ width: "40px", height: "40px" }}
 					/>
 				</button>
-				<h3 className="offcanvas-title text-white" id="myOffcanvasLabel">
+				<h4 className="offcanvas-title text-white" id="myOffcanvasLabel">
 					داشبورد کاربر
-				</h3>
+				</h4>
 			</div>
 			<div className="offcanvas-body shadow p-0">
 				<div className="d-flex flex-column justify-content-center align-items-center custom-bg-2">
@@ -86,46 +86,60 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 						{username}
 					</span>
 				</div>
-				<div className="dropdown-menu d-flex flex-column text-end custom-bg-sidebar-3 border-0 rounded-0 w-100 h-100 gap-2">
-					<Link
-						to="/"
-						className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
-					>
-						<span className="pe-2"> صفحه اصلی</span>
-						<FaHouse />
-					</Link>
-					<hr className="m-0 p-0" />
-					<Link
-						to="/UserInformation"
-						className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
-					>
-						<span className="pe-2"> ویرایش اطلاعات کاربر</span>
-						<FaInfo />
-					</Link>
-					<hr className="m-0 p-0" />
-					<Link
-						to="/UserIEInformation"
-						className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
-					>
-						<span className="pe-2"> فرم ارزیابی اولیه کاربر</span>
-						<FaBookMedical />
-					</Link>
-					<hr className="m-0 p-0" />
-					<button
-						className=" d-flex align-items-center justify-content-end me-2 dropdown-item rounded-3 btn btn-link text-end mb-0 pb-0 pe-2 me-0"
-						type="button"
-						onClick={toggleServices}
-						aria-expanded={isServicesOpen}
-						aria-controls="servicesCollapse"
-					>
-						<span className="pe-2">خدمات</span>
-						<FaBriefcaseMedical />
-					</button>
-					<div
-						className={`collapse ${isServicesOpen ? "show" : ""}`}
-						id="servicesCollapse"
-					>
-						<ul className="list-unstyled mb-0">
+				<ul className="dropdown-menu d-flex flex-column text-end custom-bg-sidebar-3 border-0 rounded-0 w-100 h-100">
+					<li>
+						<Link
+							to="/"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+						>
+							<span className="pe-2"> صفحه اصلی</span>
+							<FaHouse />
+						</Link>
+					</li>
+
+					<li>
+						<hr className="dropdown-divider" />
+					</li>
+					<li>
+						<Link
+							to="/UserInformation"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+						>
+							<span className="pe-2"> ویرایش اطلاعات کاربر</span>
+							<FaInfo />
+						</Link>
+					</li>
+					<li>
+						<hr className="dropdown-divider" />
+					</li>
+					<li>
+						<Link
+							to="/UserIEInformation"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+						>
+							<span className="pe-2"> فرم ارزیابی اولیه کاربر</span>
+							<FaBookMedical />
+						</Link>
+					</li>
+					<li>
+						<hr className="dropdown-divider" />
+					</li>
+					<li>
+						<button
+							className="btn btn-link d-flex align-items-center justify-content-end collapsed dropdown-item rounded-3 mb-1 pb-0 pe-2 me-0"
+							type="button"
+							onClick={toggleServices}
+							data-bs-toggle="collapse"
+							data-bs-target={`#servicesCollapse`}
+							aria-expanded={isServicesOpen}
+							aria-controls="servicesCollapse"
+						>
+							<span className="pe-2">خدمات</span>
+							<FaBriefcaseMedical />
+						</button>
+					</li>
+					<li className="accordion-collapse collapse" id="servicesCollapse">
+						<ul className="mb-0">
 							<li className="d-flex align-items-center ">
 								<Link
 									to="/GeneralDoctorPrescription"
@@ -145,29 +159,39 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 								</Link>
 							</li>
 						</ul>
-					</div>
-					<hr className="m-0 p-0" />
-					<Link
-						to="/UserHistory"
-						className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
-					>
-						<span className="pe-2"> تاریخچه خدمات</span>
-						<FaClockRotateLeft />
-					</Link>
+					</li>
+					<li>
+						<hr className="dropdown-divider" />
+					</li>
+
+					<li>
+						<Link
+							to="/UserHistory"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+						>
+							<span className="pe-2"> تاریخچه خدمات</span>
+							<FaClockRotateLeft />
+						</Link>
+					</li>
 
 					{isLoggedInAdmin && (
 						<>
-							<hr className="m-0 p-0" />
-							<Link
-								to="AdminDashboard"
-								className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
-							>
-								<span className="pe-2">داشبورد مدیر</span>
-								<FaUserTie />
-							</Link>
+							<li>
+								<hr className="dropdown-divider" />
+							</li>
+
+							<li>
+								<Link
+									to="AdminDashboard"
+									className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+								>
+									<span className="pe-2">داشبورد مدیر</span>
+									<FaUserTie />
+								</Link>
+							</li>
 						</>
 					)}
-				</div>
+				</ul>
 			</div>
 		</div>
 	);
