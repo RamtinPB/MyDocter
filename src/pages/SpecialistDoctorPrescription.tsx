@@ -42,17 +42,17 @@ function SpecialistDoctorPrescription() {
 
 	return (
 		<div className="custom-bg-4">
-			<div className="container d-flex flex-column">
-				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-4 my-5">
-					<h3>خدمات پزشک متخصص و فوق تخصص</h3>
+			<div className="container d-flex flex-column px-3 px-md-4">
+				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
+					<h4>خدمات پزشک متخصص و فوق تخصص</h4>
 				</div>
-				<div className="text-end bg-white border border-2 shadow rounded-5 px-5 py-5 mb-3">
-					<div className="row mx-1 row-cols-2 g-5" style={{ direction: "rtl" }}>
+				<div className="text-end bg-white border border-2 shadow rounded-5 px-0 px-md-4 px-lg-5 py-5 mb-3">
+					<div className="row row-cols-2 g-5 mx-1" style={{ direction: "rtl" }}>
 						{services.map(
 							(service, index) =>
 								service.category === "specialist" && (
-									<div className="col" key={index}>
-										<div className="card shadow-sm rounded-4">
+									<div className="col-6" key={index}>
+										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">
 												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
 													{service.name}
