@@ -4,11 +4,28 @@
       background-color: rgba(24, 55, 136, 0.5); /* 0.5 represents 50% opacity */
 
     }
+
+    #doc {
+        height: 160px;
+    }
 }
 
-@media (width: 768px) {
+@media (max-width: 768px) {
   .custom-service-img{
-    max-width: 95% !important;
+    max-width: 95% ;
+  }
+
+  #doc {
+    height: 160px ;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-service-img{
+  }
+
+  #doc {
+    height: 140px;
   }
 }
 
@@ -25,5 +42,4 @@
     background-image: url("/src/images/docBackground.png");
     background-size: cover;
     background-position: center;
-    
 }

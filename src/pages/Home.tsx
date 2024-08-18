@@ -137,18 +137,23 @@ function Home() {
 				</div>
 			</section>
 			{/* Doc Section */}
-			<section id="doc" className=" d-flex justify-content-between shadow">
+			<section
+				id="doc"
+				className=" d-flex flex-row justify-content-between shadow"
+			>
 				<img
 					src={homeText?.docImage}
 					alt="Mr Doc"
-					className="img-fluid d-none d-lg-block"
+					className="img-fluid col-md-5 col-lg-4 col-xl-3  d-sm-block d-none"
 				/>
-				<div className="text-end text-white p-5 ">
+				<div className="col-10 col-md-7 col-lg-8 text-end text-white p-1 p-md-3 p-lg-4 m-auto">
 					<h4>{homeText?.docTitle}</h4>
 					<p>{homeText?.docDescription}</p>
 				</div>
 			</section>
+			{/* Important Questions Section */}
 			<MyQuestions />
+			{/* Footer Section */}
 			<MyFooter />
 		</div>
 	);

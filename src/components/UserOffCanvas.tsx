@@ -8,8 +8,8 @@ import {
 	FaUserTie,
 } from "react-icons/fa";
 import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import "/src/cssFiles/myoffcanvas.css";
 
 interface UserProfile {
 	firstName: string;
@@ -32,11 +32,27 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 	userProfile,
 	isLoggedInAdmin,
 }) => {
-	const [isServicesOpen, setIsServicesOpen] = useState(false);
+	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
 
-	const toggleServices = () => {
-		setIsServicesOpen(!isServicesOpen);
-	};
+	useEffect(() => {
+		// Function to check the screen size and update the offcanvas class
+		const updateOffcanvasClass = () => {
+			if (window.innerWidth >= 576) {
+				setOffcanvasClass("offcanvas-start");
+			} else {
+				setOffcanvasClass("offcanvas-top h-50");
+			}
+		};
+
+		// Initial check
+		updateOffcanvasClass();
+
+		// Add event listener for window resize
+		window.addEventListener("resize", updateOffcanvasClass);
+
+		// Cleanup the event listener on component unmount
+		return () => window.removeEventListener("resize", updateOffcanvasClass);
+	}, []);
 
 	const username = userProfile
 		? `${userProfile.firstName} ${userProfile.lastName}`
@@ -44,7 +60,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 
 	return (
 		<div
-			className="offcanvas offcanvas-start"
+			className={`offcanvas ${offcanvasClass}`}
 			tabIndex={-1}
 			id="myOffcanvas"
 			aria-labelledby="myOffcanvasLabel"
@@ -58,8 +74,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 				>
 					<img
 						src="\src\images\x-noBorder.png"
-						className="rounded-circle"
-						style={{ width: "40px", height: "40px" }}
+						className="rounded-circle custom-x-btn"
 					/>
 				</button>
 				<h4 className="offcanvas-title text-white" id="myOffcanvasLabel">
@@ -72,13 +87,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 						<img
 							src={userProfile.profilePicture}
 							alt="Profile"
-							className="img-fluid rounded-circle border border-2 border-light my-3 mx-4"
-							style={{ width: "100px", height: "100px" }}
+							className="custom-user-icon-pic img-fluid rounded-circle border border-2 border-light my-3 mx-4"
 						/>
 					) : (
 						<FaUser
-							className=" rounded-circle border border-2 border-light mt-3 mb-1 mx-4 p-1"
-							style={{ width: "100px", height: "100px" }}
+							className="custom-user-icon-pic rounded-circle border border-2 border-light mt-3 mb-1 mx-4 p-1"
 							color="white"
 						/>
 					)}
@@ -126,44 +139,43 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					</li>
 					<li>
 						<button
-							className="btn btn-link d-flex align-items-center justify-content-end collapsed dropdown-item rounded-3 mb-1 pb-0 pe-2 me-0"
+							className="btn  d-flex align-items-center justify-content-end collapsed dropdown-item d-inline rounded-3 pe-2 "
 							type="button"
-							onClick={toggleServices}
 							data-bs-toggle="collapse"
 							data-bs-target={`#servicesCollapse`}
-							aria-expanded={isServicesOpen}
+							aria-expanded={false}
 							aria-controls="servicesCollapse"
 						>
 							<span className="pe-2">خدمات</span>
 							<FaBriefcaseMedical />
 						</button>
 					</li>
-					<li className="accordion-collapse collapse" id="servicesCollapse">
-						<ul className="mb-0">
-							<li className="d-flex align-items-center ">
-								<Link
-									to="/GeneralDoctorPrescription"
-									className="dropdown-item rounded-3"
-								>
-									<span className="pe-2"> خدمات پزشک عمومی</span>
-									<FaUserNurse />
-								</Link>
-							</li>
-							<li className="d-flex align-items-center">
-								<Link
-									to="/SpecialistDoctorPrescription"
-									className="dropdown-item rounded-3"
-								>
-									<span className="pe-2"> خدمات پزشک متخصص و فوق تخصص</span>
-									<FaUserDoctor />
-								</Link>
-							</li>
-						</ul>
+					<li
+						className="accordion-collapse collapse mb-0"
+						id="servicesCollapse"
+					>
+						<li className="d-flex align-items-center ">
+							<Link
+								to="/GeneralDoctorPrescription"
+								className="dropdown-item rounded-3"
+							>
+								<span className="pe-2"> خدمات پزشک عمومی</span>
+								<FaUserNurse />
+							</Link>
+						</li>
+						<li className="d-flex align-items-center">
+							<Link
+								to="/SpecialistDoctorPrescription"
+								className="dropdown-item rounded-3"
+							>
+								<span className="pe-2"> خدمات پزشک متخصص و فوق تخصص</span>
+								<FaUserDoctor />
+							</Link>
+						</li>
 					</li>
 					<li>
 						<hr className="dropdown-divider" />
 					</li>
-
 					<li>
 						<Link
 							to="/UserHistory"
