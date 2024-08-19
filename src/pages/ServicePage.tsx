@@ -2,13 +2,13 @@ import { FaCaretLeft } from "react-icons/fa";
 import FormRender from "../components/FormRender";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
-import axios from "axios";
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/customColors.css";
 
 import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface FileData {
 	fileName: string;
@@ -81,9 +81,7 @@ function ServicePage() {
 	useEffect(() => {
 		const fetchUserInfo = async () => {
 			try {
-				const response = await axios.get<UserInfo>(
-					"http://localhost:3001/userInfo"
-				);
+				const response = await axiosInstance.get<UserInfo>("/userInfo");
 				setUserInfo(response.data);
 				console.log(response.data);
 				setLoading(false);
@@ -99,9 +97,7 @@ function ServicePage() {
 	useEffect(() => {
 		const fetchInsurance = async () => {
 			try {
-				const response = await axios.get<Insurance[]>(
-					"http://localhost:3001/insurance"
-				);
+				const response = await axiosInstance.get<Insurance[]>("/insurance");
 				if (userInfo) {
 					const matchedInsurance = response.data.find(
 						(ins) => ins.insuranceType === userInfo.insuranceType
@@ -123,8 +119,8 @@ function ServicePage() {
 	useEffect(() => {
 		const fetchSupplementaryInsurance = async () => {
 			try {
-				const response = await axios.get<SupplementaryInsurance[]>(
-					"http://localhost:3001/supplementaryInsurance"
+				const response = await axiosInstance.get<SupplementaryInsurance[]>(
+					"/supplementaryInsurance"
 				);
 				if (userInfo) {
 					const matchedSupplementaryInsurance = response.data.find(
@@ -149,9 +145,7 @@ function ServicePage() {
 	useEffect(() => {
 		const fetchService = async () => {
 			try {
-				const response = await axios.get<Service[]>(
-					`http://localhost:3001/services`
-				);
+				const response = await axiosInstance.get<Service[]>(`/services`);
 				const selectedService = response.data.find((s) => `${s.id}` === id);
 
 				if (selectedService) {

@@ -1,5 +1,5 @@
 import { FaInstagram, FaTelegram, FaWhatsapp } from "react-icons/fa";
-import "../cssFiles/myfooter.css";
+import "/src/cssFiles/myfooter.css";
 import { FaXTwitter } from "react-icons/fa6";
 
 function MyFooter() {
@@ -44,7 +44,8 @@ function MyFooter() {
 								<FaXTwitter className="custom-socials-icon" color="white" />
 							</a>
 						</div>
-						<div className="dropdown d-none">
+						{/*
+						<div className="dropdown">
 							<button
 								className="btn btn-secondary dropdown-toggle"
 								type="button"
@@ -66,6 +67,7 @@ function MyFooter() {
 								</li>
 							</ul>
 						</div>
+						*/}
 					</div>
 					<hr className="border border-white rounded-circle my-2" />
 					<span className=" text-center text-uppercase mb-1">

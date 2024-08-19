@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -18,9 +18,7 @@ function AdminDashboardServicesPageContent() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await axios.get<Service[]>(
-					"http://localhost:3001/services"
-				);
+				const response = await axiosInstance.get<Service[]>("/services");
 				setServices(response.data);
 			} catch (err) {
 				console.error("Failed to fetch services", err);

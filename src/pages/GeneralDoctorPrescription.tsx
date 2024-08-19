@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
-import axios from "axios";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -18,9 +18,7 @@ function GeneralDoctorPrescription() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await axios.get<Service[]>(
-					"http://localhost:3001/services"
-				);
+				const response = await axiosInstance.get<Service[]>("/services");
 				setServices(response.data);
 				setLoading(false);
 			} catch (err) {

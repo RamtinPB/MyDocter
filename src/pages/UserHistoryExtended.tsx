@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 
 import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
@@ -9,6 +8,7 @@ import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import "../cssFiles/customColors.css";
 import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/ForRenderFilled";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -50,8 +50,8 @@ function UserHistoryExtended() {
 	useEffect(() => {
 		const fetchService = async () => {
 			try {
-				const response = await axios.get<Service[]>(
-					`http://localhost:3001/userPurchasedServices`
+				const response = await axiosInstance.get<Service[]>(
+					`/userPurchasedServices`
 				);
 				const selectedService = response.data.find(
 					(s) => `${s.purchaseId}` === purchaseId

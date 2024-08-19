@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/userInformation.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface UserFormData {
 	[key: string]: any;
@@ -18,8 +19,8 @@ function UserInformation() {
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/userInfo")
+		axiosInstance
+			.get("/userInfo")
 			.then((response) => {
 				formik.setValues(response.data);
 				if (response.data.profilePicture) {
@@ -32,8 +33,8 @@ function UserInformation() {
 	}, []);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/formFields")
+		axiosInstance
+			.get("/formFields")
 			.then((response) => {
 				setFormFields(response.data);
 			})
@@ -43,8 +44,8 @@ function UserInformation() {
 	}, []);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/validationSchemaData")
+		axiosInstance
+			.get("/validationSchemaData")
 			.then((response) => {
 				setValidationSchemaData(response.data);
 			})

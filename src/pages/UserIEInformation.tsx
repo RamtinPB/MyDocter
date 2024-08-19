@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/userIEInformation.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface UserInfo {
 	userGender: string;
@@ -24,8 +25,8 @@ function UserIEInformation() {
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/userInfo")
+		axiosInstance
+			.get("/userInfo")
 			.then((response) => {
 				setUserInfo(response.data);
 			})
@@ -35,8 +36,8 @@ function UserIEInformation() {
 	}, []);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/userInfoIE")
+		axiosInstance
+			.get("/userInfoIE")
 			.then((response) => {
 				formik.setValues(response.data);
 			})
@@ -46,8 +47,8 @@ function UserIEInformation() {
 	}, []);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/formFieldsIE")
+		axiosInstance
+			.get("/formFieldsIE")
 			.then((response) => {
 				const sections = response.data[0];
 				setFormSections(sections);
@@ -58,8 +59,8 @@ function UserIEInformation() {
 	}, []);
 
 	useEffect(() => {
-		axios
-			.get("http://localhost:3001/validationSchemaDataIE")
+		axiosInstance
+			.get("/validationSchemaDataIE")
 			.then((response) => {
 				setValidationSchemaData(response.data);
 			})

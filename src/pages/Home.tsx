@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../api/axiosInstance"; // Adjust path as needed
+import axiosInstance from "../myAPI/axiosInstance"; // Adjust path as needed
 import { Link } from "react-router-dom";
 import MyFooter from "../components/MyFooter";
 import MyQuestions from "../components/MyQuestions";

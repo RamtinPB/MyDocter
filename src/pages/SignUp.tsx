@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import "../cssFiles/login.css"; // Custom styles
+import "/src/cssFiles/login.css"; // Custom styles
 import Toast from "../components/SignUpToast.tsx";
 import Modal from "../components/SignUpModel.tsx";
+import axiosInstance from "../myAPI/axiosInstance.ts";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -49,13 +50,10 @@ function SignUp() {
 		{ setSubmitting }: any
 	) => {
 		try {
-			const response = await axios.post(
-				"http://localhost:3001/api/User/SignUp",
-				{
-					phoneNumber: values.phoneNumber,
-					password: values.password,
-				}
-			);
+			const response = await axiosInstance.post("/api/User/SignUp", {
+				phoneNumber: values.phoneNumber,
+				password: values.password,
+			});
 
 			if (response.status === 200) {
 				setVerificationSent(true);

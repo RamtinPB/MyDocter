@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { FaBell, FaRegBell } from "react-icons/fa";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import "/src/cssFiles/myheader.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface PurchasedService {
 	name: string;
@@ -29,8 +29,8 @@ const NotificationDropdown = () => {
 
 	useEffect(() => {
 		// Fetch user purchased services from the server
-		axios
-			.get("http://localhost:3001/userPurchasedServices")
+		axiosInstance
+			.get("/userPurchasedServices")
 			.then((response) => {
 				setUserPurchasedServices(response.data);
 			})

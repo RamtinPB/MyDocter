@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "../cssFiles/customColors.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface ServiceInfo {
 	[key: string]: any;
@@ -14,8 +14,8 @@ function UserHistory() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await axios.get<ServiceInfo[]>(
-					"http://localhost:3001/userPurchasedServices"
+				const response = await axiosInstance.get<ServiceInfo[]>(
+					"/userPurchasedServices"
 				);
 				setServiceInfo(response.data);
 				setLoading(false);

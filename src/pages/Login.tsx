@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../cssFiles/login.css"; // Assuming you have a separate CSS file for additional styles
+import "/src/cssFiles/login.css"; // Assuming you have a separate CSS file for additional styles
 
 function Login() {
 	const [formData, setFormData] = useState({

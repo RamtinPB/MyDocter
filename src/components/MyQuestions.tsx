@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "/src/cssFiles/myquestions.css"; // Import the CSS file for styling
 import "/src/cssFiles/customColors.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Questions {
 	title: string;
@@ -17,9 +17,7 @@ function MyQuestions() {
 	useEffect(() => {
 		const fetchQuestions = async () => {
 			try {
-				const response = await axios.get<Questions[]>(
-					"http://localhost:3001/questions"
-				);
+				const response = await axiosInstance.get<Questions[]>("/questions");
 				setQuestions(response.data);
 				setLoading(false);
 			} catch (err) {

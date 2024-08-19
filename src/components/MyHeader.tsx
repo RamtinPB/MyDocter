@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { FaUser } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -9,6 +8,7 @@ import "../cssFiles/customColors.css";
 import Logo from "../images/Logo.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface UserProfile {
 	firstName: string;
@@ -32,9 +32,7 @@ function MyHeader() {
 	useEffect(() => {
 		const fetchUserProfile = async () => {
 			try {
-				const response = await axios.get<UserProfile>(
-					"http://localhost:3001/userInfo"
-				);
+				const response = await axiosInstance.get<UserProfile>("/userInfo");
 				setUserProfile(response.data);
 				setLoading(false);
 			} catch (err) {
@@ -53,6 +51,16 @@ function MyHeader() {
 	if (error) {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
+
+	// @ts-ignore
+	const handleIsLoggedIn = () => {
+		setIsLoggedIn(true);
+	};
+
+	// @ts-ignore
+	const handleisLoggedInAdmin = () => {
+		setisLoggedInAdmin(true);
+	};
 
 	const username = userProfile
 		? `${userProfile.firstName} ${userProfile.lastName}`
