@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../cssFiles/myquestions.css"; // Import the CSS file for styling
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/myquestions.css"; // Import the CSS file for styling
+import "/src/cssFiles/customColors.css";
 
 interface Questions {
 	title: string;

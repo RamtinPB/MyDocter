@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import FormBuilder from "./components/FormBuilder";
 import FormRender from "./components/FormRender";
 import MainLayout from "./components/MainLayout";
-import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import UserInformation from "./pages/UserInformation";
 import GeneralDoctorPrescription from "./pages/GeneralDoctorPrescription";
 import SpecialistDoctorPrescription from "./pages/SpecialistDoctorPrescription";
@@ -51,7 +51,7 @@ function App() {
 
 				{/* Route without the header */}
 				<Route path="/login" element={<Login />} />
-				<Route path="/signin" element={<SignIn />} />
+				<Route path="/signUp" element={<SignUp />} />
 				<Route path="/PasswordRecovery" element={<PasswordRecovery />} />
 			</Routes>
 		</BrowserRouter>

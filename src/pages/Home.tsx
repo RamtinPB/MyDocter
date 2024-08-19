@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance"; // Adjust path as needed
 import { Link } from "react-router-dom";
 import MyFooter from "../components/MyFooter";
 import MyQuestions from "../components/MyQuestions";
-import "../cssFiles/home.css";
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/home.css";
+import "/src/cssFiles/customColors.css";
 
 interface homeTextData {
 	openingQuoteTitle: string;
@@ -32,8 +32,8 @@ function Home() {
 	useEffect(() => {
 		const fetchHomeTextData = async () => {
 			try {
-				const response = await axios.get<homeTextData[]>(
-					"http://localhost:3001/homeTextData"
+				const response = await axiosInstance.get<homeTextData[]>(
+					"/homeTextData"
 				);
 				setHomeTextData(response.data[0]);
 				setLoading(false);
@@ -72,7 +72,7 @@ function Home() {
 						<p className="p-1">{homeText?.openingQuoteDescription}</p>
 						{!isLoggedIn && (
 							<Link
-								to="/SignIn"
+								to="/SignUp"
 								className="btn btn-sm btn-light rounded-pill w-50"
 							>
 								ثبت نام

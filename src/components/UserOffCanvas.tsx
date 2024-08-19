@@ -150,7 +150,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 							<FaBriefcaseMedical />
 						</button>
 					</li>
-					<li
+					<ul
 						className="accordion-collapse collapse mb-0"
 						id="servicesCollapse"
 					>
@@ -172,7 +172,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 								<FaUserDoctor />
 							</Link>
 						</li>
-					</li>
+					</ul>
 					<li>
 						<hr className="dropdown-divider" />
 					</li>

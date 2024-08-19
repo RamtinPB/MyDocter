@@ -1,6 +1,5 @@
 {
-    "routes": {
-      "/db": "src/mockServer/db.json"
-    }
-  }
-  
+	"routes": {
+		"/db": "src/mockServer/db.json"
+	}
+}
