@@ -25,6 +25,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
@@ -35,6 +36,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "2000",
 			"subsidy": "500",
 			"image": "/src/images/پزشک ارتوپد.jpg",
@@ -45,6 +47,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1.000",
 			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
@@ -55,6 +58,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
@@ -66,6 +70,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",
@@ -76,6 +81,7 @@
 		{
 			"name": "نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
+			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/src/images/پزشک ارتوپد.jpg",

@@ -16,6 +16,7 @@ import ServicePage from "./pages/ServicePage";
 import FormRenderFilled from "./components/ForRenderFilled";
 import UserIEInformation from "./pages/UserIEInformation";
 import AdminDashboard from "./pages/AdminDashboard";
+import ServicePageEdit from "./components/AdminDashboardServicesPageEdit";
 
 function App() {
 	return (
@@ -28,6 +29,7 @@ function App() {
 					<Route path="/UserHistory" element={<UserHistory />} />
 					<Route path="/UserIEInformation" element={<UserIEInformation />} />
 					<Route path="/AdminDashboard" element={<AdminDashboard />} />
+					<Route path="/edit-service/:id" element={<ServicePageEdit />} />
 					<Route
 						path="/purchased-services/:purchaseId"
 						element={<UserHistoryExtended />}

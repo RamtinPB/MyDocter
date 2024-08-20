@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 interface Service {
 	name: string;
@@ -47,6 +48,8 @@ function AdminDashboardServicesPageContent() {
 		setServices(updatedServices);
 	};
 
+	const navigate = useNavigate();
+
 	// Render service cards based on category
 	const renderServiceCards = (category: "general" | "specialist") => {
 		return (
@@ -82,7 +85,11 @@ function AdminDashboardServicesPageContent() {
 										</button>
 										{/* Edit button */}
 										<a
-											href={`/edit-service/${service.id}`}
+											href={`/edit-service/${service.id}`} // Change this
+											onClick={(e) => {
+												e.preventDefault();
+												navigate(`/edit-service/${service.id}`);
+											}}
 											id="btn-edit"
 											className="rounded-circle btn shadow p-0 m-3"
 										>

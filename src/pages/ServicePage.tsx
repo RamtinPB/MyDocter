@@ -19,6 +19,7 @@ interface FileData {
 interface Service {
 	name: string;
 	description: string;
+	detailedDescription: string;
 	price: string;
 	subsidy: string;
 	image: string;
@@ -264,7 +265,7 @@ function ServicePage() {
 				className="d-flex justify-content-between bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4"
 				style={{ direction: "rtl" }}
 			>
-				<p className="pe-4 me-1">{service.description}</p>
+				<p className="pe-4 me-1">{service.detailedDescription}</p>
 				<img
 					src={service.image}
 					alt="Service"
@@ -327,7 +328,7 @@ function ServicePage() {
 
 			{/* Form Render Section */}
 			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
-				<h5 className="pe-4 me-1">فرم تکمیل شده</h5>
+				<h5 className="pe-4 me-1">فرم سرویس</h5>
 				<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 					{true ? (
 						<FormRender />

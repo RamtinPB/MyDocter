@@ -138,8 +138,8 @@ function UserInformation() {
 		initialValues: initialFormData,
 		validationSchema,
 		onSubmit: (values) => {
-			axios
-				.post("http://localhost:3001/submitUserInformation", values)
+			axiosInstance
+				.post("/submitUserInformation", values)
 				.then((response) => {
 					console.log("User information updated successfully:", response.data);
 				})
@@ -187,6 +187,7 @@ function UserInformation() {
 								src={profilePicture}
 								alt="Profile"
 								className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
+								style={{ width: "400px" }}
 							/>
 						) : (
 							<FaUser
