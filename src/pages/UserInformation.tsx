@@ -187,11 +187,10 @@ function UserInformation() {
 								src={profilePicture}
 								alt="Profile"
 								className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
-								style={{ width: "400px" }}
 							/>
 						) : (
 							<FaUser
-								className="custom-user-icon-pic rounded-circle border border-3 border-light p-3 my-auto"
+								className="custom-user-icon-pic rounded-circle border border-3 border-light p-2 p-md-3 my-auto"
 								color="white"
 							/>
 						)}

@@ -11,7 +11,7 @@
 }
 
 @media (max-width: 768px) {
-  .custom-service-img{
+  .custom-home-service-img{
     max-width: 95% ;
   }
 
@@ -21,7 +21,8 @@
 }
 
 @media (max-width: 576px) {
-  .custom-service-img{
+  .custom-home-service-img{
+    max-width: 95% ;
   }
 
   #doc {

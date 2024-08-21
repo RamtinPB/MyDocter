@@ -277,7 +277,7 @@ function ServicePage() {
 				{/* File Upload Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
 					<h5 className="pe-4 me-1">انتقال فایل</h5>
-					<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 px-2 mx-4 py-2">
+					<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 mx-4">
 						<div className="d-flex flex-wrap justify-content-start align-items-center">
 							{/* Display uploaded files with icons */}
 							{uploadedFiles.map((file, index) => (

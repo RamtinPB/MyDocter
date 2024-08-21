@@ -95,7 +95,7 @@ function Home() {
 									</h5>
 									<img
 										src={homeText?.servicesLeftCardImage}
-										className="img-fluid custom-service-img rounded-4 shadow-sm"
+										className="img-fluid custom-home-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
 									<p className="card-text text-end m-3">
@@ -118,7 +118,7 @@ function Home() {
 									</h5>
 									<img
 										src={homeText?.servicesRightCardImage}
-										className="img-fluid custom-service-img rounded-4 shadow-sm"
+										className="img-fluid custom-home-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
 									<p className="card-text text-end m-3">
