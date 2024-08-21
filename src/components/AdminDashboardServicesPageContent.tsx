@@ -50,6 +50,10 @@ function AdminDashboardServicesPageContent() {
 
 	const navigate = useNavigate();
 
+	const handleSubmit = () => {};
+
+	const handleCancel = () => {};
+
 	// Render service cards based on category
 	const renderServiceCards = (category: "general" | "specialist") => {
 		return (
@@ -58,7 +62,7 @@ function AdminDashboardServicesPageContent() {
 					.filter((service) => service.category === category)
 					.map((service) => (
 						<div className="col-md-4 mb-4" key={service.id}>
-							<div className="card shadow rounded-4">
+							<div className="card shadow rounded-4 p-0">
 								<div className="text-center">
 									<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
 										{service.name}
@@ -68,18 +72,17 @@ function AdminDashboardServicesPageContent() {
 										className="img-fluid m-0"
 										alt={service.name}
 									/>
-									<div className="d-flex justify-content-evenly align-items-center">
+									<div className="d-flex justify-content-around align-items-center">
 										{/* Delete button */}
 										<button
 											id="btn-delete"
-											className="rounded-circle btn shadow p-0 m-3"
+											className="rounded-circle btn shadow p-0 my-3"
 											type="button"
 											onClick={() => removeCard(service.id)} // Use unique id for deletion
 										>
 											<img
 												src="/src/images/red-delete.png"
-												className="rounded-circle"
-												style={{ width: "40px", height: "40px" }}
+												className="custom-admin-btn rounded-circle"
 												alt="Delete"
 											/>
 										</button>
@@ -91,12 +94,11 @@ function AdminDashboardServicesPageContent() {
 												navigate(`/edit-service/${service.id}`);
 											}}
 											id="btn-edit"
-											className="rounded-circle btn shadow p-0 m-3"
+											className="rounded-circle btn shadow p-0 my-3"
 										>
 											<img
 												src="/src/images/edit-cog.png"
-												className="rounded-circle"
-												style={{ width: "40px", height: "40px" }}
+												className="custom-admin-btn rounded-circle"
 												alt="Edit"
 											/>
 										</a>
@@ -114,8 +116,7 @@ function AdminDashboardServicesPageContent() {
 					>
 						<img
 							src="/src/images/green-add.png"
-							className="rounded-circle"
-							style={{ width: "40px", height: "40px" }}
+							className="custom-admin-btn ounded-circle"
 							alt="Add"
 						/>
 					</button>
@@ -125,9 +126,9 @@ function AdminDashboardServicesPageContent() {
 	};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-5">
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
 			{/* Specialist Services Section */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
 						{"سرویس های پزشک متخصص"}
@@ -137,13 +138,28 @@ function AdminDashboardServicesPageContent() {
 			</div>
 
 			{/* General Services Section */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5 ">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
 						{"سرویس های پزشک عمومی"}
 					</h3>
 				</div>
 				{renderServiceCards("general")}
+			</div>
+			{/* Submit and Cancel buttons */}
+			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
+				<button
+					className="btn btn-secondary rounded-pill px-3"
+					onClick={handleCancel}
+				>
+					{"حذف"}
+				</button>
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={handleSubmit}
+				>
+					{"ذخیره"}
+				</button>
 			</div>
 		</div>
 	);

@@ -6,9 +6,9 @@ function AdminDashboardMainPageContent() {
 	const handleCancel = () => {};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-5">
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
 			{/* {banner section} */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">{"قسمت بنر"}</h3>
 				</div>
@@ -32,7 +32,7 @@ function AdminDashboardMainPageContent() {
 				</div>
 			</div>
 			{/* [services section] */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">{"قسمت خدمات"}</h3>
 				</div>
@@ -58,7 +58,7 @@ function AdminDashboardMainPageContent() {
 				</div>
 			</div>
 			{/* [Doc section] */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">{"قسمت میانه"}</h3>
 				</div>
@@ -82,7 +82,7 @@ function AdminDashboardMainPageContent() {
 				</div>
 			</div>
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
 				<button
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}

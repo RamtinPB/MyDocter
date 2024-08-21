@@ -25,11 +25,11 @@ function AdminDashboard() {
 	return (
 		<>
 			<div
-				className="container buttons-section text-center my-5 pb-3"
+				className="container text-center my-3 my-md-4 my-lg-5 pb-2 pb-md-3"
 				style={{ direction: "rtl" }}
 			>
 				<button
-					className={`btn ${
+					className={`btn m-1 ${
 						activeSection === "mainPage" ? "btn-primary" : "btn-outline-primary"
 					} rounded-pill mx-2`}
 					onClick={() => setActiveSection("mainPage")}
@@ -37,7 +37,7 @@ function AdminDashboard() {
 					ویرایش صفحه اصلی
 				</button>
 				<button
-					className={`btn ${
+					className={`btn m-1 ${
 						activeSection === "questionsPage"
 							? "btn-primary"
 							: "btn-outline-primary"
@@ -47,7 +47,7 @@ function AdminDashboard() {
 					ویرایش سوالات متداول
 				</button>
 				<button
-					className={`btn ${
+					className={`btn m-1 ${
 						activeSection === "servicesPage"
 							? "btn-primary"
 							: "btn-outline-primary"
@@ -57,7 +57,7 @@ function AdminDashboard() {
 					ویرایش سرویس ها
 				</button>
 				<button
-					className={`btn ${
+					className={`btn m-1 ${
 						activeSection === "insurancePage"
 							? "btn-primary"
 							: "btn-outline-primary"
@@ -68,7 +68,7 @@ function AdminDashboard() {
 				</button>
 			</div>
 
-			<div className="content-section">{renderContent()}</div>
+			<div className="container">{renderContent()}</div>
 		</>
 	);
 }

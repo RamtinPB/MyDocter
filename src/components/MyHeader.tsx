@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import "../cssFiles/myheader.css";
-import "../cssFiles/customColors.css";
+import "/src/cssFiles/myheader.css";
+import "/src/cssFiles/customColors.css";
 import Logo from "../images/Logo.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component

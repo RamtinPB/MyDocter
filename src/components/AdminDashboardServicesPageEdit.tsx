@@ -2,15 +2,10 @@ import { FaCaretLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
+import "/src/cssFiles/servicePage.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import FormBuilder from "./FormBuilder";
 import axios from "axios";
-
-interface FileData {
-	fileName: string;
-	fileType: string;
-	fileUrl: string;
-}
 
 interface Service {
 	name: string;
@@ -42,6 +37,7 @@ function ServicePageEdit() {
 
 				if (selectedService) {
 					setService(selectedService);
+					setServicePicture(selectedService.image);
 				} else {
 					setError("Service not found");
 				}
@@ -100,114 +96,124 @@ function ServicePageEdit() {
 	const handleCancel = () => {};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-5">
-			{/* Header Section with Back Button and Service Name */}
-			<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-5 p-3">
-				<div className="col-2 text-white">
-					<button className="btn btn-link p-0">
+		<div className="container">
+			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
+				{/* Header Section with Back Button and Service Name */}
+				<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
+					<div className="col-2 mt-1">
 						<FaCaretLeft
+							type="button"
 							onClick={handleBackClick}
-							className="text-white"
-							size={32}
+							className="custom-back-btn"
+							color="white"
 						/>
-					</button>
+					</div>
+					<div className="col-8 text-center text-white">
+						<h4>{service.name}</h4>
+					</div>
 				</div>
-				<div className="col-8 text-center text-white">
-					<h3>{service.name}</h3>
-				</div>
-			</div>
 
-			{/* Image and Description Section */}
-			<div
-				className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4 gap-3"
-				style={{ direction: "rtl" }}
-			>
-				<input
-					type="text"
-					className="form-control text-end"
-					placeholder="قیمت سرویس"
-				/>
-				<div className="d-flex flex-column justify-content-center align-items-center gap-3">
-					{servicePicture ? (
-						<img
-							src={servicePicture}
-							alt="service"
-							className="shadow-sm rounded-5 ms-3"
-							style={{ width: "400px", height: "200px" }}
-						/>
-					) : (
-						<button
-							className="btn btn-light shadow rounded-pill my-auto"
-							style={{ cursor: "pointer" }}
-						>
+				{/* Image and Description Section */}
+				<div
+					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					style={{ direction: "rtl" }}
+				>
+					<div className="d-flex flex-column flex-grow-1 pe-1 me-1">
+						<h6 className="">توضیحات کوتاه مربوط به سرویس</h6>
+						<textarea
+							className="form-control text-end h-100"
+							rows={3}
+							placeholder="متن خود را وارد کنید"
+							style={{ resize: "none" }}
+						></textarea>
+					</div>
+
+					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
+						{servicePicture ? (
+							<img
+								src={servicePicture}
+								alt="service"
+								className="custom-service-img shadow-sm rounded-5"
+							/>
+						) : (
 							<input
 								type="file"
 								accept="image/*"
+								className="custom-service-img text-center btn btn-light shadow rounded-pill"
 								onChange={handleServicePictureChange}
 							/>
+						)}
+						<button
+							className="btn btn-sm btn-warning shadow-sm rounded-pill"
+							onClick={() => setServicePicture(null)}
+						>
+							<span> حذف عکس</span>
 						</button>
-					)}
+					</div>
+				</div>
+
+				{/* Detailed Description Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<h6 className="pe-1 me-1">توضیحات تکمیلی مربوط به سرویس</h6>
+					<textarea
+						id="userInput"
+						className="form-control text-end"
+						rows={3}
+						placeholder="متن خود را وارد کنید"
+					></textarea>
+				</div>
+
+				{/* Form Builder Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<h6 className="pe-4 me-1">فرم سرویس</h6>
+					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
+						{true ? (
+							<FormBuilder />
+						) : (
+							<div className="text-center py-3">
+								<p>اطلاعات فرم یافت نشد</p>
+							</div>
+						)}
+					</div>
+				</div>
+
+				{/* Pricing & Subsidy Section */}
+				<div
+					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					style={{ direction: "ltr" }}
+				>
+					<input
+						type="text"
+						className="form-control text-end "
+						placeholder="یارانه"
+					/>
+					<input
+						type="text"
+						className="form-control text-end"
+						placeholder="قیمت سرویس"
+					/>
+					<input
+						type="text"
+						className="form-control text-end"
+						placeholder="نام سرویس"
+					/>
+				</div>
+
+				{/* Submit and Cancel buttons */}
+				<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
 					<button
-						className="btn btn-warning shadow-sm rounded-pill w-50"
-						onClick={() => setServicePicture(null)}
+						className="btn btn-secondary rounded-pill px-3"
+						onClick={handleCancel}
 					>
-						<span> حذف عکس</span>
+						{"حذف"}
+					</button>
+					<button
+						className="btn btn-success rounded-pill px-3"
+						onClick={handleSubmit}
+					>
+						{"ذخیره"}
 					</button>
 				</div>
-			</div>
-
-			{/* Detailed Description Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
-				<h5 className="pe-1 me-1">توضیحات تکمیلی مربوط به سرویس</h5>
-				<textarea
-					id="userInput"
-					className="form-control text-end"
-					rows={3}
-					placeholder="متن خود را وارد کنید"
-				></textarea>
-			</div>
-
-			{/* Form Render Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
-				<h5 className="pe-4 me-1">فرم سرویس</h5>
-				<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
-					{true ? (
-						<FormBuilder />
-					) : (
-						<div className="text-center py-3">
-							<p>اطلاعات فرم یافت نشد</p>
-						</div>
-					)}
-				</div>
-			</div>
-
-			<div className="d-flex flex-row justify-content-evenly bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4 ">
-				<input
-					type="text"
-					className="form-control text-end"
-					placeholder="قیمت سرویس"
-				/>
-				<input
-					type="text"
-					className="form-control text-end"
-					placeholder="یارانه سرویس"
-				/>
-			</div>
-
-			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
-				<button
-					className="btn btn-secondary rounded-pill px-3"
-					onClick={handleCancel}
-				>
-					{"حذف"}
-				</button>
-				<button
-					className="btn btn-success rounded-pill px-3"
-					onClick={handleSubmit}
-				>
-					{"ذخیره"}
-				</button>
 			</div>
 		</div>
 	);

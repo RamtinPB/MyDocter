@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "/src/cssFiles/adminbuttons.css"
 
 function AdminDashboardInsurancePageContent() {
 	// Define the state for sections
@@ -33,8 +34,8 @@ function AdminDashboardInsurancePageContent() {
 	const handleCancel = () => {};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-5">
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">{"بیمه پایه"}</h3>
 				</div>
@@ -87,8 +88,7 @@ function AdminDashboardInsurancePageContent() {
 									>
 										<img
 											src="\src\images\red-delete.png"
-											className="rounded-circle"
-											style={{ width: "40px", height: "40px" }}
+											className="custom-admin-btn rounded-circle"
 										/>
 									</button>
 								</td>
@@ -108,8 +108,7 @@ function AdminDashboardInsurancePageContent() {
 									>
 										<img
 											src="\src\images\green-add.png"
-											className="rounded-circle"
-											style={{ width: "40px", height: "40px" }}
+											className="custom-admin-btn rounded-circle"
 										/>
 									</button>
 								</div>
@@ -119,7 +118,7 @@ function AdminDashboardInsurancePageContent() {
 				</table>
 			</div>
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+			<div className="d-flex justify-content-evenly px-3 py-2 my-2 ">
 				<button
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}

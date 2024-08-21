@@ -1,0 +1,45 @@
+.custom-file-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.custom-back-btn {
+    width: 30px;
+    height: 30px;
+}
+
+.custom-service-img {
+    width: 400px;
+}
+
+@media (max-width: 768px) {
+    .custom-file-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .custom-service-img {
+        width: 250px;
+    }
+
+    .custom-back-btn {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-file-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .custom-service-img {
+        width: 150px;
+    }
+
+    .custom-back-btn {
+        width: 22px;
+        height: 22px;
+    }
+}

@@ -30,8 +30,8 @@ function AdminDashboardQuestionsPageContent() {
 	const handleCancel = () => {};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-5">
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 mx-5 my-5">
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">{"لیست سوالات متداول"}</h3>
 				</div>
@@ -50,17 +50,16 @@ function AdminDashboardQuestionsPageContent() {
 						>
 							<img
 								src="\src\images\red-delete.png"
-								className="rounded-circle"
-								style={{ width: "40px", height: "40px" }}
+								className="custom-admin-btn rounded-circle"
 							/>
 						</button>
 
 						{/* Question and Answer Textareas */}
 						<div className="d-flex flex-column w-100">
-							<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-								<h4 className="pe-1 me-1">
+							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
+								<h5 className="pe-1 me-1">
 									{index + 1} {" عنوان سوال"}
-								</h4>
+								</h5>
 								<textarea
 									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
 									rows={3}
@@ -71,10 +70,10 @@ function AdminDashboardQuestionsPageContent() {
 									}
 								></textarea>
 							</div>
-							<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-								<h4 className="pe-1 me-1">
+							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
+								<h5 className="pe-1 me-1">
 									{index + 1} {" پاسخ و توضیحات سوال"}
-								</h4>
+								</h5>
 								<textarea
 									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
 									rows={3}
@@ -101,14 +100,13 @@ function AdminDashboardQuestionsPageContent() {
 					>
 						<img
 							src="\src\images\green-add.png"
-							className="rounded-circle"
-							style={{ width: "40px", height: "40px" }}
+							className="custom-admin-btn rounded-circle"
 						/>
 					</button>
 				</div>
 			</div>
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
 				<button
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}

@@ -3,6 +3,7 @@ import FormRender from "../components/FormRender";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
+import "/src/cssFiles/servicePage.css";
 
 import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
@@ -243,152 +244,152 @@ function ServicePage() {
 	};
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-5">
-			{/* Header Section with Back Button and Service Name */}
-			<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-5 p-3">
-				<div className="col-2 text-white">
-					<button className="btn btn-link p-0">
+		<div className="container">
+			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
+				{/* Header Section with Back Button and Service Name */}
+				<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
+					<div className="col-2 mt-1">
 						<FaCaretLeft
-							onClick={handleBackClick}
-							className="text-white"
-							size={32}
-						/>
-					</button>
-				</div>
-				<div className="col-8 text-center text-white">
-					<h3>{service.name}</h3>
-				</div>
-			</div>
-
-			{/* Image and Description Section */}
-			<div
-				className="d-flex justify-content-between bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4"
-				style={{ direction: "rtl" }}
-			>
-				<p className="pe-4 me-1">{service.detailedDescription}</p>
-				<img
-					src={service.image}
-					alt="Service"
-					className="img-fluid shadow-sm rounded-5 ms-3"
-					style={{ width: "400px" }}
-				/>
-			</div>
-
-			{/* File Upload Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
-				<h5 className="pe-4 me-1">انتقال فایل</h5>
-				<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 px-2 mx-4 py-2">
-					<div className="d-flex flex-wrap justify-content-start align-items-center">
-						{/* Display uploaded files with icons */}
-						{uploadedFiles.map((file, index) => (
-							<div className="d-flex flex-column p-1 mx-1">
-								<a
-									href={file.fileUrl}
-									key={index}
-									className="d-flex flex-column justify-content-center align-items-center d-block "
-									download
-								>
-									<img
-										src={getIconForFileType(file.fileName)}
-										alt={`${file.fileName} Icon`}
-										style={{ width: "50px", height: "50px" }}
-									/>
-									<p className="text-end mt-1">{file.fileName}</p>
-								</a>
-								{/* Delete Button */}
-								<button
-									className="btn btn-danger mt-1"
-									onClick={() => handleFileDelete(index)}
-								>
-									Delete
-								</button>
-							</div>
-						))}
-					</div>
-					<div className="d-flex flex-wrap justify-content-end align-items-center">
-						{/* Upload button */}
-						<button
 							type="button"
-							className="btn btn-outline-secondary ms-2"
-							onClick={handleFileUploadClick}
-						>
-							<i className="fas fa-file-upload"></i> {"آپلود فایل"}
-						</button>
-						{/* Hidden file input */}
-						<input
-							type="file"
-							ref={fileInputRef}
-							style={{ display: "none" }}
-							onChange={handleFileChange}
-							multiple // Allow multiple file selection
+							onClick={handleBackClick}
+							className="custom-back-btn"
+							color="white"
 						/>
 					</div>
+					<div className="col-8 text-center text-white">
+						<h4>{service.name}</h4>
+					</div>
 				</div>
-			</div>
 
-			{/* Form Render Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-5 mb-4">
-				<h5 className="pe-4 me-1">فرم سرویس</h5>
-				<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
-					{true ? (
-						<FormRender />
-					) : (
-						<div className="text-center py-3">
-							<p>اطلاعات فرم یافت نشد</p>
+				{/* Image and Description Section */}
+				<div
+					className="d-flex justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4"
+					style={{ direction: "rtl" }}
+				>
+					<p className="pe-3 me-1">{service.detailedDescription}</p>
+					<img
+						src={service.image}
+						alt="Service"
+						className="custom-service-img img-fluid shadow-sm rounded-5"
+					/>
+				</div>
+
+				{/* File Upload Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<h5 className="pe-4 me-1">انتقال فایل</h5>
+					<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 px-2 mx-4 py-2">
+						<div className="d-flex flex-wrap justify-content-start align-items-center">
+							{/* Display uploaded files with icons */}
+							{uploadedFiles.map((file, index) => (
+								<div className="d-flex flex-column p-1 mx-1">
+									<a
+										href={file.fileUrl}
+										key={index}
+										className="d-flex flex-column justify-content-center align-items-center d-block "
+										download
+									>
+										<img
+											src={getIconForFileType(file.fileName)}
+											alt={`${file.fileName} Icon`}
+											className="custom-file-icon"
+										/>
+										<span className="text-end mt-1">{file.fileName}</span>
+									</a>
+									{/* Delete Button */}
+									<button
+										className="btn btn-sm btn-danger rounded-pill mt-1"
+										onClick={() => handleFileDelete(index)}
+									>
+										Delete
+									</button>
+								</div>
+							))}
 						</div>
-					)}
+						<div className="d-flex flex-wrap justify-content-end align-items-center">
+							{/* Upload button */}
+							<button
+								type="button"
+								className="btn btn-outline-secondary ms-2"
+								onClick={handleFileUploadClick}
+							>
+								<i className="fas fa-file-upload"></i> {"آپلود فایل"}
+							</button>
+							{/* Hidden file input */}
+							<input
+								type="file"
+								ref={fileInputRef}
+								style={{ display: "none" }}
+								onChange={handleFileChange}
+								multiple // Allow multiple file selection
+							/>
+						</div>
+					</div>
 				</div>
-			</div>
 
-			{/* User Input Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
-				<h5 className="pe-1 me-1">شرح حال کاربر</h5>
-				<textarea
-					id="userInput"
-					className="form-control text-end"
-					rows={3}
-					placeholder="متن خود را وارد کنید"
-				></textarea>
-			</div>
-
-			{/* Pricing Table Section */}
-			<div className="bg-white border border-2 shadow text-end rounded-5 p-5 mx-5 mb-4">
-				<div className="table-responsive" style={{ direction: "rtl" }}>
-					<table className="table text-center">
-						<thead>
-							<tr>
-								<th>{"نوع بیمه"}</th>
-								<th>{"سهم بیمه"}</th>
-								<th>{"نوع بیمه تکمیلی"}</th>
-								<th>{"سهم بیمه تکمیلی"}</th>
-								<th>{"قیمت سرویس"}</th>
-								<th>{"مبالغ یارانه"}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>{userInfo?.insuranceType}</td>
-								<td>{insurance?.insuranceContribution}</td>
-								<td>{userInfo?.supplementaryInsuranceType}</td>
-								<td>
-									{supplementaryInsurance?.supplementaryInsuranceContribution}
-								</td>
-								<td>{service.price}</td>
-								<td>{service.subsidy}</td>
-							</tr>
-							{/* Add more rows as needed */}
-						</tbody>
-					</table>
+				{/* Form Render Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<h5 className="pe-4 me-1">فرم سرویس</h5>
+					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
+						{true ? (
+							<FormRender />
+						) : (
+							<div className="text-center py-3">
+								<p>اطلاعات فرم یافت نشد</p>
+							</div>
+						)}
+					</div>
 				</div>
-			</div>
 
-			{/* Purchase Button Section */}
-			<div className="d-flex justify-content-center mb-4 mt-5">
-				<div className="bg-white border border-2 shadow text-end rounded-5 ">
-					<span className=" mx-3 ">{`مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`}</span>
-					<button className="btn btn-success rounded-pill px-4 py-2">
-						{"خریداری سرویس"}
-					</button>
+				{/* User Input Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<h5 className="pe-1 me-1">شرح حال کاربر</h5>
+					<textarea
+						id="userInput"
+						className="form-control text-end"
+						rows={3}
+						placeholder="متن خود را وارد کنید"
+					></textarea>
+				</div>
+
+				{/* Pricing Table Section */}
+				<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4">
+					<div className="table-responsive" style={{ direction: "rtl" }}>
+						<table className="table text-center">
+							<thead>
+								<tr>
+									<th>{"نوع بیمه"}</th>
+									<th>{"سهم بیمه"}</th>
+									<th>{"نوع بیمه تکمیلی"}</th>
+									<th>{"سهم بیمه تکمیلی"}</th>
+									<th>{"قیمت سرویس"}</th>
+									<th>{"مبالغ یارانه"}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{userInfo?.insuranceType}</td>
+									<td>{insurance?.insuranceContribution}</td>
+									<td>{userInfo?.supplementaryInsuranceType}</td>
+									<td>
+										{supplementaryInsurance?.supplementaryInsuranceContribution}
+									</td>
+									<td>{service.price}</td>
+									<td>{service.subsidy}</td>
+								</tr>
+								{/* Add more rows as needed */}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				{/* Purchase Button Section */}
+				<div className="d-flex justify-content-center mb-4 mt-5">
+					<div className="bg-white border border-2 shadow text-end rounded-5 ">
+						<span className=" mx-3 ">{`مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`}</span>
+						<button className="btn btn-success rounded-pill px-4 py-2">
+							{"خریداری سرویس"}
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
