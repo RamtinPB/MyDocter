@@ -1,8 +1,11 @@
 function AdminDashboardMainPageContent() {
+	// @ts-ignore
 	const handleChange = () => {};
 
+	// @ts-ignore
 	const handleSubmit = () => {};
 
+	// @ts-ignore
 	const handleCancel = () => {};
 
 	return (

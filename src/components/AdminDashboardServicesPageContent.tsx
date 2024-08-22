@@ -50,8 +50,10 @@ function AdminDashboardServicesPageContent() {
 
 	const navigate = useNavigate();
 
+	// @ts-ignore
 	const handleSubmit = () => {};
 
+	// @ts-ignore
 	const handleCancel = () => {};
 
 	// Render service cards based on category

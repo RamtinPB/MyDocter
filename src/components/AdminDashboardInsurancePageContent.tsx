@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "/src/cssFiles/adminbuttons.css"
+import "/src/cssFiles/adminbuttons.css";
 
 function AdminDashboardInsurancePageContent() {
 	// Define the state for sections
@@ -29,8 +29,10 @@ function AdminDashboardInsurancePageContent() {
 		setSections(updatedSections);
 	};
 
+	// @ts-ignore
 	const handleSubmit = () => {};
 
+	// @ts-ignore
 	const handleCancel = () => {};
 
 	return (

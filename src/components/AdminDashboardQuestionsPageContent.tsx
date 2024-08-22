@@ -25,8 +25,10 @@ function AdminDashboardQuestionsPageContent() {
 		setSections(updatedSections);
 	};
 
+	// @ts-ignore
 	const handleSubmit = () => {};
 
+	// @ts-ignore
 	const handleCancel = () => {};
 
 	return (
