@@ -1,5 +1,6 @@
 import { FaInstagram, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import "/src/cssFiles/myfooter.css";
+import Logo from "../images/Logo.png";
 import { FaXTwitter } from "react-icons/fa6";
 
 function MyFooter() {
@@ -14,11 +15,7 @@ function MyFooter() {
 						</a>
 					</div>
 					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
-						<img
-							src="src\images\Logo.png"
-							className="custom-footer-logo"
-							alt="Logo"
-						/>
+						<img src={Logo} className="custom-footer-logo" alt="Logo" />
 						<a href="#!" className="link-light link-underline-opacity-0">
 							پشتیبانی 24/7
 						</a>
