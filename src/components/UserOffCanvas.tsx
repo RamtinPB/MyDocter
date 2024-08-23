@@ -11,7 +11,7 @@ import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/myoffcanvas.css";
 
-interface UserProfile {
+interface UserData {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -24,12 +24,12 @@ interface UserProfile {
 }
 
 interface UserOffCanvasProps {
-	userProfile: UserProfile | null;
+	userData: UserData | null;
 	isLoggedInAdmin: boolean;
 }
 
 const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
-	userProfile,
+	userData,
 	isLoggedInAdmin,
 }) => {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
@@ -54,9 +54,10 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 		return () => window.removeEventListener("resize", updateOffcanvasClass);
 	}, []);
 
-	const username = userProfile
-		? `${userProfile.firstName} ${userProfile.lastName}`
-		: "";
+	const username =
+		userData && userData.firstName && userData.lastName
+			? `${userData.firstName} ${userData.lastName}`
+			: userData?.phoneNumber || ""; // Fallback to phone number if firstName and lastName are missing
 
 	return (
 		<div
@@ -83,9 +84,9 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 			</div>
 			<div className="offcanvas-body shadow p-0">
 				<div className="d-flex flex-column justify-content-center align-items-center custom-bg-2">
-					{userProfile?.profilePicture ? (
+					{userData?.profilePicture ? (
 						<img
-							src={userProfile.profilePicture}
+							src={userData.profilePicture}
 							alt="Profile"
 							className="custom-user-icon-pic img-fluid rounded-circle border border-2 border-light my-3 mx-4"
 						/>

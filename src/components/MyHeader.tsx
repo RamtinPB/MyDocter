@@ -9,8 +9,9 @@ import Logo from "../images/Logo.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import axiosInstance from "../myAPI/axiosInstance";
+import { useLanguage } from "./LanguageContext";
 
-interface UserProfile {
+interface UserData {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -23,17 +24,21 @@ interface UserProfile {
 }
 
 function MyHeader() {
-	const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+	const [userData, setUserData] = useState<UserData | null>(null);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
 	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(true);
 
+	const { language } = useLanguage(); // Get language and toggle function from context
+
 	useEffect(() => {
-		const fetchUserProfile = async () => {
+		const fetchUserData = async () => {
 			try {
-				const response = await axiosInstance.get<UserProfile>("/userInfo");
-				setUserProfile(response.data);
+				const response = await axiosInstance.get<UserData>("/userInfo");
+				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
 				setError("Failed to fetch user information");
@@ -41,7 +46,7 @@ function MyHeader() {
 			}
 		};
 
-		fetchUserProfile();
+		fetchUserData();
 	}, []);
 
 	if (loading) {
@@ -62,9 +67,10 @@ function MyHeader() {
 		setisLoggedInAdmin(true);
 	};
 
-	const username = userProfile
-		? `${userProfile.firstName} ${userProfile.lastName}`
-		: "";
+	const username =
+		userData && userData.firstName && userData.lastName
+			? `${userData.firstName} ${userData.lastName}`
+			: userData?.phoneNumber || ""; // Fallback to phone number if firstName and lastName are missing
 
 	return (
 		<>
@@ -79,9 +85,9 @@ function MyHeader() {
 								data-bs-target="#myOffcanvas"
 								aria-controls="myOffcanvas"
 							>
-								{userProfile && userProfile.profilePicture ? (
+								{userData && userData.profilePicture ? (
 									<img
-										src={userProfile.profilePicture}
+										src={userData.profilePicture}
 										alt="Profile"
 										className="img-fluid custom-user-img-icon rounded-circle border border-3 border-light"
 									/>
@@ -91,7 +97,11 @@ function MyHeader() {
 										color="white"
 									/>
 								)}
-								<span className="text-white text-end pe-2 ps-4">
+								<span
+									className={`text-white text-${
+										language === "fa" ? "end" : "start"
+									} pe-2 ps-4`}
+								>
 									{username}
 								</span>
 							</button>
@@ -115,10 +125,7 @@ function MyHeader() {
 					</Link>
 				</div>
 			</nav>
-			<UserOffCanvas
-				userProfile={userProfile}
-				isLoggedInAdmin={isLoggedInAdmin}
-			/>
+			<UserOffCanvas userData={userData} isLoggedInAdmin={isLoggedInAdmin} />
 		</>
 	);
 }

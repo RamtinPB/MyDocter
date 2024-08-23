@@ -3,6 +3,7 @@ import { FaBell, FaRegBell } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "/src/cssFiles/myheader.css";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useLanguage } from "./LanguageContext";
 
 interface PurchasedService {
 	name: string;
@@ -24,8 +25,11 @@ const NotificationDropdown = () => {
 	const [userPurchasedServices, setUserPurchasedServices] = useState<
 		PurchasedService[]
 	>([]);
+
 	const [notifications, setNotifications] = useState<any[]>([]);
 	const [hasNewNotification, setHasNewNotification] = useState(false);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		// Fetch user purchased services from the server
@@ -48,9 +52,15 @@ const NotificationDropdown = () => {
 			// Generate a unique ID for each service status change using purchaseId
 			const notificationId = `${service.purchaseId}-${service.status}`;
 
+			// Conditionally create the message based on the language
+			const message =
+				language === "fa"
+					? `تغییر کرده است ${service.status} وضعیت سرویس ${service.name} به`
+					: `The status of service ${service.name} has changed to ${service.status}`;
+
 			return {
 				id: notificationId,
-				message: `Service "${service.name}" status changed to ${service.status}`,
+				message: message, // Use the conditionally set message here
 				link: service.link,
 				status: service.status,
 				seen: false,
@@ -77,7 +87,7 @@ const NotificationDropdown = () => {
 		// Check if there are any unseen notifications
 		const hasNew = sortedNotifications.some((notif) => !notif.seen);
 		setHasNewNotification(hasNew);
-	}, [userPurchasedServices]);
+	}, [userPurchasedServices, language]); // <== Make sure language is here
 
 	const handleNotificationClick = (notificationId: string) => {
 		const updatedNotifications = notifications.map((notif) =>
@@ -108,9 +118,9 @@ const NotificationDropdown = () => {
 					<Link
 						to={notification.link}
 						key={notification.id} // Using purchaseId-status for unique keys
-						className={`dropdown-item ${
-							notification.seen ? "text-muted" : "font-weight-bold"
-						}`}
+						className={`dropdown-item text-${
+							language === "fa" ? "end" : "start"
+						} ${notification.seen ? "text-muted" : "font-weight-bold"}`}
 						onClick={() => handleNotificationClick(notification.id)}
 					>
 						{notification.message}
