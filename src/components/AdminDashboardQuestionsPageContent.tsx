@@ -58,6 +58,7 @@ function AdminDashboardQuestionsPageContent() {
 
 						{/* Question and Answer Textareas */}
 						<div className="d-flex flex-column w-100">
+							{/* farsi title */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
 								<h5 className="pe-1 me-1">
 									{index + 1} {" عنوان سوال"}
@@ -72,9 +73,40 @@ function AdminDashboardQuestionsPageContent() {
 									}
 								></textarea>
 							</div>
+							{/* farsi desc */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
 								<h5 className="pe-1 me-1">
 									{index + 1} {" پاسخ و توضیحات سوال"}
+								</h5>
+								<textarea
+									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									rows={3}
+									placeholder="متن خود را وارد کنید"
+									value={section.answer}
+									onChange={(e) =>
+										handleChange(index, "answer", e.target.value)
+									}
+								></textarea>
+							</div>
+							{/* english title */}
+							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
+								<h5 className="pe-1 me-1">
+									{index + 1} {"(انگلیسی) عنوان سوال"}
+								</h5>
+								<textarea
+									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									rows={3}
+									placeholder="متن خود را وارد کنید"
+									value={section.question}
+									onChange={(e) =>
+										handleChange(index, "question", e.target.value)
+									}
+								></textarea>
+							</div>
+							{/* english desc */}
+							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
+								<h5 className="pe-1 me-1">
+									{index + 1} {"(انگلیسی) پاسخ و توضیحات سوال"}
 								</h5>
 								<textarea
 									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"

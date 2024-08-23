@@ -1038,23 +1038,33 @@
 	"questions": [
 		{
 			"title": "سوال",
-			"description": "پاسخ سوال"
+			"description": "پاسخ سوال",
+			"titleEN": "Question",
+			"descriptionEN": "Answer"
 		},
 		{
 			"title": "سوال",
-			"description": "پاسخ سوال"
+			"description": "پاسخ سوال",
+			"titleEN": "Question",
+			"descriptionEN": "Answer"
 		},
 		{
 			"title": "سوال",
-			"description": "پاسخ سوال"
+			"description": "پاسخ سوال",
+			"titleEN": "Question",
+			"descriptionEN": "Answer"
 		},
 		{
 			"title": "سوال",
-			"description": "پاسخ سوال"
+			"description": "پاسخ سوال",
+			"titleEN": "Question",
+			"descriptionEN": "Answer"
 		},
 		{
 			"title": "سوال",
-			"description": "پاسخ سوال"
+			"description": "پاسخ سوال",
+			"titleEN": "Question",
+			"descriptionEN": "Answer"
 		}
 	],
 
@@ -1062,18 +1072,29 @@
 		{
 			"openingQuoteTitle": "شعار سایت",
 			"openingQuoteDescription": "توضیح مختصر  و خیلی کوتاه در حد دو خط",
+			"openingQuoteTitleEN": "Site Quote",
+			"openingQuoteDescriptionEN": "openingQuoteDescriptionEN",
 
 			"servicesLeftCardTitle": "خدمات پزشک متخصص و فوق تخصص",
 			"servicesLeftCardDescription": "توضیحات مربوط به این سرویس",
 			"servicesLeftCardImage": "/src/images/پزشک ارتوپد.jpg",
 
+			"servicesLeftCardTitleEN": "Specialist Practitioner Services",
+			"servicesLeftCardDescriptionEN": "servicesLeftCardDescriptionEN",
+
 			"servicesRightCardTitle": "خدمات پزشک عمومی",
 			"servicesRightCardDescription": "توضیحات مربوط به این سرویس",
 			"servicesRightCardImage": "/src/images/پزشک ارتوپد.jpg",
 
+			"servicesRightCardTitleEN": "General Practitioner Services",
+			"servicesRightCardDescriptionEN": "servicesRightCardDescriptionEN",
+
 			"docTitle": "همه نتایج توسط پزشک های معتبر تایید می شوند",
 			"docImage": "/src/images/mrDoc.png",
-			"docDescription": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی"
+			"docDescription": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی",
+
+			"docTitleEN": "docTitleEN",
+			"docDescriptionEN": "docDescriptionEN"
 		}
 	]
 }

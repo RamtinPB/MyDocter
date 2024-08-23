@@ -15,7 +15,7 @@ function MyFooter() {
 						language === "fa" ? "end" : "between"
 					} px-3 pt-1 pb-4 gap-2 px-lg-3 pt-lg-2 pb-lg-5 gap-lg-4`}
 				>
-					<div className="d-flex flex-column justidy-content-center align-items-center px-3 mx-3 gap-3">
+					<div className="d-flex flex-column justify-content-center align-items-center px-3 mx-3 gap-3">
 						<h5 className="border-bottom border-2 my-1">
 							{language === "fa" ? "پشتیبانی" : "Support"}
 						</h5>

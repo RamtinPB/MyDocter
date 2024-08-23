@@ -2,17 +2,24 @@ import { useEffect, useState } from "react";
 import "/src/cssFiles/myquestions.css"; // Import the CSS file for styling
 import "/src/cssFiles/customColors.css";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useLanguage } from "./LanguageContext";
 
 interface Questions {
 	title: string;
 	description: string;
+	titleEN: string;
+	descriptionEN: string;
 }
 
 function MyQuestions() {
 	const [questions, setQuestions] = useState<Questions[]>([]);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which questions are open
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		const fetchQuestions = async () => {
@@ -53,8 +60,11 @@ function MyQuestions() {
 						<div
 							className="accordion-header border border-1 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
 							id={`heading${index}`}
+							style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 						>
-							<h3 className=" mb-0 ms-auto me-4">{question.title}</h3>
+							<h3 className=" mb-0 mx-4">
+								{language === "fa" ? question.title : question.titleEN}
+							</h3>
 							<img
 								src="src\images\plus-border.png"
 								alt="+"
@@ -74,8 +84,16 @@ function MyQuestions() {
 							className={`accordion-collapse collapse`}
 							data-bs-parent="accordionExample"
 						>
-							<div className="accordion-body text-end">
-								<p className="mb-0 ">{question.description}</p>
+							<div
+								className={`accordion-body text-${
+									language === "fa" ? "end" : "start"
+								}`}
+							>
+								<p className="mb-0 ">
+									{language === "fa"
+										? question.description
+										: question.descriptionEN}
+								</p>
 							</div>
 						</div>
 					</div>

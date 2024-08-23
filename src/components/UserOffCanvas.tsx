@@ -10,6 +10,7 @@ import {
 import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/myoffcanvas.css";
+import { useLanguage } from "./LanguageContext";
 
 interface UserData {
 	firstName: string;
@@ -33,6 +34,8 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 	isLoggedInAdmin,
 }) => {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		// Function to check the screen size and update the offcanvas class
@@ -66,7 +69,10 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 			id="myOffcanvas"
 			aria-labelledby="myOffcanvasLabel"
 		>
-			<div className="offcanvas-header d-flex justify-content-between align-items-center custom-bg-sidebar-1 shadow-lg">
+			<div
+				className="offcanvas-header d-flex justify-content-between align-items-center custom-bg-sidebar-1 shadow-lg"
+				style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+			>
 				<button
 					className="rounded-circle btn p-0"
 					type="button"
@@ -79,7 +85,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					/>
 				</button>
 				<h4 className="offcanvas-title text-white" id="myOffcanvasLabel">
-					داشبورد کاربر
+					{language === "fa" ? "داشبورد کاربر" : "Dashboard"}
 				</h4>
 			</div>
 			<div className="offcanvas-body shadow p-0">
@@ -100,13 +106,20 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 						{username}
 					</span>
 				</div>
-				<ul className="dropdown-menu d-flex flex-column text-end custom-bg-sidebar-3 border-0 rounded-0 w-100 h-100">
+				<ul
+					className={` dropdown-menu d-flex flex-column text-${
+						language === "fa" ? "end" : "start"
+					} custom-bg-sidebar-3 border-0 rounded-0 w-100 h-100 `}
+					style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+				>
 					<li>
 						<Link
 							to="/"
-							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
-							<span className="pe-2"> صفحه اصلی</span>
+							<span className="px-2">
+								{language === "fa" ? "صفحه اصلی" : "Main Page"}
+							</span>
 							<FaHouse />
 						</Link>
 					</li>
@@ -117,9 +130,13 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					<li>
 						<Link
 							to="/UserInformation"
-							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
-							<span className="pe-2"> ویرایش اطلاعات کاربر</span>
+							<span className="px-2">
+								{language === "fa"
+									? "ویرایش اطلاعات کاربر"
+									: "Edit User information"}
+							</span>
 							<FaInfo />
 						</Link>
 					</li>
@@ -129,9 +146,13 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					<li>
 						<Link
 							to="/UserIEInformation"
-							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
-							<span className="pe-2"> فرم ارزیابی اولیه کاربر</span>
+							<span className="px-2">
+								{language === "fa"
+									? "فرم ارزیابی اولیه کاربر"
+									: "Initial Evaluation Form"}
+							</span>
 							<FaBookMedical />
 						</Link>
 					</li>
@@ -140,14 +161,16 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					</li>
 					<li>
 						<button
-							className="btn  d-flex align-items-center justify-content-end collapsed dropdown-item d-inline rounded-3 pe-2 "
+							className="btn  d-flex align-items-center justify-content-end collapsed dropdown-item d-inline rounded-3 px-2 "
 							type="button"
 							data-bs-toggle="collapse"
 							data-bs-target={`#servicesCollapse`}
 							aria-expanded={false}
 							aria-controls="servicesCollapse"
 						>
-							<span className="pe-2">خدمات</span>
+							<span className="px-2">
+								{language === "fa" ? "خدمات" : "Services"}
+							</span>
 							<FaBriefcaseMedical />
 						</button>
 					</li>
@@ -160,7 +183,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 								to="/GeneralDoctorPrescription"
 								className="dropdown-item rounded-3"
 							>
-								<span className="pe-2"> خدمات پزشک عمومی</span>
+								<span className="px-2">
+									{language === "fa"
+										? "خدمات پزشک عمومی"
+										: "General Practitioner Services"}
+								</span>
 								<FaUserNurse />
 							</Link>
 						</li>
@@ -169,7 +196,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 								to="/SpecialistDoctorPrescription"
 								className="dropdown-item rounded-3"
 							>
-								<span className="pe-2"> خدمات پزشک متخصص و فوق تخصص</span>
+								<span className="px-2">
+									{language === "fa"
+										? "پزشک متخصص و فوق تخصص"
+										: "Specialist Practitioner Services"}
+								</span>
 								<FaUserDoctor />
 							</Link>
 						</li>
@@ -180,9 +211,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					<li>
 						<Link
 							to="/UserHistory"
-							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
-							<span className="pe-2"> تاریخچه خدمات</span>
+							<span className="px-2">
+								{language === "fa" ? "تاریخچه خدمات" : "Service History"}
+							</span>
 							<FaClockRotateLeft />
 						</Link>
 					</li>
@@ -196,9 +229,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 							<li>
 								<Link
 									to="AdminDashboard"
-									className="d-flex align-items-center justify-content-end dropdown-item rounded-3 pe-2"
+									className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 								>
-									<span className="pe-2">داشبورد مدیر</span>
+									<span className="px-2">
+										{language === "fa" ? "داشبورد مدیر" : "Admin Dashboard"}
+									</span>
 									<FaUserTie />
 								</Link>
 							</li>
