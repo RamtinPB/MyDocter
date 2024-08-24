@@ -8,7 +8,6 @@ import "/src/cssFiles/customColors.css";
 import Logo from "../images/Logo.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
-import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "./LanguageContext";
 
 interface UserData {

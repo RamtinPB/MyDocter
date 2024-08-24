@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { FaBell, FaRegBell } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "/src/cssFiles/myheader.css";
-import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "./LanguageContext";
 
 interface PurchasedService {

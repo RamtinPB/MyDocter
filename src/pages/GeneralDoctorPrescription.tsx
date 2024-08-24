@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
-import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;

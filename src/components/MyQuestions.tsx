@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "/src/cssFiles/myquestions.css"; // Import the CSS file for styling
 import "/src/cssFiles/customColors.css";
-import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "./LanguageContext";
 
 interface Questions {

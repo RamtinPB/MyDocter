@@ -9,7 +9,6 @@ import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
-import axiosInstance from "../myAPI/axiosInstance";
 
 interface FileData {
 	fileName: string;
