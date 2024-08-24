@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../myAPI/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 interface Service {
