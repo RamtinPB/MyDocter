@@ -84,8 +84,8 @@ function MyHeader() {
 		<>
 			<nav className="navbar navbar-expand-lg custom-header shadow-lg sticky-top">
 				<div className="container d-flex justify-content-between py-lg-1 py-0">
-					<div className="d-flex justify-content-between align-items-center gap-3">
-						{isLoggedIn ? (
+					{isLoggedIn ? (
+						<div className="d-flex justify-content-between align-items-center gap-3">
 							<button
 								className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-bg-2 border border-1 rounded-pill ps-0 ms-0"
 								type="button"
@@ -113,7 +113,10 @@ function MyHeader() {
 									{username}
 								</span>
 							</button>
-						) : (
+							<NotificationDropdown />
+						</div>
+					) : (
+						<div className="d-flex justify-content-between align-items-center gap-3">
 							<Link to="/login">
 								<img
 									src="\src\images\Login Button.png"
@@ -121,9 +124,8 @@ function MyHeader() {
 									className="d-inline-block custom-login-btn rounded-pill"
 								/>
 							</Link>
-						)}
-						<NotificationDropdown />
-					</div>
+						</div>
+					)}
 					<Link className="nav-link" to="/">
 						<img
 							src={Logo}
