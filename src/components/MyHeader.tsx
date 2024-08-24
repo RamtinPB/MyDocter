@@ -37,10 +37,19 @@ function MyHeader() {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const response = await axiosInstance.get<UserData>("/userInfo");
-				setUserData(response.data);
+				const response = await fetch("/db.json"); // Adjust path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming the userInfo is directly available in the root of db.json
+				const userInfo = data.userInfo;
+
+				setUserData(userInfo);
 				setLoading(false);
 			} catch (err) {
+				console.error("Error fetching user information:", err);
 				setError("Failed to fetch user information");
 				setLoading(false);
 			}

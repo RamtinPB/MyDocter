@@ -24,10 +24,19 @@ function MyQuestions() {
 	useEffect(() => {
 		const fetchQuestions = async () => {
 			try {
-				const response = await axiosInstance.get<Questions[]>("/questions");
-				setQuestions(response.data);
+				const response = await fetch("/db.json"); // Adjust path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming questions is directly available in the root of db.json
+				const questions = data.questions;
+
+				setQuestions(questions);
 				setLoading(false);
 			} catch (err) {
+				console.error("Error fetching questions:", err);
 				setError("Failed to fetch questions");
 				setLoading(false);
 			}

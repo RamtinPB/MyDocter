@@ -15,16 +15,22 @@ interface Service {
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<Service[]>([]);
 
-	// Fetch services data from JSON
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await axiosInstance.get<Service[]>("/services");
-				setServices(response.data);
+				const response = await fetch("/db.json"); // Adjust path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming services is an array available in the root of db.json
+				setServices(data.services || []); // Default to empty array if data.services is undefined
 			} catch (err) {
 				console.error("Failed to fetch services", err);
 			}
 		};
+
 		fetchServices();
 	}, []);
 

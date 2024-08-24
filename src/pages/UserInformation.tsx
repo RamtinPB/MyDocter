@@ -19,38 +19,30 @@ function UserInformation() {
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
 	useEffect(() => {
-		axiosInstance
-			.get("/userInfo")
+		fetch("/db.json")
 			.then((response) => {
-				formik.setValues(response.data);
-				if (response.data.profilePicture) {
-					setProfilePicture(response.data.profilePicture);
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				return response.json();
+			})
+			.then((data) => {
+				// Update state for validation schema data
+				setValidationSchemaData(data.validationSchemaData);
+
+				// Update state for form fields
+				setFormFields(data.formFields);
+
+				// Update form values with user info
+				formik.setValues(data.userInfo);
+
+				// Set profile picture if available
+				if (data.userInfo.profilePicture) {
+					setProfilePicture(data.userInfo.profilePicture);
 				}
 			})
 			.catch((error) => {
-				console.error("Error fetching user data:", error);
-			});
-	}, []);
-
-	useEffect(() => {
-		axiosInstance
-			.get("/formFields")
-			.then((response) => {
-				setFormFields(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching form fields:", error);
-			});
-	}, []);
-
-	useEffect(() => {
-		axiosInstance
-			.get("/validationSchemaData")
-			.then((response) => {
-				setValidationSchemaData(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching custom validation schema:", error);
+				console.error("Error fetching data:", error);
 			});
 	}, []);
 

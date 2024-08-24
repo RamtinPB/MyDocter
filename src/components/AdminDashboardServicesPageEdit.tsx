@@ -32,8 +32,18 @@ function ServicePageEdit() {
 	useEffect(() => {
 		const fetchService = async () => {
 			try {
-				const response = await axiosInstance.get<Service[]>(`/services`);
-				const selectedService = response.data.find((s) => `${s.id}` === id);
+				const response = await fetch("/db.json"); // Adjust path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming services is an array available in the root of db.json
+				const services = data.services;
+
+				const selectedService = services.find(
+					(s: { id: any }) => `${s.id}` === id
+				);
 
 				if (selectedService) {
 					setService(selectedService);
@@ -43,6 +53,7 @@ function ServicePageEdit() {
 				}
 				setLoading(false);
 			} catch (err) {
+				console.error("Error fetching service details:", err);
 				setError("Failed to fetch service details");
 				setLoading(false);
 			}

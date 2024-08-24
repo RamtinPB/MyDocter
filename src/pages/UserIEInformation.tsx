@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
@@ -25,52 +24,32 @@ function UserIEInformation() {
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
 
 	useEffect(() => {
-		axiosInstance
-			.get("/userInfo")
+		// Fetch all data in a single request
+		fetch("/db.json")
 			.then((response) => {
-				setUserInfo(response.data);
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				return response.json();
 			})
-			.catch((error) => {
-				console.log("Error fetching userInfo data:", error);
-			});
-	}, []);
+			.then((data) => {
+				// Update state for userInfo
+				setUserInfo(data.userInfo);
 
-	useEffect(() => {
-		axiosInstance
-			.get("/userInfoIE")
-			.then((response) => {
-				formik.setValues(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching userIE data:", error);
-			});
-	}, []);
+				// Update form values with userInfoIE data
+				formik.setValues(data.userInfoIE);
 
-	useEffect(() => {
-		axiosInstance
-			.get("/formFieldsIE")
-			.then((response) => {
-				const sections = response.data[0];
+				// Update form fields
+				const sections = data.formFieldsIE[0]; // Adjust based on structure
 				setFormSections(sections);
+
+				// Update validation schema data
+				setValidationSchemaData(data.validationSchemaDataIE);
 			})
 			.catch((error) => {
-				console.error("Error fetching form fields:", error);
+				console.error("Error fetching data:", error);
 			});
 	}, []);
-
-	useEffect(() => {
-		axiosInstance
-			.get("/validationSchemaDataIE")
-			.then((response) => {
-				setValidationSchemaData(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching custom validation schema:", error);
-			});
-	}, []);
-
-	// Function to clean form sections by filtering out unwanted properties
-
 	const validationSchema = Yup.object().shape(
 		validationSchemaData.reduce((acc, rule) => {
 			let fieldSchema: Yup.AnySchema = Yup.mixed();
@@ -155,16 +134,16 @@ function UserIEInformation() {
 		initialValues: initialFormData,
 		validationSchema,
 		onSubmit: (values) => {
-			axios
-				.post("http://localhost:3001/submitInitialEvaluation", values)
+			axiosInstance
+				.post("/submitInitialEvaluation", values)
 				.then((response) => {
 					console.log(
-						"UserIE information updated successfully:",
+						"initial evaluation updated successfully:",
 						response.data
 					);
 				})
 				.catch((error) => {
-					console.error("Error updating userIE information:", error);
+					console.error("Error updating initial evaluation:", error);
 				});
 		},
 		validateOnBlur: true,

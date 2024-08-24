@@ -49,10 +49,13 @@ function Home() {
 	useEffect(() => {
 		const fetchHomeTextData = async () => {
 			try {
-				const response = await axiosInstance.get<homeTextData[]>(
-					"/homeTextData"
-				);
-				setHomeTextData(response.data[0]);
+				const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+				if (!response.ok) {
+					throw new Error("Failed to fetch data");
+				}
+
+				const data = await response.json();
+				setHomeTextData(data.homeTextData[0]); // Assuming 'homeTextData' is the key in your JSON structure
 				setLoading(false);
 			} catch (err) {
 				setError("Failed to fetch homeTextData");

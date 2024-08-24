@@ -18,10 +18,20 @@ function SpecialistDoctorPrescription() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await axiosInstance.get<Service[]>("/services");
-				setServices(response.data);
+				// Use fetch to get the data from the public folder
+				const response = await fetch("/db.json"); // Adjust the path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming the services data is available in a property like `services`
+				const services = data.services; // Adjust according to your db.json structure
+
+				setServices(services);
 				setLoading(false);
 			} catch (err) {
+				console.error("Error fetching services:", err);
 				setError("Failed to fetch services");
 				setLoading(false);
 			}

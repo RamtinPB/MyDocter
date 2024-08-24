@@ -10,7 +10,6 @@ import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/ForRenderFilled";
-import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -50,15 +49,22 @@ function UserHistoryExtended() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		// Define a function to fetch the specific service by purchaseId
 		const fetchService = async () => {
 			try {
-				const response = await axiosInstance.get<Service[]>(
-					`/userPurchasedServices`
-				);
-				const selectedService = response.data.find(
-					(s) => `${s.purchaseId}` === purchaseId
+				// Fetch the entire list of services
+				const response = await fetch("/db.json");
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Find the specific service using the purchaseId
+				const selectedService = data.userPurchasedServices.find(
+					(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
 				);
 
+				// Set the service state if found, otherwise set error state
 				if (selectedService) {
 					setService(selectedService);
 				} else {
@@ -74,6 +80,7 @@ function UserHistoryExtended() {
 		fetchService();
 	}, [purchaseId]);
 
+	// Loading, Error and Service UI
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
 	}

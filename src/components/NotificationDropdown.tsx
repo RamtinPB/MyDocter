@@ -32,15 +32,24 @@ const NotificationDropdown = () => {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
-		// Fetch user purchased services from the server
-		axiosInstance
-			.get("/userPurchasedServices")
-			.then((response) => {
-				setUserPurchasedServices(response.data);
-			})
-			.catch((error) => {
+		const fetchUserPurchasedServices = async () => {
+			try {
+				const response = await fetch("/db.json"); // Adjust path if necessary
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const data = await response.json();
+
+				// Assuming userPurchasedServices is directly available in the root of db.json
+				const userPurchasedServices = data.userPurchasedServices;
+
+				setUserPurchasedServices(userPurchasedServices);
+			} catch (error) {
 				console.error("Error fetching purchased services:", error);
-			});
+			}
+		};
+
+		fetchUserPurchasedServices();
 	}, []);
 
 	useEffect(() => {

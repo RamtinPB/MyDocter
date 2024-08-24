@@ -81,89 +81,72 @@ function ServicePage() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchUserInfo = async () => {
+		const fetchData = async () => {
 			try {
-				const response = await axiosInstance.get<UserInfo>("/userInfo");
-				setUserInfo(response.data);
-				console.log(response.data);
-				setLoading(false);
-			} catch (err) {
-				setError("Failed to fetch UserInfo");
-				setLoading(false);
-			}
-		};
+				setLoading(true);
 
-		fetchUserInfo();
-	}, []);
-
-	useEffect(() => {
-		const fetchInsurance = async () => {
-			try {
-				const response = await axiosInstance.get<Insurance[]>("/insurance");
-				if (userInfo) {
-					const matchedInsurance = response.data.find(
-						(ins) => ins.insuranceType === userInfo.insuranceType
-					);
-					setInsurance(matchedInsurance || null);
+				// Fetch user info
+				const userInfoResponse = await fetch("/db.json");
+				if (!userInfoResponse.ok) {
+					throw new Error("Network response was not ok");
 				}
-				setLoading(false);
-			} catch (err) {
-				setError("Failed to fetch Insurance");
-				setLoading(false);
-			}
-		};
+				const data = await userInfoResponse.json();
+				const userInfo = data.userInfo;
+				setUserInfo(userInfo);
+				console.log(userInfo);
 
-		if (userInfo) {
-			fetchInsurance();
-		}
-	}, [userInfo]);
-
-	useEffect(() => {
-		const fetchSupplementaryInsurance = async () => {
-			try {
-				const response = await axiosInstance.get<SupplementaryInsurance[]>(
-					"/supplementaryInsurance"
+				// Fetch insurance data
+				const insuranceResponse = await fetch("/db.json");
+				if (!insuranceResponse.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const insuranceData = await insuranceResponse.json();
+				const matchedInsurance = insuranceData.insurance.find(
+					(ins: { insuranceType: any }) =>
+						ins.insuranceType === userInfo.insuranceType
 				);
-				if (userInfo) {
-					const matchedSupplementaryInsurance = response.data.find(
-						(suppIns) =>
+				setInsurance(matchedInsurance || null);
+
+				// Fetch supplementary insurance data
+				const supplementaryInsuranceResponse = await fetch("/db.json");
+				if (!supplementaryInsuranceResponse.ok) {
+					throw new Error("Network response was not ok");
+				}
+				const supplementaryInsuranceData =
+					await supplementaryInsuranceResponse.json();
+				const matchedSupplementaryInsurance =
+					supplementaryInsuranceData.supplementaryInsurance.find(
+						(suppIns: { supplementaryInsuranceType: any }) =>
 							suppIns.supplementaryInsuranceType ===
 							userInfo.supplementaryInsuranceType
 					);
-					setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+
+				// Fetch service data
+				const serviceResponse = await fetch("/db.json");
+				if (!serviceResponse.ok) {
+					throw new Error("Network response was not ok");
 				}
-				setLoading(false);
-			} catch (err) {
-				setError("Failed to fetch Supplementary Insurance");
-				setLoading(false);
-			}
-		};
-
-		if (userInfo) {
-			fetchSupplementaryInsurance();
-		}
-	}, [userInfo]);
-
-	useEffect(() => {
-		const fetchService = async () => {
-			try {
-				const response = await axiosInstance.get<Service[]>(`/services`);
-				const selectedService = response.data.find((s) => `${s.id}` === id);
-
+				const serviceData = await serviceResponse.json();
+				const selectedService = serviceData.services.find(
+					(s: { id: any }) => `${s.id}` === id
+				);
 				if (selectedService) {
 					setService(selectedService);
 				} else {
 					setError("Service not found");
 				}
+
 				setLoading(false);
 			} catch (err) {
-				setError("Failed to fetch service details");
+				console.error("Error fetching data:", err);
+				setError("Failed to fetch data");
 				setLoading(false);
 			}
 		};
 
-		fetchService();
-	}, [id]);
+		fetchData();
+	}, [id]); // Only re-run if `id` changes
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
