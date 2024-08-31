@@ -1077,7 +1077,7 @@
 
 			"servicesLeftCardTitle": "خدمات پزشک متخصص و فوق تخصص",
 			"servicesLeftCardDescription": "توضیحات مربوط به این سرویس",
-			"servicesLeftCardImage": "../images/پزشک ارتوپد.jpg",
+			"servicesLeftCardImage": "/src/images/پزشک ارتوپد.jpg",
 
 			"servicesLeftCardTitleEN": "Specialist Practitioner Services",
 			"servicesLeftCardDescriptionEN": "servicesLeftCardDescriptionEN",
