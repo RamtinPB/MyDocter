@@ -28,7 +28,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "1",
 			"link": "/services/1"
@@ -39,7 +39,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "2000",
 			"subsidy": "500",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "2",
 			"link": "/services/2"
@@ -50,7 +50,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1.000",
 			"subsidy": "100",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
 			"id": "3",
 			"link": "/services/3"
@@ -61,7 +61,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "4",
 			"link": "/services/4"
@@ -73,7 +73,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "5",
 			"link": "/services/5"
@@ -84,7 +84,7 @@
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
 			"price": "1000",
 			"subsidy": "100",
-			"image": "/src/images/پزشک ارتوپد.jpg",
+			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
 			"id": "6",
 			"link": "/services/6"
@@ -1077,20 +1077,20 @@
 
 			"servicesLeftCardTitle": "خدمات پزشک متخصص و فوق تخصص",
 			"servicesLeftCardDescription": "توضیحات مربوط به این سرویس",
-			"servicesLeftCardImage": "../images/پزشک ارتوپد.jpg",
+			"servicesLeftCardImage": "/images/پزشک ارتوپد.jpg",
 
 			"servicesLeftCardTitleEN": "Specialist Practitioner Services",
 			"servicesLeftCardDescriptionEN": "servicesLeftCardDescriptionEN",
 
 			"servicesRightCardTitle": "خدمات پزشک عمومی",
 			"servicesRightCardDescription": "توضیحات مربوط به این سرویس",
-			"servicesRightCardImage": "/src/images/پزشک ارتوپد.jpg",
+			"servicesRightCardImage": "/images/پزشک ارتوپد.jpg",
 
 			"servicesRightCardTitleEN": "General Practitioner Services",
 			"servicesRightCardDescriptionEN": "servicesRightCardDescriptionEN",
 
 			"docTitle": "همه نتایج توسط پزشک های معتبر تایید می شوند",
-			"docImage": "/src/images/mrDoc.png",
+			"docImage": "/images/mrDoc.png",
 			"docDescription": "متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی متن ساختگی",
 
 			"docTitleEN": "docTitleEN",
