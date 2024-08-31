@@ -88,7 +88,7 @@ function AdminDashboardServicesPageContent() {
 											onClick={() => removeCard(service.id)} // Use unique id for deletion
 										>
 											<img
-												src="/src/images/red-delete.png"
+												src="/images/red-delete.png"
 												className="custom-admin-btn rounded-circle"
 												alt="Delete"
 											/>
@@ -104,7 +104,7 @@ function AdminDashboardServicesPageContent() {
 											className="rounded-circle btn shadow p-0 my-3"
 										>
 											<img
-												src="/src/images/edit-cog.png"
+												src="/images/edit-cog.png"
 												className="custom-admin-btn rounded-circle"
 												alt="Edit"
 											/>
@@ -122,7 +122,7 @@ function AdminDashboardServicesPageContent() {
 						onClick={() => addCard(category)}
 					>
 						<img
-							src="/src/images/green-add.png"
+							src="/images/green-add.png"
 							className="custom-admin-btn ounded-circle"
 							alt="Add"
 						/>

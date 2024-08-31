@@ -205,7 +205,7 @@ function UserInformation() {
 					className="needs-validation"
 					noValidate
 				>
-					<div className="text-end bg-white shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-3">
+					<div className="text-end bg-white shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5">
 						<h2>اطلاعات کاربر</h2>
 						<div
 							className="row row-cols-2 g-4 g-md-5 my-1"

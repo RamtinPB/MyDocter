@@ -1,6 +1,6 @@
 import { FaInstagram, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import "/src/cssFiles/myfooter.css";
-import Logo from "/src/images/Logo.png";
+import Logo from "/images/Logo.png";
 import { FaXTwitter } from "react-icons/fa6";
 import { useLanguage } from "./LanguageContext";
 

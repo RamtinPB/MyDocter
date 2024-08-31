@@ -74,7 +74,7 @@ function MyQuestions() {
 								{language === "fa" ? question.title : question.titleEN}
 							</h3>
 							<img
-								src="src\images\plus-border.png"
+								src="\images\plus-border.png"
 								alt="+"
 								className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
 									openIndexes.includes(index) ? "rotate" : ""

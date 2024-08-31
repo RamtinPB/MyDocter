@@ -51,7 +51,7 @@ function AdminDashboardQuestionsPageContent() {
 							onClick={() => removeSection(index)}
 						>
 							<img
-								src="\src\images\red-delete.png"
+								src="\images\red-delete.png"
 								className="custom-admin-btn rounded-circle"
 							/>
 						</button>
@@ -133,7 +133,7 @@ function AdminDashboardQuestionsPageContent() {
 						onClick={addSection}
 					>
 						<img
-							src="\src\images\green-add.png"
+							src="\images\green-add.png"
 							className="custom-admin-btn rounded-circle"
 						/>
 					</button>

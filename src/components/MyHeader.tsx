@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "/src/cssFiles/myheader.css";
 import "/src/cssFiles/customColors.css";
-import Logo from "../images/Logo.png";
+import Logo from "/images/Logo.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
@@ -119,7 +119,7 @@ function MyHeader() {
 						<div className="d-flex justify-content-between align-items-center gap-3">
 							<Link to="/login">
 								<img
-									src="\src\images\Login Button.png"
+									src="\images\Login Button.png"
 									alt="Login"
 									className="d-inline-block custom-login-btn rounded-pill"
 								/>
