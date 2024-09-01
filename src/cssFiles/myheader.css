@@ -52,7 +52,7 @@
 }
 
 @media (max-width: 576px){
-    .custom-logo {
+    /* .custom-logo {
         width: 60px;
         height: 20px;
     }
@@ -73,7 +73,7 @@
     .custom-user-img-icon{
         width: 20px;
         height: 20px;
-    }
+    } */
 }
 
 .custom-header {
