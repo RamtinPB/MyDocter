@@ -2,10 +2,12 @@
 	"insurance": [
 		{
 			"insuranceType": "بیمه سلامت",
+			"insuranceTypeEN": "insuranceTypeEN1",
 			"insuranceContribution": "70"
 		},
 		{
 			"insuranceType": "بیمه تامین اجتماعی",
+			"insuranceTypeEN": "insuranceTypeEN2",
 			"insuranceContribution": "60"
 		}
 	],
@@ -13,19 +15,26 @@
 	"supplementaryInsurance": [
 		{
 			"supplementaryInsuranceType": "بیمه",
+			"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN1",
 			"supplementaryInsuranceContribution": "20"
 		},
 		{
 			"supplementaryInsuranceType": "بیمه تکمیلی",
+			"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN2",
 			"supplementaryInsuranceContribution": "10"
 		}
 	],
 
 	"services": [
 		{
-			"name": "نام سرویس",
+			"name": "1نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName1",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -34,9 +43,14 @@
 			"link": "/services/1"
 		},
 		{
-			"name": "نام سرویس",
+			"name": "2نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName2",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "2000",
 			"subsidy": "500",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -45,9 +59,14 @@
 			"link": "/services/2"
 		},
 		{
-			"name": "نام سرویس",
+			"name": "3نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName3",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "1.000",
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -56,9 +75,14 @@
 			"link": "/services/3"
 		},
 		{
-			"name": "نام سرویس",
+			"name": "4نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName4",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -68,9 +92,14 @@
 		},
 
 		{
-			"name": "نام سرویس",
+			"name": "5نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName5",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -79,9 +108,14 @@
 			"link": "/services/5"
 		},
 		{
-			"name": "نام سرویس",
+			"name": "6نام سرویس",
 			"description": "توضیحات کوتاه مربوط به سرویس",
 			"detailedDescription": "توضیحات تکمیلی مربوط به سرویس",
+
+			"nameEN": "ServiceName6",
+			"descriptionEN": "a clear and straight forward description",
+			"detailedDescriptionEN": "detailedDescription",
+
 			"price": "1000",
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
@@ -191,6 +225,10 @@
 		"nationality": "",
 		"insuranceType": "بیمه سلامت",
 		"supplementaryInsuranceType": "بیمه",
+
+		"insuranceTypeEN": "insuranceTypeEN",
+		"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN",
+
 		"province": "",
 		"postalCode": "",
 		"city": "",

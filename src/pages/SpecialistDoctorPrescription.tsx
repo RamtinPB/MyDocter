@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
+import { useLanguage } from "../components/LanguageContext";
 
 interface Service {
 	name: string;
 	description: string;
+
+	nameEN: string;
+	descriptionEN: string;
+
 	image: string;
 	id: string;
 	category: string;
@@ -11,8 +16,11 @@ interface Service {
 
 function SpecialistDoctorPrescription() {
 	const [services, setServices] = useState<Service[]>([]);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -51,10 +59,17 @@ function SpecialistDoctorPrescription() {
 		<div className="custom-bg-4">
 			<div className="container d-flex flex-column px-3 px-md-4">
 				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
-					<h4>خدمات پزشک متخصص و فوق تخصص</h4>
+					<h4>
+						{language === "fa"
+							? "خدمات پزشک متخصص و فوق تخصص"
+							: "Specialist Practitioner Services"}
+					</h4>
 				</div>
 				<div className="text-end bg-white border border-2 shadow rounded-5 px-0 px-md-4 px-lg-5 py-5 mb-3">
-					<div className="row row-cols-2 g-5 mx-1" style={{ direction: "rtl" }}>
+					<div
+						className="row row-cols-2 g-5 mx-1"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
 						{services.map(
 							(service, index) =>
 								service.category === "specialist" && (
@@ -62,16 +77,21 @@ function SpecialistDoctorPrescription() {
 										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">
 												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-													{service.name}
+													{language === "fa" ? service.name : service.nameEN}
 												</h5>
 												<img
 													src={service.image}
 													className="img-fluid m-0"
-													style={{ width: "546.22px" }}
 													alt={service.name}
 												/>
-												<p className="card-text my-3 mx-3 text-end">
-													{service.description}
+												<p
+													className={` card-text my-3 mx-3 text-${
+														language === "fa" ? "end" : "start"
+													} `}
+												>
+													{language === "fa"
+														? service.description
+														: service.descriptionEN}
 												</p>
 												<button
 													className="btn btn-primary rounded-pill my-3"
@@ -79,7 +99,7 @@ function SpecialistDoctorPrescription() {
 														(window.location.href = `/services/${service.id}`)
 													}
 												>
-													مشاهده
+													{language === "fa" ? "مشاهده" : "Enter"}
 												</button>
 											</div>
 										</div>

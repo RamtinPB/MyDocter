@@ -129,7 +129,11 @@ function Home() {
 										className="img-fluid custom-home-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
-									<p className="card-text text-end m-3">
+									<p
+										className={` card-text text-${
+											language === "fa" ? "end" : "start"
+										} m-3 `}
+									>
 										{language === "fa"
 											? homeText?.servicesLeftCardDescription
 											: homeText?.servicesLeftCardDescriptionEN}
@@ -156,7 +160,11 @@ function Home() {
 										className="img-fluid custom-home-service-img rounded-4 shadow-sm"
 										alt="general Doctor"
 									/>
-									<p className="card-text text-end m-3">
+									<p
+										className={` card-text text-${
+											language === "fa" ? "end" : "start"
+										} m-3 `}
+									>
 										{language === "fa"
 											? homeText?.servicesRightCardDescription
 											: homeText?.servicesRightCardDescriptionEN}
@@ -183,7 +191,11 @@ function Home() {
 					alt="Mr Doc"
 					className="img-fluid col-md-5 col-lg-4 col-xl-3  d-sm-block d-none"
 				/>
-				<div className="col-10 col-md-7 col-lg-8 text-end text-white p-1 p-md-3 p-lg-4 m-auto">
+				<div
+					className={` col-10 col-md-7 col-lg-8 text-${
+						language === "fa" ? "end" : "center"
+					} text-white p-1 p-md-3 p-lg-4 m-auto `}
+				>
 					<h4>
 						{language === "fa" ? homeText?.docTitle : homeText?.docTitleEN}
 					</h4>

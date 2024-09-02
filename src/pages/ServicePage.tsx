@@ -9,6 +9,7 @@ import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import { useLanguage } from "../components/LanguageContext";
 
 interface FileData {
 	fileName: string;
@@ -20,6 +21,11 @@ interface Service {
 	name: string;
 	description: string;
 	detailedDescription: string;
+
+	nameEN: string;
+	descriptionEN: string;
+	detailedDescriptionEN: string;
+
 	price: string;
 	subsidy: string;
 	image: string;
@@ -30,15 +36,20 @@ interface Service {
 interface UserInfo {
 	insuranceType: string;
 	supplementaryInsuranceType: string;
+
+	insuranceTypeEN: string;
+	supplementaryInsuranceTypeEN: string;
 }
 
 interface Insurance {
 	insuranceType: string;
+	insuranceTypeEN: string;
 	insuranceContribution: string;
 }
 
 interface SupplementaryInsurance {
 	supplementaryInsuranceType: string;
+	supplementaryInsuranceTypeEN: string;
 	supplementaryInsuranceContribution: string;
 }
 
@@ -76,6 +87,8 @@ function ServicePage() {
 
 	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const navigate = useNavigate();
 
@@ -239,16 +252,22 @@ function ServicePage() {
 						/>
 					</div>
 					<div className="col-8 text-center text-white">
-						<h4>{service.name}</h4>
+						<h4>{language === "fa" ? service.name : service.nameEN}</h4>
 					</div>
 				</div>
 
 				{/* Image and Description Section */}
 				<div
-					className="d-flex justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4"
-					style={{ direction: "rtl" }}
+					className={`d-flex justify-content-between bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<p className="pe-3 me-1">{service.detailedDescription}</p>
+					<p className="px-3 mx-1">
+						{language === "fa"
+							? service.detailedDescription
+							: service.detailedDescriptionEN}
+					</p>
 					<img
 						src={service.image}
 						alt="Service"
@@ -257,10 +276,21 @@ function ServicePage() {
 				</div>
 
 				{/* File Upload Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">انتقال فایل</h5>
-					<div className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 mx-4">
-						<div className="d-flex flex-wrap justify-content-start align-items-center">
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-4 mx-1">
+						{language === "fa" ? "انتقال فایل" : "File Transfer"}
+					</h5>
+					<div
+						className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 mx-4"
+						style={{ direction: "ltr" }}
+					>
+						<div
+							className={`d-flex flex-wrap justify-content-start align-items-center`}
+						>
 							{/* Display uploaded files with icons */}
 							{uploadedFiles.map((file, index) => (
 								<div className="d-flex flex-column p-1 mx-1">
@@ -275,14 +305,20 @@ function ServicePage() {
 											alt={`${file.fileName} Icon`}
 											className="custom-file-icon"
 										/>
-										<span className="text-end mt-1">{file.fileName}</span>
+										<span
+											className={`text-${
+												language === "fa" ? "end" : "start"
+											} mt-1`}
+										>
+											{file.fileName}
+										</span>
 									</a>
 									{/* Delete Button */}
 									<button
 										className="btn btn-sm btn-danger rounded-pill mt-1"
 										onClick={() => handleFileDelete(index)}
 									>
-										Delete
+										{language === "fa" ? "حذف" : "Delete"}
 									</button>
 								</div>
 							))}
@@ -294,7 +330,8 @@ function ServicePage() {
 								className="btn btn-outline-secondary ms-2"
 								onClick={handleFileUploadClick}
 							>
-								<i className="fas fa-file-upload"></i> {"آپلود فایل"}
+								<i className="fas fa-file-upload"></i>
+								{language === "fa" ? "آپلود فایل" : "Upload File"}
 							</button>
 							{/* Hidden file input */}
 							<input
@@ -310,13 +347,19 @@ function ServicePage() {
 
 				{/* Form Render Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">فرم سرویس</h5>
+					<h5 className="pe-4 me-1">
+						{language === "fa" ? "فرم سرویس" : "Service Form"}
+					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
 							<FormRender />
 						) : (
 							<div className="text-center py-3">
-								<p>اطلاعات فرم یافت نشد</p>
+								<p>
+									{language === "fa"
+										? "اطلاعات فرم یافت نشد"
+										: "Form Data Not Found"}
+								</p>
 							</div>
 						)}
 					</div>
@@ -324,34 +367,61 @@ function ServicePage() {
 
 				{/* User Input Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-1 me-1">شرح حال کاربر</h5>
+					<h5 className="pe-1 me-1">
+						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
+					</h5>
 					<textarea
 						id="userInput"
 						className="form-control text-end"
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 					></textarea>
 				</div>
 
 				{/* Pricing Table Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<div className="table-responsive" style={{ direction: "rtl" }}>
+					<div
+						className="table-responsive"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
 						<table className="table text-center">
 							<thead>
 								<tr>
-									<th>{"نوع بیمه"}</th>
-									<th>{"سهم بیمه"}</th>
-									<th>{"نوع بیمه تکمیلی"}</th>
-									<th>{"سهم بیمه تکمیلی"}</th>
-									<th>{"قیمت سرویس"}</th>
-									<th>{"مبالغ یارانه"}</th>
+									<th>{language === "fa" ? "نوع بیمه" : "Insurance Type"}</th>
+									<th>
+										{language === "fa" ? "سهم بیمه" : "Insurance Contribution"}
+									</th>
+									<th>
+										{language === "fa"
+											? "نوع بیمه تکمیلی"
+											: "Supplementary Insurance Type"}
+									</th>
+									<th>
+										{language === "fa"
+											? "سهم بیمه تکمیلی"
+											: "Supplementary Insurance Contribution"}
+									</th>
+									<th>{language === "fa" ? "قیمت سرویس" : "Service Cost"}</th>
+									<th>
+										{language === "fa" ? "مبالغ یارانه" : "Subsidy Amount"}
+									</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>{userInfo?.insuranceType}</td>
+									<td>
+										{language === "fa"
+											? userInfo?.insuranceType
+											: userInfo?.insuranceTypeEN}
+									</td>
 									<td>{insurance?.insuranceContribution}</td>
-									<td>{userInfo?.supplementaryInsuranceType}</td>
+									<td>
+										{language === "fa"
+											? userInfo?.supplementaryInsuranceType
+											: userInfo?.supplementaryInsuranceTypeEN}
+									</td>
 									<td>
 										{supplementaryInsurance?.supplementaryInsuranceContribution}
 									</td>
@@ -367,9 +437,13 @@ function ServicePage() {
 				{/* Purchase Button Section */}
 				<div className="d-flex justify-content-center mb-4 mt-5">
 					<div className="bg-white border border-2 shadow text-end rounded-5 ">
-						<span className=" mx-3 ">{`مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`}</span>
+						<span className=" mx-3 ">
+							{language === "fa"
+								? `مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`
+								: `Final Purchase Amount ${handleFinalPurchaseAmount()} Toman(s)`}
+						</span>
 						<button className="btn btn-success rounded-pill px-4 py-2">
-							{"خریداری سرویس"}
+							{language === "fa" ? "خریداری سرویس" : "Purchase Service"}
 						</button>
 					</div>
 				</div>
