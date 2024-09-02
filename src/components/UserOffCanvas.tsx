@@ -80,7 +80,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 					aria-label="Close"
 				>
 					<img
-						src="\src\images\x-noBorder.png"
+						src="\images\x-noBorder.png"
 						className="rounded-circle custom-x-btn"
 					/>
 				</button>

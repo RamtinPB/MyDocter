@@ -318,7 +318,7 @@ function UserInformation() {
 													htmlFor={field.checkboxName}
 													className="form-check-label mx-2"
 												>
-													{language === "da"
+													{language === "fa"
 														? field.checkboxLabel
 														: field.checkboxLabelEN}
 												</label>

@@ -561,11 +561,6 @@
 		}
 	],
 
-	"userInfoIE": {
-		"example1": "علی",
-		"example2": "هاشمی"
-	},
-
 	"formFieldsIE": [
 		{
 			"اطلاعات پایه": [
@@ -573,28 +568,28 @@
 					"name": "userWeight",
 					"type": "string",
 					"label": "وزن",
-					"labelEN": "",
+					"labelEN": "Weight",
 					"required": true
 				},
 				{
 					"name": "userHeight",
 					"type": "string",
 					"label": "قد",
-					"labelEN": "",
+					"labelEN": "Height",
 					"required": true
 				},
 				{
 					"name": "userAge",
 					"type": "string",
 					"label": "سن",
-					"labelEN": "",
+					"labelEN": "Age",
 					"required": true
 				},
 				{
 					"name": "userBodyMassIndex",
 					"type": "string",
 					"label": "(اختیاری) BMI نمایه توده بدنی",
-					"labelEN": "",
+					"labelEN": "Body Mass Index (optional)",
 					"optional": true
 				}
 			],
@@ -603,27 +598,31 @@
 					"name": "illnessRecordNameSelf",
 					"type": "string",
 					"label": "سابقه بیماری (جسمی / روانی / اختلال مادرزادی)",
-					"labelEN": "",
+					"labelEN": "Illness history (physical/psychological/congenital)",
 					"placeholder": "ذکر بیماری",
+					"placeholderEN": "Specify illness",
 					"required": true,
 					"checkboxName": "hasIllnessRecordSelf",
-					"checkboxLabel": "سابقه بیماری ندارم"
+					"checkboxLabel": "سابقه بیماری ندارم",
+					"checkboxLabelEN": "I have no medical history"
 				},
 				{
 					"name": "illnessRecordNameFamily",
 					"type": "string",
 					"label": "سابقه بیماری در خانواده",
-					"labelEN": "",
+					"labelEN": "Illness history in the family",
 					"placeholder": "ذکر بیماری",
+					"placeholderEn": "Specify illness",
 					"required": true,
 					"checkboxName": "hasIllnessRecordFamily",
-					"checkboxLabel": "سابقه بیماری در خانواده ندارم"
+					"checkboxLabel": "سابقه بیماری در خانواده ندارم",
+					"checkboxLabelEN": "I dont have a history of illness in my family"
 				},
 				{
 					"name": "userFamilyMemberRelation",
 					"type": "string",
 					"label": "نسبت کاربر با بیمار ذکر شده",
-					"labelEN": "",
+					"labelEN": "Relation to the mentioned patient",
 					"optional": true,
 					"checkboxName": "hasIllnessRecordFamily"
 				},
@@ -635,54 +634,67 @@
 					"name": "hasBloodTransfusion",
 					"type": "select",
 					"label": "سابقه تزریق خون و فرآورده های خونی",
-					"labelEN": "",
+					"labelEN": "History of blood transfusion",
 					"required": true,
-					"options": ["ندارم", "دارم"]
+					"options": ["ندارم", "دارم"],
+					"optionsEN": ["No", "Yes"]
 				},
 				{
 					"name": "bloodTransfusionReaction",
 					"type": "string",
 					"placeholder": "ذکر واکنش",
+					"placeholderEN": "Specify reaction",
 					"label": "سابقه واکنش به تزریق خون و فرآورده های خونی",
-					"labelEN": "",
+					"labelEN": "History of reaction to blood transfusion",
 					"required": true,
 					"checkboxName": "hasBloodTransfusionReaction",
-					"checkboxLabel": "سابقه واکنش ندارم"
+					"checkboxLabel": "سابقه واکنش ندارم",
+					"checkboxLabelEN": "No reaction history"
 				},
 				{
 					"name": "userPet",
 					"type": "string",
 					"label": "داشتن حیوان خانگی",
-					"labelEN": "",
+					"labelEN": "Having a pet",
 					"placeholder": "نوع و گونه حیوان",
+					"placeholderEN": "Type and species of pet",
 					"required": true,
 					"checkboxName": "hasPet",
-					"checkboxLabel": "حیوان خانگی ندارم"
+					"checkboxLabel": "حیوان خانگی ندارم",
+					"checkboxLabelEN": "I dont have a pet"
 				},
 				{
 					"name": "riskFactors",
 					"type": "checkmenu",
 					"label": "عادات و عوامل خطر",
-					"labelEN": "",
+					"labelEN": "Habits and Risk Factors",
 					"optional": true,
 					"options": [
-						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
 						{
-							"labelEN": "",
+							"label": "سوء مصرف دارو",
+							"labelEN": "Drug abuse",
+							"name": "drugAbuse"
+						},
+						{
+							"labelEN": "Substance abuse",
 							"label": "سوء مصرف مواد مخدر",
 							"name": "substanceAbuse"
 						},
-						{ "labelEN": "", "label": "مصرف سیگار", "name": "smoking" },
-						{ "labelEN": "", "label": "مصرف قلیان", "name": "hookah" },
-						{ "labelEN": "", "label": "مصرف الکل", "name": "alcohol" },
+						{ "labelEN": "Smoking", "label": "مصرف سیگار", "name": "smoking" },
+						{ "labelEN": "Hookah", "label": "مصرف قلیان", "name": "hookah" },
 						{
-							"labelEN": "",
+							"labelEN": "Alcohol consumption",
+							"label": "مصرف الکل",
+							"name": "alcohol"
+						},
+						{
+							"labelEN": "Mining experience",
 							"label": "سابقه کار در معدن",
 							"name": "miningExperience"
 						},
 						{
 							"label": "سابقه کار با مواد شیمیائی",
-							"labelEN": "",
+							"labelEN": "Chemical exposure",
 							"name": "chemicalExposure"
 						}
 					]
@@ -691,23 +703,30 @@
 					"name": "sleepStatus",
 					"type": "select",
 					"label": "وضعیت خواب و استراحت",
-					"labelEN": "",
+					"labelEN": "Sleep and Rest Status",
 					"required": true,
 					"options": [
 						"کمتر از حد طبیعی (کمتر از 5 ساعت)",
 						"طبیعی",
 						"بیشتر از حد طبیعی (کمتر از 5 ساعت)"
+					],
+					"optionsEN": [
+						"Less than normal (less than 5 hours)",
+						"Normal",
+						"More than normal (more than 9 hours)"
 					]
 				},
 				{
 					"name": "sleepIssues",
 					"type": "string",
 					"placeholder": "ذکر مشکلات",
+					"placeholderEN": "Specify issues",
 					"label": "مشکلات خواب",
-					"labelEN": "",
+					"labelEN": "Sleep Issues",
 					"required": true,
 					"checkboxName": "hasSleepIssues",
-					"checkboxLabel": "مشکلی در خصوص خواب ندارم"
+					"checkboxLabel": "مشکلی در خصوص خواب ندارم",
+					"checkboxLabelEN": "No sleep issues"
 				}
 			],
 			"حساسیت ها": [
@@ -715,38 +734,44 @@
 					"name": "allergyDrugName",
 					"type": "string",
 					"label": "(به ترتیب) حساسیت دارویی",
-					"labelEN": "",
+					"labelEN": "Drug Allergy",
 					"required": true,
-					"placeholder": "،نام دارو، نام دارو",
+					"placeholder": "نام دارو، نام دارو",
+					"placeholderEN": "Drug name, Drug name",
 					"checkboxName": "hasAllergyDrug",
+					"checkboxLabelEN": "I dont have drug related allergies",
 					"checkboxLabel": "حساسیت دارویی ندارم"
 				},
 				{
 					"name": "allergyDrugReaction",
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
-					"labelEN": "",
+					"labelEN": "Drug Allergy Reactions",
 					"optional": true,
-					"placeholder": "،واکنش، واکنش",
+					"placeholder": "واکنش، واکنش",
+					"placeholderEN": "Specify reaction, Specify reaction",
 					"checkboxName": "hasAllergyDrug"
 				},
 				{
 					"name": "allergyFoodName",
 					"type": "string",
 					"label": "(به ترتیب) حساسیت غذایی",
-					"labelEN": "",
+					"labelEN": "Food Allergy",
 					"required": true,
-					"placeholder": "،نام غذا، نام غذا",
+					"placeholder": "نام غذا، نام غذا",
+					"placeholderEN": "Food name, Food name",
 					"checkboxName": "hasAllergyFood",
+					"checkboxLabelEN": "I dont have food related allergies",
 					"checkboxLabel": "حساسیت غذایی ندارم"
 				},
 				{
 					"name": "allergyFoodReaction",
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
-					"labelEN": "",
+					"labelEN": "Food Allergy Reactions",
 					"optional": true,
 					"placeholder": "،واکنش، واکنش",
+					"placeholderEN": "Specify reaction, Specify reaction",
 					"checkboxName": "hasAllergyFood"
 				}
 			],
@@ -755,80 +780,87 @@
 					"name": "hearingLimitations",
 					"type": "string",
 					"label": "محدودیت شنوایی",
-					"labelEN": "",
+					"labelEN": "Hearing Limitaions",
 					"required": true,
 					"placeholder": "ذکر محدودیت و گوش مبتلا",
+					"placeholderEN": "Specify limitations and affected ear",
 					"checkboxName": "hasHearingLimitations",
+					"checkboxLabelEN": "I dont have hearing lmitations",
 					"checkboxLabel": "محدودیت شنوایی ندارم"
 				},
 				{
 					"name": "sightLimitations",
 					"type": "string",
 					"label": "محدودیت بینایی",
-					"labelEN": "",
+					"labelEN": "Vision Limitations",
 					"required": true,
 					"placeholder": "ذکر محدودیت و چشم مبتلا",
+					"placeholderEN": "Specify limitation and affected eye",
 					"checkboxName": "hasSightLimitations",
+					"checkboxLabelEN": "I dont have vision lmitations",
 					"checkboxLabel": "محدودیت بینایی ندارم"
 				},
 				{
 					"name": "disabilityOrAmputaion",
 					"type": "string",
 					"label": "نقص و قطع عضو ",
-					"labelEN": "",
+					"labelEN": "Disability or Amputation",
 					"required": true,
 					"placeholder": "ذکر نوع نقص و اندام مربوطه",
+					"placeholderEN": "Specify type and affected limb",
 					"checkboxName": "hasDisabilityOrAmputaion",
+					"checkboxLabelEN": "I dont have a disability or amputation",
 					"checkboxLabel": "نقص و قطعی عضو ندارم"
 				},
 				{
 					"name": "assistiveDevicesProsthetics",
 					"type": "checkmenu",
 					"label": "در صورت داشتن وسایل کمکی و پروتز بر اساس موارد زیر مشخص کنید",
-					"labelEN": "",
+					"labelEN": "If using assistive devices or prosthetics, specify below",
 					"options": [
-						{ "label": "عصا", "name": "cane" },
-						{ "labelEN": "", "label": "واکر", "name": "walker" },
+						{ "label": "عصا", "labelEN": "Cane", "name": "cane" },
+						{ "labelEN": "Walker", "label": "واکر", "name": "walker" },
 						{
 							"label": "ویلچر",
-							"labelEN": "",
+							"labelEN": "Weelchair",
 							"name": "wheelChair"
 						},
 						{
 							"label": "چوب زیر بغل",
-							"labelEN": "",
+							"labelEN": "Crutches",
 							"name": "armpitStick"
 						},
 						{
 							"label": "پروتز اندام",
-							"labelEN": "",
+							"labelEN": "Prosthetic limb",
 							"name": "prostheticLimb"
 						},
 						{
 							"label": "دندان مصنوعی",
-							"labelEN": "",
+							"labelEN": "Denture",
 							"name": "denture"
 						},
 						{
 							"label": "سمعک",
-							"labelEN": "",
+							"labelEN": "Hearing aid",
 							"name": "hearingAid"
 						},
 						{
 							"label": "عینک",
-							"labelEN": "",
+							"labelEN": "Glasses",
 							"name": "glasses"
 						},
 						{
 							"label": "پروتز چشم",
-							"labelEN": "",
+							"labelEN": "Prosthetic eye",
 							"name": "prostheticEye"
 						}
 					]
 				},
 				{
 					"type": "placeholder",
-					"name": "انجام فعالیت های روزانه زندگی"
+					"name": "انجام فعالیت های روزانه زندگی",
+					"nameEN": "Activities of Daily Living"
 				},
 				{
 					"type": "placeholder",
@@ -838,41 +870,46 @@
 					"name": "ableToEat",
 					"type": "select",
 					"label": "غذا خوردن",
-					"labelEN": "",
+					"labelEN": "Eating",
 					"required": true,
-					"options": ["مستقل", "وابسته (نیازمند کمک)"]
+					"options": ["مستقل", "وابسته (نیازمند کمک)"],
+					"optionsEN": ["Independent", "Dependent (needs assistance)"]
 				},
 				{
 					"name": "ableToDress",
 					"type": "select",
 					"label": "لباس پوشیدن",
-					"labelEN": "",
+					"labelEN": "Dressing",
 					"required": true,
-					"options": ["مستقل", "وابسته (نیازمند کمک)"]
+					"options": ["مستقل", "وابسته (نیازمند کمک)"],
+					"optionsEN": ["Independent", "Dependent (needs assistance)"]
 				},
 				{
 					"name": "ableToBathe",
 					"type": "select",
 					"label": "استحمام",
-					"labelEN": "",
+					"labelEN": "Bathing",
 					"required": true,
-					"options": ["مستقل", "وابسته (نیازمند کمک)"]
+					"options": ["مستقل", "وابسته (نیازمند کمک)"],
+					"optionsEN": ["Independent", "Dependent (needs assistance)"]
 				},
 				{
 					"name": "ableToGoToBathroom",
 					"type": "select",
 					"label": "دست شویی رفتن",
-					"labelEN": "",
+					"labelEN": "Toileting",
 					"required": true,
-					"options": ["مستقل", "وابسته (نیازمند کمک)"]
+					"options": ["مستقل", "وابسته (نیازمند کمک)"],
+					"optionsEN": ["Independent", "Dependent (needs assistance)"]
 				},
 				{
 					"name": "ableToFreelyMove",
 					"type": "select",
 					"label": "تحرک و جابجایی",
-					"labelEN": "",
+					"labelEN": "Mobility",
 					"required": true,
-					"options": ["مستقل", "وابسته (نیازمند کمک)"]
+					"options": ["مستقل", "وابسته (نیازمند کمک)"],
+					"optionsEN": ["Independent", "Dependent (needs assistance)"]
 				}
 			],
 			"سابقه مصرف دارو (اختیاری)": [
@@ -880,8 +917,9 @@
 					"name": "rugularDrugNames",
 					"type": "string",
 					"label": "نام دارو ها (به ترتیب)",
-					"labelEN": "",
-					"placeholder": "،نام دارو، نام دارو",
+					"labelEN": "Regular medication",
+					"placeholder": "نام دارو، نام دارو",
+					"placeholderEN": "Drug name, Drug name",
 					"optional": true
 				}
 			],
@@ -890,45 +928,59 @@
 					"name": "pregnancyStatus",
 					"type": "select",
 					"label": "وضعیت بارداری",
-					"labelEN": "",
+					"labelEN": "Pregnancy Status",
 					"required": true,
-					"options": ["بله", "خیر"]
+					"options": ["بله", "خیر"],
+					"optionsEN": ["Yes", "No"]
 				},
 				{
 					"name": "lactationStatus",
 					"type": "select",
 					"label": "وضعیت شیردهی",
-					"labelEN": "",
+					"labelEN": "Lactation Status",
 					"required": true,
-					"options": ["بله", "خیر"]
+					"options": ["بله", "خیر"],
+					"optionsEN": ["Yes", "No"]
 				}
 			]
 		}
 	],
+
+	"userInfoIE": {
+		"example1": "علی",
+		"example2": "هاشمی"
+	},
 
 	"validationSchemaDataIE": [
 		{
 			"name": "userWeight",
 			"type": "string",
 			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
-			"required": "لطفا وزن خود را وارد کنید"
+			"matchesEN": ["^[0-9]", "Please use digits between 0-9"],
+			"required": "لطفا وزن خود را وارد کنید",
+			"requiredEN": "Please enter your weight"
 		},
 		{
 			"name": "userAge",
 			"type": "string",
 			"matches": ["^[0-9]", "از ارقام بین 9-0 استفاده کنید"],
-			"required": "لطفا سن خود را وارد کنید"
+			"matchesEN": ["^[0-9]", "Please use digits between 0-9"],
+			"required": "لطفا سن خود را وارد کنید",
+			"requiredEN": "Please enter your age"
 		},
 		{
 			"name": "userHeight",
 			"type": "string",
 			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
-			"required": "لطفا قد خود را وارد کنید"
+			"matchesEN": ["^[0-9]", "Please use digits between 0-9"],
+			"required": "لطفا قد خود را وارد کنید",
+			"requiredEN": "Please enter your height"
 		},
 		{
 			"name": "userBodyMassIndex",
 			"type": "string",
 			"matches": ["^[0-9]", "از از ارقام بین 9-0 استفاده کنید"],
+			"matchesEN": ["^[0-9]", "Please use digits between 0-9"],
 			"optional": true
 		},
 		{
@@ -943,7 +995,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا بیماری خود ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا بیماری خود ذکر کنید",
+						"requiredEN": "Please mention your illness"
 					}
 				}
 			]
@@ -960,7 +1014,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا بیماری خود ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا بیماری خود ذکر کنید",
+						"requiredEN": "Please mention your family member's illness"
 					}
 				}
 			]
@@ -969,12 +1025,14 @@
 			"name": "userFamilyMemberRelation",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
 			"optional": true
 		},
 		{
 			"name": "hasBloodTransfusion",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "bloodTransfusionReaction",
@@ -988,7 +1046,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا واکنش خود ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا واکنش خود ذکر کنید",
+						"requiredEN": "Please mention your reaction"
 					}
 				}
 			]
@@ -1010,7 +1070,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا نوع و گونه حیوان خود ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا نوع و گونه حیوان خود ذکر کنید",
+						"requiredEN": "Please mention the type and species of your pet"
 					}
 				}
 			]
@@ -1018,7 +1080,8 @@
 		{
 			"name": "sleepStatus",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "sleepIssues",
@@ -1032,7 +1095,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا در خصوص خواب مشکلات خود را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا در خصوص خواب مشکلات خود را ذکر کنید",
+						"requiredEN": "Please mention your sleep issues"
 					}
 				}
 			]
@@ -1049,7 +1114,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا نام دارو ها را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا نام دارو ها را ذکر کنید",
+						"requiredEN": "Please mention the names of the drugs"
 					}
 				}
 			]
@@ -1071,7 +1138,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا نام غذا ها را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا نام غذا ها را ذکر کنید",
+						"requiredEN": "Please mention the names of the foods"
 					}
 				}
 			]
@@ -1093,7 +1162,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا محدودیت و گوش مبتلا را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا محدودیت و گوش مبتلا را ذکر کنید",
+						"requiredEN": "Please mention the limitation and affected ear"
 					}
 				}
 			]
@@ -1110,7 +1181,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا محدودیت و چشم مبتلا را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا محدودیت و چشم مبتلا را ذکر کنید",
+						"requiredEN": "Please mention the limitation and affected eye"
 					}
 				}
 			]
@@ -1127,7 +1200,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-						"required": "لطفا نوع نقص و اندام مربوطه را ذکر کنید"
+						"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+						"required": "لطفا نوع نقص و اندام مربوطه را ذکر کنید",
+						"requiredEN": "Please mention the type of disability and affected limb"
 					}
 				}
 			]
@@ -1140,27 +1215,32 @@
 		{
 			"name": "ableToEat",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "ableToDress",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "ableToBathe",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "ableToGoToBathroom",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "ableToFreelyMove",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "rugularDrugNames",
@@ -1170,12 +1250,14 @@
 		{
 			"name": "pregnancyStatus",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		},
 		{
 			"name": "lactationStatus",
 			"type": "select",
-			"required": "لطفا گزینه ای را انتخاب کنید"
+			"required": "لطفا گزینه ای را انتخاب کنید",
+			"requiredEN": "Please select an option"
 		}
 	],
 
