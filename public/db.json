@@ -681,8 +681,6 @@
 							"name": "miningExperience"
 						},
 						{
-							"labelEN": "",
-
 							"label": "سابقه کار با مواد شیمیائی",
 							"labelEN": "",
 							"name": "chemicalExposure"
@@ -792,8 +790,6 @@
 						{ "label": "عصا", "name": "cane" },
 						{ "labelEN": "", "label": "واکر", "name": "walker" },
 						{
-							"labelEN": "",
-
 							"label": "ویلچر",
 							"labelEN": "",
 							"name": "wheelChair"
