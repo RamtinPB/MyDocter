@@ -242,121 +242,151 @@
 			"name": "firstName",
 			"type": "text",
 			"label": "نام",
+			"labelEN": "First Name",
 			"required": true
 		},
 		{
 			"name": "lastName",
 			"type": "text",
 			"label": "نام خانوادگی",
+			"labelEN": "Last Name",
 			"required": true
 		},
 		{
 			"name": "phoneNumber",
 			"type": "text",
 			"label": "شماره همراه",
+			"labelEN": "Phone Number",
 			"required": true
 		},
 		{
 			"name": "email",
 			"type": "email",
 			"label": "ایمیل",
+			"labelEN": "Email Address",
 			"required": true
 		},
 		{
 			"name": "fixedPhone",
 			"type": "text",
 			"label": "شماره ثابت",
+			"labelEN": "Fixed Phone Number",
 			"required": false
 		},
 		{
 			"name": "userGender",
 			"type": "select",
 			"label": "جنسیت",
+			"labelEN": "Gender",
 			"required": true,
-			"options": ["مرد", "زن"]
+			"options": ["مرد", "زن"],
+			"optionsEN": ["Male", "Female"]
 		},
 		{
 			"name": "birthDate",
 			"type": "date",
 			"label": "تاریخ تولد",
+			"labelEN": "Date of Birth",
 			"required": true
 		},
 		{
 			"name": "fatherName",
 			"type": "text",
 			"label": "نام پدر",
+			"labelEN": "Name of Father",
 			"required": true
 		},
 		{
 			"name": "nationality",
 			"type": "select",
 			"options": ["ایرانی", "غیر ایرانی"],
+			"optionsEN": ["Iranian", "non-Iranian"],
 			"label": "ملیت",
+			"labelEN": "Nationality",
 			"required": true
 		},
 		{
 			"name": "nationalId",
 			"type": "text",
 			"label": "کد ملی",
+			"labelEN": "National ID",
 			"required": true,
 			"checkboxName": "hasNationalId",
-			"checkboxLabel": "فاقد کد ملی"
+			"checkboxLabel": "فاقد کد ملی",
+			"checkboxLabelEN": "Dont have a National ID"
 		},
 		{
 			"name": "insuranceType",
 			"type": "select",
 			"options": ["بیمه سلامت", "بیمه تامین  اجتماعی"],
+			"optionsEN": ["insurnace1", "insurnace2"],
 			"label": "نوع بیمه",
+			"labelEN": "Insurance Type",
 			"required": false,
 			"checkboxName": "hasInsurance",
-			"checkboxLabel": "فاقد بیمه"
+			"checkboxLabel": "فاقد بیمه",
+			"checkboxLabelEN": "Dont have Insurance"
 		},
 		{
 			"name": "supplementaryInsuranceType",
 			"type": "select",
 			"options": ["بیمه الف", "بیمه ب"],
+			"optionsEN": [
+				"supplementaryInsuranceType1",
+				"supplementaryInsuranceType2"
+			],
 			"label": "نوع بیمه تکمیلی",
+			"labelEN": "Supplementary Insurance Type",
 			"required": false,
 			"checkboxName": "hasSupplementaryInsurance",
-			"checkboxLabel": "فاقد بیمه تکمیلی"
+			"checkboxLabel": "فاقد بیمه تکمیلی",
+			"checkboxLabelEN": "Dont have Supplementary Insurance"
 		},
 		{
 			"name": "province",
 			"type": "text",
 			"label": "استان",
+			"labelEN": "Province",
 			"required": true
 		},
 		{
 			"name": "city",
 			"type": "text",
 			"label": "شهر",
+			"labelEN": "City",
 			"required": true
 		},
 		{
 			"name": "address",
 			"type": "text",
 			"label": "آدرس",
+			"labelEN": "Address",
 			"required": true
 		},
 		{
 			"name": "postalCode",
 			"type": "text",
 			"label": "کد پستی",
+			"labelEN": "Postal Code",
 			"required": true
 		},
 		{
 			"name": "educationLevel",
 			"type": "select",
 			"label": "سطح تحصیلات",
+			"labelEN": "Education Level",
 			"required": true,
-			"options": ["دیپلم", "کارشناسی", "کارشناسی ارشد", "دکترا"]
+			"options": ["دیپلم", "کارشناسی", "کارشناسی ارشد", "دکترا"],
+			"optionsEN": ["Diploma", "Undergraduate", "Masters", "Ph.d"]
 		},
 		{
 			"name": "maritalStatus",
 			"type": "select",
 			"label": "وضعیت تاهل",
+			"labelEN": "Matital Status",
 			"required": true,
-			"options": ["مجرد", "متاهل"]
+			"options": ["مجرد", "متاهل"],
+			"optionsEN": ["Single", "Engaged"]
 		}
 	],
 
@@ -365,30 +395,39 @@
 			"name": "firstName",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا نام خود را وارد کنید",
+			"requiredEN": "Please enter your first name"
 		},
 		{
 			"name": "lastName",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام خانوادگی خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا نام خانوادگی خود را وارد کنید",
+			"requiredEN": "Please enter your last name"
 		},
 		{
 			"name": "email",
 			"type": "string",
 			"email": "ایمیل نامعتبر است",
-			"required": "لطفا ایمیل خود را وارد کنید"
+			"emailEN": "Invalid email address",
+			"required": "لطفا ایمیل خود را وارد کنید",
+			"requiredEN": "Please enter your email"
 		},
 		{
 			"name": "phoneNumber",
 			"type": "string",
 			"matches": ["^[0-9]{11}$", "شماره همراه باید 11 رقمی باشد"],
-			"required": "لطفا شماره همراه خود را وارد کنید"
+			"matchesEN": ["^[0-9]{11}$", "Phone number must be 11 digits"],
+			"required": "لطفا شماره همراه خود را وارد کنید",
+			"requiredEN": "Please enter your phone number"
 		},
 		{
 			"name": "userGender",
 			"type": "string",
-			"required": "لطفا جنسیت خود را انتخاب کنید"
+			"required": "لطفا جنسیت خود را انتخاب کنید",
+			"requiredEN": "Please select your gender"
 		},
 		{
 			"name": "fixedPhone",
@@ -397,18 +436,25 @@
 			"matches": [
 				"^[0-9]{11}$",
 				"شماره ثابت باید 11 رقمی و همراه با کد منطقه باشد"
+			],
+			"matchesEN": [
+				"^[0-9]{11}$",
+				"Fixed phone must be 11 digits with area code"
 			]
 		},
 		{
 			"name": "fatherName",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا نام پدر خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا نام پدر خود را وارد کنید",
+			"requiredEN": "Please enter your father's name"
 		},
 		{
 			"name": "birthDate",
 			"type": "date",
-			"required": "لطفا تاریخ تولد خود را وارد کنید"
+			"required": "لطفا تاریخ تولد خود را وارد کنید",
+			"requiredEN": "Please enter your birth date"
 		},
 		{
 			"name": "nationalId",
@@ -422,7 +468,9 @@
 					},
 					"otherwise": {
 						"matches": ["^[0-9]{10}$", "کد ملی باید 10 رقمی باشد"],
-						"required": "لطفا کد ملی خود را وارد کنید"
+						"matchesEN": ["^[0-9]{10}$", "National ID must be 10 digits"],
+						"required": "لطفا کد ملی خود را وارد کنید",
+						"requiredEN": "Please enter your National ID"
 					}
 				}
 			]
@@ -430,7 +478,8 @@
 		{
 			"name": "nationality",
 			"type": "string",
-			"required": "لطفا ملیت خود را انتخاب کنید"
+			"required": "لطفا ملیت خود را انتخاب کنید",
+			"requiredEN": "Please select your nationality"
 		},
 		{
 			"name": "insuranceType",
@@ -443,7 +492,8 @@
 						"optional": true
 					},
 					"otherwise": {
-						"required": "لطفا نوع بیمه را وارد کنید"
+						"required": "لطفا نوع بیمه را وارد کنید",
+						"requiredEN": "Please enter your insurance type"
 					}
 				}
 			]
@@ -459,7 +509,8 @@
 						"optional": true
 					},
 					"otherwise": {
-						"required": "لطفا نوع بیمه تکمیلی را وارد کنید"
+						"required": "لطفا نوع بیمه تکمیلی را وارد کنید",
+						"requiredEN": "Please enter your supplementary insurance type"
 					}
 				}
 			]
@@ -468,35 +519,45 @@
 			"name": "province",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا استان خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا استان خود را وارد کنید",
+			"requiredEN": "Please enter your province"
 		},
 		{
 			"name": "postalCode",
 			"type": "string",
 			"matches": ["^[0-9]{10}$", "کد پستی باید 10 رقمی باشد"],
-			"required": "لطفا کد پستی خود را وارد کنید"
+			"matchesEN": ["^[0-9]{10}$", "Postal code must be 10 digits"],
+			"required": "لطفا کد پستی خود را وارد کنید",
+			"requiredEN": "Please enter your postal code"
 		},
 		{
 			"name": "city",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا شهر خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا شهر خود را وارد کنید",
+			"requiredEN": "Please enter your city"
 		},
 		{
 			"name": "address",
 			"type": "string",
 			"matches": ["^[ا-ی]", "از حروف فارسی استفاده کنید"],
-			"required": "لطفا آدرس خود را وارد کنید"
+			"matchesEN": ["^[A-Za-z]+$", "Please use English alphabets"],
+			"required": "لطفا آدرس خود را وارد کنید",
+			"requiredEN": "Please enter your address"
 		},
 		{
 			"name": "maritalStatus",
 			"type": "string",
-			"required": "لطفا وضعیت تاهل خود را انتخاب کنید"
+			"required": "لطفا وضعیت تاهل خود را انتخاب کنید",
+			"requiredEN": "Please select your marital status"
 		},
 		{
 			"name": "educationLevel",
 			"type": "string",
-			"required": "لطفا سطح تحصیلات خود را انتخاب کنید"
+			"required": "لطفا سطح تحصیلات خود را انتخاب کنید",
+			"requiredEN": "Please select your education level"
 		}
 	],
 
@@ -512,24 +573,28 @@
 					"name": "userWeight",
 					"type": "string",
 					"label": "وزن",
+					"labelEN": "",
 					"required": true
 				},
 				{
 					"name": "userHeight",
 					"type": "string",
 					"label": "قد",
+					"labelEN": "",
 					"required": true
 				},
 				{
 					"name": "userAge",
 					"type": "string",
 					"label": "سن",
+					"labelEN": "",
 					"required": true
 				},
 				{
 					"name": "userBodyMassIndex",
 					"type": "string",
 					"label": "(اختیاری) BMI نمایه توده بدنی",
+					"labelEN": "",
 					"optional": true
 				}
 			],
@@ -538,6 +603,7 @@
 					"name": "illnessRecordNameSelf",
 					"type": "string",
 					"label": "سابقه بیماری (جسمی / روانی / اختلال مادرزادی)",
+					"labelEN": "",
 					"placeholder": "ذکر بیماری",
 					"required": true,
 					"checkboxName": "hasIllnessRecordSelf",
@@ -547,6 +613,7 @@
 					"name": "illnessRecordNameFamily",
 					"type": "string",
 					"label": "سابقه بیماری در خانواده",
+					"labelEN": "",
 					"placeholder": "ذکر بیماری",
 					"required": true,
 					"checkboxName": "hasIllnessRecordFamily",
@@ -556,6 +623,7 @@
 					"name": "userFamilyMemberRelation",
 					"type": "string",
 					"label": "نسبت کاربر با بیمار ذکر شده",
+					"labelEN": "",
 					"optional": true,
 					"checkboxName": "hasIllnessRecordFamily"
 				},
@@ -567,6 +635,7 @@
 					"name": "hasBloodTransfusion",
 					"type": "select",
 					"label": "سابقه تزریق خون و فرآورده های خونی",
+					"labelEN": "",
 					"required": true,
 					"options": ["ندارم", "دارم"]
 				},
@@ -575,6 +644,7 @@
 					"type": "string",
 					"placeholder": "ذکر واکنش",
 					"label": "سابقه واکنش به تزریق خون و فرآورده های خونی",
+					"labelEN": "",
 					"required": true,
 					"checkboxName": "hasBloodTransfusionReaction",
 					"checkboxLabel": "سابقه واکنش ندارم"
@@ -583,6 +653,7 @@
 					"name": "userPet",
 					"type": "string",
 					"label": "داشتن حیوان خانگی",
+					"labelEN": "",
 					"placeholder": "نوع و گونه حیوان",
 					"required": true,
 					"checkboxName": "hasPet",
@@ -592,16 +663,28 @@
 					"name": "riskFactors",
 					"type": "checkmenu",
 					"label": "عادات و عوامل خطر",
+					"labelEN": "",
 					"optional": true,
 					"options": [
 						{ "label": "سوء مصرف دارو", "name": "drugAbuse" },
-						{ "label": "سوء مصرف مواد مخدر", "name": "substanceAbuse" },
-						{ "label": "مصرف سیگار", "name": "smoking" },
-						{ "label": "مصرف قلیان", "name": "hookah" },
-						{ "label": "مصرف الکل", "name": "alcohol" },
-						{ "label": "سابقه کار در معدن", "name": "miningExperience" },
 						{
+							"labelEN": "",
+							"label": "سوء مصرف مواد مخدر",
+							"name": "substanceAbuse"
+						},
+						{ "labelEN": "", "label": "مصرف سیگار", "name": "smoking" },
+						{ "labelEN": "", "label": "مصرف قلیان", "name": "hookah" },
+						{ "labelEN": "", "label": "مصرف الکل", "name": "alcohol" },
+						{
+							"labelEN": "",
+							"label": "سابقه کار در معدن",
+							"name": "miningExperience"
+						},
+						{
+							"labelEN": "",
+
 							"label": "سابقه کار با مواد شیمیائی",
+							"labelEN": "",
 							"name": "chemicalExposure"
 						}
 					]
@@ -610,6 +693,7 @@
 					"name": "sleepStatus",
 					"type": "select",
 					"label": "وضعیت خواب و استراحت",
+					"labelEN": "",
 					"required": true,
 					"options": [
 						"کمتر از حد طبیعی (کمتر از 5 ساعت)",
@@ -622,6 +706,7 @@
 					"type": "string",
 					"placeholder": "ذکر مشکلات",
 					"label": "مشکلات خواب",
+					"labelEN": "",
 					"required": true,
 					"checkboxName": "hasSleepIssues",
 					"checkboxLabel": "مشکلی در خصوص خواب ندارم"
@@ -632,6 +717,7 @@
 					"name": "allergyDrugName",
 					"type": "string",
 					"label": "(به ترتیب) حساسیت دارویی",
+					"labelEN": "",
 					"required": true,
 					"placeholder": "،نام دارو، نام دارو",
 					"checkboxName": "hasAllergyDrug",
@@ -641,6 +727,7 @@
 					"name": "allergyDrugReaction",
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
+					"labelEN": "",
 					"optional": true,
 					"placeholder": "،واکنش، واکنش",
 					"checkboxName": "hasAllergyDrug"
@@ -649,6 +736,7 @@
 					"name": "allergyFoodName",
 					"type": "string",
 					"label": "(به ترتیب) حساسیت غذایی",
+					"labelEN": "",
 					"required": true,
 					"placeholder": "،نام غذا، نام غذا",
 					"checkboxName": "hasAllergyFood",
@@ -658,6 +746,7 @@
 					"name": "allergyFoodReaction",
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
+					"labelEN": "",
 					"optional": true,
 					"placeholder": "،واکنش، واکنش",
 					"checkboxName": "hasAllergyFood"
@@ -668,6 +757,7 @@
 					"name": "hearingLimitations",
 					"type": "string",
 					"label": "محدودیت شنوایی",
+					"labelEN": "",
 					"required": true,
 					"placeholder": "ذکر محدودیت و گوش مبتلا",
 					"checkboxName": "hasHearingLimitations",
@@ -677,6 +767,7 @@
 					"name": "sightLimitations",
 					"type": "string",
 					"label": "محدودیت بینایی",
+					"labelEN": "",
 					"required": true,
 					"placeholder": "ذکر محدودیت و چشم مبتلا",
 					"checkboxName": "hasSightLimitations",
@@ -686,6 +777,7 @@
 					"name": "disabilityOrAmputaion",
 					"type": "string",
 					"label": "نقص و قطع عضو ",
+					"labelEN": "",
 					"required": true,
 					"placeholder": "ذکر نوع نقص و اندام مربوطه",
 					"checkboxName": "hasDisabilityOrAmputaion",
@@ -695,35 +787,45 @@
 					"name": "assistiveDevicesProsthetics",
 					"type": "checkmenu",
 					"label": "در صورت داشتن وسایل کمکی و پروتز بر اساس موارد زیر مشخص کنید",
+					"labelEN": "",
 					"options": [
 						{ "label": "عصا", "name": "cane" },
-						{ "label": "واکر", "name": "walker" },
+						{ "labelEN": "", "label": "واکر", "name": "walker" },
 						{
+							"labelEN": "",
+
 							"label": "ویلچر",
+							"labelEN": "",
 							"name": "wheelChair"
 						},
 						{
 							"label": "چوب زیر بغل",
+							"labelEN": "",
 							"name": "armpitStick"
 						},
 						{
 							"label": "پروتز اندام",
+							"labelEN": "",
 							"name": "prostheticLimb"
 						},
 						{
 							"label": "دندان مصنوعی",
+							"labelEN": "",
 							"name": "denture"
 						},
 						{
 							"label": "سمعک",
+							"labelEN": "",
 							"name": "hearingAid"
 						},
 						{
 							"label": "عینک",
+							"labelEN": "",
 							"name": "glasses"
 						},
 						{
 							"label": "پروتز چشم",
+							"labelEN": "",
 							"name": "prostheticEye"
 						}
 					]
@@ -740,6 +842,7 @@
 					"name": "ableToEat",
 					"type": "select",
 					"label": "غذا خوردن",
+					"labelEN": "",
 					"required": true,
 					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
@@ -747,6 +850,7 @@
 					"name": "ableToDress",
 					"type": "select",
 					"label": "لباس پوشیدن",
+					"labelEN": "",
 					"required": true,
 					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
@@ -754,6 +858,7 @@
 					"name": "ableToBathe",
 					"type": "select",
 					"label": "استحمام",
+					"labelEN": "",
 					"required": true,
 					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
@@ -761,6 +866,7 @@
 					"name": "ableToGoToBathroom",
 					"type": "select",
 					"label": "دست شویی رفتن",
+					"labelEN": "",
 					"required": true,
 					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				},
@@ -768,6 +874,7 @@
 					"name": "ableToFreelyMove",
 					"type": "select",
 					"label": "تحرک و جابجایی",
+					"labelEN": "",
 					"required": true,
 					"options": ["مستقل", "وابسته (نیازمند کمک)"]
 				}
@@ -777,6 +884,7 @@
 					"name": "rugularDrugNames",
 					"type": "string",
 					"label": "نام دارو ها (به ترتیب)",
+					"labelEN": "",
 					"placeholder": "،نام دارو، نام دارو",
 					"optional": true
 				}
@@ -786,6 +894,7 @@
 					"name": "pregnancyStatus",
 					"type": "select",
 					"label": "وضعیت بارداری",
+					"labelEN": "",
 					"required": true,
 					"options": ["بله", "خیر"]
 				},
@@ -793,6 +902,7 @@
 					"name": "lactationStatus",
 					"type": "select",
 					"label": "وضعیت شیردهی",
+					"labelEN": "",
 					"required": true,
 					"options": ["بله", "خیر"]
 				}

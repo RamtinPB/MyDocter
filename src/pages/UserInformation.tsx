@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/userInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useLanguage } from "../components/LanguageContext";
 
 interface UserFormData {
 	[key: string]: any;
@@ -15,8 +16,12 @@ const initialFormData: UserFormData = {};
 
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
+
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		fetch("/db.json")
@@ -65,12 +70,14 @@ function UserInformation() {
 			// Apply common rules
 			if (rule.matches && rule.type === "string") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(rule.matches[0]),
-					rule.matches[1]
+					new RegExp(language === "fa" ? rule.matches[0] : rule.matchesEN[0]),
+					language === "fa" ? rule.matches[1] : rule.matchesEN[1]
 				);
 			}
 			if (rule.email) {
-				fieldSchema = (fieldSchema as Yup.StringSchema).email(rule.email);
+				fieldSchema = (fieldSchema as Yup.StringSchema).email(
+					language === "fa" ? rule.email : rule.emailEN
+				);
 			}
 
 			// Apply conditional rules
@@ -82,14 +89,24 @@ function UserInformation() {
 						let thenSchema = schema;
 						if (conditions.then.matches) {
 							thenSchema = (thenSchema as Yup.StringSchema).matches(
-								new RegExp(conditions.then.matches[0]),
-								conditions.then.matches[1]
+								new RegExp(
+									language === "fa"
+										? conditions.then.matches[0]
+										: conditions.then.matchesEN[0]
+								),
+								language === "fa"
+									? conditions.then.matches[1]
+									: conditions.then.matchesEN[1]
 							);
 						}
 						if (conditions.then.required === false) {
 							thenSchema = thenSchema.notRequired();
 						} else if (conditions.then.required) {
-							thenSchema = thenSchema.required(conditions.then.required);
+							thenSchema = thenSchema.required(
+								language === "fa"
+									? conditions.then.required
+									: conditions.then.requiredEN
+							);
 						}
 						return thenSchema;
 					},
@@ -97,15 +114,23 @@ function UserInformation() {
 						let otherwiseSchema = schema;
 						if (conditions.otherwise.matches) {
 							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(conditions.otherwise.matches[0]),
-								conditions.otherwise.matches[1]
+								new RegExp(
+									language === "fa"
+										? conditions.otherwise.matches[0]
+										: conditions.otherwise.matchesEN[0]
+								),
+								language === "fa"
+									? conditions.otherwise.matches[1]
+									: conditions.otherwise.matchesEN[1]
 							);
 						}
 						if (conditions.otherwise.required === false) {
 							otherwiseSchema = otherwiseSchema.notRequired();
 						} else if (conditions.otherwise.required) {
 							otherwiseSchema = otherwiseSchema.required(
-								conditions.otherwise.required
+								language === "fa"
+									? conditions.otherwise.required
+									: conditions.otherwise.requiredEN
 							);
 						}
 						return otherwiseSchema;
@@ -114,7 +139,9 @@ function UserInformation() {
 			} else {
 				// Apply default required rule if no 'when' condition is specified
 				if (rule.required) {
-					fieldSchema = fieldSchema.required(rule.required);
+					fieldSchema = fieldSchema.required(
+						language === "fa" ? rule.required : rule.requiredEN
+					);
 				} else if (rule.optional) {
 					fieldSchema = fieldSchema.notRequired();
 				}
@@ -172,7 +199,7 @@ function UserInformation() {
 							className="btn btn-light shadow rounded-pill  my-auto"
 							onClick={() => setProfilePicture(null)}
 						>
-							<span> حذف عکس</span>
+							<span>{language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
 						</button>
 						{profilePicture ? (
 							<img
@@ -190,7 +217,7 @@ function UserInformation() {
 							className="btn btn-light shadow rounded-pill my-auto"
 							style={{ cursor: "pointer" }}
 						>
-							<span> انتخاب عکس</span>
+							<span>{language === "fa" ? "انتخاب عکس" : "Upload Picture"}</span>
 							<input
 								type="file"
 								accept="image/*"
@@ -205,11 +232,15 @@ function UserInformation() {
 					className="needs-validation"
 					noValidate
 				>
-					<div className="text-end bg-white shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5">
-						<h2>اطلاعات کاربر</h2>
+					<div
+						className={`bg-white text-${
+							language === "fa" ? "end" : "start"
+						} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
+					>
+						<h2>{language === "fa" ? "اطلاعات کاربر" : "User Information"}</h2>
 						<div
 							className="row row-cols-2 g-4 g-md-5 my-1"
-							style={{ direction: "rtl" }}
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 						>
 							{formFields.map((field, index) => {
 								const isSelect = field.type === "select";
@@ -219,10 +250,10 @@ function UserInformation() {
 									<div
 										key={index}
 										className="col mb-2"
-										style={{ direction: "rtl" }}
+										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 									>
 										<label htmlFor={field.name} className="form-label">
-											{field.label}
+											{language === "fa" ? field.label : field.labelEN}
 										</label>
 										{isSelect ? (
 											<select
@@ -231,7 +262,9 @@ function UserInformation() {
 												value={formik.values[field.name]}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
-												className={`form-select text-end shadow-sm ${
+												className={`form-select text-${
+													language === "fa" ? "end" : "start"
+												} shadow-sm ${
 													formik.touched[field.name] &&
 													formik.errors[field.name]
 														? "is-invalid"
@@ -241,8 +274,11 @@ function UserInformation() {
 												disabled={formik.values[field.checkboxName]}
 											>
 												<option value="">...</option>
-												{field.options.map((option: string, i: number) => (
-													<option className="" key={i} value={option}>
+												{(language === "fa"
+													? field.options
+													: field.optionsEN
+												).map((option: string, i: number) => (
+													<option key={i} value={option}>
 														{option}
 													</option>
 												))}
@@ -255,7 +291,9 @@ function UserInformation() {
 												value={formik.values[field.name]}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
-												className={`form-control text-end shadow-sm ${
+												className={`form-control text-${
+													language === "fa" ? "end" : "start"
+												} shadow-sm ${
 													formik.touched[field.name] &&
 													formik.errors[field.name]
 														? "is-invalid"
@@ -263,16 +301,26 @@ function UserInformation() {
 												}`}
 												required={field.required}
 												disabled={formik.values[field.checkboxName]}
-												placeholder={field.placeholder || ""}
+												placeholder={
+													(language === "fa"
+														? field.placeholder
+														: field.placeholderEN) || ""
+												}
 											/>
 										)}
 										{isCheckbox && (
-											<div className="text-end mt-2">
+											<div
+												className={`text-${
+													language === "fa" ? "end" : "start"
+												} mt-2`}
+											>
 												<label
 													htmlFor={field.checkboxName}
-													className="form-check-label ms-2"
+													className="form-check-label mx-2"
 												>
-													{field.checkboxLabel}
+													{language === "da"
+														? field.checkboxLabel
+														: field.checkboxLabelEN}
 												</label>
 												<input
 													type="checkbox"
@@ -304,7 +352,7 @@ function UserInformation() {
 								type="submit"
 								className="btn btn-primary rounded-pill px-3 py-2"
 							>
-								ذخیره
+								{language === "fa" ? "ذخیره" : "Save"}
 							</button>
 						</div>
 					</div>
