@@ -140,7 +140,7 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال محصول" : "ُService ID"}
+								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.id}
