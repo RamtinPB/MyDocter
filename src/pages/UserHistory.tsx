@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
+import { useLanguage } from "../components/LanguageContext";
 
 interface ServiceInfo {
 	[key: string]: any;
@@ -7,8 +8,11 @@ interface ServiceInfo {
 
 function UserHistory() {
 	const [serviceInfo, setServiceInfo] = useState<ServiceInfo[]>([]);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -57,20 +61,28 @@ function UserHistory() {
 	};
 
 	return (
-		<div className="custom-bg-4" style={{ height: "100vh" }}>
+		<div className="custom-bg-4 min-vh-100">
 			<div className="container py-5">
 				<div className="bg-white border border-3 border-primary rounded-5 p-3">
 					<table
 						className="table table-hover text-center"
-						style={{ direction: "rtl" }}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 					>
 						<thead>
 							<tr>
 								<th scope="col">#</th>
-								<th scope="col">نام سرویس</th>
-								<th scope="col">شماره سریال خرید</th>
-								<th scope="col">تاریخ خریداری</th>
-								<th scope="col">وضعیت پیگیری</th>
+								<th scope="col">
+									{language === "fa" ? "نام سرویس" : "Service Name"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "وضعیت پیگیری" : "Status"}
+								</th>
 							</tr>
 						</thead>
 						<tbody>

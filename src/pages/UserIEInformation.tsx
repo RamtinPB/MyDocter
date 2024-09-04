@@ -193,11 +193,12 @@ function UserIEInformation() {
 		"محدودیت ها و توانایی ها": "Limitations and Abilities",
 		"سابقه مصرف دارو (اختیاری)": "Medication History (Optional)",
 		"بیماران خانم": "Female Patients",
+		"انجام فعالیت های روزانه زندگی": "Performing daily life activities",
 		// Add any additional sections here
 	};
 
 	return (
-		<div className="custom-bg-4">
+		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column">
 				<form
 					onSubmit={formik.handleSubmit}
@@ -251,7 +252,7 @@ function UserIEInformation() {
 												} pt-0 mb-1`}
 											>
 												<div
-													className="row row-cols-2 g-5 my-1"
+													className="row d-flex align-items-start g-5 my-1"
 													style={{
 														direction: language === "fa" ? "rtl" : "ltr",
 													}}
@@ -261,7 +262,7 @@ function UserIEInformation() {
 															(field: any, idx: number) => {
 																if (field.type === "placeholder") {
 																	return (
-																		<h6 key={idx} className="col mb-2">
+																		<h6 key={idx} className="col-6 mb-2">
 																			{language === "fa"
 																				? field.name
 																				: field.nameEN}
@@ -279,7 +280,7 @@ function UserIEInformation() {
 																return (
 																	<div
 																		key={idx}
-																		className="col mb-2"
+																		className="col-6 d-flex flex-column mb-2"
 																		style={{
 																			direction:
 																				language === "fa" ? "ltr" : "rtl",
@@ -303,7 +304,7 @@ function UserIEInformation() {
 																				className={`form-select text-${
 																					language === "fa" ? "end" : "start"
 																				}
-																				 shadow-sm ${
+																				 shadow-sm select-resize ${
 																						formik.touched[field.name] &&
 																						formik.errors[field.name]
 																							? "is-invalid"
@@ -328,7 +329,7 @@ function UserIEInformation() {
 																			</select>
 																		) : isCheckMenu ? (
 																			<div
-																				className="checkmenu "
+																				className="d-flex flex-column checkmenu"
 																				style={{
 																					direction:
 																						language === "fa" ? "rtl" : "ltr",
@@ -338,16 +339,8 @@ function UserIEInformation() {
 																					(option: any, i: number) => (
 																						<div
 																							key={i}
-																							className=" form-check "
+																							className={`d-flex justify-content-start mt-2`}
 																						>
-																							<label
-																								htmlFor={option.name}
-																								className="form-check-label"
-																							>
-																								{language === "fa"
-																									? option.label
-																									: option.labelEN}
-																							</label>
 																							<input
 																								type="checkbox"
 																								id={option.name}
@@ -370,6 +363,18 @@ function UserIEInformation() {
 																										: ""
 																								}`}
 																							/>
+																							<label
+																								htmlFor={option.name}
+																								className={`form-check-label ${
+																									language === "fa"
+																										? "me-3"
+																										: "ms-3"
+																								} `}
+																							>
+																								{language === "fa"
+																									? option.label
+																									: option.labelEN}
+																							</label>
 																						</div>
 																					)
 																				)}
@@ -434,9 +439,7 @@ function UserIEInformation() {
 																		)}
 																		{isCheckbox && field.checkboxLabel && (
 																			<div
-																				className={`text-${
-																					language === "fa" ? "end" : "start"
-																				} mt-2`}
+																				className={`d-flex justify-content-end mt-2`}
 																			>
 																				<input
 																					type="checkbox"
@@ -456,7 +459,9 @@ function UserIEInformation() {
 																				/>
 																				<label
 																					htmlFor={field.checkboxName}
-																					className="form-check-label mx-3"
+																					className={`form-check-label ${
+																						language === "fa" ? "ms-3" : "me-3"
+																					}`}
 																				>
 																					{language === "fa"
 																						? field.checkboxLabel
@@ -486,7 +491,7 @@ function UserIEInformation() {
 							type="submit"
 							className="btn btn-primary rounded-pill fs-6 px-4 py-2"
 						>
-							ذخیره
+							{language === "fa" ? "ذخیره" : "Save"}
 						</button>
 					</div>
 				</form>

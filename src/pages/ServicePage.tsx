@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
+import "/src/cssFiles/textOverflow.css";
 
 import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
@@ -282,7 +283,7 @@ function ServicePage() {
 					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
 					<h5 className="px-4 mx-1">
-						{language === "fa" ? "انتقال فایل" : "File Transfer"}
+						{language === "fa" ? "ارسال فایل" : "Send Files"}
 					</h5>
 					<div
 						className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 mx-4"
@@ -305,11 +306,7 @@ function ServicePage() {
 											alt={`${file.fileName} Icon`}
 											className="custom-file-icon"
 										/>
-										<span
-											className={`text-${
-												language === "fa" ? "end" : "start"
-											} mt-1`}
-										>
+										<span className={`scrollable-text text-center mt-1`}>
 											{file.fileName}
 										</span>
 									</a>
@@ -331,7 +328,7 @@ function ServicePage() {
 								onClick={handleFileUploadClick}
 							>
 								<i className="fas fa-file-upload"></i>
-								{language === "fa" ? "آپلود فایل" : "Upload File"}
+								{language === "fa" ? "ارسال فایل" : "Upload"}
 							</button>
 							{/* Hidden file input */}
 							<input
@@ -346,8 +343,12 @@ function ServicePage() {
 				</div>
 
 				{/* Form Render Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-4 mx-1">
 						{language === "fa" ? "فرم سرویس" : "Service Form"}
 					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
@@ -366,13 +367,19 @@ function ServicePage() {
 				</div>
 
 				{/* User Input Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-1 me-1">
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-1 mx-1">
 						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
 					</h5>
 					<textarea
 						id="userInput"
-						className="form-control text-end"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						}`}
 						rows={3}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
@@ -381,7 +388,11 @@ function ServicePage() {
 				</div>
 
 				{/* Pricing Table Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4">
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
 					<div
 						className="table-responsive"
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -436,7 +447,11 @@ function ServicePage() {
 
 				{/* Purchase Button Section */}
 				<div className="d-flex justify-content-center mb-4 mt-5">
-					<div className="bg-white border border-2 shadow text-end rounded-5 ">
+					<div
+						className={`bg-white border border-2 shadow text-${
+							language === "fa" ? "end" : "start"
+						} rounded-5 `}
+					>
 						<span className=" mx-3 ">
 							{language === "fa"
 								? `مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`

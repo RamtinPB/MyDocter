@@ -191,7 +191,7 @@ function UserInformation() {
 	};
 
 	return (
-		<div className="custom-bg-4">
+		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column">
 				<form onSubmit={formik.handleSubmit} className="mt-4 mt-md-5">
 					<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">

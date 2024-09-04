@@ -151,6 +151,11 @@
 					"fileUrl": "http://yourserver.com/files/example.jpeg"
 				},
 				{
+					"fileName": "example12345678901234567890.jpeg",
+					"fileType": "jpeg",
+					"fileUrl": "http://yourserver.com/files/example12345678901234567890.jpeg"
+				},
+				{
 					"fileName": "document.pdf",
 					"fileType": "pdf",
 					"fileUrl": "http://yourserver.com/files/document.pdf"
@@ -856,16 +861,9 @@
 							"name": "prostheticEye"
 						}
 					]
-				},
-				{
-					"type": "placeholder",
-					"name": "انجام فعالیت های روزانه زندگی",
-					"nameEN": "Activities of Daily Living"
-				},
-				{
-					"type": "placeholder",
-					"name": ""
-				},
+				}
+			],
+			"انجام فعالیت های روزانه زندگی": [
 				{
 					"name": "ableToEat",
 					"type": "select",

@@ -5,11 +5,12 @@ import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import "/src/cssFiles/textOverflow.css";
 import "/src/cssFiles/customColors.css";
-
 import "/src/cssFiles/servicePage.css";
 import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/ForRenderFilled";
+import { useLanguage } from "../components/LanguageContext";
 
 interface Service {
 	name: string;
@@ -43,10 +44,14 @@ const getIconForFileType = (fileName: string) => {
 
 function UserHistoryExtended() {
 	const { purchaseId } = useParams<{ purchaseId: string }>();
+
 	const [service, setService] = useState<Service | null>(null);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const navigate = useNavigate();
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		// Define a function to fetch the specific service by purchaseId
@@ -101,7 +106,7 @@ function UserHistoryExtended() {
 	};
 
 	return (
-		<div className="custom-bg-4">
+		<div className="custom-bg-4 min-vh-100">
 			<div className="container py-5">
 				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
 					<div className="text-start m-2">
@@ -115,41 +120,79 @@ function UserHistoryExtended() {
 
 					<div
 						className="row row-cols-2 mx-2 mx-md-auto"
-						style={{ direction: "rtl" }}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 					>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">نام سرویس</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "نام سرویس" : "Service Name"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.name}
 							</div>
 						</div>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">شماره سریال</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "شماره سریال محصول" : "ُService ID"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.id}
 							</div>
 						</div>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">تاریخ خریداری</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.purchaseDate}
 							</div>
 						</div>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">قیمت نهایی خریداری</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa"
+									? `مبلغ نهایی خرید`
+									: `Final Purchase Amount`}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.finalPurchaseAmount}
 							</div>
 						</div>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">شماره سریال تراکنش</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.purchaseId}
 							</div>
 						</div>
-						<div className="co-6 mb-5 px-3 px-md-5">
-							<h6 className=" me-1">وضعیت پیگیری</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 pe-3 py-2">
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "وضعیت پیگیری" : "Status"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{service.status}
 							</div>
 						</div>
@@ -157,8 +200,14 @@ function UserHistoryExtended() {
 				</div>
 
 				{/* Sent Files Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">فایل های انتقال شده</h5>
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-4 mx-1">
+						{language === "fa" ? "فایل های ارسال شده" : "Sent Files"}
+					</h5>
 					{service.files && service.files.length > 0 ? (
 						<div className="d-flex flex-wrap justify-content-start align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
 							{service.files.map((file, index) => (
@@ -176,41 +225,63 @@ function UserHistoryExtended() {
 											alt={`${file.fileName} Icon`}
 											className="custom-file-icon"
 										/>
-										<span className="text-end mt-1">{file.fileName}</span>
+										<span className={`scrollable-text text-center mt-1`}>
+											{file.fileName}
+										</span>
 									</a>
 								</div>
 							))}
 						</div>
 					) : (
 						<div className="d-flex flex-wrap justify-content-center align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
-							<p className="px-3 mx-4 py-2">هیچ فایلی یافت نشد</p>
+							<p className="px-3 mx-4 py-2">
+								{language === "fa" ? "هیچ فایلی یافت نشد" : "No files found"}
+							</p>
 						</div>
 					)}
 				</div>
 
 				{/* Form Render Filled Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">فرم تکمیل شده</h5>
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-4 mx-1">
+						{language === "fa" ? "فرم تکمیل شده" : "Completed Form"}
+					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
 							<FormRenderFilled />
 						) : (
 							<div className="text-center py-3">
-								<p>اطلاعات فرم یافت نشد</p>
+								<p>
+									{language === "fa"
+										? "اطلاعات فرم یافت نشد"
+										: "Form Data Not Found"}
+								</p>
 							</div>
 						)}
 					</div>
 				</div>
 
 				{/* User Input Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5 className="pe-4 me-1">شرح حال کاربر</h5>
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-4 mx-1">
+						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
+					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{service.userInput ? (
 							<p>{service.userInput}</p>
 						) : (
 							<div className="text-center px-3 mx-4 py-2">
-								<p>ورودی داده نشد</p>
+								<p>
+									{language === "fa" ? "ورودی داده نشد" : "No input was given"}
+								</p>
 							</div>
 						)}
 					</div>

@@ -1,11 +1,26 @@
 .custom-btn {
     width: 45px;
     height: 45px;
-  }
+}
+
+.select-resize {
+ font-size: 0.9rem !important;
+}
   
-  @media (max-width:768px){
-    .custom-btn {
-      width: 35px;
-      height: 35px;
-    }
+@media (max-width:768px){
+  .custom-btn {
+     width: 35px;
+     height: 35px;
   }
+
+   .select-resize {
+     font-size: 0.85rem !important;
+   }
+ }
+ 
+
+ @media (max-width:576px){
+  .select-resize {
+    font-size: 0.6rem !important;
+  }
+}
