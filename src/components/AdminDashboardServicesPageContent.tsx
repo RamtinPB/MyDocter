@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "./LanguageContext";
 
 interface Service {
 	name: string;
 	description: string;
+
+	nameEN: string;
+	descriptionEN: string;
+
 	price: string;
 	subsidy: string;
 	image: string;
@@ -13,6 +18,7 @@ interface Service {
 
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<Service[]>([]);
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -38,6 +44,8 @@ function AdminDashboardServicesPageContent() {
 		const newCard: Service = {
 			name: "New Service",
 			description: "New description",
+			nameEN: "New Service",
+			descriptionEN: "description",
 			price: "0",
 			subsidy: "0",
 			image: "/src/images/placeholder.jpg",
@@ -72,7 +80,7 @@ function AdminDashboardServicesPageContent() {
 							<div className="card shadow rounded-4 p-0">
 								<div className="text-center">
 									<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-										{service.name}
+										{language === "fa" ? service.name : service.nameEN}
 									</h5>
 									<img
 										src={service.image}
@@ -138,7 +146,9 @@ function AdminDashboardServicesPageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{"سرویس های پزشک متخصص"}
+						{language === "fa"
+							? "سرویس های پزشک متخصص"
+							: "Specialist Practitioner Services"}
 					</h3>
 				</div>
 				{renderServiceCards("specialist")}
@@ -148,7 +158,10 @@ function AdminDashboardServicesPageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5 ">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{"سرویس های پزشک عمومی"}
+						{}
+						{language === "fa"
+							? "سرویس های پزشک عمومی"
+							: "General Practitioner Services"}
 					</h3>
 				</div>
 				{renderServiceCards("general")}
@@ -159,13 +172,13 @@ function AdminDashboardServicesPageContent() {
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}
 				>
-					{"حذف"}
+					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
 				</button>
 				<button
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{"ذخیره"}
+					{language === "fa" ? "ذخیره" : "Save Changes"}
 				</button>
 			</div>
 		</div>

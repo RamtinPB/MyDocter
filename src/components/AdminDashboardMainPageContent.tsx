@@ -270,13 +270,13 @@ function AdminDashboardMainPageContent() {
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}
 				>
-					{language === "fa" ? "حذف تغییرات" : "Cancel"}
+					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
 				</button>
 				<button
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{language === "fa" ? "ذخیره" : "Save"}
+					{language === "fa" ? "ذخیره" : "Save Changes"}
 				</button>
 			</div>
 		</div>

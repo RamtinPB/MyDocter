@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLanguage } from "./LanguageContext";
 
 interface Section {
 	question: string;
@@ -7,6 +8,8 @@ interface Section {
 
 function AdminDashboardQuestionsPageContent() {
 	const [sections, setSections] = useState<Section[]>([]);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const addSection = () => {
 		setSections([...sections, { question: "", answer: "" }]);
@@ -33,15 +36,20 @@ function AdminDashboardQuestionsPageContent() {
 
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
+			<div
+				className={`d-flex flex-column bg-white shadow rounded-5 m-3 m-md-4 m-lg-5`}
+			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
-					<h3 className="text-center text-white m-0">{"لیست سوالات متداول"}</h3>
+					<h3 className="text-center text-white m-0">
+						{language === "fa" ? "لیست سوالات متداول" : "Q&A List"}
+					</h3>
 				</div>
 				{sections.map((section, index) => (
 					<div
 						key={index}
 						id="question-section"
 						className="d-flex justify-content-between align-items-center shadow-sm rounded-5 rounded-top-0"
+						style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 					>
 						{/* Delete button for each question section */}
 						<button
@@ -60,13 +68,22 @@ function AdminDashboardQuestionsPageContent() {
 						<div className="d-flex flex-column w-100">
 							{/* farsi title */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<h5 className="pe-1 me-1">
-									{index + 1} {" عنوان سوال"}
-								</h5>
+								<div className={` justify-content-end d-flex px-1 mx-1`}>
+									<h5 className="mx-1">{index + 1}</h5>
+									<h5>
+										{language === "fa" ? " عنوان سوال" : "Question (Farsi)"}
+									</h5>
+								</div>
 								<textarea
-									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									className={`form-control text-${
+										language === "fa" ? "end" : "start"
+									} border border-1 shadow-sm rounded-4 py-2 my-1`}
 									rows={3}
-									placeholder="متن خود را وارد کنید"
+									placeholder={
+										language === "fa"
+											? "متن خود را وارد کنید"
+											: "Write your input"
+									}
 									value={section.question}
 									onChange={(e) =>
 										handleChange(index, "question", e.target.value)
@@ -75,13 +92,24 @@ function AdminDashboardQuestionsPageContent() {
 							</div>
 							{/* farsi desc */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<h5 className="pe-1 me-1">
-									{index + 1} {" پاسخ و توضیحات سوال"}
-								</h5>
+								<div className={` justify-content-end d-flex px-1 mx-1`}>
+									<h5 className="mx-1">{index + 1}</h5>
+									<h5>
+										{language === "fa"
+											? "پاسخ و توضیحات سوال"
+											: "Explanation (Farsi)"}
+									</h5>
+								</div>
 								<textarea
-									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									className={`form-control text-${
+										language === "fa" ? "end" : "start"
+									} border border-1 shadow-sm rounded-4 py-2 my-1`}
 									rows={3}
-									placeholder="متن خود را وارد کنید"
+									placeholder={
+										language === "fa"
+											? "متن خود را وارد کنید"
+											: "Write your input"
+									}
 									value={section.answer}
 									onChange={(e) =>
 										handleChange(index, "answer", e.target.value)
@@ -90,13 +118,24 @@ function AdminDashboardQuestionsPageContent() {
 							</div>
 							{/* english title */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<h5 className="pe-1 me-1">
-									{index + 1} {"(انگلیسی) عنوان سوال"}
-								</h5>
+								<div className={` justify-content-end d-flex px-1 mx-1`}>
+									<h5 className="mx-1">{index + 1}</h5>
+									<h5>
+										{language === "fa"
+											? "(انگلیسی) عنوان سوال"
+											: "Question (English)"}
+									</h5>
+								</div>
 								<textarea
-									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									className={`form-control text-${
+										language === "fa" ? "end" : "start"
+									} border border-1 shadow-sm rounded-4 py-2 my-1`}
 									rows={3}
-									placeholder="متن خود را وارد کنید"
+									placeholder={
+										language === "fa"
+											? "متن خود را وارد کنید"
+											: "Write your input"
+									}
 									value={section.question}
 									onChange={(e) =>
 										handleChange(index, "question", e.target.value)
@@ -105,13 +144,24 @@ function AdminDashboardQuestionsPageContent() {
 							</div>
 							{/* english desc */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<h5 className="pe-1 me-1">
-									{index + 1} {"(انگلیسی) پاسخ و توضیحات سوال"}
-								</h5>
+								<div className={` justify-content-end d-flex px-1 mx-1`}>
+									<h5 className="mx-1">{index + 1}</h5>
+									<h5>
+										{language === "fa"
+											? "(انگلیسی) پاسخ و توضیحات سوال"
+											: "Explanation (English)"}
+									</h5>
+								</div>
 								<textarea
-									className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+									className={`form-control text-${
+										language === "fa" ? "end" : "start"
+									} border border-1 shadow-sm rounded-4 py-2 my-1`}
 									rows={3}
-									placeholder="متن خود را وارد کنید"
+									placeholder={
+										language === "fa"
+											? "متن خود را وارد کنید"
+											: "Write your input"
+									}
 									value={section.answer}
 									onChange={(e) =>
 										handleChange(index, "answer", e.target.value)
@@ -145,13 +195,13 @@ function AdminDashboardQuestionsPageContent() {
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}
 				>
-					{"حذف"}
+					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
 				</button>
 				<button
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{"ذخیره"}
+					{language === "fa" ? "ذخیره" : "Save Changes"}
 				</button>
 			</div>
 		</div>

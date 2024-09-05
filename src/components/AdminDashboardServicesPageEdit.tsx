@@ -5,11 +5,17 @@ import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
 import axios from "axios";
+import { useLanguage } from "./LanguageContext";
 
 interface Service {
 	name: string;
 	description: string;
 	detailedDescription: string;
+
+	nameEN: string;
+	descriptionEN: string;
+	detailedDescriptionEN: string;
+
 	price: string;
 	subsidy: string;
 	image: string;
@@ -25,6 +31,8 @@ function ServicePageEdit() {
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const navigate = useNavigate();
 
@@ -122,21 +130,33 @@ function ServicePageEdit() {
 						/>
 					</div>
 					<div className="col-8 text-center text-white">
-						<h4>{service.name}</h4>
+						<h4>{language === "fa" ? service.name : service.nameEN}</h4>
 					</div>
 				</div>
 
 				{/* Image and Description Section */}
 				<div
 					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
-					style={{ direction: "rtl" }}
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<div className="d-flex flex-column flex-grow-1 pe-1 me-1">
-						<h6 className="">توضیحات کوتاه مربوط به سرویس</h6>
+					<div className="d-flex flex-column flex-grow-1 px-1 mx-1">
+						<h6
+							className={`text-${
+								language === "fa" ? "end" : "start"
+							} px-1 mx-1`}
+						>
+							{language === "fa"
+								? "توضیحات کوتاه مربوط به سرویس"
+								: "Short description of the service"}
+						</h6>
 						<textarea
-							className="form-control text-end h-100"
+							className={`form-control text-${
+								language === "fa" ? "end" : "start"
+							} h-100`}
 							rows={3}
-							placeholder="متن خود را وارد کنید"
+							placeholder={
+								language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+							}
 							style={{ resize: "none" }}
 						></textarea>
 					</div>
@@ -160,31 +180,47 @@ function ServicePageEdit() {
 							className="btn btn-sm btn-warning shadow-sm rounded-pill"
 							onClick={() => setServicePicture(null)}
 						>
-							<span> حذف عکس</span>
+							<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
 						</button>
 					</div>
 				</div>
 
 				{/* Detailed Description Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h6 className="pe-1 me-1">توضیحات تکمیلی مربوط به سرویس</h6>
+					<h6
+						className={` text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "توضیحات تکمیلی مربوط به سرویس"
+							: "Detailed description of the service"}
+					</h6>
 					<textarea
 						id="userInput"
-						className="form-control text-end"
+						className={`form-control  text-${
+							language === "fa" ? "end" : "start"
+						}`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 					></textarea>
 				</div>
 
 				{/* Form Builder Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h6 className="pe-4 me-1">فرم سرویس</h6>
+					<h6 className="pe-4 me-1">
+						{language === "fa" ? "فرم سرویس" : "Service Form"}
+					</h6>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
 							<FormBuilder />
 						) : (
 							<div className="text-center py-3">
-								<p>اطلاعات فرم یافت نشد</p>
+								<p>
+									{language === "fa"
+										? "اطلاعات فرم یافت نشد"
+										: "Form Data Not Found"}
+								</p>
 							</div>
 						)}
 					</div>
@@ -192,23 +228,42 @@ function ServicePageEdit() {
 
 				{/* Pricing & Subsidy Section */}
 				<div
-					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					className="d-flex flex-column flex-lg-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
 					style={{ direction: "ltr" }}
 				>
 					<input
 						type="text"
-						className="form-control text-end "
-						placeholder="یارانه"
+						className={`form-control  text-${
+							language === "fa" ? "end" : "start"
+						}`}
+						placeholder={language === "fa" ? "یارانه" : "Subsidy"}
 					/>
 					<input
 						type="text"
-						className="form-control text-end"
-						placeholder="قیمت سرویس"
+						className={`form-control  text-${
+							language === "fa" ? "end" : "start"
+						}`}
+						placeholder={language === "fa" ? "قیمت سرویس" : "Service Cost"}
 					/>
 					<input
 						type="text"
-						className="form-control text-end"
-						placeholder="نام سرویس"
+						className={`form-control  text-${
+							language === "fa" ? "end" : "start"
+						}`}
+						placeholder={
+							language === "fa" ? "نام سرویس" : "Service Name (Farsi)"
+						}
+					/>
+					<input
+						type="text"
+						className={`form-control  text-${
+							language === "fa" ? "end" : "start"
+						}`}
+						placeholder={
+							language === "fa"
+								? "نام سرویس (انگلیسی)"
+								: "Service Name (English)"
+						}
 					/>
 				</div>
 
@@ -218,13 +273,13 @@ function ServicePageEdit() {
 						className="btn btn-secondary rounded-pill px-3"
 						onClick={handleCancel}
 					>
-						{"حذف"}
+						{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
 					</button>
 					<button
 						className="btn btn-success rounded-pill px-3"
 						onClick={handleSubmit}
 					>
-						{"ذخیره"}
+						{language === "fa" ? "ذخیره" : "Save Changes"}
 					</button>
 				</div>
 			</div>
