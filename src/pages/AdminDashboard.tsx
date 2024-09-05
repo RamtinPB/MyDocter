@@ -3,9 +3,12 @@ import AdminDashboardMainPageContent from "../components/AdminDashboardMainPageC
 import AdminDashboardInsurancePageContent from "../components/AdminDashboardInsurancePageContent";
 import AdminDashboardQuestionsPageContent from "../components/AdminDashboardQuestionsPageContent";
 import AdminDashboardServicesPageContent from "../components/AdminDashboardServicesPageContent";
+import { useLanguage } from "../components/LanguageContext";
 
 function AdminDashboard() {
 	const [activeSection, setActiveSection] = useState("mainPage");
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const renderContent = () => {
 		switch (activeSection) {
@@ -26,7 +29,7 @@ function AdminDashboard() {
 		<>
 			<div
 				className="container text-center my-3 my-md-4 my-lg-5 pb-2 pb-md-3"
-				style={{ direction: "rtl" }}
+				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 			>
 				<button
 					className={`btn m-1 ${
@@ -34,7 +37,7 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => setActiveSection("mainPage")}
 				>
-					ویرایش صفحه اصلی
+					{language === "fa" ? "ویرایش صفحه اصلی" : "Edit Main Page Content"}
 				</button>
 				<button
 					className={`btn m-1 ${
@@ -44,7 +47,7 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => setActiveSection("questionsPage")}
 				>
-					ویرایش سوالات متداول
+					{language === "fa" ? "ویرایش سوالات متداول" : "Edit Q&A Content"}
 				</button>
 				<button
 					className={`btn m-1 ${
@@ -54,7 +57,7 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => setActiveSection("servicesPage")}
 				>
-					ویرایش سرویس ها
+					{language === "fa" ? "ویرایش سرویس ها" : "Edit Services"}
 				</button>
 				<button
 					className={`btn m-1 ${
@@ -64,7 +67,7 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => setActiveSection("insurancePage")}
 				>
-					ویرایش بیمه ها
+					{language === "fa" ? "ویرایش بیمه ها" : "Edit Insurances"}
 				</button>
 			</div>
 

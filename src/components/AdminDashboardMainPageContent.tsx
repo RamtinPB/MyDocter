@@ -1,4 +1,8 @@
+import { useLanguage } from "./LanguageContext";
+
 function AdminDashboardMainPageContent() {
+	const { language } = useLanguage(); // Get language and toggle function from context
+
 	// @ts-ignore
 	const handleChange = () => {};
 
@@ -13,45 +17,83 @@ function AdminDashboardMainPageContent() {
 			{/* {banner section} */}
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
-					<h3 className="text-center text-white m-0">{"قسمت بنر"}</h3>
+					<h3 className="text-center text-white m-0">
+						{language === "fa" ? "قسمت بنر" : "Banner Section"}
+					</h3>
 				</div>
 				{/* farsi */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"شعار سایت"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa" ? "شعار سایت" : "Opening quote title (Farsi)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"متن کوتاه بعد از شعار سایت"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "متن کوتاه بعد از شعار سایت"
+							: "Opening quote description (Farsi)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				{/* english */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"(انگلیسی) شعار سایت"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "(انگلیسی) شعار سایت"
+							: "Opening quote title (English)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">
-						{"(انگلیسی) متن کوتاه بعد از شعار سایت"}
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "(انگلیسی) متن کوتاه بعد از شعار سایت"
+							: "Opening quote description (English)"}
 					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -59,49 +101,85 @@ function AdminDashboardMainPageContent() {
 			{/* [services section] */}
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
-					<h3 className="text-center text-white m-0">{"قسمت خدمات"}</h3>
+					<h3 className="text-center text-white m-0">
+						{language === "fa" ? "قسمت خدمات" : "Services Section"}
+					</h3>
 				</div>
 				{/* farsi */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">
-						{"متن توضیح خدمات پزشک متخصص و فوق تخصص"}
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "متن توضیح خدمات پزشک متخصص و فوق تخصص"
+							: "Specialist services card description (Farsi)"}
 					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"متن توضیح خدمات پزشک عمومی"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "متن توضیح خدمات پزشک عمومی"
+							: "General services card description (Farsi)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				{/* english */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">
-						{"(انگلیسی) متن توضیح خدمات پزشک متخصص و فوق تخصص"}
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "(انگلیسی) متن توضیح خدمات پزشک متخصص و فوق تخصص"
+							: "Specialist services card description (English)"}
 					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">
-						{"(انگلیسی) متن توضیح خدمات پزشک عمومی"}
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "(انگلیسی) متن توضیح خدمات پزشک عمومی"
+							: "General services card description (English)"}
 					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -109,43 +187,79 @@ function AdminDashboardMainPageContent() {
 			{/* [Doc section] */}
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
-					<h3 className="text-center text-white m-0">{"قسمت میانه"}</h3>
+					<h3 className="text-center text-white m-0">
+						{language === "fa" ? "قسمت میانه" : "MIddle Section"}
+					</h3>
 				</div>
 				{/* farsi */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"سر تیتر"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa" ? "سر تیتر" : "Main title (Farsi)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"متن اصلی"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa" ? "متن اصلی" : "Main Description (Farsi)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				{/* english */}
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"(انگلیسی) سر تیتر"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa" ? "(انگلیسی) سر تیتر" : "Main title (Egnlish)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
-					<h4 className="pe-1 me-1">{"(انگلیسی) متن اصلی"}</h4>
+					<h4
+						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
+					>
+						{language === "fa"
+							? "(انگلیسی) متن اصلی"
+							: "Main Description (English)"}
+					</h4>
 					<textarea
-						className="form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1"
+						className={`form-control text-${
+							language === "fa" ? "end" : "start"
+						} border border-1 shadow-sm rounded-4 py-2 my-1`}
 						rows={3}
-						placeholder="متن خود را وارد کنید"
+						placeholder={
+							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -156,13 +270,13 @@ function AdminDashboardMainPageContent() {
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}
 				>
-					{"حذف"}
+					{language === "fa" ? "حذف تغییرات" : "Cancel"}
 				</button>
 				<button
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{"ذخیره"}
+					{language === "fa" ? "ذخیره" : "Save"}
 				</button>
 			</div>
 		</div>

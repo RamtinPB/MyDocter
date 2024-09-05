@@ -2,12 +2,10 @@
 	"insurance": [
 		{
 			"insuranceType": "بیمه سلامت",
-			"insuranceTypeEN": "insuranceTypeEN1",
 			"insuranceContribution": "70"
 		},
 		{
 			"insuranceType": "بیمه تامین اجتماعی",
-			"insuranceTypeEN": "insuranceTypeEN2",
 			"insuranceContribution": "60"
 		}
 	],
@@ -15,12 +13,10 @@
 	"supplementaryInsurance": [
 		{
 			"supplementaryInsuranceType": "بیمه",
-			"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN1",
 			"supplementaryInsuranceContribution": "20"
 		},
 		{
 			"supplementaryInsuranceType": "بیمه تکمیلی",
-			"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN2",
 			"supplementaryInsuranceContribution": "10"
 		}
 	],
@@ -230,9 +226,6 @@
 		"nationality": "",
 		"insuranceType": "بیمه سلامت",
 		"supplementaryInsuranceType": "بیمه",
-
-		"insuranceTypeEN": "insuranceTypeEN",
-		"supplementaryInsuranceTypeEN": "supplementaryInsuranceTypeEN",
 
 		"province": "",
 		"postalCode": "",
