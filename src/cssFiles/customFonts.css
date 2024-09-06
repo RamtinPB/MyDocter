@@ -41,38 +41,7 @@ body, p, a, span, div, button, input, textarea {
 /* Responsive font sizes for mobile devices (phones and smaller tablets) */
 @media (max-width: 768px) {
     h1 {
-        font-size: 2rem !important; /* Slightly smaller for phones */
-    }
-
-    h2 {
-        font-size: 1.75rem !important;
-    }
-
-    h3 {
-        font-size: 1.5rem !important;
-    }
-
-    h4 {
-        font-size: 1.25rem !important;
-    }
-
-    h5 {
-        font-size: 1.1rem !important;
-    }
-
-    h6 {
-        font-size: 1rem !important;
-    }
-
-    body, p, a, span, div, button, input, textarea {
-        font-size: 0.85rem !important; /* Smaller base font size on mobile */
-    }
-}
-
-/* Even smaller screens (like very small phones) */
-@media (max-width: 576px) {
-    h1 {
-        font-size: 1.75rem !important; /* Further reduction for very small screens */
+        font-size: 1.75rem !important; /* Slightly smaller for phones */
     }
 
     h2 {
@@ -93,6 +62,37 @@ body, p, a, span, div, button, input, textarea {
 
     h6 {
         font-size: 0.9rem !important;
+    }
+
+    body, p, a, span, div, button, input, textarea {
+        font-size: 0.85rem !important; /* Smaller base font size on mobile */
+    }
+}
+
+/* Even smaller screens (like very small phones) */
+@media (max-width: 576px) {
+    h1 {
+        font-size: 1.5rem !important; /* Further reduction for very small screens */
+    }
+
+    h2 {
+        font-size: 1.25rem !important;
+    }
+
+    h3 {
+        font-size: 1.1rem !important;
+    }
+
+    h4 {
+        font-size: 1rem !important;
+    }
+
+    h5 {
+        font-size: 0.9rem !important;
+    }
+
+    h6 {
+        font-size: 0.8rem !important;
     }
 
     body, p, a, span, div, button, input, textarea {

@@ -5,31 +5,67 @@ import { useLanguage } from "./LanguageContext";
 function AdminDashboardInsurancePageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
-	// Define the state for sections
-	const [sections, setSections] = useState<
+	// Define the state for Basic Insurance sections
+	const [basicInsuranceSections, setBasicInsuranceSections] = useState<
 		{ input1: string; input2: string }[]
 	>([]);
 
-	// Add a new section to the table
-	const addSection = () => {
-		setSections([...sections, { input1: "", input2: "" }]);
+	// Define the state for Supplementary Insurance sections
+	const [supplementaryInsuranceSections, setSupplementaryInsuranceSections] =
+		useState<{ input1: string; input2: string }[]>([]);
+
+	// Add a new section to the Basic Insurance table
+	const addBasicInsuranceSection = () => {
+		setBasicInsuranceSections([
+			...basicInsuranceSections,
+			{ input1: "", input2: "" },
+		]);
 	};
 
-	// Remove a specific section by its index
-	const removeSection = (indexToRemove: number) => {
-		const newSections = sections.filter((_, index) => index !== indexToRemove);
-		setSections(newSections);
+	// Add a new section to the Supplementary Insurance table
+	const addSupplementaryInsuranceSection = () => {
+		setSupplementaryInsuranceSections([
+			...supplementaryInsuranceSections,
+			{ input1: "", input2: "" },
+		]);
 	};
 
-	// Handle change in the input fields
-	const handleChange = (
+	// Remove a specific section from the Basic Insurance table
+	const removeBasicInsuranceSection = (indexToRemove: number) => {
+		const newSections = basicInsuranceSections.filter(
+			(_, index) => index !== indexToRemove
+		);
+		setBasicInsuranceSections(newSections);
+	};
+
+	// Remove a specific section from the Supplementary Insurance table
+	const removeSupplementaryInsuranceSection = (indexToRemove: number) => {
+		const newSections = supplementaryInsuranceSections.filter(
+			(_, index) => index !== indexToRemove
+		);
+		setSupplementaryInsuranceSections(newSections);
+	};
+
+	// Handle change in the input fields for Basic Insurance
+	const handleBasicInsuranceChange = (
 		index: number,
 		field: "input1" | "input2",
 		value: string
 	) => {
-		const updatedSections = [...sections];
+		const updatedSections = [...basicInsuranceSections];
 		updatedSections[index][field] = value;
-		setSections(updatedSections);
+		setBasicInsuranceSections(updatedSections);
+	};
+
+	// Handle change in the input fields for Supplementary Insurance
+	const handleSupplementaryInsuranceChange = (
+		index: number,
+		field: "input1" | "input2",
+		value: string
+	) => {
+		const updatedSections = [...supplementaryInsuranceSections];
+		updatedSections[index][field] = value;
+		setSupplementaryInsuranceSections(updatedSections);
 	};
 
 	// @ts-ignore
@@ -40,7 +76,7 @@ function AdminDashboardInsurancePageContent() {
 
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
-			{/* Insurance */}
+			{/* Basic Insurance */}
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
@@ -66,10 +102,10 @@ function AdminDashboardInsurancePageContent() {
 						</tr>
 					</thead>
 					<tbody>
-						{sections.map((section, index) => (
+						{basicInsuranceSections.map((section, index) => (
 							<tr key={index}>
 								<th scope="row" className="align-middle">
-									{index + 1}
+									<span className="px-1">{index + 1}</span>
 								</th>
 								<td className="align-middle">
 									<input
@@ -77,7 +113,11 @@ function AdminDashboardInsurancePageContent() {
 										className="form-control"
 										value={section.input1}
 										onChange={(e) =>
-											handleChange(index, "input1", e.target.value)
+											handleBasicInsuranceChange(
+												index,
+												"input1",
+												e.target.value
+											)
 										}
 										placeholder={
 											language === "fa" ? "نام بیمه" : "Insurance name"
@@ -90,21 +130,25 @@ function AdminDashboardInsurancePageContent() {
 										className="form-control"
 										value={section.input2}
 										onChange={(e) =>
-											handleChange(index, "input2", e.target.value)
+											handleBasicInsuranceChange(
+												index,
+												"input2",
+												e.target.value
+											)
 										}
 										placeholder={
 											language === "fa"
 												? "درصد سهم بیمه"
-												: "Insurance Contribution percentage"
+												: "Contribution percentage"
 										}
 									/>
 								</td>
 								<td className="align-middle">
 									<button
 										id="btn-delete"
-										className="rounded-circle btn p-0 m-3"
+										className="rounded-circle btn p-0 m-1 m-md-3"
 										type="button"
-										onClick={() => removeSection(index)}
+										onClick={() => removeBasicInsuranceSection(index)}
 									>
 										<img
 											src="\images\red-delete.png"
@@ -124,7 +168,7 @@ function AdminDashboardInsurancePageContent() {
 									<button
 										className="rounded-circle btn p-0 m-1"
 										type="button"
-										onClick={addSection}
+										onClick={addBasicInsuranceSection}
 									>
 										<img
 											src="\images\green-add.png"
@@ -164,10 +208,10 @@ function AdminDashboardInsurancePageContent() {
 						</tr>
 					</thead>
 					<tbody>
-						{sections.map((section, index) => (
+						{supplementaryInsuranceSections.map((section, index) => (
 							<tr key={index}>
-								<th scope="row" className="align-middle">
-									{index + 1}
+								<th scope="row" className="align-middle ">
+									<span className="px-1">{index + 1}</span>
 								</th>
 								<td className="align-middle">
 									<input
@@ -175,7 +219,11 @@ function AdminDashboardInsurancePageContent() {
 										className="form-control"
 										value={section.input1}
 										onChange={(e) =>
-											handleChange(index, "input1", e.target.value)
+											handleSupplementaryInsuranceChange(
+												index,
+												"input1",
+												e.target.value
+											)
 										}
 										placeholder={
 											language === "fa" ? "نام بیمه" : "Insurance name"
@@ -188,21 +236,25 @@ function AdminDashboardInsurancePageContent() {
 										className="form-control"
 										value={section.input2}
 										onChange={(e) =>
-											handleChange(index, "input2", e.target.value)
+											handleSupplementaryInsuranceChange(
+												index,
+												"input2",
+												e.target.value
+											)
 										}
 										placeholder={
 											language === "fa"
 												? "درصد سهم بیمه"
-												: "Insurance Contribution percentage"
+												: "Contribution percentage"
 										}
 									/>
 								</td>
 								<td className="align-middle">
 									<button
 										id="btn-delete"
-										className="rounded-circle btn p-0 m-3"
+										className="rounded-circle btn p-0 m-1 m-md-3"
 										type="button"
-										onClick={() => removeSection(index)}
+										onClick={() => removeSupplementaryInsuranceSection(index)}
 									>
 										<img
 											src="\images\red-delete.png"
@@ -222,7 +274,7 @@ function AdminDashboardInsurancePageContent() {
 									<button
 										className="rounded-circle btn p-0 m-1"
 										type="button"
-										onClick={addSection}
+										onClick={addSupplementaryInsuranceSection}
 									>
 										<img
 											src="\images\green-add.png"
@@ -248,7 +300,7 @@ function AdminDashboardInsurancePageContent() {
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{language === "fa" ? "ذخیره" : "Save Changes"}
+					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
 				</button>
 			</div>
 		</div>

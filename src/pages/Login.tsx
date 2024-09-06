@@ -2,8 +2,11 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "/src/cssFiles/login.css"; // Assuming you have a separate CSS file for additional styles
+import { useLanguage } from "../components/LanguageContext";
 
 function Login() {
+	const { language } = useLanguage(); // Get language and toggle function from context
+
 	const [formData, setFormData] = useState({
 		username: "",
 		password: "",
@@ -40,59 +43,74 @@ function Login() {
 				<div className="d-flex justify-content-center justify-content-xl-end">
 					<div className="col-12 col-xl-4 col-lg-6 col-md-7 ">
 						<div
-							className="card p-4 shadow rounded-4"
+							className="card p-3 p-md-4 shadow rounded-4"
 							style={{
 								backgroundColor: "rgba(255, 255, 255, 0.9)",
 							}}
 						>
-							<div className="d-flex justify-content-end justify-content-lg-between mb-3 pb-1">
-								<button
+							<div
+								className={`row text-${
+									language === "fa" ? "end" : "center"
+								}  mb-4 pb-1`}
+							>
+								<FaCaretLeft
+									className="col-2 custom-back-btn"
+									type="button"
+									color="black"
 									onClick={handleBackClick}
-									className="btn btn-link p-0 m-0"
-								>
-									<FaCaretLeft size={27} color="black" />
-								</button>
-								<h3 className="mb-0">ورود به پزشک من</h3>
+								/>
+								<h3 className={`col-${language === "fa" ? "10" : "8"} mb-0`}>
+									{language === "fa" ? "ورود به پزشک من" : "Log into My Docter"}
+								</h3>
 							</div>
-							<form onSubmit={handleSubmit}>
+							<form
+								onSubmit={handleSubmit}
+								style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							>
 								<div className="d-flex justify-content-between mb-3 p-1">
 									<div className="">
-										<a href="/SignIn">ثبت نام رایگان</a>
-									</div>
-									<div className="">
 										<label htmlFor="username" className="form-label">
-											ثبت نام نکرده اید؟
+											{language === "fa"
+												? "ثبت نام نکرده اید؟"
+												: "Not Registered?"}
 										</label>
 									</div>
+									<div className="">
+										<a href="/SignUp">
+											{language === "fa" ? "ثبت نام رایگان" : "Free Sign Up"}
+										</a>
+									</div>
 								</div>
-								<div className="mb-3 p-1 text-end">
+								<div className="mb-3 p-1">
 									<label htmlFor="username" className="form-label">
-										شماره تماس یا ایمیل
+										{language === "fa" ? "شماره تماس" : "Phone number"}
 									</label>
 									<input
 										type="text"
-										className="form-control text-end"
+										className="form-control"
 										id="username"
 										name="username"
-										placeholder="09164524878 یا example@gmail.com"
+										placeholder="09164524878"
 										value={formData.username}
 										onChange={handleInputChange}
 									/>
 								</div>
-								<div className="mb-3 p-1 text-end">
+								<div className="mb-3 p-1 ">
 									<div className="d-flex justify-content-between">
-										<div className="text-start">
-											<a href="/PasswordRecovery">
-												رمز عبور را فراموش کرده اید؟
-											</a>
-										</div>
 										<div className="">
 											<label htmlFor="password" className="form-label">
-												رمز عبور
+												{language === "fa" ? "رمز عبور" : "Password"}
 											</label>
 										</div>
+										<div className="">
+											<a href="/PasswordRecovery">
+												{language === "fa"
+													? "رمز عبور را فراموش کرده اید؟"
+													: "Forgot your password?"}
+											</a>
+										</div>
 									</div>
-									<div className="input-group">
+									<div className="input-group" style={{ direction: "ltr" }}>
 										<span
 											onClick={togglePasswordVisibility}
 											className="input-group-text eye-icon"
@@ -102,7 +120,9 @@ function Login() {
 										</span>
 										<input
 											type={showPassword ? "text" : "password"}
-											className="form-control text-end"
+											className={`form-control text-${
+												language === "fa" ? "end" : "start"
+											}`}
 											id="password"
 											name="password"
 											placeholder="********"
@@ -111,25 +131,28 @@ function Login() {
 										/>
 									</div>
 								</div>
-								<div className="form-check mb-3 text-end d-flex justify-content-end align-items-center">
+								<div
+									className={`form-check  d-flex justify-content-start p-1 mb-3`}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+								>
+									<label className="form-check-label mx-1" htmlFor="rememberMe">
+										{language === "fa" ? "مرا به خاطر بسپارید" : "Remmember Me"}
+									</label>
 									<input
 										type="checkbox"
-										className="form-check-input me-2"
+										className="form-check-input mx-1"
 										id="rememberMe"
 										name="rememberMe"
 										checked={formData.rememberMe}
 										onChange={handleInputChange}
 									/>
-									<label className="form-check-label me-1" htmlFor="rememberMe">
-										مرا به خاطر بسپارید
-									</label>
 								</div>
 								<div className="p-1 text-center">
 									<button
 										type="submit"
 										className="btn btn-primary rounded-pill"
 									>
-										ورود
+										{language === "fa" ? "ورود" : "Login"}
 									</button>
 								</div>
 							</form>

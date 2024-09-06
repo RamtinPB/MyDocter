@@ -201,7 +201,7 @@ function AdminDashboardQuestionsPageContent() {
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{language === "fa" ? "ذخیره" : "Save Changes"}
+					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
 				</button>
 			</div>
 		</div>

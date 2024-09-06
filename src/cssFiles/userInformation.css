@@ -3,10 +3,18 @@
     height: 170px;
 }
 
+.select-resize {
+ font-size: 0.9rem !important;
+}
+
 @media (max-width: 768px) {
     .custom-user-icon-pic {
         width: 150px;
         height: 150px;
+    }
+
+    .select-resize {
+      font-size: 0.85rem !important;
     }
 }
 
@@ -14,5 +22,9 @@
     .custom-user-icon-pic {
         width: 90px;
         height: 90px;
+    }
+    
+    .select-resize {
+      font-size: 0.6rem !important;
     }
 }

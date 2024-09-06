@@ -747,7 +747,7 @@
 					"labelEN": "Drug Allergy Reactions",
 					"optional": true,
 					"placeholder": "واکنش، واکنش",
-					"placeholderEN": "Specify reaction, Specify reaction",
+					"placeholderEN": "Reaction, Reaction",
 					"checkboxName": "hasAllergyDrug"
 				},
 				{
@@ -768,8 +768,8 @@
 					"label": "(به ترتیب) نوع واکنش ها ",
 					"labelEN": "Food Allergy Reactions",
 					"optional": true,
-					"placeholder": "،واکنش، واکنش",
-					"placeholderEN": "Specify reaction, Specify reaction",
+					"placeholder": "واکنش، واکنش",
+					"placeholderEN": "Reaction, Reaction",
 					"checkboxName": "hasAllergyFood"
 				}
 			],

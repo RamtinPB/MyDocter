@@ -188,7 +188,7 @@ function AdminDashboardMainPageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "قسمت میانه" : "MIddle Section"}
+						{language === "fa" ? "قسمت میانه" : "Middle Section"}
 					</h3>
 				</div>
 				{/* farsi */}
@@ -276,7 +276,7 @@ function AdminDashboardMainPageContent() {
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{language === "fa" ? "ذخیره" : "Save Changes"}
+					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
 				</button>
 			</div>
 		</div>

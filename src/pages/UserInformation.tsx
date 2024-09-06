@@ -262,7 +262,7 @@ function UserInformation() {
 												value={formik.values[field.name]}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
-												className={`form-select text-${
+												className={`form-select select-resize text-${
 													language === "fa" ? "end" : "start"
 												} shadow-sm ${
 													formik.touched[field.name] &&

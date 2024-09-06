@@ -8,28 +8,52 @@ import "/src/cssFiles/login.css"; // Custom styles
 import Toast from "../components/SignUpToast.tsx";
 import Modal from "../components/SignUpModel.tsx";
 import axiosInstance from "../myAPI/axiosInstance.ts";
+import { useLanguage } from "../components/LanguageContext.tsx";
 
 // Validation Schema
-const validationSchema = Yup.object().shape({
-	phoneNumber: Yup.string()
-		.matches(
-			/^(09\d{9}|\+989\d{9})$/,
-			"شماره وارد شده باید *********09 باشد یا *********989+ باشد"
-		)
-		.required("شماره تماس الزامی است"),
-	password: Yup.string()
-		.min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد")
-		.max(16, "رمز عبور نمی‌تواند بیشتر از ۱۶ کاراکتر باشد")
-		.matches(
-			/^(?=.*[0-9])(?=.*[a-zA-Z])/,
-			"رمز عبور باید شامل حداقل یک حرف انگلیسی و یک عدد باشد"
-		)
-		.matches(
-			/^[a-zA-Z0-9!@#$%^&*()+=_\-{}\[\]:;"'?<>,.]+$/,
-			"تنها از کاراکترهای خاص ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , می توان استفاده کند"
-		)
-		.required("رمز عبور الزامی است"),
-});
+// Function to dynamically switch between English and Persian validation messages
+const getValidationSchema = (language: string) => {
+	return Yup.object().shape({
+		phoneNumber: Yup.string()
+			.matches(
+				/^(09\d{9}|\+989\d{9})$/,
+				language === "fa"
+					? "شماره وارد شده باید *********09 باشد یا *********989+ باشد"
+					: "The phone number must be in the format 09********* or +989*********"
+			)
+			.required(
+				language === "fa" ? "شماره تماس الزامی است" : "Phone number is required"
+			),
+		password: Yup.string()
+			.min(
+				8,
+				language === "fa"
+					? "رمز عبور باید حداقل ۸ کاراکتر باشد"
+					: "Password must be at least 8 characters long"
+			)
+			.max(
+				16,
+				language === "fa"
+					? "رمز عبور نمی‌تواند بیشتر از ۱۶ کاراکتر باشد"
+					: "Password cannot be longer than 16 characters"
+			)
+			.matches(
+				/^(?=.*[0-9])(?=.*[a-zA-Z])/,
+				language === "fa"
+					? "رمز عبور باید شامل حداقل یک حرف انگلیسی و یک عدد باشد"
+					: "Password must contain at least one letter and one number"
+			)
+			.matches(
+				/^[a-zA-Z0-9!@#$%^&*()+=_\-{}\[\]:;"'?<>,.]+$/,
+				language === "fa"
+					? "تنها از کاراکترهای خاص ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , می توان استفاده کند"
+					: "Only special characters ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , are allowed"
+			)
+			.required(
+				language === "fa" ? "رمز عبور الزامی است" : "Password is required"
+			),
+	});
+};
 
 function SignUp() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +68,8 @@ function SignUp() {
 	const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
 	const handleBackClick = () => navigate("/");
+
+	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const handleFormSubmit = async (
 		values: { phoneNumber: any; password: any },
@@ -98,51 +124,63 @@ function SignUp() {
 				<div className="d-flex justify-content-center justify-content-xl-end">
 					<div className="col-12 col-xl-4 col-lg-6 col-md-7">
 						<div
-							className="card p-4 shadow"
+							className="card p-3 p-md-4 shadow rounded-4"
 							style={{
 								backgroundColor: "rgba(255, 255, 255, 0.9)",
-								borderRadius: "15px",
 							}}
 						>
-							<div className="d-flex justify-content-end justify-content-lg-between mb-3 pb-4">
-								<button
+							<div
+								className={`row text-${
+									language === "fa" ? "end" : "center"
+								} mb-4 pb-1`}
+							>
+								<FaCaretLeft
+									className="col-2 custom-back-btn"
+									type="button"
+									color="black"
 									onClick={handleBackClick}
-									className="btn btn-link p-0 m-0"
-								>
-									<FaCaretLeft size={27} color="black" />
-								</button>
-								<h3 className="mb-0">ثبت نام در پزشک من</h3>
+								/>
+								<h3 className={`col-${language === "fa" ? "10" : "8"} mb-0`}>
+									{language === "fa"
+										? "ثبت نام در پزشک من"
+										: "Signup in My Docter"}
+								</h3>
 							</div>
 
 							<Formik
 								initialValues={{ phoneNumber: "", password: "" }}
-								validationSchema={validationSchema}
+								validationSchema={getValidationSchema(language)}
 								onSubmit={handleFormSubmit}
 							>
 								{({ isSubmitting }) => (
-									<Form>
-										<div className="mb-4 p-1 text-end">
+									<Form
+										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									>
+										<div className="mb-3 p-1">
 											<label htmlFor="phoneNumber" className="form-label">
-												شماره تماس
+												{language === "fa" ? "شماره تماس" : "Phone number"}
 											</label>
 											<Field
 												type="text"
 												name="phoneNumber"
-												className="form-control text-end"
+												className="form-control"
 												placeholder="09164524878"
 											/>
 											<ErrorMessage
 												name="phoneNumber"
 												component="div"
-												className="text-danger text-end"
+												className="text-danger"
 											/>
 										</div>
 
-										<div className="mb-4 p-1 text-end">
+										<div className="mb-3 p-1">
 											<label htmlFor="password" className="form-label">
-												رمز عبور
+												{language === "fa" ? "رمز عبور" : "Password"}
 											</label>
-											<div className="input-group">
+											<div
+												className="input-group "
+												style={{ direction: "ltr" }}
+											>
 												<span
 													onClick={togglePasswordVisibility}
 													className="input-group-text eye-icon"
@@ -153,43 +191,52 @@ function SignUp() {
 												<Field
 													type={showPassword ? "text" : "password"}
 													name="password"
-													className="form-control text-end"
+													className={`form-control text-${
+														language === "fa" ? "end" : "start"
+													}`}
 													placeholder="********"
 												/>
 											</div>
 											<ErrorMessage
 												name="password"
 												component="div"
-												className="text-danger text-end"
+												className="text-danger"
 											/>
 										</div>
 
-										<div className="form-check mb-3 text-end d-flex justify-content-end">
+										<div
+											className={`form-check d-flex justify-content-start p-1 mb-3`}
+											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										>
+											<label
+												className="form-check-label mx-1"
+												htmlFor="rememberMe"
+											>
+												{language === "fa"
+													? "مرا به خاطر بسپارید"
+													: "Remmember Me"}
+											</label>
 											<Field
 												type="checkbox"
 												name="rememberMe"
-												className="form-check-input me-2"
+												className="form-check-input mx-2"
 											/>
-											<label
-												className="form-check-label me-1"
-												htmlFor="rememberMe"
-											>
-												مرا به خاطر بسپارید
-											</label>
 										</div>
 
 										{verificationSent && (
-											<div className="mb-4 p-1 text-end">
+											<div className="mb-4 p-1">
 												<label
 													htmlFor="verificationCode"
 													className="form-label"
 												>
-													کد تایید
+													{language === "fa" ? "کد تایید" : "Verification Code"}
 												</label>
 												<input
 													type="text"
-													className="form-control text-end"
-													placeholder="کد تایید"
+													className="form-control"
+													placeholder={
+														language === "fa" ? "کد تایید" : "Verification Code"
+													}
 													value={verificationCode}
 													onChange={(e) => setVerificationCode(e.target.value)}
 												/>
@@ -198,7 +245,7 @@ function SignUp() {
 													className="btn btn-success rounded-pill mt-3"
 													onClick={handleVerificationSubmit}
 												>
-													تایید کد
+													{language === "fa" ? "کد تایید" : "Verification Code"}
 												</button>
 											</div>
 										)}
@@ -210,7 +257,7 @@ function SignUp() {
 													className="btn btn-primary rounded-pill"
 													disabled={isSubmitting}
 												>
-													ثبت نام
+													{language === "fa" ? "ثبت نام" : "Signup"}
 												</button>
 											</div>
 										)}
