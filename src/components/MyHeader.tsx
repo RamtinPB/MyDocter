@@ -111,7 +111,9 @@ function MyHeader() {
 								)}
 								<span
 									className={`text-white text-${
-										language === "fa" ? "end pe-4 ps-2" : "start pe-2 ps-4"
+										language === "fa"
+											? "end pe-4 ps-3 ms-1"
+											: "start pe-3 ps-4 ms-1"
 									} `}
 								>
 									{username}
