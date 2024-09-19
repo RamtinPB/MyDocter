@@ -64,7 +64,7 @@ const NotificationDropdown = () => {
 			const message =
 				language === "fa"
 					? `تغییر کرده است ${service.status} وضعیت سرویس ${service.name} به`
-					: `The status of service ${service.name} has changed to ${service.status}`;
+					: `has changed to ${service.status} ${service.name} The status of the service `;
 
 			return {
 				id: notificationId,

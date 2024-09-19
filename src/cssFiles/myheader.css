@@ -1,6 +1,6 @@
 .custom-logo {
     width: 135px;
-    height: 45px;
+    height: 45px !important;
 }
 
 .custom-login-btn {
@@ -100,4 +100,21 @@ background: linear-gradient(90deg, rgba(24,55,136,1) 0%, rgba(0,0,0,1) 50%, rgba
     left: 0 !important; /* Ensure it starts from the very left of the viewport */
     right: 0  !important; /* Ensure it spans to the very right of the viewport */
     border-radius: 0 !important; /* Remove border radius if any to make it consistent across the viewport */
+}
+
+.custom-loggedin-btn-bg {
+	background: linear-gradient(146deg, rgba(24,55,136,1) 0%, rgba(162,192,238,1) 50%, rgba(124,175,243,1) 100%);
+	background-size: 200% 200%; /* This enlarges the gradient so it has space to move */
+	animation: gradientAnimation 5s ease infinite; /* Adjust the timing and easing */
+}
+@keyframes gradientAnimation {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%; /* Moves the gradient */
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

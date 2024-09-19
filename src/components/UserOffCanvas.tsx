@@ -41,7 +41,11 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 		// Function to check the screen size and update the offcanvas class
 		const updateOffcanvasClass = () => {
 			if (window.innerWidth >= 576) {
-				setOffcanvasClass("offcanvas-start");
+				if (language === "fa") {
+					setOffcanvasClass("offcanvas-start");
+				} else {
+					setOffcanvasClass("offcanvas-end");
+				}
 			} else {
 				setOffcanvasClass("offcanvas-top h-50");
 			}
@@ -55,7 +59,7 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 
 		// Cleanup the event listener on component unmount
 		return () => window.removeEventListener("resize", updateOffcanvasClass);
-	}, []);
+	}, [language]);
 
 	const username =
 		userData && userData.firstName && userData.lastName

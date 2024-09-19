@@ -6,6 +6,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "/src/cssFiles/myheader.css";
 import "/src/cssFiles/customColors.css";
 import Logo from "/images/Logo.png";
+import LogoEN from "/images/LogoEN.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
@@ -83,11 +84,14 @@ function MyHeader() {
 	return (
 		<>
 			<nav className="navbar navbar-expand-lg custom-header shadow-lg sticky-top">
-				<div className="container d-flex justify-content-between py-lg-1 py-0">
+				<div
+					className="container d-flex justify-content-between py-lg-1 py-0"
+					style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+				>
 					{isLoggedIn ? (
 						<div className="d-flex justify-content-between align-items-center gap-3">
 							<button
-								className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-bg-2 border border-1 rounded-pill ps-0 ms-0"
+								className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-loggedin-btn-bg border border-1 rounded-pill px-0 mx-0"
 								type="button"
 								data-bs-toggle="offcanvas"
 								data-bs-target="#myOffcanvas"
@@ -107,8 +111,8 @@ function MyHeader() {
 								)}
 								<span
 									className={`text-white text-${
-										language === "fa" ? "end" : "start"
-									} pe-2 ps-4`}
+										language === "fa" ? "end pe-4 ps-2" : "start pe-2 ps-4"
+									} `}
 								>
 									{username}
 								</span>
@@ -128,7 +132,7 @@ function MyHeader() {
 					)}
 					<Link className="nav-link" to="/">
 						<img
-							src={Logo}
+							src={language === "fa" ? Logo : LogoEN}
 							className="img-fluid custom-logo d-inline-block align-top "
 							alt="Logo"
 						/>

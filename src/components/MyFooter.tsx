@@ -1,6 +1,7 @@
 import { FaInstagram, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import "/src/cssFiles/myfooter.css";
 import Logo from "/images/Logo.png";
+import LogoEN from "/images/LogoEN.png";
 import { FaXTwitter } from "react-icons/fa6";
 import { useLanguage } from "./LanguageContext";
 
@@ -24,7 +25,11 @@ function MyFooter() {
 						</a>
 					</div>
 					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
-						<img src={Logo} className="custom-footer-logo" alt="Logo" />
+						<img
+							src={language === "fa" ? Logo : LogoEN}
+							className="custom-footer-logo"
+							alt="Logo"
+						/>
 						<a href="#!" className="link-light link-underline-opacity-0">
 							{language === "fa" ? "پشتیبانی 24/7" : "24/7 Support"}
 						</a>

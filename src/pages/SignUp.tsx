@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import axios from "axios";
 import "/src/cssFiles/login.css"; // Custom styles
 import Toast from "../components/SignUpToast.tsx";
-import Modal from "../components/SignUpModel.tsx";
 import axiosInstance from "../myAPI/axiosInstance.ts";
 import { useLanguage } from "../components/LanguageContext.tsx";
 
@@ -18,7 +17,7 @@ const getValidationSchema = (language: string) => {
 			.matches(
 				/^(09\d{9}|\+989\d{9})$/,
 				language === "fa"
-					? "شماره وارد شده باید *********09 باشد یا *********989+ باشد"
+					? "شماره وارد شده باید به شکل *********09 یا *********989+ باشد"
 					: "The phone number must be in the format 09********* or +989*********"
 			)
 			.required(
@@ -58,7 +57,6 @@ const getValidationSchema = (language: string) => {
 function SignUp() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [verificationSent, setVerificationSent] = useState(false);
-	const [showModal, setShowModal] = useState(false);
 	const [verificationCode, setVerificationCode] = useState("");
 	const [toastMessage, setToastMessage] = useState("");
 	const [showToast, setShowToast] = useState(false);
@@ -83,27 +81,27 @@ function SignUp() {
 
 			if (response.status === 200) {
 				setVerificationSent(true);
-				setToastMessage("کد تایید به شماره تماس شما ارسال شد.");
+				setToastMessage("کد تایید به شماره تماس شما ارسال شد");
 				setShowToast(true);
 			}
 		} catch (error) {
-			let errorMessage = "خطای ناشناخته رخ داده است.";
+			let errorMessage = "خطای ناشناخته رخ داده است";
 
 			if (axios.isAxiosError(error)) {
 				// Handle known Axios error
 				switch (error.response?.status) {
 					case 400:
-						errorMessage = "فرمت شماره تماس اشتباه است.";
+						errorMessage = "فرمت شماره تماس اشتباه است";
 						break;
 					case 401:
 						errorMessage =
-							"رمز عبور باید شامل حروف و اعداد باشد و بین ۸ تا ۱۶ کاراکتر باشد.";
+							"رمز عبور باید شامل حروف و اعداد باشد و بین ۸ تا ۱۶ کاراکتر باشد";
 						break;
 					case 409:
-						errorMessage = "این شماره تماس قبلا ثبت شده است.";
+						errorMessage = "این شماره تماس قبلا ثبت شده است";
 						break;
 					default:
-						errorMessage = "خطای ناشناخته رخ داده است.";
+						errorMessage = "خطای ناشناخته رخ داده است";
 				}
 			}
 			setToastMessage(errorMessage);
@@ -274,20 +272,6 @@ function SignUp() {
 				show={showToast}
 				onClose={() => setShowToast(false)}
 			/>
-			<Modal
-				show={showModal}
-				onClose={() => setShowModal(false)}
-				onConfirm={handleVerificationSubmit}
-			>
-				<p>کد تایید به شماره تماس شما ارسال شده است. لطفا آن را وارد کنید:</p>
-				<input
-					type="text"
-					className="form-control text-end"
-					placeholder="کد تایید"
-					value={verificationCode}
-					onChange={(e) => setVerificationCode(e.target.value)}
-				/>
-			</Modal>
 		</div>
 	);
 }

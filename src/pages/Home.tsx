@@ -32,6 +32,7 @@ interface homeTextData {
 	docDescription: string;
 	///////////////////////
 	docTitleEN: string;
+	docImageEN: string;
 	docDescriptionEN: string;
 }
 
@@ -185,15 +186,16 @@ function Home() {
 			<section
 				id="doc"
 				className=" d-flex flex-row justify-content-between shadow"
+				style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 			>
 				<img
-					src={homeText?.docImage}
+					src={language === "fa" ? homeText?.docImage : homeText?.docImageEN}
 					alt="Mr Doc"
 					className="img-fluid col-md-5 col-lg-4 col-xl-3  d-sm-block d-none"
 				/>
 				<div
 					className={` col-10 col-md-7 col-lg-8 text-${
-						language === "fa" ? "end" : "center"
+						language === "fa" ? "end" : "start"
 					} text-white p-1 p-md-3 p-lg-4 m-auto `}
 				>
 					<h4>

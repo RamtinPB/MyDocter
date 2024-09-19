@@ -12,14 +12,17 @@ function SignUpToast({ message, show, onClose }: SignUpToastProps) {
 			}`}
 		>
 			<div className="toast fade show">
-				<div className="toast-body">
-					{message}
+				<div
+					className="toast-body d-flex justify-content-end align-items-center"
+					style={{ direction: "ltr" }}
+				>
+					<p className=" px-2 mb-0">{message}</p>
 					<button
 						type="button"
-						className="btn-close"
+						className="btn-close px-2"
 						aria-label="Close"
 						onClick={onClose}
-					></button>
+					/>
 				</div>
 			</div>
 		</div>
