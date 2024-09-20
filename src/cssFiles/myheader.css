@@ -103,7 +103,7 @@ background: linear-gradient(90deg, rgba(24,55,136,1) 0%, rgba(0,0,0,1) 50%, rgba
 }
 
 .custom-loggedin-btn-bg {
-	background: linear-gradient(145deg, rgba(24,55,136,1) 0%, rgba(24,55,136,1) 25%, rgba(162,192,238,1) 50%, rgba(124,175,243,1) 75%, rgba(124,175,243,1) 100%);
+	background: linear-gradient(145deg, rgba(24,55,136,1) 0%, rgba(24,55,136,1) 20%, rgba(162,192,238,1) 50%, rgba(124,175,243,1) 80%, rgba(124,175,243,1) 100%);
 	background-size: 200% 200%; /* This enlarges the gradient so it has space to move */
 	animation: gradientAnimation 3s ease-in-out infinite; /* Adjust the timing and easing */
 }
