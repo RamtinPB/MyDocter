@@ -3,6 +3,7 @@ import AdminDashboardMainPageContent from "../components/AdminDashboardMainPageC
 import AdminDashboardInsurancePageContent from "../components/AdminDashboardInsurancePageContent";
 import AdminDashboardQuestionsPageContent from "../components/AdminDashboardQuestionsPageContent";
 import AdminDashboardServicesPageContent from "../components/AdminDashboardServicesPageContent";
+import AdminDashboardFormPageContent from "../components/AdminDashboardFormPageContent";
 import { useLanguage } from "../components/LanguageContext";
 
 function AdminDashboard() {
@@ -20,6 +21,8 @@ function AdminDashboard() {
 				return <QuestionsPageContent />;
 			case "servicesPage":
 				return <ServicesPageContent />;
+			case "formPage":
+				return <FormPageContent />;
 			default:
 				return <MainPageContent />;
 		}
@@ -69,6 +72,14 @@ function AdminDashboard() {
 				>
 					{language === "fa" ? "ویرایش بیمه ها" : "Edit Insurances"}
 				</button>
+				<button
+					className={`btn m-1 ${
+						activeSection === "formPage" ? "btn-primary" : "btn-outline-primary"
+					} rounded-pill mx-2`}
+					onClick={() => setActiveSection("formPage")}
+				>
+					{language === "fa" ? "ویرایش فرم ها" : "Edit Forms"}
+				</button>
 			</div>
 
 			<div className="container">{renderContent()}</div>
@@ -81,5 +92,6 @@ const MainPageContent = () => <AdminDashboardMainPageContent />;
 const InsurancePageContent = () => <AdminDashboardInsurancePageContent />;
 const QuestionsPageContent = () => <AdminDashboardQuestionsPageContent />;
 const ServicesPageContent = () => <AdminDashboardServicesPageContent />;
+const FormPageContent = () => <AdminDashboardFormPageContent />;
 
 export default AdminDashboard;

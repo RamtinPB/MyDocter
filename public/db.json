@@ -381,7 +381,7 @@
 			"name": "maritalStatus",
 			"type": "select",
 			"label": "وضعیت تاهل",
-			"labelEN": "Matital Status",
+			"labelEN": "Marital Status",
 			"required": true,
 			"options": ["مجرد", "متاهل"],
 			"optionsEN": ["Single", "Engaged"]
@@ -588,7 +588,7 @@
 					"type": "string",
 					"label": "(اختیاری) BMI نمایه توده بدنی",
 					"labelEN": "Body Mass Index (optional)",
-					"optional": true
+					"required": false
 				}
 			],
 			"تاریخچه سلامتی و بیماری": [
@@ -621,7 +621,7 @@
 					"type": "string",
 					"label": "نسبت کاربر با بیمار ذکر شده",
 					"labelEN": "Relation to the mentioned patient",
-					"optional": true,
+					"required": false,
 					"checkboxName": "hasIllnessRecordFamily"
 				},
 				{
@@ -666,7 +666,7 @@
 					"type": "checkmenu",
 					"label": "عادات و عوامل خطر",
 					"labelEN": "Habits and Risk Factors",
-					"optional": true,
+					"required": false,
 					"options": [
 						{
 							"label": "سوء مصرف دارو",
@@ -745,7 +745,7 @@
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
 					"labelEN": "Drug Allergy Reactions",
-					"optional": true,
+					"required": false,
 					"placeholder": "واکنش، واکنش",
 					"placeholderEN": "Reaction, Reaction",
 					"checkboxName": "hasAllergyDrug"
@@ -767,7 +767,7 @@
 					"type": "string",
 					"label": "(به ترتیب) نوع واکنش ها ",
 					"labelEN": "Food Allergy Reactions",
-					"optional": true,
+					"required": false,
 					"placeholder": "واکنش، واکنش",
 					"placeholderEN": "Reaction, Reaction",
 					"checkboxName": "hasAllergyFood"
@@ -813,6 +813,7 @@
 				{
 					"name": "assistiveDevicesProsthetics",
 					"type": "checkmenu",
+					"required": true,
 					"label": "در صورت داشتن وسایل کمکی و پروتز بر اساس موارد زیر مشخص کنید",
 					"labelEN": "If using assistive devices or prosthetics, specify below",
 					"options": [
@@ -911,7 +912,7 @@
 					"labelEN": "Regular medication",
 					"placeholder": "نام دارو، نام دارو",
 					"placeholderEN": "Drug name, Drug name",
-					"optional": true
+					"required": false
 				}
 			],
 			"بیماران خانم": [
