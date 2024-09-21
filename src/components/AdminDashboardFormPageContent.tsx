@@ -87,7 +87,11 @@ function AdminDashboardFormPageContent() {
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
 			{/* User Information Form */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
+			<div
+				className={`d-flex flex-column bg-white shadow text-${
+					language === "fa" ? "end" : "start"
+				} rounded-5 m-3 m-md-4 m-lg-5`}
+			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
 						{language === "fa" ? "فرم اطلاعات کاربر" : "User Information Form"}
@@ -121,7 +125,11 @@ function AdminDashboardFormPageContent() {
 			</div>
 
 			{/* Initial Evaluation Form */}
-			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
+			<div
+				className={`d-flex flex-column bg-white shadow text-${
+					language === "fa" ? "end" : "start"
+				} rounded-5 m-3 m-md-4 m-lg-5`}
+			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
 						{language === "fa"
