@@ -49,6 +49,7 @@ function UserHistoryExtended() {
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+
 	const navigate = useNavigate();
 
 	const { language } = useLanguage(); // Get language and toggle function from context
