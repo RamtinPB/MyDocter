@@ -28,7 +28,7 @@
 
 @media (max-width: 768px){
     .custom-logo {
-        width: 80px;
+        width: 130px;
         height: 30px;
     }
     .custom-login-btn {
@@ -52,28 +52,26 @@
 }
 
 @media (max-width: 576px){
-    /* .custom-logo {
-        width: 60px;
-        height: 20px;
+    .custom-logo {
+        width: 120px;
     }
     .custom-login-btn {
-        width: 65px;
-        height: 18px;
+        width: 100px;
     }
     
     .custom-loggedin-btn {
-        height: 20px;
+        height: 35px;
     }
 
     .custom-notification-btn{
-        width: 15px;
-        height: 15px;
+        width: 20px;
+        height: 20px;
     }
 
     .custom-user-img-icon{
-        width: 20px;
-        height: 20px;
-    } */
+        width: 35px;
+        height: 35px;
+    }
 }
 
 .custom-header {

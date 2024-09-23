@@ -127,7 +127,7 @@ function MyHeader() {
 								<img
 									src="\images\Login Button.png"
 									alt="Login"
-									className="d-inline-block custom-login-btn rounded-pill"
+									className="img-fluid d-inline-block custom-login-btn rounded-pill"
 								/>
 							</Link>
 						</div>

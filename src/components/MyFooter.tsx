@@ -19,22 +19,23 @@ function MyFooter() {
 			<div className="container">
 				{/* top section */}
 				<div
-					className={`d-flex justify-content-start px-3 pt-1 pb-4 gap-2 px-lg-3 pt-lg-2 pb-lg-5 gap-lg-4`}
+					className={`row px-3 pt-1 pb-4 gap-2 px-lg-3 pt-lg-2 pb-lg-5 gap-lg-4`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
+					{/* Logo Column */}
+					<div className="col-12 col-md d-flex flex-column justify-content-center justify-content-md-start align-items-center pb-4 gap-4 order-1 order-md-0">
 						<img
 							src={language === "fa" ? Logo : LogoEN}
-							className="custom-footer-logo"
+							className="img-fluid "
 							alt="Logo"
 						/>
 						<a
 							href="#!"
 							className="d-flex align-items-center link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
-							<span className="px-2">
+							<h4 className=" px-2 mb-0">
 								{language === "fa" ? "پشتیبانی 24/7" : "24/7 Support"}
-							</span>
+							</h4>
 
 							{language === "fa" ? (
 								<FaPhoneAlt className="img-fluid" color="white" />
@@ -46,21 +47,85 @@ function MyFooter() {
 							href="#!"
 							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
-							mydocter.support@gmail
+							<h4>mydocter.support@gmail</h4>
 						</a>
 					</div>
-					<div className="d-flex flex-column justify-content-center align-items-center px-3 mx-3 gap-3">
+
+					{/* Utility Links */}
+
+					<div className="col col-md d-flex flex-column justify-content-start align-items-start px-3 mx-3 gap-3 order-3 order-md-1">
 						<h5 className="border-bottom border-2 my-1">
-							{language === "fa" ? "پشتیبانی" : "Support"}
+							{language === "fa" ? "شرکت" : "Company"}
 						</h5>
 						<a
 							href="#!"
 							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
-							{language === "fa" ? "راهنمایی" : "Guidance"}
+							{language === "fa" ? "درباره ما" : "About Us"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "فرصت‌های شغلی" : "Careers"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "اخبار" : "Newsroom"}
+						</a>
+					</div>
+
+					<div className="col col-md d-flex flex-column justify-content-start align-items-start px-3 mx-3 gap-3 order-4 order-md-1">
+						<h5 className="border-bottom border-2 my-1">
+							{language === "fa" ? "قوانین" : "Legal"}
+						</h5>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "سیاست حفظ حریم خصوصی" : "Privacy Policy"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "شرایط و ضوابط" : "Terms & Conditions"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "سیاست کوکی" : "Cookie Policy"}
+						</a>
+					</div>
+
+					<div className="col col-md d-flex flex-column justify-content-start align-items-start px-3 mx-3 gap-3 order-5 order-md-1">
+						<h5 className="border-bottom border-2 my-1">
+							{language === "fa" ? "منابع" : "Resources"}
+						</h5>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "وبلاگ" : "Blog"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "مستندات" : "Documentation"}
+						</a>
+						<a
+							href="#!"
+							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
+						>
+							{language === "fa" ? "مرجع API" : "API Reference"}
 						</a>
 					</div>
 				</div>
+
 				{/* bottom section */}
 				<div className="d-flex flex-column">
 					<hr className=" border border-white rounded-circle my-2" />
