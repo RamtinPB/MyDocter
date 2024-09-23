@@ -253,7 +253,9 @@ function ServicePage() {
 						/>
 					</div>
 					<div className="col-8 text-center text-white">
-						<h4>{language === "fa" ? service.name : service.nameEN}</h4>
+						<h4 className="mb-0">
+							{language === "fa" ? service.name : service.nameEN}
+						</h4>
 					</div>
 				</div>
 
