@@ -191,7 +191,7 @@ function Home() {
 				<img
 					src={language === "fa" ? homeText?.docImage : homeText?.docImageEN}
 					alt="Mr Doc"
-					className="img-fluid col-md-5 col-lg-4 col-xl-3  d-sm-block d-none"
+					className="img-fluid col-md-5 col-lg-4 col-xl-3 d-sm-block d-none"
 				/>
 				<div
 					className={` col-10 col-md-7 col-lg-8 text-${
