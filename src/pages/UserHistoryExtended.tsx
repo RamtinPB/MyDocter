@@ -103,7 +103,6 @@ function UserHistoryExtended() {
 
 	const handleBackClick = () => {
 		navigate("/UserHistory");
-		console.log("clicked");
 	};
 
 	return (

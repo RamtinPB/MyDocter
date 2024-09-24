@@ -1,5 +1,5 @@
 import { FaCaretLeft } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
@@ -35,6 +35,7 @@ function ServicePageEdit() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		const fetchService = async () => {
@@ -83,8 +84,13 @@ function ServicePageEdit() {
 		);
 	}
 
+	// Function to handle the back button
 	const handleBackClick = () => {
-		navigate("/AdminDashboard");
+		// Check the section passed in the location state
+		const section = location.state?.section || "mainPage";
+		navigate("/AdminDashboard", {
+			state: { activeSection: section }, // Pass the section back to AdminDashboard
+		});
 	};
 
 	const handleServicePictureChange = (

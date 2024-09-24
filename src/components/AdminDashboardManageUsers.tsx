@@ -69,6 +69,10 @@ function AdminDashboardManageUsers() {
 							<th scope="col">
 								{language === "fa" ? "شناسه کاربر" : "User ID"}
 							</th>
+							<th scope="col">{language === "fa" ? "ایمیل" : "Email"}</th>
+							<th scope="col">
+								{language === "fa" ? "شماره همراه" : "Phone Number"}
+							</th>
 							<th scope="col">{language === "fa" ? "ویرایش" : "Edit"}</th>
 							<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
 						</tr>
@@ -82,12 +86,16 @@ function AdminDashboardManageUsers() {
 								<td className="align-middle">{user.firstName}</td>
 								<td className="align-middle">{user.lastName}</td>
 								<td className="align-middle">{user.userId}</td>
+								<td className="align-middle">{user.email}</td>
+								<td className="align-middle">{user.phoneNumber}</td>
 								<td className="align-middle">
 									<a
 										href={`/edit-user/${user.userId}`} // Change this
 										onClick={(e) => {
 											e.preventDefault();
-											navigate(`/edit-user/${user.userId}`);
+											navigate(`/edit-user/${user.userId}`, {
+												state: { section: "manageUsers" },
+											});
 										}}
 										id="btn-edit"
 										className="rounded-circle btn shadow p-0 my-3"
@@ -115,7 +123,7 @@ function AdminDashboardManageUsers() {
 							</tr>
 						))}
 						<tr>
-							<td colSpan={6} className="align-middle">
+							<td colSpan={8} className="align-middle">
 								<div
 									id="btn-add"
 									className="d-flex justify-content-center align-items-center"

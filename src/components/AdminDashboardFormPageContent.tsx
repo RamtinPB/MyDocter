@@ -65,7 +65,6 @@ function AdminDashboardFormPageContent() {
 		// }).catch(error => console.error('Update error:', error));
 	};
 
-	// @ts-ignore
 	const handleCancel = () => {
 		// Reset form fields and sections to their original initial values (deep copy)
 		setFormFields(JSON.parse(JSON.stringify(initialFormFields)));

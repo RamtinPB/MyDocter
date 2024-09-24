@@ -106,7 +106,9 @@ function AdminDashboardServicesPageContent() {
 											href={`/edit-service/${service.id}`} // Change this
 											onClick={(e) => {
 												e.preventDefault();
-												navigate(`/edit-service/${service.id}`);
+												navigate(`/edit-service/${service.id}`, {
+													state: { section: "servicesPage" }, // Pass the section as state
+												});
 											}}
 											id="btn-edit"
 											className="rounded-circle btn shadow p-0 my-3"

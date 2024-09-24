@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import AdminDashboardMainPageContent from "../components/AdminDashboardMainPageContent";
 import AdminDashboardInsurancePageContent from "../components/AdminDashboardInsurancePageContent";
 import AdminDashboardQuestionsPageContent from "../components/AdminDashboardQuestionsPageContent";
@@ -6,11 +6,27 @@ import AdminDashboardServicesPageContent from "../components/AdminDashboardServi
 import AdminDashboardFormPageContent from "../components/AdminDashboardFormPageContent";
 import { useLanguage } from "../components/LanguageContext";
 import AdminDashboardManageUsers from "../components/AdminDashboardManageUsers";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
 	const [activeSection, setActiveSection] = useState("mainPage");
-
+	const location = useLocation();
+	const navigate = useNavigate();
 	const { language } = useLanguage(); // Get language and toggle function from context
+
+	// Check if there is a state passed with the section to open
+	useEffect(() => {
+		if (location.state?.activeSection) {
+			setActiveSection(location.state.activeSection);
+		}
+		console.log(location.state?.activeSection);
+	}, [location]);
+
+	// Function to handle setting activeSection and updating location.state
+	const handleNavigation = (section: SetStateAction<string>) => {
+		setActiveSection(section);
+		navigate("/AdminDashboard", { state: { activeSection: section } }); // Set the state for activeSection
+	};
 
 	const renderContent = () => {
 		switch (activeSection) {
@@ -41,7 +57,7 @@ function AdminDashboard() {
 					className={`btn m-1 ${
 						activeSection === "mainPage" ? "btn-primary" : "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("mainPage")}
+					onClick={() => handleNavigation("mainPage")}
 				>
 					{language === "fa" ? "ویرایش صفحه اصلی" : "Edit Main Page Content"}
 				</button>
@@ -51,7 +67,7 @@ function AdminDashboard() {
 							? "btn-primary"
 							: "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("questionsPage")}
+					onClick={() => handleNavigation("questionsPage")}
 				>
 					{language === "fa" ? "ویرایش سوالات متداول" : "Edit Q&A Content"}
 				</button>
@@ -61,7 +77,7 @@ function AdminDashboard() {
 							? "btn-primary"
 							: "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("servicesPage")}
+					onClick={() => handleNavigation("servicesPage")}
 				>
 					{language === "fa" ? "ویرایش سرویس ها" : "Edit Services"}
 				</button>
@@ -71,7 +87,7 @@ function AdminDashboard() {
 							? "btn-primary"
 							: "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("insurancePage")}
+					onClick={() => handleNavigation("insurancePage")}
 				>
 					{language === "fa" ? "ویرایش بیمه ها" : "Edit Insurances"}
 				</button>
@@ -79,7 +95,7 @@ function AdminDashboard() {
 					className={`btn m-1 ${
 						activeSection === "formPage" ? "btn-primary" : "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("formPage")}
+					onClick={() => handleNavigation("formPage")}
 				>
 					{language === "fa" ? "ویرایش فرم ها" : "Edit Forms"}
 				</button>
@@ -89,7 +105,7 @@ function AdminDashboard() {
 							? "btn-primary"
 							: "btn-outline-primary"
 					} rounded-pill mx-2`}
-					onClick={() => setActiveSection("manageUsers")}
+					onClick={() => handleNavigation("manageUsers")}
 				>
 					{language === "fa" ? "مدیریت کاربران" : "Manage Users"}
 				</button>

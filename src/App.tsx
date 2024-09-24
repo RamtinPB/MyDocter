@@ -17,6 +17,7 @@ import FormRenderFilled from "./components/ForRenderFilled";
 import UserIEInformation from "./pages/UserIEInformation";
 import AdminDashboard from "./pages/AdminDashboard";
 import ServicePageEdit from "./components/AdminDashboardServicesPageEdit";
+import AdminDashboardManageUsersExtended from "./components/AdminDashboardManageUsersExtended";
 
 function App() {
 	return (
@@ -30,6 +31,10 @@ function App() {
 					<Route path="/UserIEInformation" element={<UserIEInformation />} />
 					<Route path="/AdminDashboard" element={<AdminDashboard />} />
 					<Route path="/edit-service/:id" element={<ServicePageEdit />} />
+					<Route
+						path="/edit-user/:userId"
+						element={<AdminDashboardManageUsersExtended />}
+					/>
 					<Route
 						path="/purchased-services/:purchaseId"
 						element={<UserHistoryExtended />}
