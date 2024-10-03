@@ -35,8 +35,7 @@
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
-			"id": "1",
-			"link": "/services/1"
+			"id": "1"
 		},
 		{
 			"name": "2نام سرویس",
@@ -51,8 +50,7 @@
 			"subsidy": "500",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
-			"id": "2",
-			"link": "/services/2"
+			"id": "2"
 		},
 		{
 			"name": "3نام سرویس",
@@ -67,8 +65,7 @@
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "specialist",
-			"id": "3",
-			"link": "/services/3"
+			"id": "3"
 		},
 		{
 			"name": "4نام سرویس",
@@ -83,8 +80,7 @@
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
-			"id": "4",
-			"link": "/services/4"
+			"id": "4"
 		},
 
 		{
@@ -100,8 +96,7 @@
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
-			"id": "5",
-			"link": "/services/5"
+			"id": "5"
 		},
 		{
 			"name": "6نام سرویس",
@@ -116,8 +111,7 @@
 			"subsidy": "100",
 			"image": "/images/پزشک ارتوپد.jpg",
 			"category": "general",
-			"id": "6",
-			"link": "/services/6"
+			"id": "6"
 		}
 	],
 
@@ -128,7 +122,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "1000",
 			"purchaseId": "1",
-			"link": "/purchased-services/1",
 			"status": "complete",
 			"files": [
 				{
@@ -165,7 +158,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "2",
-			"link": "/purchased-services/2",
 			"status": "processing"
 		},
 		{
@@ -174,7 +166,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "3",
-			"link": "/purchased-services/3",
 			"status": "error"
 		},
 		{
@@ -183,7 +174,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "4",
-			"link": "/purchased-services/4",
 			"status": "error"
 		},
 		{
@@ -192,7 +182,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "5",
-			"link": "/purchased-services/5",
 			"status": "error"
 		},
 		{
@@ -201,7 +190,6 @@
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "6",
-			"link": "/purchased-services/6",
 			"status": "complete"
 		}
 	],
@@ -646,6 +634,48 @@
 		}
 	],
 
+	"userInfoIE": {
+		"userWeight": "70kg",
+		"userHeight": "170cm",
+		"userAge": "40",
+		"userBodyMassIndex": "",
+		"illnessRecordNameSelf": "",
+		"illnessRecordNameFamily": "",
+		"userFamilyMemberRelation": "",
+		"hasBloodTransfusion": "No",
+		"bloodTransfusionReaction": "",
+		"userPet": "",
+		"riskFactors": {
+			"drugAbuse": false,
+			"substanceAbuse": false,
+			"smoking": false,
+			"hookah": false,
+			"alcohol": false,
+			"miningExperience": false,
+			"chemicalExposure": false
+		},
+		"sleepStatus": "Normal",
+		"sleepIssues": "",
+		"allergyDrugName": "",
+		"allergyDrugReaction": "",
+		"allergyFoodName": "",
+		"allergyFoodReaction": "",
+		"hearingLimitations": "",
+		"sightLimitations": "",
+		"disabilityOrAmputation": "",
+		"assistiveDevicesProsthetics": {
+			"cane": false,
+			"walker": false,
+			"wheelChair": false,
+			"armpitStick": false,
+			"prostheticLimb": false,
+			"denture": false,
+			"hearingAid": false,
+			"glasses": false,
+			"prostheticEye": false
+		}
+	},
+
 	"formFieldsIE": [
 		{
 			"اطلاعات پایه": [
@@ -1025,11 +1055,6 @@
 		}
 	],
 
-	"userInfoIE": {
-		"example1": "علی",
-		"example2": "هاشمی"
-	},
-
 	"validationSchemaDataIE": [
 		{
 			"name": "userWeight",
@@ -1340,36 +1365,36 @@
 		}
 	],
 
-	"questions": [
+	"faqs": [
 		{
-			"title": "سوال",
-			"description": "پاسخ سوال",
-			"titleEN": "Question",
-			"descriptionEN": "Answer"
+			"question": "سوال",
+			"answer": "پاسخ سوال",
+			"questionEN": "Question",
+			"answerEN": "Answer"
 		},
 		{
-			"title": "سوال",
-			"description": "پاسخ سوال",
-			"titleEN": "Question",
-			"descriptionEN": "Answer"
+			"question": "سوال",
+			"answer": "پاسخ سوال",
+			"questionEN": "Question",
+			"answerEN": "Answer"
 		},
 		{
-			"title": "سوال",
-			"description": "پاسخ سوال",
-			"titleEN": "Question",
-			"descriptionEN": "Answer"
+			"question": "سوال",
+			"answer": "پاسخ سوال",
+			"questionEN": "Question",
+			"answerEN": "Answer"
 		},
 		{
-			"title": "سوال",
-			"description": "پاسخ سوال",
-			"titleEN": "Question",
-			"descriptionEN": "Answer"
+			"question": "سوال",
+			"answer": "پاسخ سوال",
+			"questionEN": "Question",
+			"answerEN": "Answer"
 		},
 		{
-			"title": "سوال",
-			"description": "پاسخ سوال",
-			"titleEN": "Question",
-			"descriptionEN": "Answer"
+			"question": "سوال",
+			"answer": "پاسخ سوال",
+			"questionEN": "Question",
+			"answerEN": "Answer"
 		}
 	],
 

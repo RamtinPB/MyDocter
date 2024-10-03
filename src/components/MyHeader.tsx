@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "/src/cssFiles/myheader.css";
 import "/src/cssFiles/customColors.css";
+import Login from "/images/Login Button.png";
+import LoginEN from "/images/LoginEN.png";
 import Logo from "/images/Logo.png";
 import LogoEN from "/images/LogoEN.png";
 import NotificationDropdown from "./NotificationDropdown";
@@ -124,11 +126,19 @@ function MyHeader() {
 					) : (
 						<div className="d-flex justify-content-between align-items-center gap-3">
 							<Link to="/login">
-								<img
-									src="\images\Login Button.png"
-									alt="Login"
-									className="img-fluid d-inline-block custom-login-btn rounded-pill"
-								/>
+								{language === "fa" ? (
+									<img
+										src={Login}
+										alt="Login"
+										className="img-fluid d-inline-block custom-login-btn rounded-pill"
+									/>
+								) : (
+									<img
+										src={LoginEN}
+										alt="Login"
+										className="img-fluid d-inline-block custom-login-btn-en rounded-pill"
+									/>
+								)}
 							</Link>
 						</div>
 					)}

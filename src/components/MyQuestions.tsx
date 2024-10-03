@@ -4,10 +4,10 @@ import "/src/cssFiles/customColors.css";
 import { useLanguage } from "./LanguageContext";
 
 interface Questions {
-	title: string;
-	description: string;
-	titleEN: string;
-	descriptionEN: string;
+	question: string;
+	answer: string;
+	questionEN: string;
+	answerEN: string;
 }
 
 function MyQuestions() {
@@ -30,7 +30,7 @@ function MyQuestions() {
 				const data = await response.json();
 
 				// Assuming questions is directly available in the root of db.json
-				const questions = data.questions;
+				const questions = data.faqs;
 
 				setQuestions(questions);
 				setLoading(false);
@@ -70,8 +70,8 @@ function MyQuestions() {
 							id={`heading${index}`}
 							style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 						>
-							<h3 className=" mb-0 mx-4">
-								{language === "fa" ? question.title : question.titleEN}
+							<h3 className=" mb-0 mx-3">
+								{language === "fa" ? question.question : question.questionEN}
 							</h3>
 							<img
 								src="\images\plus-border.png"
@@ -97,10 +97,8 @@ function MyQuestions() {
 									language === "fa" ? "end" : "start"
 								}`}
 							>
-								<p className="mb-0 ">
-									{language === "fa"
-										? question.description
-										: question.descriptionEN}
+								<p className=" mb-0">
+									{language === "fa" ? question.answer : question.answerEN}
 								</p>
 							</div>
 						</div>

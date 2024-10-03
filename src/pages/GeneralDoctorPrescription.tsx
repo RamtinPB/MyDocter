@@ -59,7 +59,7 @@ function GeneralDoctorPrescription() {
 		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column px-3 px-md-4">
 				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
-					<h4>
+					<h4 className="m-1">
 						{language === "fa"
 							? "خدمات پزشک عمومی"
 							: "General Practitioner Services"}

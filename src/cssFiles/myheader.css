@@ -8,6 +8,11 @@
     height: 35px;
 }
 
+.custom-login-btn-en {
+    width: 95px;
+    height: 35px !important;
+}
+
 .custom-loggedin-btn {
     height: 40px;
 }
@@ -35,6 +40,11 @@
         width: 85px;
         height: 25px;
     }
+
+    .custom-login-btn-en {
+        width: 90px;
+        height: 25px;
+    }
     
     .custom-loggedin-btn {
         height: 30px;
@@ -60,6 +70,10 @@
     }
     
     .custom-loggedin-btn {
+        height: 35px;
+    }
+
+    .custom-login-btn-en {
         height: 35px;
     }
 

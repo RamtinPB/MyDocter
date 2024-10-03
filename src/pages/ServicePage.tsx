@@ -244,7 +244,7 @@ function ServicePage() {
 			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
 				{/* Header Section with Back Button and Service Name */}
 				<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
-					<div className="col-2 mt-1">
+					<div className="col-2">
 						<FaCaretLeft
 							type="button"
 							onClick={handleBackClick}

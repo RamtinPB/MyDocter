@@ -5,6 +5,7 @@ import MyQuestions from "../components/MyQuestions";
 import "/src/cssFiles/home.css";
 import "/src/cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface homeTextData {
 	openingQuoteTitle: string;
@@ -49,15 +50,17 @@ function Home() {
 	useEffect(() => {
 		const fetchHomeTextData = async () => {
 			try {
-				const response = await fetch("/db.json"); // Adjust the path to your static JSON file
-				if (!response.ok) {
+				const response = await axiosInstance.post("/api/Pages/GetHomePageData");
+				if (response.status !== 200) {
 					throw new Error("Failed to fetch data");
 				}
+				console.log(response); // Log the full response to check structure
+				console.log("Base URL: ", import.meta.env.VITE_API_BASE_URL);
 
-				const data = await response.json();
-				setHomeTextData(data.homeTextData[0]); // Assuming 'homeTextData' is the key in your JSON structure
+				setHomeTextData(response.data); // Assuming 'data' is the correct structure
 				setLoading(false);
 			} catch (err) {
+				console.error(err);
 				setError("Failed to fetch homeTextData");
 				setLoading(false);
 			}
@@ -65,6 +68,26 @@ function Home() {
 
 		fetchHomeTextData();
 	}, []);
+
+	// useEffect(() => {
+	// 	const fetchHomeTextData = async () => {
+	// 		try {
+	// 			const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+	// 			if (!response.ok) {
+	// 				throw new Error("Failed to fetch data");
+	// 			}
+
+	// 			const data = await response.json();
+	// 			setHomeTextData(data.homeTextData[0]); // Assuming 'homeTextData' is the key in your JSON structure
+	// 			setLoading(false);
+	// 		} catch (err) {
+	// 			setError("Failed to fetch homeTextData");
+	// 			setLoading(false);
+	// 		}
+	// 	};
+
+	// 	fetchHomeTextData();
+	// }, []);
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;

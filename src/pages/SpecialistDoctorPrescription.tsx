@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -21,6 +22,41 @@ function SpecialistDoctorPrescription() {
 	const [error, setError] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
+
+	// useEffect(() => {
+	// 	const fetchServices = async () => {
+	// 		try {
+	// 			// Make POST request to the API to fetch available services
+	// 			const response = await axiosInstance.post(
+	// 				"/api/Service/GetAvailableServices",
+	// 				{
+	// 					/* you may need to include request body if necessary */
+	// 				}
+	// 			);
+
+	// 			if (response.status !== 200) {
+	// 				throw new Error("Failed to fetch services");
+	// 			}
+
+	// 			// Assuming response.data contains the list of services
+	// 			const services = response.data;
+
+	// 			// Filter only specialist services
+	// 			const specialistServices = services.filter(
+	// 				(service: Service) => service.category === "specialist"
+	// 			);
+
+	// 			setServices(specialistServices);
+	// 			setLoading(false);
+	// 		} catch (err) {
+	// 			console.error("Error fetching services:", err);
+	// 			setError("Failed to fetch services");
+	// 			setLoading(false);
+	// 		}
+	// 	};
+
+	// 	fetchServices();
+	// }, []);
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -59,7 +95,7 @@ function SpecialistDoctorPrescription() {
 		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column px-3 px-md-4">
 				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
-					<h4>
+					<h4 className="m-1">
 						{language === "fa"
 							? "خدمات پزشک متخصص و فوق تخصص"
 							: "Specialist Practitioner Services"}
