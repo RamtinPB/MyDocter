@@ -80,7 +80,7 @@ function AdminDashboardInsurancePageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "بیمه پایه" : "Basic Insurance"}
+						{language === "fa" ? "بیمه پایه" : "Basic Insurances"}
 					</h3>
 				</div>
 				<table
@@ -186,7 +186,7 @@ function AdminDashboardInsurancePageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "بیمه تکمیلی" : "Supplementary  Insurance"}
+						{language === "fa" ? "بیمه تکمیلی" : "Supplementary  Insurances"}
 					</h3>
 				</div>
 				<table

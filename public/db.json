@@ -310,6 +310,125 @@
 		}
 	],
 
+	"usersIE": [
+		{
+			"userId": "1",
+			"userWeight": "50kg",
+			"userHeight": "160cm",
+			"userAge": "65",
+			"userBodyMassIndex": "",
+
+			"illnessRecordNameSelf": "",
+			"illnessRecordNameFamily": "",
+			"userFamilyMemberRelation": "",
+			"hasBloodTransfusion": "No",
+			"bloodTransfusionReaction": "",
+			"userPet": "",
+
+			"riskFactors": {
+				"drugAbuse": false,
+				"substanceAbuse": false,
+				"smoking": true,
+				"hookah": false,
+				"alcohol": false,
+				"miningExperience": false,
+				"chemicalExposure": false
+			},
+
+			"sleepStatus": "Normal",
+			"sleepIssues": "",
+
+			"allergyDrugName": "",
+			"allergyDrugReaction": "",
+			"allergyFoodName": "",
+			"allergyFoodReaction": "",
+
+			"hearingLimitations": "",
+			"sightLimitations": "",
+			"disabilityOrAmputation": "",
+			"assistiveDevicesProsthetics": {
+				"cane": true,
+				"walker": false,
+				"wheelChair": true,
+				"armpitStick": false,
+				"prostheticLimb": true,
+				"denture": false,
+				"hearingAid": false,
+				"glasses": false,
+				"prostheticEye": false
+			},
+
+			"ableToEat": "",
+			"ableToDress": "",
+			"ableToBathe": "",
+			"ableToGoToBathroom": "",
+			"ableToFreelyMove": "",
+
+			"rugularDrugNames": "",
+
+			"pregnancyStatus": "No",
+			"lactationStatus": "Yes"
+		},
+		{
+			"userId": "2",
+			"userWeight": "70kg",
+			"userHeight": "170cm",
+			"userAge": "40",
+			"userBodyMassIndex": "",
+
+			"illnessRecordNameSelf": "",
+			"illnessRecordNameFamily": "",
+			"userFamilyMemberRelation": "",
+			"hasBloodTransfusion": "No",
+			"bloodTransfusionReaction": "",
+			"userPet": "",
+
+			"riskFactors": {
+				"drugAbuse": false,
+				"substanceAbuse": false,
+				"smoking": false,
+				"hookah": false,
+				"alcohol": false,
+				"miningExperience": false,
+				"chemicalExposure": false
+			},
+
+			"sleepStatus": "Normal",
+			"sleepIssues": "",
+
+			"allergyDrugName": "",
+			"allergyDrugReaction": "",
+			"allergyFoodName": "",
+			"allergyFoodReaction": "",
+
+			"hearingLimitations": "",
+			"sightLimitations": "",
+			"disabilityOrAmputation": "",
+			"assistiveDevicesProsthetics": {
+				"cane": false,
+				"walker": false,
+				"wheelChair": false,
+				"armpitStick": false,
+				"prostheticLimb": false,
+				"denture": false,
+				"hearingAid": false,
+				"glasses": true,
+				"prostheticEye": false
+			},
+
+			"ableToEat": "",
+			"ableToDress": "",
+			"ableToBathe": "",
+			"ableToGoToBathroom": "",
+			"ableToFreelyMove": "",
+
+			"rugularDrugNames": "",
+
+			"pregnancyStatus": "No",
+			"lactationStatus": "Yes"
+		}
+	],
+
 	"formFields": [
 		{
 			"name": "firstName",
@@ -639,12 +758,14 @@
 		"userHeight": "170cm",
 		"userAge": "40",
 		"userBodyMassIndex": "",
+
 		"illnessRecordNameSelf": "",
 		"illnessRecordNameFamily": "",
 		"userFamilyMemberRelation": "",
 		"hasBloodTransfusion": "No",
 		"bloodTransfusionReaction": "",
 		"userPet": "",
+
 		"riskFactors": {
 			"drugAbuse": false,
 			"substanceAbuse": false,
@@ -654,12 +775,15 @@
 			"miningExperience": false,
 			"chemicalExposure": false
 		},
+
 		"sleepStatus": "Normal",
 		"sleepIssues": "",
+
 		"allergyDrugName": "",
 		"allergyDrugReaction": "",
 		"allergyFoodName": "",
 		"allergyFoodReaction": "",
+
 		"hearingLimitations": "",
 		"sightLimitations": "",
 		"disabilityOrAmputation": "",
@@ -673,7 +797,18 @@
 			"hearingAid": false,
 			"glasses": false,
 			"prostheticEye": false
-		}
+		},
+
+		"ableToEat": "",
+		"ableToDress": "",
+		"ableToBathe": "",
+		"ableToGoToBathroom": "",
+		"ableToFreelyMove": "",
+
+		"rugularDrugNames": "",
+
+		"pregnancyStatus": false,
+		"lactationStatus": false
 	},
 
 	"formFieldsIE": [

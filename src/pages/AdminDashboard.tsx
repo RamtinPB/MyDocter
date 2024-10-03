@@ -1,7 +1,7 @@
 import { SetStateAction, useEffect, useState } from "react";
 import AdminDashboardMainPageContent from "../components/AdminDashboardMainPageContent";
 import AdminDashboardInsurancePageContent from "../components/AdminDashboardInsurancePageContent";
-import AdminDashboardQuestionsPageContent from "../components/AdminDashboardQuestionsPageContent";
+import AdminDashboardQuestionsPageContent from "../components/AdminDashboardFAQPageContent";
 import AdminDashboardServicesPageContent from "../components/AdminDashboardServicesPageContent";
 import AdminDashboardFormPageContent from "../components/AdminDashboardFormPageContent";
 import { useLanguage } from "../components/LanguageContext";
@@ -69,7 +69,7 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => handleNavigation("questionsPage")}
 				>
-					{language === "fa" ? "ویرایش سوالات متداول" : "Edit Q&A Content"}
+					{language === "fa" ? "ویرایش سوالات متداول" : "Edit FAQ Content"}
 				</button>
 				<button
 					className={`btn m-1 ${

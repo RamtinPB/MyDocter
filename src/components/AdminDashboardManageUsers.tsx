@@ -52,7 +52,7 @@ function AdminDashboardManageUsers() {
 			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "لیست کاربران" : "User List"}
+						{language === "fa" ? "لیست کاربران" : "List of Users"}
 					</h3>
 				</div>
 				<table

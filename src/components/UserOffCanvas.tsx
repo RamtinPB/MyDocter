@@ -29,10 +29,7 @@ interface UserOffCanvasProps {
 	isLoggedInAdmin: boolean;
 }
 
-const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
-	userData,
-	isLoggedInAdmin,
-}) => {
+function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
 
 	const { language } = useLanguage(); // Get language and toggle function from context
@@ -247,6 +244,6 @@ const UserOffCanvas: React.FC<UserOffCanvasProps> = ({
 			</div>
 		</div>
 	);
-};
+}
 
 export default UserOffCanvas;

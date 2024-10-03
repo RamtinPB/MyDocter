@@ -6,7 +6,7 @@ interface Section {
 	answer: string;
 }
 
-function AdminDashboardQuestionsPageContent() {
+function AdminDashboardFAQPageContent() {
 	const [sections, setSections] = useState<Section[]>([]);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
@@ -41,7 +41,7 @@ function AdminDashboardQuestionsPageContent() {
 			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "لیست سوالات متداول" : "Q&A List"}
+						{language === "fa" ? "لیست سوالات متداول" : "FAQ List"}
 					</h3>
 				</div>
 				{sections.map((section, index) => (
@@ -208,4 +208,4 @@ function AdminDashboardQuestionsPageContent() {
 	);
 }
 
-export default AdminDashboardQuestionsPageContent;
+export default AdminDashboardFAQPageContent;

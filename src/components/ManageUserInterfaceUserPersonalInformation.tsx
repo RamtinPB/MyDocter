@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { FaCaretLeft } from "react-icons/fa";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useLanguage } from "./LanguageContext";
 
-interface User {
+interface UserInfo {
 	firstName: string;
 	lastName: string;
 	profilePicture: string;
@@ -35,14 +34,11 @@ interface User {
 function ManageUserInterfaceUserPersonalInformation() {
 	const { userId } = useParams();
 
-	const [user, setUser] = useState<User | null>(null);
-	const [initialUser, setInitialUser] = useState<User | null>(null);
+	const [user, setUser] = useState<UserInfo | null>(null);
+	const [initialUser, setInitialUser] = useState<UserInfo | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-
-	const navigate = useNavigate();
-	const location = useLocation();
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -88,15 +84,6 @@ function ManageUserInterfaceUserPersonalInformation() {
 	if (!user) {
 		return <div className="text-center my-5 text-danger">User not found</div>;
 	}
-
-	// Function to handle the back button
-	const handleBackClick = () => {
-		// Check the section passed in the location state
-		const section = location.state?.section || "mainPage";
-		navigate("/AdminDashboard", {
-			state: { activeSection: section }, // Pass the section back to AdminDashboard
-		});
-	};
 
 	// Handle input changes
 	const handleChange = (key: string, value: string) => {
@@ -163,62 +150,59 @@ function ManageUserInterfaceUserPersonalInformation() {
 	};
 
 	return (
-		<div className="custom-bg-4 min-vh-100">
-			<div className="container py-5">
-				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<div className="text-start m-2">
-						<FaCaretLeft
-							type="button"
-							onClick={handleBackClick}
-							className="custom-back-btn"
-							color="black"
-						/>
-					</div>
-
-					{/* account informations */}
-					<div
-						className="row row-cols-2 mx-2 mx-md-auto"
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-					>
-						{Object.entries(user).map(([key, value]) => (
-							<div
-								key={key}
-								className={`col-6 text-${
-									language === "fa" ? "end" : "start"
-								} mb-5 px-3 px-md-5`}
-								style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-							>
-								<label className="form-label mx-1">
-									{language === "fa" ? labels[key]?.fa : labels[key]?.en || key}
-								</label>
-								<input
-									type="text"
-									className={`form-control  text-${
-										language === "fa" ? "end" : "start"
-									}`}
-									value={value}
-									onChange={(e) => handleChange(key, e.target.value)}
-								/>
-							</div>
-						))}
-					</div>
-
-					{/* Submit and Cancel buttons */}
-					<div className="d-flex justify-content-evenly p-3 my-2 mx-4 ">
-						<button
-							className="btn btn-secondary rounded-pill px-3"
-							onClick={handleCancel}
-						>
-							{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
-						</button>
-						<button
-							className="btn btn-success rounded-pill px-3"
-							onClick={handleSubmit}
-						>
-							{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
-						</button>
-					</div>
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
+			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
+				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
+					<h3 className="text-center text-white m-0">
+						{language === "fa"
+							? `اطلاعات شخصی کاربر`
+							: `Edit User: "${userId}" Personal Information`}
+					</h3>
 				</div>
+
+				{/* account informations */}
+				<div
+					className="row row-cols-2 mx-2 mx-md-auto"
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+				>
+					{Object.entries(user).map(([key, value]) => (
+						<div
+							key={key}
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
+							<label className="form-label mx-1">
+								{language === "fa" ? labels[key]?.fa : labels[key]?.en || key}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								value={value}
+								onChange={(e) => handleChange(key, e.target.value)}
+							/>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* Submit and Cancel buttons */}
+			<div className="d-flex justify-content-evenly px-3 py-2 my-2 ">
+				<button
+					className="btn btn-secondary rounded-pill px-3"
+					onClick={handleCancel}
+				>
+					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
+				</button>
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={handleSubmit}
+				>
+					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
+				</button>
 			</div>
 		</div>
 	);
