@@ -87,7 +87,7 @@ function ManageUserInterfaceUserInitialEvaluationInformation() {
 
 					setInitialUser(selectedUser);
 				} else {
-					setError("Service not found");
+					setError("information not found");
 				}
 				setLoading(false);
 			} catch (err) {

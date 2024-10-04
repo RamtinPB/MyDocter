@@ -118,7 +118,7 @@
 	"userPurchasedServices": [
 		{
 			"name": "نام سرویس",
-			"id": "1",
+			"userId": "1",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "1000",
 			"purchaseId": "1",
@@ -154,7 +154,7 @@
 		},
 		{
 			"name": "نام سرویس",
-			"id": "2",
+			"userId": "2",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "2",
@@ -162,7 +162,7 @@
 		},
 		{
 			"name": "نام سرویس",
-			"id": "3",
+			"userId": "1",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "3",
@@ -170,7 +170,7 @@
 		},
 		{
 			"name": "نام سرویس",
-			"id": "4",
+			"userId": "2",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "4",
@@ -178,7 +178,7 @@
 		},
 		{
 			"name": "نام سرویس",
-			"id": "1",
+			"userId": "1",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "5",
@@ -186,7 +186,7 @@
 		},
 		{
 			"name": "نام سرویس",
-			"id": "1",
+			"userId": "1",
 			"purchaseDate": "***-**-**",
 			"finalPurchaseAmount": "100",
 			"purchaseId": "6",

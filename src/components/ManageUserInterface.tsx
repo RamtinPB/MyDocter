@@ -44,10 +44,9 @@ function ManageUserInterface() {
 
 	// Function to handle the back button
 	const handleBackClick = () => {
-		// Check the section passed in the location state
-		const section = location.state?.activeSection || "manageUsers"; // Default to "mainPage"
+		// Always return to AdminDashboard with "manageUsers" set as the active section
 		navigate("/AdminDashboard", {
-			state: { activeSection: section }, // Pass the section back to AdminDashboard
+			state: { activeSection: "manageUsers" }, // Hardcode "manageUsers" as the active section
 		});
 	};
 
