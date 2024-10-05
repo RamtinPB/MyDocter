@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import "/src/cssFiles/login.css"; // Custom styles
-import Toast from "../components/SignUpToast.tsx";
+import Toast from "../components/Toast.tsx";
 import axiosInstance from "../myAPI/axiosInstance.ts";
 import { useLanguage } from "../components/LanguageContext.tsx";
 
 // Validation Schema
-// Function to dynamically switch between English and Persian validation messages
 const getValidationSchema = (language: string) => {
 	return Yup.object().shape({
 		phoneNumber: Yup.string()
@@ -56,10 +55,10 @@ const getValidationSchema = (language: string) => {
 
 function SignUp() {
 	const [showPassword, setShowPassword] = useState(false);
-	const [verificationSent, setVerificationSent] = useState(false);
-	const [verificationCode, setVerificationCode] = useState("");
 	const [toastMessage, setToastMessage] = useState("");
 	const [showToast, setShowToast] = useState(false);
+	const [countdown, setCountdown] = useState(5); // Countdown for navigation
+	const [isSuccess, setIsSuccess] = useState(false); // Track successful signup
 
 	const navigate = useNavigate();
 
@@ -67,7 +66,19 @@ function SignUp() {
 
 	const handleBackClick = () => navigate("/");
 
-	const { language } = useLanguage(); // Get language and toggle function from context
+	const { language } = useLanguage();
+
+	useEffect(() => {
+		// Countdown logic for 5 seconds
+		if (showToast && isSuccess && countdown > 0) {
+			const timer = setTimeout(() => {
+				setCountdown(countdown - 1);
+			}, 1000);
+			return () => clearTimeout(timer);
+		} else if (isSuccess && countdown === 0) {
+			navigate("/"); // Navigate after countdown ends
+		}
+	}, [showToast, isSuccess, countdown, navigate]);
 
 	const handleFormSubmit = async (
 		values: { phoneNumber: any; password: any },
@@ -80,40 +91,67 @@ function SignUp() {
 			});
 
 			if (response.status === 200) {
-				setVerificationSent(true);
-				setToastMessage("کد تایید به شماره تماس شما ارسال شد");
-				setShowToast(true);
+				{
+					language === "fa"
+						? setToastMessage("ثبت نام با موفقیت انجام شد")
+						: setToastMessage("Signup was successful");
+				}
+				setShowToast(true); // Show toast
+				setCountdown(5); // Reset countdown to 5 seconds
+				setIsSuccess(true); // Mark success
 			}
 		} catch (error) {
 			let errorMessage = "خطای ناشناخته رخ داده است";
 
 			if (axios.isAxiosError(error)) {
-				// Handle known Axios error
-				switch (error.response?.status) {
-					case 400:
-						errorMessage = "فرمت شماره تماس اشتباه است";
-						break;
-					case 401:
-						errorMessage =
-							"رمز عبور باید شامل حروف و اعداد باشد و بین ۸ تا ۱۶ کاراکتر باشد";
-						break;
-					case 409:
-						errorMessage = "این شماره تماس قبلا ثبت شده است";
-						break;
-					default:
-						errorMessage = "خطای ناشناخته رخ داده است";
+				// Check for error response and errorCode
+				const errorCode = error.response?.data?.errorCode;
+				const apiErrorMessage = error.response?.data?.message;
+
+				if (error.response?.status === 400 && errorCode) {
+					// Handle specific error codes
+					switch (errorCode) {
+						case 1001:
+							{
+								language === "fa"
+									? (errorMessage = apiErrorMessage)
+									: "The phone number must be in the format 09********* or +989*********";
+							}
+							break;
+						case 1002:
+							{
+								language === "fa"
+									? (errorMessage = apiErrorMessage)
+									: `Entered password doesn't have the required properties. Password length must be between 8 and 16 characters and must contain at least one letter and one digit. Only the following special characters are supported: ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; " ' ? < > , . `;
+							}
+							break;
+						case 1003:
+							{
+								language === "fa"
+									? (errorMessage = apiErrorMessage)
+									: "Entered phoneNumber is already used by another user.";
+							}
+							break;
+						case 1004:
+							{
+								language === "fa"
+									? (errorMessage = apiErrorMessage)
+									: "Too many verification code requested for this phone number. Wait some time and try again.";
+							}
+							break;
+						default:
+							errorMessage = "خطای ناشناخته‌ای رخ داده است";
+					}
+				} else {
+					errorMessage = "خطای ناشناخته‌ای رخ داده است";
 				}
 			}
 			setToastMessage(errorMessage);
 			setShowToast(true);
+			setIsSuccess(false);
 		} finally {
 			setSubmitting(false);
 		}
-	};
-
-	const handleVerificationSubmit = async () => {
-		console.log("Verification code submitted:", verificationCode);
-		navigate("/dashboard");
 	};
 
 	return (
@@ -221,44 +259,15 @@ function SignUp() {
 											/>
 										</div>
 
-										{verificationSent && (
-											<div className="mb-4 p-1">
-												<label
-													htmlFor="verificationCode"
-													className="form-label"
-												>
-													{language === "fa" ? "کد تایید" : "Verification Code"}
-												</label>
-												<input
-													type="text"
-													className="form-control"
-													placeholder={
-														language === "fa" ? "کد تایید" : "Verification Code"
-													}
-													value={verificationCode}
-													onChange={(e) => setVerificationCode(e.target.value)}
-												/>
-												<button
-													type="button"
-													className="btn btn-success rounded-pill mt-3"
-													onClick={handleVerificationSubmit}
-												>
-													{language === "fa" ? "کد تایید" : "Verification Code"}
-												</button>
-											</div>
-										)}
-
-										{!verificationSent && (
-											<div className="p-1 text-center">
-												<button
-													type="submit"
-													className="btn btn-primary rounded-pill"
-													disabled={isSubmitting}
-												>
-													{language === "fa" ? "ثبت نام" : "Signup"}
-												</button>
-											</div>
-										)}
+										<div className="p-1 text-center">
+											<button
+												type="submit"
+												className="btn btn-primary rounded-pill"
+												disabled={isSubmitting}
+											>
+												{language === "fa" ? "ثبت نام" : "Signup"}
+											</button>
+										</div>
 									</Form>
 								)}
 							</Formik>
@@ -271,6 +280,8 @@ function SignUp() {
 				message={toastMessage}
 				show={showToast}
 				onClose={() => setShowToast(false)}
+				isSuccess={isSuccess} // Pass success state
+				countdown={countdown} // Pass countdown state
 			/>
 		</div>
 	);

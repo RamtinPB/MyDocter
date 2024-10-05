@@ -1,317 +1,334 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useFormik } from "formik";
+given this code for a sign up page:
+import { useState } from "react";
+import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../cssFiles/customColors.css";
+import axios from "axios";
+import "/src/cssFiles/login.css"; // Custom styles
+import Toast from "../components/SignUpToast.tsx";
+import axiosInstance from "../myAPI/axiosInstance.ts";
+import { useLanguage } from "../components/LanguageContext.tsx";
 
-interface UserIEFormData {
-	[key: string]: any;
-}
-
-const initialFormData: UserIEFormData = {};
-
-function UserIEInformation() {
-	const [formSections, setFormSections] = useState<{ [key: string]: any[] }>(
-		{}
-	);
-	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
-	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
-
-	useEffect(() => {
-		axios
-			.get("http://localhost:3001/userinfoIE")
-			.then((response) => {
-				formik.setValues(response.data);
-				if (response.data.profilePicture) {
-					// Handle profile picture if needed
-				}
-			})
-			.catch((error) => {
-				console.error("Error fetching userIE data:", error);
-			});
-	}, []);
-
-	useEffect(() => {
-		axios
-			.get("http://localhost:3001/formFieldsIE")
-			.then((response) => {
-				const sections = response.data[0];
-				setFormSections(sections);
-				console.log(response.data[0]);
-			})
-			.catch((error) => {
-				console.error("Error fetching form fields:", error);
-			});
-	}, []);
-
-	useEffect(() => {
-		axios
-			.get("http://localhost:3001/validationSchemaDataIE")
-			.then((response) => {
-				setValidationSchemaData(response.data);
-			})
-			.catch((error) => {
-				console.error("Error fetching custom validation schema:", error);
-			});
-	}, []);
-
-	const validationSchema = Yup.object().shape(
-		validationSchemaData.reduce((acc, rule) => {
-			let fieldSchema: Yup.AnySchema = Yup.mixed();
-
-			switch (rule.type) {
-				case "string":
-					fieldSchema = Yup.string();
-					break;
-				case "date":
-					fieldSchema = Yup.date();
-					break;
-				default:
-					fieldSchema = Yup.mixed();
-			}
-
-			if (rule.matches && rule.type === "string") {
-				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(rule.matches[0]),
-					rule.matches[1]
-				);
-			}
-			if (rule.email) {
-				fieldSchema = (fieldSchema as Yup.StringSchema).email(rule.email);
-			}
-
-			if (rule.when) {
-				const [depField, conditions] = rule.when;
-				fieldSchema = fieldSchema.when(depField, {
-					is: conditions.is,
-					then: (schema) => {
-						let thenSchema = schema;
-						if (conditions.then.matches) {
-							thenSchema = (thenSchema as Yup.StringSchema).matches(
-								new RegExp(conditions.then.matches[0]),
-								conditions.then.matches[1]
-							);
-						}
-						if (conditions.then.required === false) {
-							thenSchema = thenSchema.notRequired();
-						} else if (conditions.then.required) {
-							thenSchema = thenSchema.required(conditions.then.required);
-						}
-						return thenSchema;
-					},
-					otherwise: (schema) => {
-						let otherwiseSchema = schema;
-						if (conditions.otherwise.matches) {
-							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(conditions.otherwise.matches[0]),
-								conditions.otherwise.matches[1]
-							);
-						}
-						if (conditions.otherwise.required === false) {
-							otherwiseSchema = otherwiseSchema.notRequired();
-						} else if (conditions.otherwise.required) {
-							otherwiseSchema = otherwiseSchema.required(
-								conditions.otherwise.required
-							);
-						}
-						return otherwiseSchema;
-					},
-				});
-			} else {
-				if (rule.required) {
-					fieldSchema = fieldSchema.required(rule.required);
-				} else if (rule.optional) {
-					fieldSchema = fieldSchema.notRequired();
-				}
-			}
-
-			acc[rule.name] = fieldSchema as Yup.Schema<any>;
-			return acc;
-		}, {} as Yup.ObjectSchema<any>)
-	);
-
-	const formik = useFormik({
-		initialValues: initialFormData,
-		validationSchema,
-		onSubmit: (values) => {
-			axios
-				.post("http://localhost:3001/submit", values)
-				.then((response) => {
-					console.log(
-						"UserIE information updated successfully:",
-						response.data
-					);
-				})
-				.catch((error) => {
-					console.error("Error updating userIE information:", error);
-				});
-		},
-		validateOnBlur: true,
-		validateOnChange: true,
+// Validation Schema
+// Function to dynamically switch between English and Persian validation messages
+const getValidationSchema = (language: string) => {
+	return Yup.object().shape({
+		phoneNumber: Yup.string()
+			.matches(
+				/^(09\d{9}|\+989\d{9})$/,
+				language === "fa"
+					? "شماره وارد شده باید به شکل *********09 یا *********989+ باشد"
+					: "The phone number must be in the format 09********* or +989*********"
+			)
+			.required(
+				language === "fa" ? "شماره تماس الزامی است" : "Phone number is required"
+			),
+		password: Yup.string()
+			.min(
+				8,
+				language === "fa"
+					? "رمز عبور باید حداقل ۸ کاراکتر باشد"
+					: "Password must be at least 8 characters long"
+			)
+			.max(
+				16,
+				language === "fa"
+					? "رمز عبور نمی‌تواند بیشتر از ۱۶ کاراکتر باشد"
+					: "Password cannot be longer than 16 characters"
+			)
+			.matches(
+				/^(?=.*[0-9])(?=.*[a-zA-Z])/,
+				language === "fa"
+					? "رمز عبور باید شامل حداقل یک حرف انگلیسی و یک عدد باشد"
+					: "Password must contain at least one letter and one number"
+			)
+			.matches(
+				/^[a-zA-Z0-9!@#$%^&*()+=_\-{}\[\]:;"'?<>,.]+$/,
+				language === "fa"
+					? "تنها از کاراکترهای خاص ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , می توان استفاده کند"
+					: "Only special characters ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , are allowed"
+			)
+			.required(
+				language === "fa" ? "رمز عبور الزامی است" : "Password is required"
+			),
 	});
+};
 
-	const toggleForm = (index: number) => {
-		setOpenIndexes((prevOpenIndexes) =>
-			prevOpenIndexes.includes(index)
-				? prevOpenIndexes.filter((i) => i !== index)
-				: [...prevOpenIndexes, index]
-		);
+function SignUp() {
+	const [showPassword, setShowPassword] = useState(false);
+	const [verificationSent, setVerificationSent] = useState(false);
+	const [verificationCode, setVerificationCode] = useState("");
+	const [toastMessage, setToastMessage] = useState("");
+	const [showToast, setShowToast] = useState(false);
+
+	const navigate = useNavigate();
+
+	const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+	const handleBackClick = () => navigate("/");
+
+	const { language } = useLanguage(); // Get language and toggle function from context
+
+	const handleFormSubmit = async (
+		values: { phoneNumber: any; password: any },
+		{ setSubmitting }: any
+	) => {
+		try {
+			const response = await axiosInstance.post("/api/User/SignUp", {
+				phoneNumber: values.phoneNumber,
+				password: values.password,
+			});
+
+			if (response.status === 200) {
+				setVerificationSent(true);
+				setToastMessage("کد تایید به شماره تماس شما ارسال شد");
+				setShowToast(true);
+			}
+		} catch (error) {
+			let errorMessage = "خطای ناشناخته رخ داده است";
+
+			if (axios.isAxiosError(error)) {
+				// Handle known Axios error
+				switch (error.response?.status) {
+					case 400:
+						errorMessage = "فرمت شماره تماس اشتباه است";
+						break;
+					case 401:
+						errorMessage =
+							"رمز عبور باید شامل حروف و اعداد باشد و بین ۸ تا ۱۶ کاراکتر باشد";
+						break;
+					case 409:
+						errorMessage = "این شماره تماس قبلا ثبت شده است";
+						break;
+					default:
+						errorMessage = "خطای ناشناخته رخ داده است";
+				}
+			}
+			setToastMessage(errorMessage);
+			setShowToast(true);
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const handleVerificationSubmit = async () => {
+		console.log("Verification code submitted:", verificationCode);
+		navigate("/dashboard");
 	};
 
 	return (
-		<div className="custom-bg-4">
-			<div className="container d-flex flex-column">
-				<form
-					onSubmit={formik.handleSubmit}
-					className="needs-validation my-5"
-					noValidate
-				>
-					<div className="accordion">
-						{Object.keys(formSections).map((section, index) => (
-							<div
-								className="accordion-item shadow-sm rounded-5 mb-5"
-								key={index}
-							>
-								<div
-									className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
-									id={`heading${index}`}
-								>
-									<h3 className="mb-0 ms-auto me-4">{section}</h3>
-									<img
-										src="src/images/plus-border.png"
-										alt="+"
-										className={`img-fluid m-0 p-0 btn-toggle ${
-											openIndexes.includes(index) ? "rotate" : ""
-										}`}
-										onClick={() => toggleForm(index)}
-										data-bs-toggle="collapse"
-										data-bs-target={`#collapse${index}`}
-										itemType="button"
-										aria-expanded={openIndexes.includes(index)}
-										aria-controls={`collapse${index}`}
-										style={{ width: "50px", height: "50px" }}
-									/>
-								</div>
-								<div
-									id={`collapse${index}`}
-									className={`collapse ${
-										openIndexes.includes(index) ? "show" : ""
-									}`}
-									aria-labelledby={`heading${index}`}
-								>
-									<div className="accordion-body text-end pt-0 mb-1">
-										<div className="row row-cols-2 g-5 my-1">
-											{Array.isArray(formSections[section]) &&
-												formSections[section].map((field: any, idx: number) => {
-													const isSelect = field.type === "select";
-													const isCheckbox = field.checkboxName;
-
-													return (
-														<div key={idx} className="col mb-2">
-															<label
-																htmlFor={field.name}
-																className="form-label"
-															>
-																{field.label}
-															</label>
-															{isSelect ? (
-																<select
-																	id={field.name}
-																	name={field.name}
-																	value={formik.values[field.name]}
-																	onChange={formik.handleChange}
-																	onBlur={formik.handleBlur}
-																	className={`form-select text-end shadow-sm ${
-																		formik.touched[field.name] &&
-																		formik.errors[field.name]
-																			? "is-invalid"
-																			: ""
-																	}`}
-																	required={field.required}
-																	disabled={formik.values[field.checkboxName]}
-																>
-																	<option value="" disabled>
-																		{field.placeholder || "..."}
-																	</option>
-																	{field.options.map(
-																		(option: string, i: number) => (
-																			<option key={i} value={option}>
-																				{option}
-																			</option>
-																		)
-																	)}
-																</select>
-															) : (
-																<input
-																	type={field.type}
-																	id={field.name}
-																	name={field.name}
-																	value={formik.values[field.name]}
-																	onChange={formik.handleChange}
-																	onBlur={formik.handleBlur}
-																	className={`form-control text-end shadow-sm ${
-																		formik.touched[field.name] &&
-																		formik.errors[field.name]
-																			? "is-invalid"
-																			: ""
-																	}`}
-																	required={field.required}
-																	disabled={formik.values[field.checkboxName]}
-																	placeholder={field.placeholder || ""}
-																/>
-															)}
-															{isCheckbox && field.checkboxLabel && (
-																<div className="text-end mt-2">
-																	<input
-																		type="checkbox"
-																		id={field.checkboxName}
-																		name={field.checkboxName}
-																		checked={Boolean(
-																			formik.values[field.checkboxName]
-																		)}
-																		onChange={(e) => {
-																			formik.setFieldValue(
-																				field.checkboxName,
-																				e.target.checked
-																			);
-																		}}
-																		className="form-check-input shadow-sm"
-																	/>
-																	<label
-																		htmlFor={field.checkboxName}
-																		className="form-check-label ms-3"
-																	>
-																		{field.checkboxLabel}
-																	</label>
-																</div>
-															)}
-															{formik.touched[field.name] &&
-																formik.errors[field.name] && (
-																	<div className="invalid-feedback">
-																		{formik.errors[field.name] as string}
-																	</div>
-																)}
-														</div>
-													);
-												})}
-										</div>
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-					<div className="d-flex justify-content-center my-3">
-						<button
-							type="submit"
-							className="btn btn-primary rounded-pill text-white fs-4 px-5 py-2 shadow-sm"
+		<div className="d-flex justify-content-center align-items-center vh-100 login-container">
+			<div className="container">
+				<div className="d-flex justify-content-center justify-content-xl-end">
+					<div className="col-12 col-xl-4 col-lg-6 col-md-7">
+						<div
+							className="card p-3 p-md-4 shadow rounded-4"
+							style={{
+								backgroundColor: "rgba(255, 255, 255, 0.9)",
+							}}
 						>
-							ذخیره
-						</button>
+							<div
+								className={`row text-${
+									language === "fa" ? "end" : "center"
+								} mb-4 pb-1`}
+							>
+								<FaCaretLeft
+									className="col-2 custom-back-btn"
+									type="button"
+									color="black"
+									onClick={handleBackClick}
+								/>
+								<h3 className={`col-${language === "fa" ? "10" : "8"} mb-0`}>
+									{language === "fa"
+										? "ثبت نام در پزشک من"
+										: "Signup in My Docter"}
+								</h3>
+							</div>
+
+							<Formik
+								initialValues={{ phoneNumber: "", password: "" }}
+								validationSchema={getValidationSchema(language)}
+								onSubmit={handleFormSubmit}
+							>
+								{({ isSubmitting }) => (
+									<Form
+										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									>
+										<div className="mb-3 p-1">
+											<label htmlFor="phoneNumber" className="form-label">
+												{language === "fa" ? "شماره تماس" : "Phone number"}
+											</label>
+											<Field
+												type="text"
+												name="phoneNumber"
+												className="form-control"
+												placeholder="09164524878"
+											/>
+											<ErrorMessage
+												name="phoneNumber"
+												component="div"
+												className="text-danger"
+											/>
+										</div>
+
+										<div className="mb-3 p-1">
+											<label htmlFor="password" className="form-label">
+												{language === "fa" ? "رمز عبور" : "Password"}
+											</label>
+											<div
+												className="input-group "
+												style={{ direction: "ltr" }}
+											>
+												<span
+													onClick={togglePasswordVisibility}
+													className="input-group-text eye-icon"
+													style={{ cursor: "pointer" }}
+												>
+													{showPassword ? <FaEyeSlash /> : <FaEye />}
+												</span>
+												<Field
+													type={showPassword ? "text" : "password"}
+													name="password"
+													className={`form-control text-${
+														language === "fa" ? "end" : "start"
+													}`}
+													placeholder="********"
+												/>
+											</div>
+											<ErrorMessage
+												name="password"
+												component="div"
+												className="text-danger"
+											/>
+										</div>
+
+										<div
+											className={`form-check d-flex justify-content-start p-1 mb-3`}
+											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										>
+											<label
+												className="form-check-label mx-1"
+												htmlFor="rememberMe"
+											>
+												{language === "fa"
+													? "مرا به خاطر بسپارید"
+													: "Remmember Me"}
+											</label>
+											<Field
+												type="checkbox"
+												name="rememberMe"
+												className="form-check-input mx-2"
+											/>
+										</div>
+
+										{verificationSent && (
+											<div className="mb-4 p-1">
+												<label
+													htmlFor="verificationCode"
+													className="form-label"
+												>
+													{language === "fa" ? "کد تایید" : "Verification Code"}
+												</label>
+												<input
+													type="text"
+													className="form-control"
+													placeholder={
+														language === "fa" ? "کد تایید" : "Verification Code"
+													}
+													value={verificationCode}
+													onChange={(e) => setVerificationCode(e.target.value)}
+												/>
+												<button
+													type="button"
+													className="btn btn-success rounded-pill mt-3"
+													onClick={handleVerificationSubmit}
+												>
+													{language === "fa" ? "کد تایید" : "Verification Code"}
+												</button>
+											</div>
+										)}
+
+										{!verificationSent && (
+											<div className="p-1 text-center">
+												<button
+													type="submit"
+													className="btn btn-primary rounded-pill"
+													disabled={isSubmitting}
+												>
+													{language === "fa" ? "ثبت نام" : "Signup"}
+												</button>
+											</div>
+										)}
+									</Form>
+								)}
+							</Formik>
+						</div>
 					</div>
-				</form>
+				</div>
 			</div>
+
+			<Toast
+				message={toastMessage}
+				show={showToast}
+				onClose={() => setShowToast(false)}
+			/>
 		</div>
 	);
 }
 
-export default UserIEInformation;
+export default SignUp;
+
+and this sign up api my friend provided me:
+POST
+/api/User/SignUp
+
+Parameters
+Cancel
+Reset
+No parameters
+
+Request body
+
+application/json
+{
+  "phoneNumber": "09168135753",
+  "password": "@test234"
+}
+Execute
+Clear
+Responses
+Curl
+
+curl -X 'POST' \
+  'https://localhost:7004/api/User/SignUp' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "phoneNumber": "09168135753",
+  "password": "@test234"
+}'
+Request URL
+https://localhost:7004/api/User/SignUp
+Server response
+Code	Details
+200	
+Response body
+Download
+{
+  "phoneNumber": "+989168135753",
+  "codeExpiryMinutes": 3
+}
+Response headers
+ content-type: application/json; charset=utf-8 
+ date: Sat,05 Oct 2024 16:57:49 GMT 
+ server: Kestrel 
+Responses
+Code	Description	Links
+200	
+OK
+
+No links
+
+how should i implement it to my front end?
+also remember to take into account the requirements of the inputs as shown in the code for the api's logic to work correctly.
