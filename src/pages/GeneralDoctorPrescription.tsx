@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
@@ -11,7 +12,7 @@ interface Service {
 
 	image: string;
 	id: string;
-	category: string;
+	type: string;
 }
 
 function GeneralDoctorPrescription() {
@@ -25,22 +26,42 @@ function GeneralDoctorPrescription() {
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				// Use fetch to get the data from the public folder
-				const response = await fetch("/db.json"); // Adjust the path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+				// Attempt to fetch from the API
+				const response = await axiosInstance.post(
+					"/api/Service/GetAvailableServices",
+					{
+						serviceType: "General", // Add the 'General' value to the request body
+					}
+				);
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				const data = await response.json();
+				console.log(response); // Log the full response to check structure
+				console.log("Base URL: ", import.meta.env.VITE_API_BASE_URL);
 
-				// Assuming the services data is available in a property like `services`
-				const services = data.services; // Adjust according to your db.json structure
-
-				setServices(services);
+				setServices(response.data); // Assuming 'data' is the correct structure
 				setLoading(false);
 			} catch (err) {
-				console.error("Error fetching services:", err);
-				setError("Failed to fetch services");
-				setLoading(false);
+				console.error("API request failed, trying local db.json", err);
+
+				// Fallback to fetching from db.json if API request fails
+				try {
+					const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+
+					const data = await response.json();
+					setServices(data.services); // Assuming 'homeTextData' is the key in your JSON structure
+					setLoading(false);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+					setError("Failed to fetch data from both API and local fallback.");
+					setLoading(false);
+				}
 			}
 		};
 
@@ -72,7 +93,7 @@ function GeneralDoctorPrescription() {
 					>
 						{services.map(
 							(service, index) =>
-								service.category === "general" && (
+								service.type === "General" && (
 									<div className="col-6" key={index}>
 										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">

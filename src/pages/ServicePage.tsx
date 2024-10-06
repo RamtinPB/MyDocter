@@ -31,7 +31,7 @@ interface Service {
 	subsidy: string;
 	image: string;
 	id: string;
-	category: string;
+	type: string;
 	files?: FileData[]; // File data interface
 }
 interface UserInfo {
@@ -198,9 +198,9 @@ function ServicePage() {
 	};
 
 	const handleBackClick = () => {
-		if (service?.category.toLocaleLowerCase() === "specialist") {
+		if (service?.type.toLocaleLowerCase() === "specialist") {
 			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
-		} else if (service?.category.toLocaleLowerCase() === "general") {
+		} else if (service?.type.toLocaleLowerCase() === "general") {
 			navigate("/GeneralDoctorPrescription"); // Replace with actual route
 		} else {
 			navigate("/"); // Default fallback

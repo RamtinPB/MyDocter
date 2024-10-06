@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MyFooter from "../components/MyFooter";
-import MyQuestions from "../components/MyQuestions";
+import FAQ from "../components/FAQ";
 import "/src/cssFiles/home.css";
 import "/src/cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
@@ -78,9 +78,7 @@ function Home() {
 						"Failed to fetch data from both API and db.json",
 						jsonErr
 					);
-					setError(
-						"Failed to fetch homeTextData from both API and local fallback."
-					);
+					setError("Failed to fetch data from both API and local fallback.");
 					setLoading(false);
 				}
 			}
@@ -232,7 +230,7 @@ function Home() {
 				</div>
 			</section>
 			{/* Important Questions Section */}
-			<MyQuestions />
+			<FAQ />
 			{/* Footer Section */}
 			<MyFooter />
 		</div>
