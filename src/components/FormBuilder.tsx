@@ -32,14 +32,44 @@ function FormBuilder() {
 	const [options, setOptions] = useState<string[]>([]);
 	const [serviceId, setServiceId] = useState<string>("");
 
+	const [uiSchema, setUiSchema] = useState({});
+
+	// Helper function to get the correct widget based on the element type
+	const getUiWidget = (elementType: string) => {
+		switch (elementType) {
+			case "radio":
+				return "radio";
+			case "select":
+				return "select";
+			case "text-checkbox":
+				return "text"; // Treat text-checkbox as text input for ui purposes
+			default:
+				return "text"; // Default to text input
+		}
+	};
+
+	// Helper function to get the correct class names based on the element type
+	const getClassNames = (elementType: string) => {
+		switch (elementType) {
+			case "radio":
+				return "form-check-inline mb-3"; // Radio-specific class names
+			case "select":
+				return " mb-3"; // Dropdown select class names
+			case "text-checkbox":
+				return " mb-3"; // Shared class for text-checkbox
+			default:
+				return " mb-3"; // Default class for other types (e.g., text, number)
+		}
+	};
+
 	const addFormElement = () => {
 		let newElement: any;
 
 		if (newElementType === "radio" || newElementType === "select") {
 			newElement = {
-				type: newElementType === "radio" ? "string" : "string",
+				type: "string",
 				title: newElementLabel,
-				enum: options,
+				enum: options, // Define options for radio and select
 			};
 		} else if (newElementType === "text-checkbox") {
 			newElement = {
@@ -80,6 +110,7 @@ function FormBuilder() {
 
 		const newElementKey = newElementLabel || `element_${Date.now()}`;
 
+		// Update schema
 		setSchema({
 			...schema,
 			properties: {
@@ -87,6 +118,18 @@ function FormBuilder() {
 				[newElementKey]: newElement,
 			},
 		});
+
+		// Update uiSchema with dynamic widget and class names
+		const newUiSchema = {
+			...uiSchema,
+			[newElementKey]: {
+				"ui:widget": getUiWidget(newElementType), // Set widget type dynamically
+				"ui:options": {
+					classNames: getClassNames(newElementType), // Set class names dynamically
+				},
+			},
+		};
+		setUiSchema(newUiSchema);
 
 		// Reset fields after adding the element
 		setNewElementLabel("");
@@ -234,12 +277,12 @@ function FormBuilder() {
 							<div key={index} className="d-flex align-items-center mb-2">
 								<input
 									type="text"
-									className="form-control me-2"
+									className="form-control mx-2"
 									value={option}
 									onChange={(e) => handleOptionChange(index, e.target.value)}
 								/>
 								<button
-									className="btn btn-danger ms-2"
+									className="btn btn-danger mx-2"
 									onClick={() => handleDeleteOption(index)}
 								>
 									{language === "fa" ? "حذف" : "Delete"}
@@ -254,16 +297,9 @@ function FormBuilder() {
 				</div>
 			)}
 
-			<div
-				className="d-flex flex-row justify-content-around align-items-center my-4"
-				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-			>
+			<div className="d-flex flex-row justify-content-center align-items-center my-4">
 				<button className="btn btn-primary" onClick={addFormElement}>
 					{language === "fa" ? "اضافه کردن ورودی" : "Add input"}
-				</button>
-
-				<button className="btn btn-success" onClick={saveFormSchema}>
-					{language === "fa" ? "ذخیره فرم" : "Save Form"}
 				</button>
 			</div>
 
@@ -274,7 +310,7 @@ function FormBuilder() {
 				<h3 className="mb-5">
 					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
 				</h3>
-				<Form schema={schema} validator={validator}>
+				<Form schema={schema} uiSchema={uiSchema} validator={validator}>
 					<div className="d-flex flex-wrap justify-content-center align-items-center">
 						{Object.keys(schema.properties).length === 0 ? (
 							<p className="text-muted">
@@ -296,6 +332,12 @@ function FormBuilder() {
 						)}
 					</div>
 				</Form>
+			</div>
+
+			<div className="d-flex flex-row justify-content-center align-items-center my-4">
+				<button className="btn btn-success" onClick={saveFormSchema}>
+					{language === "fa" ? "ذخیره فرم" : "Save Form"}
+				</button>
 			</div>
 		</div>
 	);
