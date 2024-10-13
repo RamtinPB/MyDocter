@@ -13,7 +13,7 @@ interface Service {
 	subsidy: string;
 	image: string;
 	id: string;
-	category: string;
+	type: string;
 }
 
 function AdminDashboardServicesPageContent() {
@@ -39,8 +39,8 @@ function AdminDashboardServicesPageContent() {
 		fetchServices();
 	}, []);
 
-	// Add a new blank card to the appropriate category
-	const addCard = (category: "general" | "specialist") => {
+	// Add a new blank card to the appropriate type
+	const addCard = (type: "General" | "Specialist") => {
 		const newCard: Service = {
 			name: "New Service",
 			description: "New description",
@@ -50,7 +50,7 @@ function AdminDashboardServicesPageContent() {
 			subsidy: "0",
 			image: "/src/images/placeholder.jpg",
 			id: (services.length + 1).toString(), // Generate a unique id
-			category,
+			type,
 		};
 		setServices([...services, newCard]);
 	};
@@ -69,12 +69,12 @@ function AdminDashboardServicesPageContent() {
 	// @ts-ignore
 	const handleCancel = () => {};
 
-	// Render service cards based on category
-	const renderServiceCards = (category: "general" | "specialist") => {
+	// Render service cards based on type
+	const renderServiceCards = (type: "General" | "Specialist") => {
 		return (
 			<div className="row m-4">
 				{services
-					.filter((service) => service.category === category)
+					.filter((service) => service.type === type)
 					.map((service) => (
 						<div className="col-md-4 mb-4" key={service.id}>
 							<div className="card shadow rounded-4 p-0">
@@ -124,12 +124,12 @@ function AdminDashboardServicesPageContent() {
 							</div>
 						</div>
 					))}
-				{/* Add Button for the category */}
+				{/* Add Button for the type */}
 				<div className="col-md-4 d-flex justify-content-center align-items-center mb-4">
 					<button
 						className="rounded-circle btn p-0 m-3 shadow"
 						type="button"
-						onClick={() => addCard(category)}
+						onClick={() => addCard(type)}
 					>
 						<img
 							src="/images/green-add.png"
@@ -153,7 +153,7 @@ function AdminDashboardServicesPageContent() {
 							: "Specialist Practitioner Services"}
 					</h3>
 				</div>
-				{renderServiceCards("specialist")}
+				{renderServiceCards("Specialist")}
 			</div>
 
 			{/* General Services Section */}
@@ -166,7 +166,7 @@ function AdminDashboardServicesPageContent() {
 							: "General Practitioner Services"}
 					</h3>
 				</div>
-				{renderServiceCards("general")}
+				{renderServiceCards("General")}
 			</div>
 			{/* Submit and Cancel buttons */}
 			<div className="d-flex justify-content-evenly px-3 py-2 my-2">

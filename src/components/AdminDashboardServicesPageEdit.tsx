@@ -20,7 +20,7 @@ interface Service {
 	subsidy: string;
 	image: string;
 	id: string;
-	category: string;
+	type: string;
 }
 
 function ServicePageEdit() {
