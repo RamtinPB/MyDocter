@@ -3,6 +3,11 @@ import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 import { useLanguage } from "./LanguageContext";
 
+// Define uiSchema type with index signature
+interface UiSchema {
+	[key: string]: any; // Or a more specific type based on your form schema structure
+}
+
 interface Schema {
 	title?: string;
 	type: string;
@@ -32,7 +37,8 @@ function FormBuilder() {
 	const [options, setOptions] = useState<string[]>([]);
 	const [serviceId, setServiceId] = useState<string>("");
 
-	const [uiSchema, setUiSchema] = useState({});
+	const [uiSchema, setUiSchema] = useState<UiSchema>({});
+	const [checkboxLabel, setCheckboxLabel] = useState("");
 
 	// Helper function to get the correct widget based on the element type
 	const getUiWidget = (elementType: string) => {
@@ -43,8 +49,10 @@ function FormBuilder() {
 				return "select";
 			case "text-checkbox":
 				return "text"; // Treat text-checkbox as text input for ui purposes
+			case "boolean":
+				return "checkbox"; // Use checkbox for boolean types
 			default:
-				return "text"; // Default to text input
+				return "text"; // Default to text input for other types
 		}
 	};
 
@@ -52,11 +60,13 @@ function FormBuilder() {
 	const getClassNames = (elementType: string) => {
 		switch (elementType) {
 			case "radio":
-				return "form-check-inline mb-3"; // Radio-specific class names
+				return " mb-3"; // Radio-specific class names
 			case "select":
 				return " mb-3"; // Dropdown select class names
 			case "text-checkbox":
 				return " mb-3"; // Shared class for text-checkbox
+			case "checkbox":
+				return "mb-3";
 			default:
 				return " mb-3"; // Default class for other types (e.g., text, number)
 		}
@@ -74,13 +84,11 @@ function FormBuilder() {
 		} else if (newElementType === "text-checkbox") {
 			newElement = {
 				type: "object",
-				title: newElementLabel,
 				properties: {
-					text: { type: "string", title: "Text" },
+					text: { type: "string", title: "Text" }, // Text input label remains "Text"
 					disable: {
 						type: "boolean",
-						title: "Disable Text",
-						description: "Check to disable text input",
+						title: checkboxLabel, // Use the separate label for the checkbox
 					},
 				},
 				dependencies: {
@@ -89,12 +97,13 @@ function FormBuilder() {
 							{
 								properties: {
 									disable: { const: true },
+									text: { type: "string", title: "Text", readOnly: true }, // Disable the text input
 								},
 							},
 							{
 								properties: {
 									disable: { const: false },
-									text: { type: "string", title: "Text" },
+									text: { type: "string", title: "Text", readOnly: false }, // Enable the text input
 								},
 							},
 						],
@@ -119,20 +128,37 @@ function FormBuilder() {
 			},
 		});
 
-		// Update uiSchema with dynamic widget and class names
+		// Update uiSchema with classNames for styling
 		const newUiSchema = {
 			...uiSchema,
 			[newElementKey]: {
 				"ui:widget": getUiWidget(newElementType), // Set widget type dynamically
 				"ui:options": {
-					classNames: getClassNames(newElementType), // Set class names dynamically
+					classNames: getClassNames(newElementType), // Set class names dynamically for styling
 				},
 			},
 		};
+
+		// For text-checkbox, set specific uiSchema for text and disable fields
+		if (newElementType === "text-checkbox") {
+			newUiSchema[newElementKey] = {
+				...newUiSchema[newElementKey], // Preserve existing fields
+				"ui:order": ["text", "disable"], // Set the order: text first, then checkbox
+				text: {
+					"ui:disabled": schema.properties[newElementKey]?.disable === true, // Dynamically disable text
+					"ui:options": { label: false }, // Hide the label for the text input
+				},
+				disable: {
+					"ui:options": { label: checkboxLabel }, // Set the label for the checkbox
+				},
+			};
+		}
+
 		setUiSchema(newUiSchema);
 
 		// Reset fields after adding the element
 		setNewElementLabel("");
+		setCheckboxLabel(""); // Reset the checkbox label field
 		setOptions([]);
 	};
 
@@ -294,6 +320,20 @@ function FormBuilder() {
 					<button className="btn btn-secondary mt-2" onClick={handleAddOption}>
 						{language === "fa" ? "اضافه کردن گزینه" : "Add Option"}
 					</button>
+				</div>
+			)}
+
+			{newElementType === "text-checkbox" && (
+				<div className="my-4">
+					<label className="form-label">
+						{language === "fa" ? "عنوان چک باکس" : "Checkbox Label"}
+					</label>
+					<input
+						type="text"
+						className="form-control"
+						value={checkboxLabel}
+						onChange={(e) => setCheckboxLabel(e.target.value)}
+					/>
 				</div>
 			)}
 
