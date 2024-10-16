@@ -2,6 +2,7 @@ import { useState } from "react";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 // Define uiSchema type with index signature
 interface UiSchema {
@@ -19,8 +20,11 @@ interface Schema {
 		};
 	};
 }
+interface FormBuilderProps {
+	serviceId: string; // New prop to accept the service ID
+}
 
-function FormBuilder() {
+function FormBuilder({ serviceId }: FormBuilderProps) {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const [schema, setSchema] = useState<Schema>({
@@ -35,7 +39,6 @@ function FormBuilder() {
 
 	const [newElementLabel, setNewElementLabel] = useState("");
 	const [options, setOptions] = useState<string[]>([]);
-	const [serviceId, setServiceId] = useState<string>("");
 
 	const [uiSchema, setUiSchema] = useState<UiSchema>({});
 	const [checkboxLabel, setCheckboxLabel] = useState("");
@@ -189,28 +192,43 @@ function FormBuilder() {
 		setOptions(updatedOptions);
 	};
 
-	const saveFormSchema = () => {
-		const storedForms = JSON.parse(localStorage.getItem("customForms") || "{}");
-		storedForms[serviceId] = schema;
-		localStorage.setItem("customForms", JSON.stringify(storedForms));
-		alert("Form schema saved successfully!");
+	const saveFormSchema = async () => {
+		try {
+			// Attempt to save the form schema to the API
+			const response = await axiosInstance.post("/api/Forms/SaveFormSchema", {
+				serviceId, // Add any necessary identifiers like serviceId
+				schema, // Include the form schema data
+			});
+
+			if (response.status !== 200) {
+				throw new Error("Failed to save form schema to the API");
+			}
+
+			alert("Form saved successfully to the server!");
+		} catch (apiError) {
+			console.error(
+				"API request failed, falling back to local storage:",
+				apiError
+			);
+
+			// Fallback: Save form schema to localStorage for testing purposes
+			try {
+				const storedForms = JSON.parse(
+					localStorage.getItem("customForms") || "{}"
+				);
+				storedForms[serviceId] = schema; // Associate schema with serviceId in local storage
+				localStorage.setItem("customForms", JSON.stringify(storedForms));
+
+				alert("Form saved locally for testing!");
+			} catch (localError) {
+				console.error("Failed to save form schema locally:", localError);
+				alert("Failed to save form schema both to the server and locally.");
+			}
+		}
 	};
 
 	return (
 		<div className="container my-5">
-			<div className="my-4">
-				<label htmlFor="serviceId" className="form-label">
-					{language === "fa" ? "شناسه سرویس" : "Service ID"}
-				</label>
-				<input
-					type="text"
-					id="serviceId"
-					className="form-control"
-					value={serviceId}
-					onChange={(e) => setServiceId(e.target.value)}
-				/>
-			</div>
-
 			<div className="my-4">
 				<label htmlFor="formTitle" className="form-label">
 					{language === "fa" ? "تیتر فرم (اختیاری)" : "Form Title (Optional)"}

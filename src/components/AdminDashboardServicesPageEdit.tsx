@@ -225,7 +225,7 @@ function ServicePageEdit() {
 					</h6>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
-							<FormBuilder />
+							<FormBuilder serviceId={id as string} />
 						) : (
 							<div className="text-center py-3">
 								<p>
@@ -291,7 +291,7 @@ function ServicePageEdit() {
 						className="btn btn-success rounded-pill px-3"
 						onClick={handleSubmit}
 					>
-						{language === "fa" ? "ذخیره" : "Save Changes"}
+						{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
 					</button>
 				</div>
 			</div>
