@@ -10,8 +10,6 @@ const CustomFieldTemplate = ({
 	classNames,
 	label,
 	help,
-	required,
-	description,
 	errors,
 	children,
 }: any) => (
