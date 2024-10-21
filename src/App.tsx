@@ -48,7 +48,7 @@ function App() {
 						path="/SpecialistDoctorPrescription"
 						element={<SpecialistDoctorPrescription />}
 					/>
-					<Route path="/formBuilder" element={<FormBuilder />} />
+					<Route path="/formBuilder/:serviceId" element={<FormBuilder />} />
 					<Route path="/formRender" element={<FormRender />} />
 					<Route
 						path="/form-filled/:id/:purchaseId"

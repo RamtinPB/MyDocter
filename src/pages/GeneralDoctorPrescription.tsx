@@ -88,13 +88,13 @@ function GeneralDoctorPrescription() {
 				</div>
 				<div className="text-end bg-white shadow rounded-5 px-0 px-md-4 px-lg-5 py-5 mb-3">
 					<div
-						className="row row-cols-2 mx-1 g-5"
+						className="row row-cols-1 row-cols-md-2 mx-1 g-5"
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 					>
 						{services.map(
 							(service, index) =>
 								service.type === "General" && (
-									<div className="col-6" key={index}>
+									<div className="col-12 col-md-6" key={index}>
 										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">
 												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">

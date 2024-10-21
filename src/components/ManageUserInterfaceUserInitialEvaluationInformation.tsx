@@ -208,8 +208,8 @@ function ManageUserInterfaceUserInitialEvaluationInformation() {
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
 						{language === "fa"
-							? `اطلاعات شخصی کاربر`
-							: `Edit User: "${userId}" Personal Information`}
+							? `اطلاعات فرم ارزشیابی اولیه کاربر`
+							: `Edit User: "${userId}" Initial Evaluation Information`}
 					</h3>
 				</div>
 

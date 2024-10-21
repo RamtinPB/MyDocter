@@ -225,7 +225,7 @@ function ServicePageEdit() {
 					</h6>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
-							<FormBuilder serviceId={id as string} />
+							<FormBuilder />
 						) : (
 							<div className="text-center py-3">
 								<p>

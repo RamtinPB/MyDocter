@@ -3,6 +3,7 @@ import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useParams } from "react-router-dom";
 
 // Define uiSchema type with index signature
 interface UiSchema {
@@ -20,11 +21,10 @@ interface Schema {
 		};
 	};
 }
-interface FormBuilderProps {
-	serviceId: string; // New prop to accept the service ID
-}
 
-function FormBuilder({ serviceId }: FormBuilderProps) {
+function FormBuilder() {
+	const { serviceId } = useParams<{ serviceId: string }>();
+
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const [schema, setSchema] = useState<Schema>({
@@ -216,7 +216,7 @@ function FormBuilder({ serviceId }: FormBuilderProps) {
 				const storedForms = JSON.parse(
 					localStorage.getItem("customForms") || "{}"
 				);
-				storedForms[serviceId] = schema; // Associate schema with serviceId in local storage
+				storedForms[serviceId as string] = schema; // Associate schema with serviceId in local storage
 				localStorage.setItem("customForms", JSON.stringify(storedForms));
 
 				alert("Form saved locally for testing!");
@@ -393,7 +393,10 @@ function FormBuilder({ serviceId }: FormBuilderProps) {
 			</div>
 
 			<div className="d-flex flex-row justify-content-center align-items-center my-4">
-				<button className="btn btn-success" onClick={saveFormSchema}>
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={saveFormSchema}
+				>
 					{language === "fa" ? "ذخیره فرم" : "Save Form"}
 				</button>
 			</div>
