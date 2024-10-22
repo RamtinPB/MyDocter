@@ -24,30 +24,54 @@ function UserInformation() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
-		fetch("/db.json")
+		axiosInstance
+			.post("/api/User/GetUserData") // Call the API to get user data
 			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.json();
-			})
-			.then((data) => {
-				// Update state for validation schema data
-				setValidationSchemaData(data.validationSchemaData);
+				const data = response.data;
 
-				// Update state for form fields
-				setFormFields(data.formFields);
-
-				// Update form values with user info
-				formik.setValues(data.userInfo);
+				// Populate form fields with API response
+				formik.setValues({
+					...data,
+					profilePicture: data.profileImageUrl,
+				});
 
 				// Set profile picture if available
-				if (data.userInfo.profilePicture) {
-					setProfilePicture(data.userInfo.profilePicture);
+				if (data.profileImageUrl) {
+					setProfilePicture(data.profileImageUrl);
 				}
 			})
 			.catch((error) => {
-				console.error("Error fetching data:", error);
+				console.error("API request failed, trying local db.json", error);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update state for validation schema data (if any)
+						setValidationSchemaData(data.validationSchemaData);
+
+						// Update state for form fields
+						setFormFields(data.formFields);
+
+						// Update form values with user info from db.json
+						formik.setValues(data.userInfo);
+
+						// Set profile picture if available
+						if (data.userInfo.profilePicture) {
+							setProfilePicture(data.userInfo.profilePicture);
+						}
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
 			});
 	}, []);
 
@@ -158,13 +182,11 @@ function UserInformation() {
 		validationSchema,
 		onSubmit: (values) => {
 			axiosInstance
-				.post("/submitUserInformation", values)
-				.then((response) => {
-					console.log("User information updated successfully:", response.data);
-				})
-				.catch((error) => {
-					console.error("Error updating user information:", error);
-				});
+				.post("/api/User/UpdateUserData", values)
+				.then((response) =>
+					console.log("User information updated:", response.data)
+				)
+				.catch((error) => console.error("Error updating user info:", error));
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
@@ -174,19 +196,19 @@ function UserInformation() {
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		if (e.target.files && e.target.files[0]) {
-			setProfilePicture(URL.createObjectURL(e.target.files[0]));
+			setProfilePicture(URL.createObjectURL(e.target.files[0])); // Show preview
 
 			const formData = new FormData();
 			formData.append("profilePicture", e.target.files[0]);
 
 			axios
 				.post("/api/upload-profile-picture", formData)
-				.then((response) => {
-					console.log("Profile picture uploaded successfully:", response.data);
-				})
-				.catch((error) => {
-					console.error("Error uploading profile picture:", error);
-				});
+				.then((response) =>
+					console.log("Profile picture uploaded:", response.data)
+				)
+				.catch((error) =>
+					console.error("Error uploading profile picture:", error)
+				);
 		}
 	};
 

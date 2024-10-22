@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -12,15 +12,17 @@ import { useLanguage } from "../components/LanguageContext.tsx";
 // Validation Schema
 const getValidationSchema = (language: string) => {
 	return Yup.object().shape({
-		phoneNumber: Yup.string()
+		emailAddress: Yup.string()
 			.matches(
-				/^(09\d{9}|\+989\d{9})$/,
+				/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 				language === "fa"
-					? "شماره وارد شده باید به شکل *********09 یا *********989+ باشد"
-					: "The phone number must be in the format 09********* or +989*********"
+					? "فرمت آدرس ایمیل اشتباه است"
+					: "Invalid email format, must include a full domain"
 			)
 			.required(
-				language === "fa" ? "شماره تماس الزامی است" : "Phone number is required"
+				language === "fa"
+					? " آدرس ایمیل الزامی است"
+					: "Email Address is required"
 			),
 		password: Yup.string()
 			.min(
@@ -54,6 +56,9 @@ const getValidationSchema = (language: string) => {
 };
 
 function SignUp() {
+	const [captchaImage, setCaptchaImage] = useState<string | null>(null);
+	const [captchaCode, setCaptchaCode] = useState<string | null>(null);
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [toastMessage, setToastMessage] = useState("");
 	const [showToast, setShowToast] = useState(false);
@@ -68,6 +73,38 @@ function SignUp() {
 
 	const { language } = useLanguage();
 
+	const fetchCaptcha = async () => {
+		try {
+			// Revoke the old object URL (if any) to free memory
+			if (captchaImage) {
+				URL.revokeObjectURL(captchaImage);
+			}
+
+			// Add a unique query parameter to prevent caching
+			const timestamp = new Date().getTime();
+			const response = await axiosInstance.get(
+				`/api/User/GetCaptcha?timestamp=${timestamp}`,
+				{
+					responseType: "blob",
+				}
+			);
+
+			// Convert the blob into an object URL
+			const blob = new Blob([response.data], {
+				type: response.headers["content-type"],
+			});
+			const objectURL = URL.createObjectURL(blob);
+
+			setCaptchaImage(objectURL); // Set the object URL as the image source
+		} catch (error) {
+			console.error("Error fetching CAPTCHA:", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchCaptcha();
+	}, []);
+
 	useEffect(() => {
 		// Countdown logic for 5 seconds
 		if (showToast && isSuccess && countdown > 0) {
@@ -81,27 +118,28 @@ function SignUp() {
 	}, [showToast, isSuccess, countdown, navigate]);
 
 	const handleFormSubmit = async (
-		values: { phoneNumber: any; password: any },
+		values: { emailAddress: any; password: any },
 		{ setSubmitting }: any
 	) => {
 		try {
 			const response = await axiosInstance.post("/api/User/SignUp", {
-				phoneNumber: values.phoneNumber,
+				emailAddress: values.emailAddress,
 				password: values.password,
+				captcha: captchaCode,
 			});
 
 			if (response.status === 200) {
 				{
 					language === "fa"
 						? setToastMessage("ثبت نام با موفقیت انجام شد")
-						: setToastMessage("Signup was successful");
+						: setToastMessage("Sign up was successful");
 				}
 				setShowToast(true); // Show toast
 				setCountdown(5); // Reset countdown to 5 seconds
 				setIsSuccess(true); // Mark success
 			}
 		} catch (error) {
-			let errorMessage = "خطای ناشناخته رخ داده است";
+			let errorMessage = "";
 
 			if (axios.isAxiosError(error)) {
 				// Check for error response and errorCode
@@ -111,33 +149,29 @@ function SignUp() {
 				if (error.response?.status === 400 && errorCode) {
 					// Handle specific error codes
 					switch (errorCode) {
-						case 1001:
-							{
+						case 1029:
+							errorMessage =
 								language === "fa"
-									? (errorMessage = apiErrorMessage)
-									: "The phone number must be in the format 09********* or +989*********";
-							}
+									? "کد امنیتی اشتباه است."
+									: "Wrong CAPTCHA code.";
+							break;
+						case 1031:
+							errorMessage =
+								language === "fa"
+									? "فرمت آدرس ایمیل اشتباه است."
+									: "Incorrect email address format.";
 							break;
 						case 1002:
-							{
+							errorMessage =
 								language === "fa"
-									? (errorMessage = apiErrorMessage)
-									: `Entered password doesn't have the required properties. Password length must be between 8 and 16 characters and must contain at least one letter and one digit. Only the following special characters are supported: ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; " ' ? < > , . `;
-							}
+									? apiErrorMessage
+									: "Entered password doesn't meet required properties.";
 							break;
-						case 1003:
-							{
+						case 1032:
+							errorMessage =
 								language === "fa"
-									? (errorMessage = apiErrorMessage)
-									: "Entered phoneNumber is already used by another user.";
-							}
-							break;
-						case 1004:
-							{
-								language === "fa"
-									? (errorMessage = apiErrorMessage)
-									: "Too many verification code requested for this phone number. Wait some time and try again.";
-							}
+									? apiErrorMessage
+									: "Email address is already in use.";
 							break;
 						default:
 							errorMessage = "خطای ناشناخته‌ای رخ داده است";
@@ -184,7 +218,7 @@ function SignUp() {
 							</div>
 
 							<Formik
-								initialValues={{ phoneNumber: "", password: "" }}
+								initialValues={{ emailAddress: "", password: "" }}
 								validationSchema={getValidationSchema(language)}
 								onSubmit={handleFormSubmit}
 							>
@@ -193,24 +227,24 @@ function SignUp() {
 										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 									>
 										<div className="mb-3 p-1">
-											<label htmlFor="phoneNumber" className="form-label">
-												{language === "fa" ? "شماره تماس" : "Phone number"}
+											<label id="emailAddress" className="form-label">
+												{language === "fa" ? "آدرس ایمیل" : "Email Address"}
 											</label>
 											<Field
 												type="text"
-												name="phoneNumber"
+												name="emailAddress"
 												className="form-control"
-												placeholder="09164524878"
+												placeholder="example@gmail.com"
 											/>
 											<ErrorMessage
-												name="phoneNumber"
+												name="emailAddress"
 												component="div"
 												className="text-danger"
 											/>
 										</div>
 
 										<div className="mb-3 p-1">
-											<label htmlFor="password" className="form-label">
+											<label id="password" className="form-label">
 												{language === "fa" ? "رمز عبور" : "Password"}
 											</label>
 											<div
@@ -240,14 +274,60 @@ function SignUp() {
 											/>
 										</div>
 
+										<div className="mb-3 p-1">
+											<div
+												className="d-flex  align-items-center justify-content-evenly mb-3"
+												style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+											>
+												<button
+													type="button"
+													onClick={fetchCaptcha}
+													className="btn btn-secondary rounded-pill mt-2"
+												>
+													{language === "fa"
+														? "کد امنیتی جدید"
+														: "Request New CAPTCHA"}
+												</button>
+												{captchaImage ? (
+													<img
+														src={captchaImage}
+														alt="CAPTCHA"
+														className="rounded-3"
+													/>
+												) : (
+													<p>
+														{language === "fa"
+															? "در حال بارگذاری..."
+															: "Loading..."}
+													</p>
+												)}
+											</div>
+
+											<Field
+												type="text"
+												name="captcha"
+												className="form-control"
+												placeholder={
+													language === "fa"
+														? "کد امنیتی را وارد کنید"
+														: "Enter CAPTCHA"
+												}
+												onChange={(e: {
+													target: { value: SetStateAction<string | null> };
+												}) => setCaptchaCode(e.target.value)}
+											/>
+											<ErrorMessage
+												name="captcha"
+												component="div"
+												className="text-danger"
+											/>
+										</div>
+
 										<div
 											className={`form-check d-flex justify-content-start p-1 mb-3`}
 											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 										>
-											<label
-												className="form-check-label mx-1"
-												htmlFor="rememberMe"
-											>
+											<label className="form-check-label mx-1" id="rememberMe">
 												{language === "fa"
 													? "مرا به خاطر بسپارید"
 													: "Remmember Me"}

@@ -17,9 +17,9 @@ function Toast({ message, show, onClose, isSuccess, countdown }: ToastProps) {
 				show ? "d-block" : "d-none"
 			}`}
 		>
-			<div className="toast fade show">
+			<div className="toast rounded-4 fade show">
 				<div
-					className="toast-body d-flex justify-content-start align-items-center"
+					className="toast-body d-flex justify-content-between align-items-center "
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<p className=" px-2 mb-0">

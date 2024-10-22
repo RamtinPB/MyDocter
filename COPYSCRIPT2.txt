@@ -1,0 +1,87 @@
+given this code ive implemented to use the api i have:
+useEffect(() => {
+		// Countdown logic for 5 seconds
+		if (showToast && isSuccess && countdown > 0) {
+			const timer = setTimeout(() => {
+				setCountdown(countdown - 1);
+			}, 1000);
+			return () => clearTimeout(timer);
+		} else if (isSuccess && countdown === 0) {
+			navigate("/"); // Navigate after countdown ends
+		}
+	}, [showToast, isSuccess, countdown, navigate]);
+
+please alter this code to implement these new api:
+
+1. the get captcha which will request one and show the user the captcha (which will then be used in the sign up api):
+GetCaptcha
+Route: GET /api/User/GetCaptcha
+
+Description: This API generates and returns a CAPTCHA image for client validation. The generated CAPTCHA contains a randomly generated 5-digit number rendered with random colors, fonts, and slight distortions for security. The CAPTCHA code is stored in the session for later validation.
+
+Needs Authentication: false
+
+Response:
+
+200 OK – Returns a CAPTCHA image in JPEG format.
+Session Data: Stores the CAPTCHA code (CaptchaCode) in the user's session.
+
+2. the sign up api which sends the email, password, and the previously requested captcha(after a brief validation check):
+SignUp
+Route: POST /api/User/SignUp
+
+Description: This API allows new users to sign up by providing their email address, password, and a CAPTCHA for verification. It performs several checks, including CAPTCHA validation, email address formatting, password strength validation, and whether the email address is already in use. Once validated, the user is created in the system and login token is returned.
+
+Needs Authentication: false
+
+Request Structure:
+
+{
+  "emailAddress": "string",      // User's email address (required)
+  "password": "string",         // User's password (required)
+  "captcha": "string"           // CAPTCHA code entered by the user (required)
+}
+Response:
+
+200 OK – Sign-up is successful
+Structure:
+{
+  "emailAddress": "string",
+  "JWToken": "string",
+  "hasCompletedProfile": false,
+  "isAdministrator": false
+}
+Error Responses:
+
+400 Bad Request – Returned in the following cases:
+"WrongCaptchaCode": If the CAPTCHA entered by the user doesn't match the one stored in the session.
+"IncorrectEmailAddressFormat": If the provided email address format is invalid.
+"IncorrectPasswordFormat": If the provided password does not meet the security requirements.
+"EmailAddressAlreadyInUse": If the email address is already registered with another user.
+
+you will also need to alter the errorCode and apiErrorMessage sections, to do that you will need this list of error codes:
+ public static ErrorResponse EmailAddressAlreadyInUse = new()
+        {
+            ErrorCode = 1032,
+            Message = "آدرس ایمیل قبلا استفاده شده است.", //Email Address is Already In Use
+        };
+
+ public static ErrorResponse IncorrectEmailAddressFormat = new()
+        {
+            ErrorCode = 1031,
+            Message = "فرمت آدرس ایمیل اشتباه است.", //Incorrect Email Address Format
+        };
+
+ public static ErrorResponse WrongCaptchaCode = new()
+        {
+            ErrorCode = 1029,
+            Message = "کد امنیتی اشتباه است.", //Captcha code is invalid
+        };
+
+ public static ErrorResponse IncorrectPasswordFormat = new()
+        {
+            ErrorCode = 1002,
+            Message = "رمز عبور فاقد شرایط مورد نیاز است." //Entered password doesn't have the required properties. Password length must be between 8 and 16 characters and must contain at least one letter and one digit. Only the following special characters are supported: ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; " ' ? < > , .
+        };
+
+please dont rewrite the entire code, just tell me what and where to make changes.
