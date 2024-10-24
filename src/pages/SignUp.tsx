@@ -57,7 +57,7 @@ const getValidationSchema = (language: string) => {
 
 function SignUp() {
 	const [captchaImage, setCaptchaImage] = useState<string | null>(null);
-	const [captchaCode, setCaptchaCode] = useState<string | null>(null);
+	const [loadingCaptcha, setLoadingCaptcha] = useState(false);
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [toastMessage, setToastMessage] = useState("");
@@ -79,15 +79,12 @@ function SignUp() {
 			if (captchaImage) {
 				URL.revokeObjectURL(captchaImage);
 			}
+			setLoadingCaptcha(true);
 
-			// Add a unique query parameter to prevent caching
-			const timestamp = new Date().getTime();
-			const response = await axiosInstance.get(
-				`/api/User/GetCaptcha?timestamp=${timestamp}`,
-				{
-					responseType: "blob",
-				}
-			);
+			const response = await axiosInstance.get(`/api/User/GetCaptcha`, {
+				responseType: "blob",
+				withCredentials: true,
+			});
 
 			// Convert the blob into an object URL
 			const blob = new Blob([response.data], {
@@ -98,6 +95,8 @@ function SignUp() {
 			setCaptchaImage(objectURL); // Set the object URL as the image source
 		} catch (error) {
 			console.error("Error fetching CAPTCHA:", error);
+		} finally {
+			setLoadingCaptcha(false);
 		}
 	};
 
@@ -118,15 +117,25 @@ function SignUp() {
 	}, [showToast, isSuccess, countdown, navigate]);
 
 	const handleFormSubmit = async (
-		values: { emailAddress: any; password: any },
+		values: {
+			captcha: any;
+			emailAddress: any;
+			password: any;
+		},
 		{ setSubmitting }: any
 	) => {
 		try {
-			const response = await axiosInstance.post("/api/User/SignUp", {
-				emailAddress: values.emailAddress,
-				password: values.password,
-				captcha: captchaCode,
-			});
+			const response = await axiosInstance.post(
+				"/api/User/SignUp",
+				{
+					emailAddress: values.emailAddress,
+					password: values.password,
+					captcha: values.captcha,
+				},
+				{
+					withCredentials: true,
+				}
+			);
 
 			if (response.status === 200) {
 				{
@@ -154,6 +163,7 @@ function SignUp() {
 								language === "fa"
 									? "کد امنیتی اشتباه است."
 									: "Wrong CAPTCHA code.";
+
 							break;
 						case 1031:
 							errorMessage =
@@ -218,7 +228,7 @@ function SignUp() {
 							</div>
 
 							<Formik
-								initialValues={{ emailAddress: "", password: "" }}
+								initialValues={{ emailAddress: "", password: "", captcha: "" }}
 								validationSchema={getValidationSchema(language)}
 								onSubmit={handleFormSubmit}
 							>
@@ -276,13 +286,14 @@ function SignUp() {
 
 										<div className="mb-3 p-1">
 											<div
-												className="d-flex  align-items-center justify-content-evenly mb-3"
+												className="d-flex align-items-center justify-content-evenly mb-3"
 												style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 											>
 												<button
 													type="button"
 													onClick={fetchCaptcha}
 													className="btn btn-secondary rounded-pill mt-2"
+													disabled={loadingCaptcha}
 												>
 													{language === "fa"
 														? "کد امنیتی جدید"
@@ -312,9 +323,6 @@ function SignUp() {
 														? "کد امنیتی را وارد کنید"
 														: "Enter CAPTCHA"
 												}
-												onChange={(e: {
-													target: { value: SetStateAction<string | null> };
-												}) => setCaptchaCode(e.target.value)}
 											/>
 											<ErrorMessage
 												name="captcha"
