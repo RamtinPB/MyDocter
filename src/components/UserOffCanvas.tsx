@@ -13,15 +13,11 @@ import "/src/cssFiles/myoffcanvas.css";
 import { useLanguage } from "./LanguageContext";
 
 interface UserData {
-	firstName: string;
+	name: string;
 	lastName: string;
 	email: string;
 	phoneNumber: string;
-	userAge: string;
-	userHeight: string;
-	userWeight: string;
-	userGender: string;
-	profilePicture: string;
+	profileImageURL: string;
 }
 
 interface UserOffCanvasProps {
@@ -59,9 +55,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	}, [language]);
 
 	const username =
-		userData && userData.firstName && userData.lastName
-			? `${userData.firstName} ${userData.lastName}`
-			: userData?.phoneNumber || ""; // Fallback to phone number if firstName and lastName are missing
+		userData && userData.name && userData.lastName
+			? `${userData.name} ${userData.lastName}`
+			: userData?.email || ""; // Fallback to email if name and lastName are missing
 
 	return (
 		<div
@@ -91,9 +87,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 			</div>
 			<div className="offcanvas-body shadow p-0">
 				<div className="d-flex flex-column justify-content-center align-items-center custom-bg-2">
-					{userData?.profilePicture ? (
+					{userData?.profileImageURL ? (
 						<img
-							src={userData.profilePicture}
+							src={userData.profileImageURL}
 							alt="Profile"
 							className="custom-user-icon-pic img-fluid rounded-circle border border-2 border-light my-3 mx-4"
 						/>

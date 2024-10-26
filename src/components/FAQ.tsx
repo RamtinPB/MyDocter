@@ -30,8 +30,6 @@ function FAQ() {
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
-				console.log(response); // Log the full response to check structure
-				console.log("Base URL: ", import.meta.env.VITE_API_BASE_URL);
 
 				setFaq(response.data);
 				setLoading(false);

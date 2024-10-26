@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash, FaCaretLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -8,6 +8,7 @@ import "/src/cssFiles/login.css"; // Custom styles
 import Toast from "../components/Toast.tsx";
 import axiosInstance from "../myAPI/axiosInstance.ts";
 import { useLanguage } from "../components/LanguageContext.tsx";
+import { useAuth } from "../components/AuthContext.tsx";
 
 // Validation Schema
 const getValidationSchema = (language: string) => {
@@ -72,6 +73,7 @@ function SignUp() {
 	const handleBackClick = () => navigate("/");
 
 	const { language } = useLanguage();
+	const { setAuthData } = useAuth();
 
 	const fetchCaptcha = async () => {
 		try {
@@ -138,11 +140,23 @@ function SignUp() {
 			);
 
 			if (response.status === 200) {
-				{
+				const { jwToken, isAdministrator } = response.data;
+
+				// Store token and admin status in local storage
+				localStorage.setItem("jwToken", jwToken);
+				localStorage.setItem(
+					"isAdministrator",
+					JSON.stringify(isAdministrator)
+				);
+
+				// Update Auth context
+				setAuthData(jwToken, isAdministrator);
+
+				setToastMessage(
 					language === "fa"
-						? setToastMessage("ثبت نام با موفقیت انجام شد")
-						: setToastMessage("Sign up was successful");
-				}
+						? "ثبت نام با موفقیت انجام شد"
+						: "Sign up was successful"
+				);
 				setShowToast(true); // Show toast
 				setCountdown(5); // Reset countdown to 5 seconds
 				setIsSuccess(true); // Mark success

@@ -12,48 +12,95 @@ import LogoEN from "/images/LogoEN.png";
 import NotificationDropdown from "./NotificationDropdown";
 import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
+import { useAuth } from "./AuthContext";
+import axiosInstance from "../myAPI/axiosInstance";
+import axios from "axios";
 
 interface UserData {
-	firstName: string;
+	name: string;
 	lastName: string;
-	email: string;
 	phoneNumber: string;
-	userAge: string;
-	userHeight: string;
-	userWeight: string;
-	userGender: string;
-	profilePicture: string;
+	email: string;
+	profileImageURL: string;
 }
 
 function MyHeader() {
+	const { isAdministrator, jwToken } = useAuth();
+
 	const [userData, setUserData] = useState<UserData | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
-	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(!!jwToken);
+	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(isAdministrator);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
+		setIsLoggedIn(!!jwToken);
+		setisLoggedInAdmin(isAdministrator);
+	}, [jwToken, isAdministrator]);
+
+	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const response = await fetch("/db.json"); // Adjust path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+				const response = await axiosInstance.post("/api/User/GetUserProfile");
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				const data = await response.json();
 
-				// Assuming the userInfo is directly available in the root of db.json
-				const userInfo = data.userInfo;
-
-				setUserData(userInfo);
+				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
-				console.error("Error fetching user information:", err);
-				setError("Failed to fetch user information");
-				setLoading(false);
+				let errorMessage = "";
+
+				if (axios.isAxiosError(error)) {
+					// Check for error response and errorCode
+					const errorCode = error.response?.data?.errorCode;
+					const apiErrorMessage = error.response?.data?.message;
+
+					if (error.response?.status === 400 && errorCode) {
+						// Handle specific error codes
+						switch (errorCode) {
+							case 1007:
+								errorMessage =
+									language === "fa"
+										? apiErrorMessage
+										: "This User was not found.";
+
+								break;
+							case 1010:
+								errorMessage = apiErrorMessage;
+								break;
+							default:
+								errorMessage = "خطای ناشناخته‌ای رخ داده است";
+						}
+					} else {
+						errorMessage = "خطای ناشناخته‌ای رخ داده است";
+					}
+				}
+
+				try {
+					const response = await fetch("/db.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+
+					// Assuming the userInfo is directly available in the root of db.json
+					const userInfo = data.userInfo;
+
+					setUserData(userInfo);
+					setLoading(false);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+					setError("Failed to fetch data from both API and local fallback.");
+					setLoading(false);
+				}
 			}
 		};
 
@@ -68,20 +115,10 @@ function MyHeader() {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
 
-	// @ts-ignore
-	const handleIsLoggedIn = () => {
-		setIsLoggedIn(true);
-	};
-
-	// @ts-ignore
-	const handleisLoggedInAdmin = () => {
-		setisLoggedInAdmin(true);
-	};
-
 	const username =
-		userData && userData.firstName && userData.lastName
-			? `${userData.firstName} ${userData.lastName}`
-			: userData?.phoneNumber || ""; // Fallback to phone number if firstName and lastName are missing
+		userData && userData.name && userData.lastName
+			? `${userData.name} ${userData.lastName}`
+			: userData?.email || ""; // Fallback to email if name and lastName are missing
 
 	return (
 		<>
@@ -99,9 +136,9 @@ function MyHeader() {
 								data-bs-target="#myOffcanvas"
 								aria-controls="myOffcanvas"
 							>
-								{userData && userData.profilePicture ? (
+								{userData && userData.profileImageURL ? (
 									<img
-										src={userData.profilePicture}
+										src={userData.profileImageURL}
 										alt="Profile"
 										className="img-fluid custom-user-img-icon rounded-circle border border-3 border-light"
 									/>

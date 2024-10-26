@@ -55,8 +55,6 @@ function Home() {
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
-				console.log(response); // Log the full response to check structure
-				console.log("Base URL: ", import.meta.env.VITE_API_BASE_URL);
 
 				setHomeTextData(response.data); // Assuming 'data' is the correct structure
 				setLoading(false);

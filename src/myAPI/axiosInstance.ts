@@ -5,11 +5,23 @@ const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    Accept: '*/*',
+    Accept: "*/*",
   },
 });
 
-// You can also add error handling here if necessary
+// Add request interceptor to include JWT token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const jwToken = localStorage.getItem("jwToken"); // Assuming jwToken is stored in localStorage
+    if (jwToken) {
+      config.headers.Authorization = `Bearer ${jwToken}`; // Adds token to the Authorization header as Bearer token
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor for error handling
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
