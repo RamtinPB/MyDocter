@@ -6,6 +6,7 @@ import "/src/cssFiles/home.css";
 import "/src/cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "../components/AuthContext";
 
 interface homeTextData {
 	openingQuoteTitle: string;
@@ -38,12 +39,13 @@ interface homeTextData {
 }
 
 function Home() {
+	const { jwToken } = useAuth();
 	const [homeText, setHomeTextData] = useState<homeTextData | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(!!jwToken);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
