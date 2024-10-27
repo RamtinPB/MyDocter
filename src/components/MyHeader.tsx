@@ -25,22 +25,14 @@ interface UserData {
 }
 
 function MyHeader() {
-	const { isAdministrator, jwToken } = useAuth();
+	const { isAdministrator, loginState } = useAuth();
 
 	const [userData, setUserData] = useState<UserData | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const [isLoggedIn, setIsLoggedIn] = useState(!!jwToken);
-	const [isLoggedInAdmin, setisLoggedInAdmin] = useState(isAdministrator);
-
 	const { language } = useLanguage(); // Get language and toggle function from context
-
-	useEffect(() => {
-		setIsLoggedIn(!!jwToken);
-		setisLoggedInAdmin(isAdministrator);
-	}, [jwToken, isAdministrator]);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -127,7 +119,7 @@ function MyHeader() {
 					className="container d-flex justify-content-between py-lg-1 py-0"
 					style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 				>
-					{isLoggedIn ? (
+					{loginState ? (
 						<div className="d-flex justify-content-between align-items-center gap-3">
 							<button
 								className="btn d-flex align-items-center justify-content-between custom-loggedin-btn custom-loggedin-btn-bg border border-1 rounded-pill px-0 mx-0"
@@ -188,7 +180,7 @@ function MyHeader() {
 					</Link>
 				</div>
 			</nav>
-			<UserOffCanvas userData={userData} isLoggedInAdmin={isLoggedInAdmin} />
+			<UserOffCanvas userData={userData} isLoggedInAdmin={isAdministrator} />
 		</>
 	);
 }

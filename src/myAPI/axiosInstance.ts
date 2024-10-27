@@ -21,6 +21,20 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+export const configureAxios = (setAuthData: (arg0: null) => void, setLoginState: (arg0: boolean) => void) => {
+  axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response && error.response.status === 401) {
+        setAuthData(null);
+        setLoginState(false);  // Update login state to indicate user is logged out
+        
+      }
+      return Promise.reject(error);
+    }
+  );
+};
+
 // Response interceptor for error handling
 axiosInstance.interceptors.response.use(
   (response) => response,

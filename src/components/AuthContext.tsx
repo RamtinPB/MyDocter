@@ -1,21 +1,22 @@
+// AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Define the shape of the Auth context
 interface AuthContextType {
 	jwToken: string | null;
 	isAdministrator: boolean;
-	setAuthData: (token: string, isAdmin: boolean) => void;
+	setAuthData: (token: string | null, isAdmin?: boolean) => void;
+	loginState: boolean;
+	setLoginState: (state: boolean) => void;
 }
 
-// Create AuthContext with undefined initial value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Auth Provider
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [jwToken, setJwToken] = useState<string | null>(null);
 	const [isAdministrator, setIsAdministrator] = useState(false);
+	const [loginState, setLoginState] = useState(false);
 
 	useEffect(() => {
 		const storedToken = localStorage.getItem("jwToken");
@@ -26,21 +27,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, []);
 
-	const setAuthData = (token: string, isAdmin: boolean) => {
-		setJwToken(token);
-		setIsAdministrator(isAdmin);
-		localStorage.setItem("jwToken", token);
-		localStorage.setItem("isAdministrator", String(isAdmin));
+	const setAuthData = (token: string | null, isAdmin: boolean = false) => {
+		if (token === null) {
+			setJwToken(null);
+			setIsAdministrator(false);
+			localStorage.removeItem("jwToken");
+			localStorage.removeItem("isAdministrator");
+			setLoginState(false); // Set login state to false on logout
+		} else {
+			setJwToken(token);
+			setIsAdministrator(isAdmin);
+			localStorage.setItem("jwToken", token);
+			localStorage.setItem("isAdministrator", String(isAdmin));
+			setLoginState(true); // Set login state to true on login
+		}
 	};
 
 	return (
-		<AuthContext.Provider value={{ jwToken, isAdministrator, setAuthData }}>
+		<AuthContext.Provider
+			value={{
+				jwToken,
+				isAdministrator,
+				setAuthData,
+				loginState,
+				setLoginState,
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
 };
 
-// Custom hook to use the AuthContext
 export const useAuth = () => {
 	const context = useContext(AuthContext);
 	if (context === undefined) {
