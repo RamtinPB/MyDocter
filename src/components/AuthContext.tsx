@@ -24,6 +24,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		if (storedToken) {
 			setJwToken(storedToken);
 			setIsAdministrator(storedIsAdmin);
+			setLoginState(true); // Set loginState to true if token exists
+		} else {
+			setLoginState(false);
 		}
 	}, []);
 

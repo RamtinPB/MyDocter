@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaUser } from "react-icons/fa";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
@@ -23,6 +22,9 @@ function UserInformation() {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	// fetch user data
 	useEffect(() => {
 		axiosInstance
 			.post("/api/User/GetUserData") // Call the API to get user data
@@ -41,23 +43,20 @@ function UserInformation() {
 				}
 			})
 			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
 
 				// Fetch from local db.json if API fails
 				fetch("/db.json")
 					.then((response) => {
 						if (!response.ok) {
-							throw new Error("Failed to fetch data from db.json");
+							throw new Error("Failed to fetch user data from db.json");
 						}
 						return response.json();
 					})
 					.then((data) => {
-						// Update state for validation schema data (if any)
-						setValidationSchemaData(data.validationSchemaData);
-
-						// Update state for form fields
-						setFormFields(data.formFields);
-
 						// Update form values with user info from db.json
 						formik.setValues(data.userInfo);
 
@@ -68,7 +67,78 @@ function UserInformation() {
 					})
 					.catch((jsonError) => {
 						console.error(
-							"Failed to fetch data from both API and db.json",
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user data form fields
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserDataFormFields") // Call the API to get user data
+			.then((response) => {
+				setFormFields(response.data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form fields failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form fields from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update state for form fields
+						setFormFields(data.formFields);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form fields from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user data form validation schema
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserDataFormValidationSchemas") // Call the API to get user data
+			.then((response) => {
+				setValidationSchemaData(response.data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form validation schema failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form validation schema from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						setValidationSchemaData(data.validationSchema);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form validation schema from both API and db.json",
 							jsonError
 						);
 					});
@@ -192,23 +262,54 @@ function UserInformation() {
 		validateOnChange: true,
 	});
 
-	const handleProfilePictureChange = (
+	const handleProfilePictureChange = async (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		if (e.target.files && e.target.files[0]) {
-			setProfilePicture(URL.createObjectURL(e.target.files[0])); // Show preview
+			const selectedFile = e.target.files[0];
 
+			// Update the profile picture preview
+			setProfilePicture(URL.createObjectURL(selectedFile));
+
+			// Prepare FormData for API upload
 			const formData = new FormData();
-			formData.append("profilePicture", e.target.files[0]);
+			formData.append("profilePicture", selectedFile);
 
-			axios
-				.post("/api/upload-profile-picture", formData)
-				.then((response) =>
-					console.log("Profile picture uploaded:", response.data)
-				)
-				.catch((error) =>
-					console.error("Error uploading profile picture:", error)
+			try {
+				// Upload profile picture
+				const uploadResponse = await axiosInstance.post(
+					"/UploadProfileImage",
+					formData,
+					{
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+					}
 				);
+
+				// Extract the uploaded image URL from the response
+				const profileImageUrl = uploadResponse.data.profileImageUrl;
+
+				// Update the user's data with the new profile picture URL
+				await axiosInstance.post("/api/User/UpdateUserData", {
+					profileImageUrl,
+				});
+
+				// Update local profile picture state with the new URL
+				setProfilePicture(profileImageUrl);
+
+				console.log(
+					"Profile picture uploaded and user data updated successfully."
+				);
+			} catch (error) {
+				console.error("Error uploading profile picture:", error);
+			}
+		}
+	};
+
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
 		}
 	};
 
@@ -237,12 +338,15 @@ function UserInformation() {
 						)}
 						<button
 							className="btn btn-light shadow rounded-pill my-auto"
+							type="button"
 							style={{ cursor: "pointer" }}
+							onClick={handleButtonClick}
 						>
 							<span>{language === "fa" ? "انتخاب عکس" : "Upload Picture"}</span>
 							<input
 								type="file"
 								accept="image/*"
+								ref={fileInputRef}
 								onChange={handleProfilePictureChange}
 								style={{ display: "none" }}
 							/>

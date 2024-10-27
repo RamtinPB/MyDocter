@@ -198,10 +198,16 @@ function SignUp() {
 									: "Email address is already in use.";
 							break;
 						default:
-							errorMessage = "خطای ناشناخته‌ای رخ داده است";
+							errorMessage =
+								language === "fa"
+									? "خطای ناشناخته‌ای رخ داده است"
+									: "Unknown Error.";
 					}
 				} else {
-					errorMessage = "خطای ناشناخته‌ای رخ داده است";
+					errorMessage =
+						language === "fa"
+							? "خطای ناشناخته‌ای رخ داده است"
+							: "Unknown Error.";
 				}
 			}
 			setToastMessage(errorMessage);

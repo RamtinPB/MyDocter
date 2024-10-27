@@ -21,14 +21,14 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export const configureAxios = (setAuthData: (arg0: null) => void, setLoginState: (arg0: boolean) => void) => {
+export const configureAxios = (setAuthData: (token: null) => void, setLoginState: (state: boolean) => void) => {
   axiosInstance.interceptors.response.use(
-    response => response,
-    error => {
+    (response) => response,
+    (error) => {
       if (error.response && error.response.status === 401) {
+        // Clear authentication data and update login state on 401
         setAuthData(null);
-        setLoginState(false);  // Update login state to indicate user is logged out
-        
+        setLoginState(false);
       }
       return Promise.reject(error);
     }

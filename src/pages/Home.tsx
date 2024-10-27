@@ -39,13 +39,11 @@ interface homeTextData {
 }
 
 function Home() {
-	const { jwToken } = useAuth();
+	const { loginState } = useAuth();
 	const [homeText, setHomeTextData] = useState<homeTextData | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-
-	const [isLoggedIn, setIsLoggedIn] = useState(!!jwToken);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -114,7 +112,7 @@ function Home() {
 								? homeText?.openingQuoteDescription
 								: homeText?.openingQuoteDescriptionEN}
 						</p>
-						{!isLoggedIn && (
+						{!loginState && (
 							<Link
 								to="/SignUp"
 								className="btn btn-sm btn-light rounded-pill w-50"
