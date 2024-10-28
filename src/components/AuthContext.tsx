@@ -1,5 +1,6 @@
 // AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { configureAxios } from "../myAPI/axiosInstance";
 
 interface AuthContextType {
 	jwToken: string | null;
@@ -28,6 +29,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		} else {
 			setLoginState(false);
 		}
+		// Configure Axios to update loginState on 401 errors
+		configureAxios(setAuthData, setLoginState);
 	}, []);
 
 	const setAuthData = (token: string | null, isAdmin: boolean = false) => {

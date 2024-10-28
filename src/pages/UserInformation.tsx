@@ -8,10 +8,46 @@ import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 
 interface UserFormData {
-	[key: string]: any;
+	name?: string;
+	lastName?: string;
+	phoneNumber?: string;
+	email?: string;
+	gender?: string;
+	insuranceType?: string;
+	nationalCode?: string;
+	supplementaryInsuranceType?: string;
+	isIranian?: string | boolean;
+	isMarried?: string | boolean;
+	noInsurance?: boolean;
+	noNationalCode?: boolean;
+	noSupplementaryInsurance?: boolean;
+	// Add any other fields as needed
 }
 
 const initialFormData: UserFormData = {};
+
+function convertIsIranianToBoolean(
+	isIranian: string | boolean | undefined
+): boolean {
+	if (isIranian === "ایرانی") return true;
+	if (isIranian === "غیر ایرانی") return false;
+	return Boolean(isIranian); // Fallback to convert to boolean
+}
+
+function convertIsMarriedToBoolean(
+	isMarried: string | boolean | undefined
+): boolean {
+	if (isMarried === "ایرانی") return true;
+	if (isMarried === "غیر ایرانی") return false;
+	return Boolean(isMarried); // Fallback to convert to boolean
+}
+
+function handleConditionalEmptyFields(values: UserFormData): UserFormData {
+	if (values.noInsurance) values.insuranceType = "";
+	if (values.noNationalCode) values.nationalCode = "";
+	if (values.noSupplementaryInsurance) values.supplementaryInsuranceType = "";
+	return values;
+}
 
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
@@ -250,13 +286,20 @@ function UserInformation() {
 	const formik = useFormik({
 		initialValues: initialFormData,
 		validationSchema,
-		onSubmit: (values) => {
-			axiosInstance
-				.post("/api/User/UpdateUserData", values)
-				.then((response) =>
-					console.log("User information updated:", response.data)
-				)
-				.catch((error) => console.error("Error updating user info:", error));
+		onSubmit: async (values) => {
+			const updatedData: UserFormData = {
+				...handleConditionalEmptyFields(values),
+				isIranian: convertIsIranianToBoolean(values.isIranian),
+				isMarried: convertIsMarriedToBoolean(values.isMarried),
+			};
+
+			try {
+				// Send the transformed data to the update API
+				await axiosInstance.post("/api/User/UpdateUserData", updatedData);
+				console.log("User data updated successfully");
+			} catch (error) {
+				console.error("Error updating user data:", error);
+			}
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
@@ -385,19 +428,25 @@ function UserInformation() {
 											<select
 												id={field.name}
 												name={field.name}
-												value={formik.values[field.name]}
+												value={String(
+													formik.values[field.name as keyof UserFormData] || ""
+												)}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
 												className={`form-select select-resize text-${
 													language === "fa" ? "end" : "start"
 												} shadow-sm ${
-													formik.touched[field.name] &&
-													formik.errors[field.name]
+													formik.touched[field.name as keyof UserFormData] &&
+													formik.errors[field.name as keyof UserFormData]
 														? "is-invalid"
 														: ""
 												}`}
 												required={field.required}
-												disabled={formik.values[field.checkboxName]}
+												disabled={
+													!!formik.values[
+														field.checkboxName as keyof UserFormData
+													]
+												}
 											>
 												<option value="">...</option>
 												{(language === "fa"
@@ -414,19 +463,25 @@ function UserInformation() {
 												type={field.type}
 												id={field.name}
 												name={field.name}
-												value={formik.values[field.name]}
+												value={String(
+													formik.values[field.name as keyof UserFormData] || ""
+												)}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
 												className={`form-control text-${
 													language === "fa" ? "end" : "start"
 												} shadow-sm ${
-													formik.touched[field.name] &&
-													formik.errors[field.name]
+													formik.touched[field.name as keyof UserFormData] &&
+													formik.errors[field.name as keyof UserFormData]
 														? "is-invalid"
 														: ""
 												}`}
 												required={field.required}
-												disabled={formik.values[field.checkboxName]}
+												disabled={
+													!!formik.values[
+														field.checkboxName as keyof UserFormData
+													]
+												}
 												placeholder={
 													(language === "fa"
 														? field.placeholder
@@ -452,7 +507,11 @@ function UserInformation() {
 													type="checkbox"
 													id={field.checkboxName}
 													name={field.checkboxName}
-													checked={Boolean(formik.values[field.checkboxName])}
+													checked={Boolean(
+														formik.values[
+															field.checkboxName as keyof UserFormData
+														]
+													)}
 													onChange={(e) => {
 														formik.setFieldValue(
 															field.checkboxName,
@@ -463,10 +522,14 @@ function UserInformation() {
 												/>
 											</div>
 										)}
-										{formik.touched[field.name] &&
-											formik.errors[field.name] && (
+										{formik.touched[field.name as keyof UserFormData] &&
+											formik.errors[field.name as keyof UserFormData] && (
 												<div className="invalid-feedback">
-													{formik.errors[field.name] as string}
+													{
+														formik.errors[
+															field.name as keyof UserFormData
+														] as string
+													}
 												</div>
 											)}
 									</div>

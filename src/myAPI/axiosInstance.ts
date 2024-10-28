@@ -29,19 +29,11 @@ export const configureAxios = (setAuthData: (token: null) => void, setLoginState
         // Clear authentication data and update login state on 401
         setAuthData(null);
         setLoginState(false);
+        window.location.assign("/");
       }
       return Promise.reject(error);
     }
   );
 };
-
-// Response interceptor for error handling
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error("Error making the request", error);
-    return Promise.reject(error);
-  }
-);
 
 export default axiosInstance;

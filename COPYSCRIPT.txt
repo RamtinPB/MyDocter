@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+in this code:
+import { useState, useEffect, useRef } from "react";
 import { FaUser } from "react-icons/fa";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "/src/cssFiles/customColors.css";
@@ -16,30 +16,133 @@ const initialFormData: UserFormData = {};
 
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
+
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
+
 	const { language } = useLanguage(); // Get language and toggle function from context
 
-	// Fetch user data on component mount
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	// fetch user data
 	useEffect(() => {
 		axiosInstance
 			.post("/api/User/GetUserData") // Call the API to get user data
 			.then((response) => {
 				const data = response.data;
-				
+
 				// Populate form fields with API response
 				formik.setValues({
 					...data,
 					profilePicture: data.profileImageUrl,
 				});
-				
+
 				// Set profile picture if available
 				if (data.profileImageUrl) {
 					setProfilePicture(data.profileImageUrl);
 				}
 			})
 			.catch((error) => {
-				console.error("Error fetching user data:", error);
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update form values with user info from db.json
+						formik.setValues(data.userInfo);
+
+						// Set profile picture if available
+						if (data.userInfo.profilePicture) {
+							setProfilePicture(data.userInfo.profilePicture);
+						}
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user data form fields
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserDataFormFields") // Call the API to get user data
+			.then((response) => {
+				setFormFields(response.data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form fields failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form fields from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update state for form fields
+						setFormFields(data.formFields);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form fields from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user data form validation schema
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserDataFormValidationSchemas") // Call the API to get user data
+			.then((response) => {
+				setValidationSchemaData(response.data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form validation schema failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form validation schema from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						setValidationSchemaData(data.validationSchema);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form validation schema from both API and db.json",
+							jsonError
+						);
+					});
 			});
 	}, []);
 
@@ -151,34 +254,63 @@ function UserInformation() {
 		onSubmit: (values) => {
 			axiosInstance
 				.post("/api/User/UpdateUserData", values)
-				.then((response) => {
-					console.log("User information updated successfully:", response.data);
-				})
-				.catch((error) => {
-					console.error("Error updating user information:", error);
-				});
+				.then((response) =>
+					console.log("User information updated:", response.data)
+				)
+				.catch((error) => console.error("Error updating user info:", error));
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
 	});
 
-	const handleProfilePictureChange = (
+	const handleProfilePictureChange = async (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		if (e.target.files && e.target.files[0]) {
-			setProfilePicture(URL.createObjectURL(e.target.files[0]));
+			const selectedFile = e.target.files[0];
 
+			// Update the profile picture preview
+			setProfilePicture(URL.createObjectURL(selectedFile));
+
+			// Prepare FormData for API upload
 			const formData = new FormData();
-			formData.append("profilePicture", e.target.files[0]);
+			formData.append("profilePicture", selectedFile);
 
-			axios
-				.post("/api/upload-profile-picture", formData)
-				.then((response) => {
-					console.log("Profile picture uploaded successfully:", response.data);
-				})
-				.catch((error) => {
-					console.error("Error uploading profile picture:", error);
+			try {
+				// Upload profile picture
+				const uploadResponse = await axiosInstance.post(
+					"/UploadProfileImage",
+					formData,
+					{
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+					}
+				);
+
+				// Extract the uploaded image URL from the response
+				const profileImageUrl = uploadResponse.data.profileImageUrl;
+
+				// Update the user's data with the new profile picture URL
+				await axiosInstance.post("/api/User/UpdateUserData", {
+					profileImageUrl,
 				});
+
+				// Update local profile picture state with the new URL
+				setProfilePicture(profileImageUrl);
+
+				console.log(
+					"Profile picture uploaded and user data updated successfully."
+				);
+			} catch (error) {
+				console.error("Error uploading profile picture:", error);
+			}
+		}
+	};
+
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
 		}
 	};
 
@@ -207,12 +339,15 @@ function UserInformation() {
 						)}
 						<button
 							className="btn btn-light shadow rounded-pill my-auto"
+							type="button"
 							style={{ cursor: "pointer" }}
+							onClick={handleButtonClick}
 						>
 							<span>{language === "fa" ? "انتخاب عکس" : "Upload Picture"}</span>
 							<input
 								type="file"
 								accept="image/*"
+								ref={fileInputRef}
 								onChange={handleProfilePictureChange}
 								style={{ display: "none" }}
 							/>
@@ -241,90 +376,111 @@ function UserInformation() {
 								return (
 									<div
 										key={index}
-										className={`col-12 col-md-${isSelect ? 12 : 6}`}
+										className="col mb-2"
+										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 									>
 										<label htmlFor={field.name} className="form-label">
-											{language === "fa" ? field.title : field.titleEN}
+											{language === "fa" ? field.label : field.labelEN}
 										</label>
-
 										{isSelect ? (
 											<select
 												id={field.name}
 												name={field.name}
-												className={`form-select ${
+												value={formik.values[field.name]}
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												className={`form-select select-resize text-${
+													language === "fa" ? "end" : "start"
+												} shadow-sm ${
 													formik.touched[field.name] &&
 													formik.errors[field.name]
 														? "is-invalid"
 														: ""
 												}`}
-												value={formik.values[field.name]}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
+												required={field.required}
+												disabled={formik.values[field.checkboxName]}
 											>
-												{field.options.map((option, optionIndex) => (
-													<option key={optionIndex} value={option}>
-														{language === "fa"
-															? field.selectOptions[optionIndex]
-															: field.selectOptionsEN[optionIndex]}
+												<option value="">...</option>
+												{(language === "fa"
+													? field.options
+													: field.optionsEN
+												).map((option: string, i: number) => (
+													<option key={i} value={option}>
+														{option}
 													</option>
 												))}
 											</select>
-										) : isCheckbox ? (
-											<div className="form-check form-switch">
-												<input
-													id={field.name}
-													name={field.name}
-													type="checkbox"
-													className={`form-check-input ${
-														formik.touched[field.name] &&
-														formik.errors[field.name]
-															? "is-invalid"
-															: ""
-													}`}
-													checked={formik.values[field.name]}
-													onChange={formik.handleChange}
-													onBlur={formik.handleBlur}
-												/>
-												<label
-													className="form-check-label"
-													htmlFor={field.name}
-												>
-													{language === "fa"
-														? field.checkboxTitle
-														: field.checkboxTitleEN}
-												</label>
-											</div>
 										) : (
 											<input
+												type={field.type}
 												id={field.name}
 												name={field.name}
-												type={field.type}
-												className={`form-control ${
+												value={formik.values[field.name]}
+												onChange={formik.handleChange}
+												onBlur={formik.handleBlur}
+												className={`form-control text-${
+													language === "fa" ? "end" : "start"
+												} shadow-sm ${
 													formik.touched[field.name] &&
 													formik.errors[field.name]
 														? "is-invalid"
 														: ""
 												}`}
-												value={formik.values[field.name]}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
+												required={field.required}
+												disabled={formik.values[field.checkboxName]}
 												placeholder={
-													language === "fa"
+													(language === "fa"
 														? field.placeholder
-														: field.placeholderEN
+														: field.placeholderEN) || ""
 												}
 											/>
 										)}
-
+										{isCheckbox && (
+											<div
+												className={`text-${
+													language === "fa" ? "end" : "start"
+												} mt-2`}
+											>
+												<label
+													htmlFor={field.checkboxName}
+													className="form-check-label mx-2"
+												>
+													{language === "fa"
+														? field.checkboxLabel
+														: field.checkboxLabelEN}
+												</label>
+												<input
+													type="checkbox"
+													id={field.checkboxName}
+													name={field.checkboxName}
+													checked={Boolean(formik.values[field.checkboxName])}
+													onChange={(e) => {
+														formik.setFieldValue(
+															field.checkboxName,
+															e.target.checked
+														);
+													}}
+													className="form-check-input shadow-sm"
+												/>
+											</div>
+										)}
 										{formik.touched[field.name] &&
 											formik.errors[field.name] && (
 												<div className="invalid-feedback">
-													{formik.errors[field.name]}
+													{formik.errors[field.name] as string}
 												</div>
 											)}
 									</div>
 								);
 							})}
+						</div>
+						<div className="d-flex justify-content-center mt-4 mt-md-5">
+							<button
+								type="submit"
+								className="btn btn-primary rounded-pill px-3 py-2"
+							>
+								{language === "fa" ? "ذخیره" : "Save"}
+							</button>
 						</div>
 					</div>
 				</form>
@@ -334,3 +490,99 @@ function UserInformation() {
 }
 
 export default UserInformation;
+
+i have some issues with the data being sent via the update user data api.
+this is the data being sent:
+{name: "باران", lastName: "ران", phoneNumber: "09168125753", email: "ram@gmail.com", gender: "زن",…}
+balance
+: 
+0
+birthdate
+: 
+"2024-10-03"
+educationLevel
+: 
+"کارشناسی ارشد"
+email
+: 
+"ram@gmail.com"
+fatherName
+: 
+"بب"
+fixedPhone
+: 
+"06314268798"
+gender
+: 
+"زن"
+insuranceType
+: 
+"بیمه سلامت"
+isIranian
+: 
+"غیر ایرانی"
+isMarried
+: 
+"مجرد"
+lastName
+: 
+"ران"
+name
+: 
+"باران"
+nationalCode
+: 
+""
+noNationalCode
+: 
+true
+noSupplementaryInsurance
+: 
+true
+phoneNumber
+: 
+"09168125753"
+residenceAddress
+: 
+"صقصقصقصقص"
+residenceCity
+: 
+"لاااا"
+residencePostalCode
+: 
+"2336525852"
+residenceProvince
+: 
+"ثثثثقق"
+supplementalInsuranceType
+: 
+""
+supplementaryInsuranceType
+: 
+"بیمه الف"
+
+1. the isIranian item should converted to boolean before being sent.
+i dont want to change anything regarding what is displayed and what data is received by the user in the front, so instead im asking you to create a function that will convert the data being sent for isIranian to be boolean:
+if the value for isIranian is: "غیر ایرانی" then give a value of FALSE and if it is "ایرانی" give it a TRUE
+
+2. when these three are TRUE:
+noInsurance
+: 
+true
+noNationalCode
+: 
+true
+noSupplementaryInsurance
+: 
+true
+
+the values for the corresponding items being:
+insuranceType, nationalCode, and supplementaryInsuranceType, should be empty string ""
+regardless of what was inputted by the user in the front.
+if possible create function for this as well to handle data before summation and to avoid changing anything else.
+
+3. tell me where this item:
+supplementalInsuranceType
+: 
+""
+is coming from, because i want to get rid of it. its not supposed to be.
