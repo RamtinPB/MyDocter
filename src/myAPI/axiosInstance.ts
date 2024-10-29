@@ -21,15 +21,25 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export const configureAxios = (setAuthData: (token: null) => void, setLoginState: (state: boolean) => void) => {
+export const configureAxios = (
+  setAuthData: (token: null) => void,
+  setLoginState: (state: boolean) => void
+) => {
+  let isLoggedOut = false; // Centralized variable to prevent multiple redirects
+
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response && error.response.status === 401) {
-        // Clear authentication data and update login state on 401
-        setAuthData(null);
-        setLoginState(false);
-        window.location.assign("/");
+      if (error.response && error.response.status === 401 && !isLoggedOut) {
+        isLoggedOut = true; // Set flag to prevent multiple executions
+        setAuthData(null); // Clear token data
+        setLoginState(false); // Immediately set login state to false
+        window.location.assign("/"); // Redirect to login page
+
+        // Optional: reset the flag after a delay to prevent issues with subsequent errors
+        setTimeout(() => {
+          isLoggedOut = false;
+        }, 500); // Adjust delay as needed
       }
       return Promise.reject(error);
     }

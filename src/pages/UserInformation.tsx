@@ -21,7 +21,6 @@ interface UserFormData {
 	noInsurance?: boolean;
 	noNationalCode?: boolean;
 	noSupplementaryInsurance?: boolean;
-	// Add any other fields as needed
 }
 
 const initialFormData: UserFormData = {};

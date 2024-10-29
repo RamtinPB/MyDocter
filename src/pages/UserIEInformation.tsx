@@ -7,14 +7,88 @@ import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 
 interface UserInfo {
-	userGender: string;
+	gender: string;
 }
 
 interface UserIEFormData {
-	[key: string]: any;
+	// Basic Information
+	weight?: string;
+	height?: string;
+	userAge?: string;
+	bodyMassIndex?: string; // Optional field
+
+	// Health and Illness History
+	illnessHistory?: string;
+	noIllnessHistory?: boolean; // Checkbox for conditional validation
+	illnessHistoryInFamily?: string;
+	noIllnessHistoryInFamily?: boolean; // Checkbox for conditional validation
+	userFamilyMemberRelation?: string;
+	bloodTransfusionHistory?: string;
+	bloodTransfusionReactionHistory?: string;
+	noBloodTransfusionReactionHistory?: boolean;
+	riskFactors?: string[]; // For the checkmenu type
+	pets?: string;
+	noPets?: boolean;
+	sleepStatus?: string;
+	sleepIssues?: string;
+	hasSleepIssues?: boolean;
+
+	// Allergies
+	allergyToDrug?: string;
+	noAllergyToDrug?: boolean;
+	allergyToDrugReaction?: string;
+	allergyToFood?: string;
+	noAllergyToFood?: boolean;
+	allergyToFoodReaction?: string;
+
+	// Disabilities and Capabilities
+	hearingDisability?: string;
+	noHearingDisability?: boolean;
+	sightDisability?: string;
+	noSightDisability?: boolean;
+	disabilityOrAmputation?: string;
+	noDisabilityOrAmputation?: boolean;
+	assistiveDevicesProsthetics?: string[]; // For the checkmenu type
+
+	// Daily Activities
+	ableToEat?: string;
+	ableToDress?: string;
+	ableToBathe?: string;
+	ableToGoToBathroom?: string;
+	ableToFreelyMove?: string;
+
+	// Medication History (Optional)
+	regularDrugUseHistory?: string;
+
+	// Women-specific Information
+	pregnancyStatus?: string;
+	lactationStatus?: string;
 }
 
-const initialFormData: UserIEFormData = {};
+const initialFormData: UserIEFormData = {
+	weight: "",
+	height: "",
+	userAge: "",
+	illnessHistory: "",
+	illnessHistoryInFamily: "",
+	bloodTransfusionHistory: "",
+	bloodTransfusionReactionHistory: "",
+	pets: "",
+	sleepStatus: "",
+	sleepIssues: "",
+	allergyToDrug: "",
+	allergyToFood: "",
+	hearingDisability: "",
+	sightDisability: "",
+	disabilityOrAmputation: "",
+	ableToEat: "",
+	ableToDress: "",
+	ableToBathe: "",
+	ableToGoToBathroom: "",
+	ableToFreelyMove: "",
+	pregnancyStatus: "",
+	lactationStatus: "",
+};
 
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -28,31 +102,153 @@ function UserIEInformation() {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	// fetch user data
 	useEffect(() => {
-		// Fetch all data in a single request
-		fetch("/db.json")
+		axiosInstance
+			.post("/api/User/GetUserData") // Call the API to get user data
 			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.json();
-			})
-			.then((data) => {
+				const data = response.data;
+
 				// Update state for userInfo
-				setUserInfo(data.userInfo);
-
-				// Update form values with userInfoIE data
-				formik.setValues(data.userInfoIE);
-
-				// Update form fields
-				const sections = data.formFieldsIE[0]; // Adjust based on structure
-				setFormSections(sections);
-
-				// Update validation schema data
-				setValidationSchemaData(data.validationSchemaDataIE);
+				setUserInfo(data);
 			})
 			.catch((error) => {
-				console.error("Error fetching data:", error);
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update state for userInfo
+						setUserInfo(data.userInfo);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user information data
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserInformation") // Call the API to get user data
+			.then((response) => {
+				const data = response.data;
+
+				// Update form values with userInfoIE data
+				formik.setValues(data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update form values with userInfoIE data
+						formik.setValues(data.userInfoIE);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user information form fields
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserInformationFormFields") // Call the API to get user data
+			.then((response) => {
+				// Update form fields
+				const sections = response.data[0]; // Adjust based on structure
+				setFormSections(sections);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form fields failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form fields from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update form fields
+						const sections = data.formFieldsIE[0]; // Adjust based on structure
+						setFormSections(sections);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form fields from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// fetch user infomation form validation schema
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserInformationFormValidationSchemas") // Call the API to get user data
+			.then((response) => {
+				// Update validation schema data
+				setValidationSchemaData(response.data);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data form validation schema failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form validation schema from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update validation schema data
+						setValidationSchemaData(data.validationSchemaDataIE);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form validation schema from both API and db.json",
+							jsonError
+						);
+					});
 			});
 	}, []);
 
@@ -72,83 +268,96 @@ function UserIEInformation() {
 					fieldSchema = Yup.mixed();
 			}
 
-			// Apply common rules
-			if (rule.matches && rule.type === "string") {
-				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(language === "fa" ? rule.matches[0] : rule.matchesEN[0]),
-					language === "fa" ? rule.matches[1] : rule.matchesEN[1]
-				);
-			}
-			if (rule.email) {
-				fieldSchema = (fieldSchema as Yup.StringSchema).email(
-					language === "fa" ? rule.email : rule.emailEN
-				);
-			}
+			if (rule.checkboxName) {
+				const baseSchema = Yup.string();
 
-			// Apply conditional rules
-			if (rule.when) {
-				const [depField, conditions] = rule.when;
-				fieldSchema = fieldSchema.when(depField, {
-					is: conditions.is,
-					then: (schema) => {
-						let thenSchema = schema;
-						if (conditions.then.matches) {
-							thenSchema = (thenSchema as Yup.StringSchema).matches(
-								new RegExp(
-									language === "fa"
-										? conditions.then.matches[0]
-										: conditions.then.matchesEN[0]
-								),
-								language === "fa"
-									? conditions.then.matches[1]
-									: conditions.then.matchesEN[1]
-							);
-						}
-						if (conditions.then.required === false) {
-							thenSchema = thenSchema.notRequired();
-						} else if (conditions.then.required) {
-							thenSchema = thenSchema.required(
-								language === "fa"
-									? conditions.then.required
-									: conditions.then.requiredEN
-							);
-						}
-						return thenSchema;
-					},
-					otherwise: (schema) => {
-						let otherwiseSchema = schema;
-						if (conditions.otherwise.matches) {
-							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(
-									language === "fa"
-										? conditions.otherwise.matches[0]
-										: conditions.otherwise.matchesEN[0]
-								),
-								language === "fa"
-									? conditions.otherwise.matches[1]
-									: conditions.otherwise.matchesEN[1]
-							);
-						}
-						if (conditions.otherwise.required === false) {
-							otherwiseSchema = otherwiseSchema.notRequired();
-						} else if (conditions.otherwise.required) {
-							otherwiseSchema = otherwiseSchema.required(
-								language === "fa"
-									? conditions.otherwise.required
-									: conditions.otherwise.requiredEN
-							);
-						}
-						return otherwiseSchema;
-					},
-				});
+				fieldSchema = baseSchema.when(
+					rule.checkboxName as string,
+					(value: any, schema) => {
+						return value === true
+							? schema.notRequired().nullable()
+							: schema.required("field is required");
+					}
+				);
 			} else {
-				// Apply default required rule if no 'when' condition is specified
-				if (rule.required) {
-					fieldSchema = fieldSchema.required(
-						language === "fa" ? rule.required : rule.requiredEN
+				// Apply common rules
+				if (rule.matches && rule.type === "string") {
+					fieldSchema = (fieldSchema as Yup.StringSchema).matches(
+						new RegExp(language === "fa" ? rule.matches[0] : rule.matchesEN[0]),
+						language === "fa" ? rule.matches[1] : rule.matchesEN[1]
 					);
-				} else if (rule.optional) {
-					fieldSchema = fieldSchema.notRequired();
+				}
+				if (rule.email) {
+					fieldSchema = (fieldSchema as Yup.StringSchema).email(
+						language === "fa" ? rule.email : rule.emailEN
+					);
+				}
+
+				// Apply conditional rules
+				if (rule.when) {
+					const [depField, conditions] = rule.when;
+					fieldSchema = fieldSchema.when(depField, {
+						is: conditions.is,
+						then: (schema) => {
+							let thenSchema = schema;
+							if (conditions.then.matches) {
+								thenSchema = (thenSchema as Yup.StringSchema).matches(
+									new RegExp(
+										language === "fa"
+											? conditions.then.matches[0]
+											: conditions.then.matchesEN[0]
+									),
+									language === "fa"
+										? conditions.then.matches[1]
+										: conditions.then.matchesEN[1]
+								);
+							}
+							if (conditions.then.required === false) {
+								thenSchema = thenSchema.notRequired();
+							} else if (conditions.then.required) {
+								thenSchema = thenSchema.required(
+									language === "fa"
+										? conditions.then.required
+										: conditions.then.requiredEN
+								);
+							}
+							return thenSchema;
+						},
+						otherwise: (schema) => {
+							let otherwiseSchema = schema;
+							if (conditions.otherwise.matches) {
+								otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
+									new RegExp(
+										language === "fa"
+											? conditions.otherwise.matches[0]
+											: conditions.otherwise.matchesEN[0]
+									),
+									language === "fa"
+										? conditions.otherwise.matches[1]
+										: conditions.otherwise.matchesEN[1]
+								);
+							}
+							if (conditions.otherwise.required === false) {
+								otherwiseSchema = otherwiseSchema.notRequired();
+							} else if (conditions.otherwise.required) {
+								otherwiseSchema = otherwiseSchema.required(
+									language === "fa"
+										? conditions.otherwise.required
+										: conditions.otherwise.requiredEN
+								);
+							}
+							return otherwiseSchema;
+						},
+					});
+				} else {
+					// Apply default required rule if no 'when' condition is specified
+					if (rule.required) {
+						fieldSchema = fieldSchema.required(
+							language === "fa" ? rule.required : rule.requiredEN
+						);
+					} else if (rule.optional) {
+						fieldSchema = fieldSchema.notRequired();
+					}
 				}
 			}
 
@@ -160,19 +369,17 @@ function UserIEInformation() {
 
 	const formik = useFormik({
 		initialValues: initialFormData,
-		validationSchema,
-		onSubmit: (values) => {
-			axiosInstance
-				.post("/submitInitialEvaluation", values)
-				.then((response) => {
-					console.log(
-						"initial evaluation updated successfully:",
-						response.data
-					);
-				})
-				.catch((error) => {
-					console.error("Error updating initial evaluation:", error);
-				});
+		validationSchema: validationSchema,
+
+		onSubmit: async (values) => {
+			try {
+				// Send the transformed data to the update API
+				await axiosInstance.post("/api/User/UpdateUserInformation", values);
+				console.log("User data updated successfully");
+				console.log(formik.errors);
+			} catch (error) {
+				console.error("Error updating user data:", error);
+			}
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
@@ -197,11 +404,23 @@ function UserIEInformation() {
 		// Add any additional sections here
 	};
 
+	const handleTestSubmit = async (e: { preventDefault: () => void }) => {
+		e.preventDefault();
+		const errors = await formik.validateForm();
+		console.log("Validation errors on submit:", errors);
+
+		if (Object.keys(errors).length === 0) {
+			formik.handleSubmit();
+		} else {
+			console.log("Form submission blocked due to validation errors.");
+		}
+	};
+
 	return (
 		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column">
 				<form
-					onSubmit={formik.handleSubmit}
+					onSubmit={handleTestSubmit}
 					className="needs-validation my-5"
 					noValidate
 				>
@@ -209,9 +428,7 @@ function UserIEInformation() {
 						{Object.keys(formSections).map(
 							(section, index) =>
 								!(section === "id") &&
-								!(
-									userInfo?.userGender === "مرد" && section === "بیماران خانم"
-								) && (
+								!(userInfo?.gender === "مرد" && section === "بیماران خانم") && (
 									<div
 										className="accordion-item shadow-sm rounded-5 mb-5"
 										key={index}
@@ -298,21 +515,31 @@ function UserIEInformation() {
 																			<select
 																				id={field.name}
 																				name={field.name}
-																				value={formik.values[field.name]}
+																				value={String(
+																					formik.values[
+																						field.name as keyof UserIEFormData
+																					] || ""
+																				)}
 																				onChange={formik.handleChange}
 																				onBlur={formik.handleBlur}
 																				className={`form-select text-${
 																					language === "fa" ? "end" : "start"
 																				}
 																				 shadow-sm select-resize ${
-																						formik.touched[field.name] &&
-																						formik.errors[field.name]
+																						formik.touched[
+																							field.name as keyof UserIEFormData
+																						] &&
+																						formik.errors[
+																							field.name as keyof UserIEFormData
+																						]
 																							? "is-invalid"
 																							: ""
 																					}`}
 																				required={field.required}
 																				disabled={
-																					formik.values[field.checkboxName]
+																					!!formik.values[
+																						field.checkboxName as keyof UserIEFormData
+																					]
 																				}
 																			>
 																				<option value="" disabled>
@@ -346,19 +573,26 @@ function UserIEInformation() {
 																								id={option.name}
 																								name={option.name}
 																								checked={
-																									formik.values[option.name] ||
-																									false
+																									!!formik.values[
+																										option.name as keyof UserIEFormData
+																									] || false
 																								}
 																								onChange={() => {
 																									formik.setFieldValue(
 																										option.name,
-																										!formik.values[option.name] // Toggle the value
+																										!formik.values[
+																											option.name as keyof UserIEFormData
+																										] // Toggle the value
 																									);
 																								}}
 																								onBlur={formik.handleBlur}
 																								className={`form-check-input ${
-																									formik.touched[option.name] &&
-																									formik.errors[option.name]
+																									formik.touched[
+																										option.name as keyof UserIEFormData
+																									] &&
+																									formik.errors[
+																										option.name as keyof UserIEFormData
+																									]
 																										? "is-invalid"
 																										: ""
 																								}`}
@@ -389,14 +623,19 @@ function UserIEInformation() {
 																							name={field.name}
 																							value={option.value}
 																							checked={
-																								formik.values[field.name] ===
-																								option.value
+																								formik.values[
+																									field.name as keyof UserIEFormData
+																								] === option.value
 																							}
 																							onChange={formik.handleChange}
 																							onBlur={formik.handleBlur}
 																							className={`form-check-input ${
-																								formik.touched[field.name] &&
-																								formik.errors[field.name]
+																								formik.touched[
+																									field.name as keyof UserIEFormData
+																								] &&
+																								formik.errors[
+																									field.name as keyof UserIEFormData
+																								]
 																									? "is-invalid"
 																									: ""
 																							}`}
@@ -415,20 +654,30 @@ function UserIEInformation() {
 																				type={field.type}
 																				id={field.name}
 																				name={field.name}
-																				value={formik.values[field.name]}
+																				value={String(
+																					formik.values[
+																						field.name as keyof UserIEFormData
+																					] || ""
+																				)}
 																				onChange={formik.handleChange}
 																				onBlur={formik.handleBlur}
 																				className={`form-control text-${
 																					language === "fa" ? "end" : "start"
 																				} shadow-sm ${
-																					formik.touched[field.name] &&
-																					formik.errors[field.name]
+																					formik.touched[
+																						field.name as keyof UserIEFormData
+																					] &&
+																					formik.errors[
+																						field.name as keyof UserIEFormData
+																					]
 																						? "is-invalid"
 																						: ""
 																				}`}
 																				required={field.required}
 																				disabled={
-																					formik.values[field.checkboxName]
+																					!!formik.values[
+																						field.checkboxName as keyof UserIEFormData
+																					]
 																				}
 																				placeholder={
 																					(language === "fa"
@@ -446,14 +695,22 @@ function UserIEInformation() {
 																					id={field.checkboxName}
 																					name={field.checkboxName}
 																					checked={
-																						formik.values[field.checkboxName] ||
-																						false
+																						!!formik.values[
+																							field.checkboxName as keyof UserIEFormData
+																						] || false
 																					}
 																					onChange={(e) => {
 																						formik.setFieldValue(
 																							field.checkboxName,
 																							e.target.checked
 																						);
+
+																						if (e.target.checked) {
+																							formik.setFieldValue(
+																								field.name,
+																								""
+																							);
+																						}
 																					}}
 																					className="form-check-input shadow-sm"
 																				/>
@@ -469,10 +726,18 @@ function UserIEInformation() {
 																				</label>
 																			</div>
 																		)}
-																		{formik.touched[field.name] &&
-																			formik.errors[field.name] && (
+																		{formik.touched[
+																			field.name as keyof UserIEFormData
+																		] &&
+																			formik.errors[
+																				field.name as keyof UserIEFormData
+																			] && (
 																				<div className="invalid-feedback">
-																					{formik.errors[field.name] as string}
+																					{String(
+																						formik.errors[
+																							field.name as keyof UserIEFormData
+																						]
+																					)}
 																				</div>
 																			)}
 																	</div>
