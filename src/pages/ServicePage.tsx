@@ -11,6 +11,7 @@ import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface FileData {
 	fileName: string;
@@ -31,7 +32,7 @@ interface Service {
 	subsidy: string;
 	image: string;
 	id: string;
-	type: string;
+	type: Number;
 	files?: FileData[]; // File data interface
 }
 interface UserInfo {
@@ -93,73 +94,229 @@ function ServicePage() {
 
 	const navigate = useNavigate();
 
+	// fetch user data
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				setLoading(true);
+		setLoading(true);
 
-				// Fetch user info
-				const userInfoResponse = await fetch("/db.json");
-				if (!userInfoResponse.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const data = await userInfoResponse.json();
-				const userInfo = data.userInfo;
-				setUserInfo(userInfo);
-				console.log(userInfo);
+		axiosInstance
+			.post("/api/User/GetUserData") // Call the API to get user data
+			.then((response) => {
+				const data = response.data;
 
-				// Fetch insurance data
-				const insuranceResponse = await fetch("/db.json");
-				if (!insuranceResponse.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const insuranceData = await insuranceResponse.json();
-				const matchedInsurance = insuranceData.insurance.find(
+				setUserInfo(data);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						const userInfo = data.userInfo;
+						setUserInfo(userInfo);
+						setLoading(false);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+						setLoading(false);
+					});
+			});
+	}, [id]);
+
+	// Fetch insurance & supplementary insurance data
+	useEffect(() => {
+		setLoading(true);
+
+		// Only proceed if userInfo is defined
+		if (!userInfo) return;
+
+		axiosInstance
+			.post("/api/Insurance/GetAllInsuranceData") // Call the API to get user data
+			.then((response) => {
+				const data = response.data;
+
+				const matchedInsurance = data.insurance.find(
 					(ins: { insuranceType: any }) =>
 						ins.insuranceType === userInfo.insuranceType
 				);
 				setInsurance(matchedInsurance || null);
 
-				// Fetch supplementary insurance data
-				const supplementaryInsuranceResponse = await fetch("/db.json");
-				if (!supplementaryInsuranceResponse.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const supplementaryInsuranceData =
-					await supplementaryInsuranceResponse.json();
-				const matchedSupplementaryInsurance =
-					supplementaryInsuranceData.supplementaryInsurance.find(
-						(suppIns: { supplementaryInsuranceType: any }) =>
-							suppIns.supplementaryInsuranceType ===
-							userInfo.supplementaryInsuranceType
-					);
+				const matchedSupplementaryInsurance = data.supplementaryInsurance.find(
+					(suppIns: { supplementaryInsuranceType: any }) =>
+						suppIns.supplementaryInsuranceType ===
+						userInfo.supplementaryInsuranceType
+				);
 				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
 
-				// Fetch service data
-				const serviceResponse = await fetch("/db.json");
-				if (!serviceResponse.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const serviceData = await serviceResponse.json();
-				const selectedService = serviceData.services.find(
-					(s: { id: any }) => `${s.id}` === id
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
 				);
-				if (selectedService) {
-					setService(selectedService);
-				} else {
-					setError("Service not found");
-				}
 
-				setLoading(false);
-			} catch (err) {
-				console.error("Error fetching data:", err);
-				setError("Failed to fetch data");
-				setLoading(false);
-			}
-		};
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						const matchedInsurance = data.insurance.find(
+							(ins: { insuranceType: any }) =>
+								ins.insuranceType === userInfo.insuranceType
+						);
+						setInsurance(matchedInsurance || null);
 
-		fetchData();
-	}, [id]); // Only re-run if `id` changes
+						const matchedSupplementaryInsurance =
+							data.supplementaryInsurance.find(
+								(suppIns: { supplementaryInsuranceType: any }) =>
+									suppIns.supplementaryInsuranceType ===
+									userInfo.supplementaryInsuranceType
+							);
+						setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+
+						setLoading(false);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+						setLoading(false);
+					});
+			});
+	}, [userInfo, id]);
+
+	// fetch service data
+	useEffect(() => {
+		setLoading(true);
+		axiosInstance
+			.post("/api/Service/GetServiceData", { serviceId: id }) // Call the API to get user data
+			.then((response) => {
+				const data = response.data;
+
+				setService(data.service);
+				console.log(data.service);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error("Failed to fetch user data from db.json");
+						}
+						return response.json();
+					})
+					.then((data) => {
+						const selectedService = data.services.find(
+							(s: { id: any }) => `${s.id}` === id
+						);
+						if (selectedService) {
+							setService(selectedService);
+						} else {
+							setError("Service not found");
+						}
+						setLoading(false);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+						setLoading(false);
+					});
+			});
+	}, [id]);
+
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			setLoading(true);
+
+	// 			// Fetch user info
+	// 			const userInfoResponse = await fetch("/db.json");
+	// 			if (!userInfoResponse.ok) {
+	// 				throw new Error("Network response was not ok");
+	// 			}
+	// 			const data = await userInfoResponse.json();
+	// 			const userInfo = data.userInfo;
+	// 			setUserInfo(userInfo);
+	// 			console.log(userInfo);
+
+	// 			// Fetch insurance data
+	// 			const insuranceResponse = await fetch("/db.json");
+	// 			if (!insuranceResponse.ok) {
+	// 				throw new Error("Network response was not ok");
+	// 			}
+	// 			const insuranceData = await insuranceResponse.json();
+	// 			const matchedInsurance = insuranceData.insurance.find(
+	// 				(ins: { insuranceType: any }) =>
+	// 					ins.insuranceType === userInfo.insuranceType
+	// 			);
+	// 			setInsurance(matchedInsurance || null);
+
+	// 			// Fetch supplementary insurance data
+	// 			const supplementaryInsuranceResponse = await fetch("/db.json");
+	// 			if (!supplementaryInsuranceResponse.ok) {
+	// 				throw new Error("Network response was not ok");
+	// 			}
+	// 			const supplementaryInsuranceData =
+	// 				await supplementaryInsuranceResponse.json();
+	// 			const matchedSupplementaryInsurance =
+	// 				supplementaryInsuranceData.supplementaryInsurance.find(
+	// 					(suppIns: { supplementaryInsuranceType: any }) =>
+	// 						suppIns.supplementaryInsuranceType ===
+	// 						userInfo.supplementaryInsuranceType
+	// 				);
+	// 			setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+
+	// 			// Fetch service data
+	// 			const serviceResponse = await fetch("/db.json");
+	// 			if (!serviceResponse.ok) {
+	// 				throw new Error("Network response was not ok");
+	// 			}
+	// 			const serviceData = await serviceResponse.json();
+	// 			const selectedService = serviceData.services.find(
+	// 				(s: { id: any }) => `${s.id}` === id
+	// 			);
+	// 			if (selectedService) {
+	// 				setService(selectedService);
+	// 			} else {
+	// 				setError("Service not found");
+	// 			}
+
+	// 			setLoading(false);
+	// 		} catch (err) {
+	// 			console.error("Error fetching data:", err);
+	// 			setError("Failed to fetch data");
+	// 			setLoading(false);
+	// 		}
+	// 	};
+
+	// 	fetchData();
+	// }, [id]); // Only re-run if `id` changes
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
@@ -198,12 +355,12 @@ function ServicePage() {
 	};
 
 	const handleBackClick = () => {
-		if (service?.type.toLocaleLowerCase() === "specialist") {
+		if (service.type === 1) {
 			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
-		} else if (service?.type.toLocaleLowerCase() === "general") {
+		} else if (service.type === 0) {
 			navigate("/GeneralDoctorPrescription"); // Replace with actual route
 		} else {
-			navigate("/"); // Default fallback
+			console.log(service.type);
 		}
 	};
 

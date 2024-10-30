@@ -12,6 +12,14 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper function to check if JWT is expired
+const isTokenExpired = (jwToken: string) => {
+	if (!jwToken) return true;
+	const payload = JSON.parse(atob(jwToken.split(".")[1]));
+	const expiry = payload.exp * 1000; // Convert to milliseconds
+	return Date.now() > expiry;
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
@@ -22,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	useEffect(() => {
 		const storedToken = localStorage.getItem("jwToken");
 		const storedIsAdmin = localStorage.getItem("isAdministrator") === "true";
-		if (storedToken) {
+		if (storedToken && !isTokenExpired(storedToken)) {
 			setJwToken(storedToken);
 			setIsAdministrator(storedIsAdmin);
 			setLoginState(true); // Set loginState to true if token exists

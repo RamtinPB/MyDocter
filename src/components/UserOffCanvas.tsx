@@ -11,6 +11,8 @@ import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/myoffcanvas.css";
 import { useLanguage } from "./LanguageContext";
+import { LuLogOut } from "react-icons/lu";
+import { useAuth } from "./AuthContext";
 
 interface UserData {
 	name: string;
@@ -29,6 +31,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
 
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const { setAuthData } = useAuth();
 
 	useEffect(() => {
 		// Function to check the screen size and update the offcanvas class
@@ -59,6 +62,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 			? `${userData.name} ${userData.lastName}`
 			: userData?.email || ""; // Fallback to email if name and lastName are missing
 
+	const handleLogout = () => {
+		setAuthData(null); // Clear token and reset login state
+		window.location.assign("/"); // Optionally, redirect to the homepage or login page
+	};
 	return (
 		<div
 			className={`offcanvas ${offcanvasClass}`}
@@ -236,6 +243,22 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 							</li>
 						</>
 					)}
+
+					<li>
+						<hr className="dropdown-divider" />
+					</li>
+
+					<li>
+						<button
+							onClick={handleLogout}
+							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
+						>
+							<span className="px-2">
+								{language === "fa" ? "خروج از سامانه" : "Log out"}
+							</span>
+							<LuLogOut />
+						</button>
+					</li>
 				</ul>
 			</div>
 		</div>

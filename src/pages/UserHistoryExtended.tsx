@@ -11,14 +11,18 @@ import "/src/cssFiles/servicePage.css";
 import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/ForRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
-interface Service {
-	name: string;
+interface purchasedServiceProps {
 	id: string;
-	purchaseDate: string;
-	finalPurchaseAmount: string;
-	purchaseId: string;
+	serviceId: string;
+	serviceName: string;
+	date: string;
 	status: string;
+	lastUpdateTime: string;
+	finalPrice: string;
+	result: string;
+	approvedByDoctor: Boolean;
 	files?: { fileName: string; fileType: string; fileUrl: string }[]; // Added files property
 	userInput: string;
 }
@@ -45,7 +49,8 @@ const getIconForFileType = (fileName: string) => {
 function UserHistoryExtended() {
 	const { purchaseId } = useParams<{ purchaseId: string }>();
 
-	const [service, setService] = useState<Service | null>(null);
+	const [purchasedServiceData, setPurchasedServiceData] =
+		useState<purchasedServiceProps | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -54,37 +59,66 @@ function UserHistoryExtended() {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	// Fetch specific purchased service
 	useEffect(() => {
-		// Define a function to fetch the specific service by purchaseId
-		const fetchService = async () => {
-			try {
-				// Fetch the entire list of services
-				const response = await fetch("/db.json");
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const data = await response.json();
-
-				// Find the specific service using the purchaseId
-				const selectedService = data.userPurchasedServices.find(
-					(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
+		axiosInstance
+			.post("/api/Service/GetPurchasedService", {
+				purchasedServiceId: purchaseId,
+			})
+			.then((response) => {
+				setPurchasedServiceData(response.data);
+				setError(null); // Clear any previous errors on success
+			})
+			.catch((apiError) => {
+				console.error(
+					"API request for purchased services failed. Trying local db.json",
+					apiError
+				);
+				setError(
+					"Failed to fetch purchased services from API. Trying local data."
 				);
 
-				// Set the service state if found, otherwise set error state
-				if (selectedService) {
-					setService(selectedService);
-				} else {
-					setError("Service not found");
-				}
-				setLoading(false);
-			} catch (err) {
-				setError("Failed to fetch service details");
-				setLoading(false);
-			}
-		};
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch purchased services from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Find the specific service using the purchaseId
+						const selectedService = data.userPurchasedServices.find(
+							(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
+						);
 
-		fetchService();
-	}, [purchaseId]);
+						// Set the service state if found, otherwise set error state
+						if (selectedService) {
+							setPurchasedServiceData(selectedService);
+						} else {
+							setError("Service not found");
+						}
+						setError(null); // Clear any previous errors on success
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch purchased services from both API and db.json",
+							jsonError
+						);
+						setError(
+							"Failed to fetch purchased services from both API and local data."
+						);
+					})
+					.finally(() => {
+						setLoading(false); // Ensure loading is false after all attempts
+					});
+			})
+			.finally(() => {
+				setLoading(false); // Ensure loading is false if API request succeeds
+			});
+	}, []);
 
 	// Loading, Error and Service UI
 	if (loading) {
@@ -95,9 +129,11 @@ function UserHistoryExtended() {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
 
-	if (!service) {
+	if (!purchasedServiceData) {
 		return (
-			<div className="text-center my-5 text-danger">Service not found</div>
+			<div className="text-center my-5 text-danger">
+				Purchased Service not found
+			</div>
 		);
 	}
 
@@ -131,7 +167,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "نام سرویس" : "Service Name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.name}
+								{purchasedServiceData.serviceName}
 							</div>
 						</div>
 						<div
@@ -143,7 +179,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.id}
+								{purchasedServiceData.id}
 							</div>
 						</div>
 						<div
@@ -155,7 +191,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.purchaseDate}
+								{purchasedServiceData.date}
 							</div>
 						</div>
 						<div
@@ -169,7 +205,7 @@ function UserHistoryExtended() {
 									: `Final Purchase Amount`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.finalPurchaseAmount}
+								{purchasedServiceData.finalPrice}
 							</div>
 						</div>
 						<div
@@ -181,7 +217,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.purchaseId}
+								{purchasedServiceData.id}
 							</div>
 						</div>
 						<div
@@ -193,7 +229,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "وضعیت پیگیری" : "Status"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{service.status}
+								{purchasedServiceData.status}
 							</div>
 						</div>
 					</div>
@@ -208,9 +244,10 @@ function UserHistoryExtended() {
 					<h5 className="px-4 mx-1">
 						{language === "fa" ? "فایل های ارسال شده" : "Sent Files"}
 					</h5>
-					{service.files && service.files.length > 0 ? (
+					{purchasedServiceData.files &&
+					purchasedServiceData.files.length > 0 ? (
 						<div className="d-flex flex-wrap justify-content-start align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
-							{service.files.map((file, index) => (
+							{purchasedServiceData.files.map((file, index) => (
 								<div
 									key={index}
 									className="d-flex flex-column file-item p-1 mx-1"
@@ -275,8 +312,8 @@ function UserHistoryExtended() {
 						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{service.userInput ? (
-							<p>{service.userInput}</p>
+						{purchasedServiceData.userInput ? (
+							<p>{purchasedServiceData.userInput}</p>
 						) : (
 							<div className="text-center px-3 mx-4 py-2">
 								<p>

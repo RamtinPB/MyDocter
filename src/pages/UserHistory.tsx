@@ -1,42 +1,75 @@
 import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
-interface ServiceInfo {
-	[key: string]: any;
+interface PurchasedServicesProp {
+	id: string;
+	serviceId: string;
+	serviceName: string;
+	status: string;
+	lastUpdateTime: string;
 }
 
 function UserHistory() {
-	const [serviceInfo, setServiceInfo] = useState<ServiceInfo[]>([]);
+	const [purchasedServicesData, setPurchasedServicesData] = useState<
+		PurchasedServicesProp[]
+	>([]);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	// Fetch purchased services of a specific user
 	useEffect(() => {
-		const fetchServices = async () => {
-			try {
-				// Use fetch to get the data from the public folder
-				const response = await fetch("/db.json"); // Adjust the path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const data = await response.json();
+		axiosInstance
+			.post("/api/Service/GetUserPurchasedServices")
+			.then((response) => {
+				const purchasedServices = response.data;
+				setPurchasedServicesData(purchasedServices);
+				setError(null); // Clear any previous errors on success
+			})
+			.catch((apiError) => {
+				console.error(
+					"API request for purchased services failed. Trying local db.json",
+					apiError
+				);
+				setError(
+					"Failed to fetch purchased services from API. Trying local data."
+				);
 
-				// Assuming the services data is available in a property like `services`
-				const services = data.userPurchasedServices;
-
-				setServiceInfo(services);
-				setLoading(false);
-			} catch (err) {
-				console.error("Error fetching services:", err);
-				setError("Failed to fetch services");
-				setLoading(false);
-			}
-		};
-
-		fetchServices();
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch purchased services from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						const services = data.userPurchasedServices;
+						setPurchasedServicesData(services);
+						setError(null); // Clear any previous errors on success
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch purchased services from both API and db.json",
+							jsonError
+						);
+						setError(
+							"Failed to fetch purchased services from both API and local data."
+						);
+					})
+					.finally(() => {
+						setLoading(false); // Ensure loading is false after all attempts
+					});
+			})
+			.finally(() => {
+				setLoading(false); // Ensure loading is false if API request succeeds
+			});
 	}, []);
 
 	if (loading) {
@@ -49,9 +82,9 @@ function UserHistory() {
 
 	const getStatusClass = (status: string) => {
 		switch (status.toLowerCase()) {
-			case "complete":
+			case "Complete":
 				return "bg-success";
-			case "processing":
+			case "Active":
 				return "bg-warning";
 			case "error":
 				return "bg-danger";
@@ -86,26 +119,30 @@ function UserHistory() {
 							</tr>
 						</thead>
 						<tbody>
-							{serviceInfo.map((service, index) => (
+							{purchasedServicesData.map((purchasedSurvice, index) => (
 								<tr
-									key={service.purchaseId}
+									key={purchasedSurvice.id}
 									onClick={() =>
-										(window.location.href = `/purchased-services/${service.purchaseId}`)
+										(window.location.href = `/purchased-services/${purchasedSurvice.id}`)
 									}
 								>
 									<th scope="row" className="align-middle">
 										{index + 1}
 									</th>
-									<td className="align-middle">{service.name}</td>
-									<td className="align-middle">{service.purchaseId}</td>
-									<td className="align-middle">{service.purchaseDate}</td>
+									<td className="align-middle">
+										{purchasedSurvice.serviceName}
+									</td>
+									<td className="align-middle">{purchasedSurvice.id}</td>
+									<td className="align-middle">
+										{purchasedSurvice.lastUpdateTime}
+									</td>
 									<td className="align-middle">
 										<span
 											className={`align-middle badge ${getStatusClass(
-												service.status
+												purchasedSurvice.status
 											)} rounded-pill`}
 										>
-											{service.status}
+											{purchasedSurvice.status}
 										</span>
 									</td>
 								</tr>

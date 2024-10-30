@@ -18,7 +18,6 @@ import UserIEInformation from "./pages/UserIEInformation";
 import AdminDashboard from "./pages/AdminDashboard";
 import ServicePageEdit from "./components/AdminDashboardServicesPageEdit";
 import AdminDashboardManageUsersExtended from "./components/ManageUserInterface";
-import { AuthProvider } from "./components/AuthContext";
 
 function App() {
 	return (

@@ -326,19 +326,9 @@ function Login() {
 
 										<div className="mb-3 p-1">
 											<div
-												className="d-flex align-items-center justify-content-evenly mb-3"
+												className="d-flex flex-column align-items-center justify-content-evenly mb-3"
 												style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 											>
-												<button
-													type="button"
-													onClick={fetchCaptcha}
-													className="btn btn-secondary rounded-pill mt-2"
-													disabled={loadingCaptcha}
-												>
-													{language === "fa"
-														? "کد امنیتی جدید"
-														: "Request New CAPTCHA"}
-												</button>
 												{captchaImage ? (
 													<img
 														src={captchaImage}
@@ -352,6 +342,16 @@ function Login() {
 															: "Loading..."}
 													</p>
 												)}
+												<button
+													type="button"
+													onClick={fetchCaptcha}
+													className="btn btn-secondary rounded-pill mt-2"
+													disabled={loadingCaptcha}
+												>
+													{language === "fa"
+														? "کد امنیتی جدید"
+														: "Request New CAPTCHA"}
+												</button>
 											</div>
 
 											<Field
