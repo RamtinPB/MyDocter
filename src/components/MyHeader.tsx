@@ -14,7 +14,7 @@ import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
-import axios from "axios";
+// import axios from "axios";
 
 interface UserData {
 	name: string;
