@@ -1,38 +1,110 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
-interface Section {
+interface FAQsProps {
+	id: number;
 	question: string;
 	answer: string;
+	questionEn: string;
+	answerEn: string;
 }
 
 function AdminDashboardFAQPageContent() {
-	const [sections, setSections] = useState<Section[]>([]);
+	const [FAQsData, setFAQsData] = useState<FAQsProps[]>([]);
+	const [initialFAQsData, setInitialFAQsData] = useState<FAQsProps[]>([]);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
-	const addSection = () => {
-		setSections([...sections, { question: "", answer: "" }]);
+	useEffect(() => {
+		const fetchFAQ = async () => {
+			try {
+				// Attempt to fetch from the API
+				const response = await axiosInstance.post("/api/Admin/GetAllFAQs");
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
+				}
+
+				setFAQsData(response.data);
+				setInitialFAQsData(response.data);
+			} catch (err) {
+				console.error("API request failed, trying local db.json", err);
+
+				// Fallback to fetching from db.json if API request fails
+				try {
+					const response = await fetch("/db.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+
+					// Assuming faq is directly available in the root of db.json
+					const faq = data.faqs;
+
+					setFAQsData(faq);
+					setInitialFAQsData(faq);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
+			}
+		};
+
+		fetchFAQ();
+	}, []);
+
+	const addFAQ = async () => {
+		const newFAQ = {
+			id: 0,
+			question: "",
+			answer: "",
+			questionEn: "",
+			answerEn: "",
+		};
+		try {
+			const response = await axiosInstance.post("/api/Admin/AddFAQ", newFAQ);
+			if (response.status === 200) {
+				setFAQsData([...FAQsData, newFAQ]);
+			}
+		} catch (error) {
+			console.error("Failed to add FAQ", error);
+		}
 	};
 
-	// Remove a specific section by its index
-	const removeSection = (indexToRemove: number) => {
-		const newSections = sections.filter((_, index) => index !== indexToRemove);
-		setSections(newSections);
+	// Remove a specific FAQ by its index
+	const removeFAQ = async (indexToRemove: number) => {
+		const faqToRemove = FAQsData[indexToRemove];
+		try {
+			const response = await axiosInstance.post("/api/Admin/RemoveFAQ", {
+				faqId: faqToRemove.id,
+			});
+			if (response.status === 200) {
+				setFAQsData(FAQsData.filter((_, index) => index !== indexToRemove));
+			}
+		} catch (error) {
+			console.error("Failed to remove FAQ", error);
+		}
 	};
 
 	// Handle change in question or answer textarea
-	const handleChange = (index: number, field: keyof Section, value: string) => {
-		const updatedSections = [...sections];
-		updatedSections[index][field] = value;
-		setSections(updatedSections);
+	const handleChange = (
+		index: number,
+		field: "question" | "answer" | "questionEn" | "answerEn", // Explicit keys
+		value: string
+	) => {
+		const updatedFAQsData = [...FAQsData];
+		updatedFAQsData[index][field] = value;
+		setFAQsData(updatedFAQsData);
 	};
 
-	// @ts-ignore
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {};
 
 	// @ts-ignore
-	const handleCancel = () => {};
+	const handleCancel = () => {
+		setFAQsData(JSON.parse(JSON.stringify(initialFAQsData)));
+	};
 
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
@@ -44,7 +116,7 @@ function AdminDashboardFAQPageContent() {
 						{language === "fa" ? "لیست سوالات متداول" : "FAQ List"}
 					</h3>
 				</div>
-				{sections.map((section, index) => (
+				{FAQsData.map((faq, index) => (
 					<div
 						key={index}
 						id="question-section"
@@ -56,7 +128,7 @@ function AdminDashboardFAQPageContent() {
 							id="btn-delete"
 							className="rounded-circle btn p-0 m-3"
 							type="button"
-							onClick={() => removeSection(index)}
+							onClick={() => removeFAQ(index)}
 						>
 							<img
 								src="\images\red-delete.png"
@@ -84,7 +156,7 @@ function AdminDashboardFAQPageContent() {
 											? "متن خود را وارد کنید"
 											: "Write your input"
 									}
-									value={section.question}
+									value={faq.question}
 									onChange={(e) =>
 										handleChange(index, "question", e.target.value)
 									}
@@ -110,7 +182,7 @@ function AdminDashboardFAQPageContent() {
 											? "متن خود را وارد کنید"
 											: "Write your input"
 									}
-									value={section.answer}
+									value={faq.answer}
 									onChange={(e) =>
 										handleChange(index, "answer", e.target.value)
 									}
@@ -136,9 +208,9 @@ function AdminDashboardFAQPageContent() {
 											? "متن خود را وارد کنید"
 											: "Write your input"
 									}
-									value={section.question}
+									value={faq.questionEn}
 									onChange={(e) =>
-										handleChange(index, "question", e.target.value)
+										handleChange(index, "questionEn", e.target.value)
 									}
 								></textarea>
 							</div>
@@ -162,9 +234,9 @@ function AdminDashboardFAQPageContent() {
 											? "متن خود را وارد کنید"
 											: "Write your input"
 									}
-									value={section.answer}
+									value={faq.answerEn}
 									onChange={(e) =>
-										handleChange(index, "answer", e.target.value)
+										handleChange(index, "answerEn", e.target.value)
 									}
 								></textarea>
 							</div>
@@ -172,7 +244,7 @@ function AdminDashboardFAQPageContent() {
 					</div>
 				))}
 
-				{/* Add Button for new question sections */}
+				{/* Add Button for new question FAQsData */}
 				<div
 					id="btn-add"
 					className="d-flex justify-content-center align-items-center shadow-sm rounded-5 rounded-top-0"
@@ -180,7 +252,7 @@ function AdminDashboardFAQPageContent() {
 					<button
 						className="rounded-circle btn p-0 m-3"
 						type="button"
-						onClick={addSection}
+						onClick={addFAQ}
 					>
 						<img
 							src="\images\green-add.png"

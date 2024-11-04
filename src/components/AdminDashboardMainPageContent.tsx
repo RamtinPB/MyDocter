@@ -1,16 +1,113 @@
+import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
+
+interface homePageDataProps {
+	openingQuoteTitle: string;
+	openingQuoteDescription: string;
+	openingQuoteTitleEN: string;
+	openingQuoteDescriptionEN: string;
+	/////////////////////////////////////////
+	servicesLeftCardTitle: string;
+	servicesLeftCardDescription: string;
+	servicesLeftCardImage: string;
+	/////////////////////////////////////////
+	servicesLeftCardTitleEN: string;
+	servicesLeftCardDescriptionEN: string;
+	/////////////////////////////////////////
+	servicesRightCardTitle: string;
+	servicesRightCardDescription: string;
+	servicesRightCardImage: string;
+	/////////////////////////////////////////
+	servicesRightCardTitleEN: string;
+	servicesRightCardDescriptionEN: string;
+	/////////////////////////////////////////
+	docTitle: string;
+	docImage: string;
+	docImageEN: string;
+	docDescription: string;
+	/////////////////////////////////////////
+	docTitleEN: string;
+	docDescriptionEN: string;
+}
 
 function AdminDashboardMainPageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
-	// @ts-ignore
-	const handleChange = () => {};
+	const [homePageData, setHomePageData] = useState<homePageDataProps | null>(
+		null
+	);
 
-	// @ts-ignore
-	const handleSubmit = () => {};
+	const [initialHomePageData, setInitialHomePageData] =
+		useState<homePageDataProps | null>(null);
 
-	// @ts-ignore
-	const handleCancel = () => {};
+	useEffect(() => {
+		const fetchHomeTextData = async () => {
+			try {
+				// Attempt to fetch from the API
+				const response = await axiosInstance.post("/api/Pages/GetHomePageData");
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
+				}
+
+				setHomePageData(response.data);
+				setInitialHomePageData(response.data);
+			} catch (err) {
+				console.error("API request failed, trying local db.json", err);
+
+				// Fallback to fetching from db.json if API request fails
+				try {
+					const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+
+					const data = await response.json();
+					setHomePageData(data.homeTextData[0]);
+					setInitialHomePageData(data.homeTextData[0]);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
+			}
+		};
+
+		fetchHomeTextData();
+	}, []);
+
+	const handleSubmit = () => {
+		// Collect and prepare data to be sent to the backend
+		const updatedData = {
+			homePageData,
+		};
+
+		console.log("Updated Data to Send:", updatedData);
+
+		// Send to backend using fetch/axios etc.
+		// Example:
+		// fetch('/your-backend-endpoint', {
+		//   method: 'POST',
+		//   headers: { 'Content-Type': 'application/json' },
+		//   body: JSON.stringify(updatedData),
+		// }).then(response => {
+		//   if (!response.ok) throw new Error('Error in updating');
+		//   return response.json();
+		// }).catch(error => console.error('Update error:', error));
+	};
+
+	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		const { name, value } = event.target;
+		setHomePageData((prevData) => ({
+			...prevData!,
+			[name]: value,
+		}));
+	};
+
+	const handleCancel = () => {
+		setHomePageData(JSON.parse(JSON.stringify(initialHomePageData)));
+	};
 
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
@@ -36,6 +133,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="openingQuoteTitleFa" // Name attribute for corresponding data in homePageData
+						value={homePageData?.openingQuoteTitle || ""} // Set value to corresponding homePageData property
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -55,6 +154,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="openingQuoteDescriptionFa"
+						value={homePageData?.openingQuoteDescription || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -75,6 +176,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="openingQuoteTitleEn"
+						value={homePageData?.openingQuoteTitleEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -94,6 +197,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="openingQuoteDescriptionEn"
+						value={homePageData?.openingQuoteDescriptionEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -122,6 +227,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="servicesLeftCardDescription"
+						value={homePageData?.servicesLeftCardDescription || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -141,6 +248,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="servicesRightCardDescription"
+						value={homePageData?.servicesRightCardDescription || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -161,6 +270,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="servicesLeftCardDescriptionEN"
+						value={homePageData?.servicesLeftCardDescriptionEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -180,6 +291,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="servicesRightCardDescriptionEN"
+						value={homePageData?.servicesRightCardDescriptionEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -206,6 +319,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="docTitle"
+						value={homePageData?.docTitle || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -223,6 +338,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="docDescription"
+						value={homePageData?.docDescription || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -241,6 +358,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="docTitleEN"
+						value={homePageData?.docTitleEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -260,6 +379,8 @@ function AdminDashboardMainPageContent() {
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
+						name="docDescriptionEN"
+						value={homePageData?.docDescriptionEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
