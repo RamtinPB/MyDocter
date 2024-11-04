@@ -45,6 +45,7 @@ function MyHeader() {
 				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
+				// unimportant
 				// let errorMessage = "";
 
 				// if (axios.isAxiosError(error)) {
