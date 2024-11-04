@@ -211,7 +211,7 @@
 		"fatherName": "عبدالله",
 		"birthDate": "",
 		"nationalId": "",
-		"nationality": "",
+		"nationality": "غیر ایرانی",
 		"insuranceType": "بیمه سلامت",
 		"supplementaryInsuranceType": "بیمه",
 
@@ -219,7 +219,7 @@
 		"postalCode": "",
 		"city": "",
 		"address": "",
-		"maritalStatus": "",
+		"maritalStatus": "مجرد",
 		"educationLevel": ""
 	},
 
