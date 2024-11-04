@@ -45,7 +45,7 @@ function MyHeader() {
 				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
-				let errorMessage = "";
+				/*let errorMessage = "";
 
 				if (axios.isAxiosError(error)) {
 					// Check for error response and errorCode
@@ -71,7 +71,7 @@ function MyHeader() {
 					} else {
 						errorMessage = "خطای ناشناخته‌ای رخ داده است";
 					}
-				}
+				}*/
 
 				try {
 					const response = await fetch("/db.json"); // Adjust path if necessary
