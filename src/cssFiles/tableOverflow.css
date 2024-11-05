@@ -1,0 +1,11 @@
+@media (max-width: 576px){
+    .table-responsive-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+    }
+
+/* Optional: Prevent the table from stretching too wide */
+    .table-responsive-container table {
+        min-width: 100%; /* Ensure the table fills the screen width */
+    }
+}

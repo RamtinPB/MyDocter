@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
 import { useNavigate } from "react-router-dom";
+import "../cssFiles/tableOverflow.css";
+import "../cssFiles/adminbuttons.css";
 
 interface Users {
 	[key: string]: any;
@@ -55,94 +57,100 @@ function AdminDashboardManageUsers() {
 						{language === "fa" ? "لیست کاربران" : "List of Users"}
 					</h3>
 				</div>
-				<table
-					className="table table-hover text-center mb-5"
-					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-				>
-					<thead>
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">{language === "fa" ? "نام" : "First Name"}</th>
-							<th scope="col">
-								{language === "fa" ? "نام خانوادگی" : "Last Name"}
-							</th>
-							<th scope="col">
-								{language === "fa" ? "شناسه کاربر" : "User ID"}
-							</th>
-							<th scope="col">{language === "fa" ? "ایمیل" : "Email"}</th>
-							<th scope="col">
-								{language === "fa" ? "شماره همراه" : "Phone Number"}
-							</th>
-							<th scope="col">{language === "fa" ? "ویرایش" : "Edit"}</th>
-							<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{users.map((user, index) => (
-							<tr key={index}>
-								<th scope="row" className="align-middle">
-									<span className="px-1">{index + 1}</span>
-								</th>
-								<td className="align-middle">{user.firstName}</td>
-								<td className="align-middle">{user.lastName}</td>
-								<td className="align-middle">{user.userId}</td>
-								<td className="align-middle">{user.email}</td>
-								<td className="align-middle">{user.phoneNumber}</td>
-								<td className="align-middle">
-									<a
-										href={`/edit-user/${user.userId}`} // Change this
-										onClick={(e) => {
-											e.preventDefault();
-											navigate(`/edit-user/${user.userId}`, {
-												state: { section: "manageUsers" },
-											});
-										}}
-										id="btn-edit"
-										className="rounded-circle btn shadow p-0 my-3"
-									>
-										<img
-											src="/images/edit-cog.png"
-											className="custom-admin-btn rounded-circle"
-											alt="Edit"
-										/>
-									</a>
-								</td>
-								<td className="align-middle">
-									<button
-										id="btn-delete"
-										className="rounded-circle btn p-0 m-1 m-md-3"
-										type="button"
-										onClick={() => removeUser(index)}
-									>
-										<img
-											src="/images/red-delete.png"
-											className="custom-admin-btn rounded-circle"
-										/>
-									</button>
-								</td>
-							</tr>
-						))}
-						<tr>
-							<td colSpan={8} className="align-middle">
-								<div
-									id="btn-add"
-									className="d-flex justify-content-center align-items-center"
-								>
-									<button
-										className="rounded-circle btn p-0 m-1"
-										type="button"
-										onClick={addUser}
-									>
-										<img
-											src="/images/green-add.png"
-											className="custom-admin-btn rounded-circle"
-										/>
-									</button>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div className="container">
+					<div className="table-responsive-container">
+						<table
+							className="table table-hover text-center mb-5"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">
+										{language === "fa" ? "نام" : "First Name"}
+									</th>
+									<th scope="col">
+										{language === "fa" ? "نام خانوادگی" : "Last Name"}
+									</th>
+									<th scope="col">
+										{language === "fa" ? "شناسه کاربر" : "User ID"}
+									</th>
+									<th scope="col">{language === "fa" ? "ایمیل" : "Email"}</th>
+									<th scope="col">
+										{language === "fa" ? "شماره همراه" : "Phone Number"}
+									</th>
+									<th scope="col">{language === "fa" ? "ویرایش" : "Edit"}</th>
+									<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{users.map((user, index) => (
+									<tr key={index}>
+										<th scope="row" className="align-middle">
+											<span className="px-1">{index + 1}</span>
+										</th>
+										<td className="align-middle">{user.firstName}</td>
+										<td className="align-middle">{user.lastName}</td>
+										<td className="align-middle">{user.userId}</td>
+										<td className="align-middle">{user.email}</td>
+										<td className="align-middle">{user.phoneNumber}</td>
+										<td className="align-middle">
+											<a
+												href={`/edit-user/${user.userId}`} // Change this
+												onClick={(e) => {
+													e.preventDefault();
+													navigate(`/edit-user/${user.userId}`, {
+														state: { section: "manageUsers" },
+													});
+												}}
+												id="btn-edit"
+												className="rounded-circle btn shadow p-0 my-3"
+											>
+												<img
+													src="/images/edit-cog.png"
+													className="custom-admin-btn rounded-circle"
+													alt="Edit"
+												/>
+											</a>
+										</td>
+										<td className="align-middle">
+											<button
+												id="btn-delete"
+												className="rounded-circle btn p-0 m-1 m-md-3"
+												type="button"
+												onClick={() => removeUser(index)}
+											>
+												<img
+													src="/images/red-delete.png"
+													className="custom-admin-btn rounded-circle"
+												/>
+											</button>
+										</td>
+									</tr>
+								))}
+								<tr>
+									<td colSpan={8} className="align-middle">
+										<div
+											id="btn-add"
+											className="d-flex justify-content-center align-items-center"
+										>
+											<button
+												className="rounded-circle btn p-0 m-1"
+												type="button"
+												onClick={addUser}
+											>
+												<img
+													src="/images/green-add.png"
+													className="custom-admin-btn rounded-circle"
+												/>
+											</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
