@@ -12,7 +12,6 @@ interface FAQsProps {
 
 function AdminDashboardFAQPageContent() {
 	const [FAQsData, setFAQsData] = useState<FAQsProps[]>([]);
-	const [initialFAQsData, setInitialFAQsData] = useState<FAQsProps[]>([]);
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
@@ -27,7 +26,6 @@ function AdminDashboardFAQPageContent() {
 				}
 
 				setFAQsData(response.data);
-				setInitialFAQsData(response.data);
 			} catch (err) {
 				console.error("API request failed, trying local db.json", err);
 
@@ -43,7 +41,6 @@ function AdminDashboardFAQPageContent() {
 					const faq = data.faqs;
 
 					setFAQsData(faq);
-					setInitialFAQsData(faq);
 				} catch (jsonErr) {
 					console.error(
 						"Failed to fetch data from both API and db.json",
@@ -108,11 +105,6 @@ function AdminDashboardFAQPageContent() {
 		} catch (error) {
 			console.log("Failed to send new FAQs to server", error);
 		}
-	};
-
-	// @ts-ignore
-	const handleCancel = () => {
-		setFAQsData(JSON.parse(JSON.stringify(initialFAQsData)));
 	};
 
 	return (
@@ -276,12 +268,6 @@ function AdminDashboardFAQPageContent() {
 			</div>
 			{/* Submit and Cancel buttons */}
 			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
-				<button
-					className="btn btn-secondary rounded-pill px-3"
-					onClick={handleCancel}
-				>
-					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
-				</button>
 				<button
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
