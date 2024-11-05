@@ -7,38 +7,147 @@ import "/src/cssFiles/userInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 
-interface UserFormData {
-	name?: string;
-	lastName?: string;
-	phoneNumber?: string;
-	email?: string;
-	gender?: string;
-	insuranceType?: string;
-	nationalCode?: string;
-	supplementaryInsuranceType?: string;
-	isIranian?: string | boolean;
-	isMarried?: string | boolean;
-	noInsurance?: boolean;
-	noNationalCode?: boolean;
-	noSupplementaryInsurance?: boolean;
+// Define a type for the relevant fields to filter
+interface validationSchemaDataProps {
+	name: string;
+	required: boolean;
+	type: string;
+	checkboxName: string;
+
+	matches: string;
+	matchesMessage: string;
+
+	matchesEN: string;
+	matchesMessageEN: string;
+
+	requiredMessage: string;
+	requiredMessageEN: string;
 }
 
-const initialFormData: UserFormData = {};
+interface formFieldsProps {
+	name: string;
+	type: string;
+	required: string;
+
+	label: string;
+	labelEN: string;
+
+	options: string;
+	optionsEN: string;
+
+	checkboxName: string;
+	checkboxLabel: string;
+	checkboxLabelEN: string;
+}
+
+// Create a utility function to process the data
+const processData = (
+	data: any[]
+): {
+	formFieldsProps: formFieldsProps[];
+	validationSchemaData: validationSchemaDataProps[];
+} => {
+	const formFields: formFieldsProps[] = data.map((field) => ({
+		name: field.name,
+		type: field.type,
+		required: field.required, // Assuming this is already a boolean
+		label: field.label,
+		labelEN: field.labelEN,
+		options: field.options, // Assuming options might be an array
+		optionsEN: field.optionsEN, // Assuming optionsEN might be an array
+		checkboxName: field.checkboxName,
+		checkboxLabel: field.checkboxLabel,
+		checkboxLabelEN: field.checkboxLabelEN,
+	}));
+
+	const validationSchemaData: validationSchemaDataProps[] = data
+		.filter((field) => field.type || field.matches || field.checkboxName)
+		.map((field) => ({
+			name: field.name,
+			required: field.required,
+			type: field.type,
+			matches: field.matches,
+			matchesMessage: field.matchesMessage,
+			matchesEN: field.matchesEN,
+			matchesMessageEN: field.matchesMessageEN,
+			requiredMessage: field.requiredMessage,
+			requiredMessageEN: field.requiredMessageEN,
+			checkboxName: field.checkboxName,
+		}));
+
+	return { formFieldsProps: formFields, validationSchemaData };
+};
+
+interface UserFormData {
+	name: string;
+	lastName: string;
+	phoneNumber: string;
+	email: string;
+	gender: string;
+	insuranceType: string;
+	supplementaryInsuranceType: string;
+	nationalCode: string;
+	isIranian: string | boolean;
+	isMarried: string | boolean;
+	noInsurance: boolean;
+	noNationalCode: boolean;
+	noSupplementaryInsurance: boolean;
+	residenceProvince: string;
+	residenceCity: string;
+	residenceAddress: string;
+	residencePostalCode: string;
+	educationLevel: string;
+	birthdate: string;
+}
+
+const initialFormData: UserFormData = {
+	name: "",
+	lastName: "",
+	phoneNumber: "",
+	email: "",
+	gender: "",
+	insuranceType: "",
+	supplementaryInsuranceType: "",
+	nationalCode: "",
+	isIranian: "",
+	isMarried: "",
+	noInsurance: false,
+	noNationalCode: false,
+	noSupplementaryInsurance: false,
+	residenceProvince: "",
+	residenceCity: "",
+	residenceAddress: "",
+	residencePostalCode: "",
+	educationLevel: "",
+	birthdate: "",
+};
 
 function convertIsIranianToBoolean(
 	isIranian: string | boolean | undefined
 ): boolean {
 	if (isIranian === "ایرانی") return true;
 	if (isIranian === "غیر ایرانی") return false;
-	return Boolean(isIranian); // Fallback to convert to boolean
+	return Boolean(isIranian);
 }
 
 function convertIsMarriedToBoolean(
 	isMarried: string | boolean | undefined
 ): boolean {
-	if (isMarried === "ایرانی") return true;
-	if (isMarried === "غیر ایرانی") return false;
-	return Boolean(isMarried); // Fallback to convert to boolean
+	if (isMarried === "متاهل") return true;
+	if (isMarried === "مجرد") return false;
+	return Boolean(isMarried);
+}
+
+function convertIsIranianToString(isIranian: boolean | undefined): string {
+	if (isIranian === true) return "ایرانی";
+	if (isIranian === false) return "غیر ایرانی";
+	return "";
+}
+
+function convertIsMarriedToString(isMarried: boolean | undefined): string {
+	if (isMarried === true) return "متاهل";
+	if (isMarried === false) return "مجرد";
+	return "";
 }
 
 function handleConditionalEmptyFields(values: UserFormData): UserFormData {
@@ -50,11 +159,9 @@ function handleConditionalEmptyFields(values: UserFormData): UserFormData {
 
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
-
-	const [profilePicture, setProfilePicture] = useState<string | null>(null);
-
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
+	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -65,12 +172,19 @@ function UserInformation() {
 			.post("/api/User/GetUserData") // Call the API to get user data
 			.then((response) => {
 				const data = response.data;
+				console.log(data);
 
 				// Populate form fields with API response
-				formik.setValues({
+				// Convert `isIranian` and `isMarried` booleans to strings
+				const formattedData = {
 					...data,
+					isIranian: convertIsIranianToString(data.isIranian),
+					isMarried: convertIsMarriedToString(data.isMarried),
 					profilePicture: data.profileImageUrl,
-				});
+				};
+
+				// Populate form fields with the formatted response
+				formik.setValues(formattedData);
 
 				// Set profile picture if available
 				if (data.profileImageUrl) {
@@ -109,77 +223,51 @@ function UserInformation() {
 			});
 	}, []);
 
-	// fetch user data form fields
+	// Assuming that formData comes as a single structure from the API
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetUserDataFormFields") // Call the API to get user data
+			.post("/api/User/GetUserDataFormFields") // API call for form data and validation
 			.then((response) => {
-				setFormFields(response.data);
+				const data = response.data;
+
+				const {
+					formFieldsProps: newFormFields,
+					validationSchemaData: newValidationSchemaData,
+				} = processData(data);
+
+				setFormFields(newFormFields);
+				setValidationSchemaData(newValidationSchemaData);
+
+				console.log(newFormFields);
+				console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
-				console.error(
-					"API request for user data form fields failed, trying local db.json",
-					error
-				);
+				console.error("API request failed, trying local db.json", error);
 
-				// Fetch from local db.json if API fails
 				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(
-								"Failed to fetch user data form fields from db.json"
-							);
-						}
-						return response.json();
-					})
+					.then((response) => response.json())
 					.then((data) => {
-						// Update state for form fields
-						setFormFields(data.formFields);
+						const {
+							formFieldsProps: newFormFields,
+							validationSchemaData: newValidationSchemaData,
+						} = processData(data);
+
+						setFormFields(newFormFields);
+						setValidationSchemaData(newValidationSchemaData);
+
+						console.log(newFormFields);
+						console.log(newValidationSchemaData);
 					})
 					.catch((jsonError) => {
 						console.error(
-							"Failed to fetch user data form fields from both API and db.json",
+							"Failed to fetch data from both API and db.json",
 							jsonError
 						);
 					});
 			});
 	}, []);
 
-	// fetch user data form validation schema
-	useEffect(() => {
-		axiosInstance
-			.post("/api/User/GetUserDataFormValidationSchemas") // Call the API to get user data
-			.then((response) => {
-				setValidationSchemaData(response.data);
-			})
-			.catch((error) => {
-				console.error(
-					"API request for user data form validation schema failed, trying local db.json",
-					error
-				);
-
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(
-								"Failed to fetch user data form validation schema from db.json"
-							);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						setValidationSchemaData(data.validationSchema);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data form validation schema from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, []);
-
+	// Create the Yup validation schema based on validationSchemaData
 	const validationSchema = Yup.object().shape(
 		validationSchemaData.reduce((acc, rule) => {
 			let fieldSchema: Yup.AnySchema = Yup.mixed();
@@ -192,6 +280,9 @@ function UserInformation() {
 				case "date":
 					fieldSchema = Yup.date();
 					break;
+				case "select":
+					fieldSchema = Yup.string();
+					break;
 				default:
 					fieldSchema = Yup.mixed();
 			}
@@ -199,67 +290,39 @@ function UserInformation() {
 			// Apply common rules
 			if (rule.matches && rule.type === "string") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(language === "fa" ? rule.matches[0] : rule.matchesEN[0]),
-					language === "fa" ? rule.matches[1] : rule.matchesEN[1]
+					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
+					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
 				);
 			}
-			if (rule.email) {
+			if (rule.name === "email") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).email(
-					language === "fa" ? rule.email : rule.emailEN
+					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
 				);
 			}
 
 			// Apply conditional rules
-			if (rule.when) {
-				const [depField, conditions] = rule.when;
+			if (rule.checkboxName) {
+				const depField = rule.checkboxName;
 				fieldSchema = fieldSchema.when(depField, {
-					is: conditions.is,
+					is: true,
 					then: (schema) => {
 						let thenSchema = schema;
-						if (conditions.then.matches) {
-							thenSchema = (thenSchema as Yup.StringSchema).matches(
-								new RegExp(
-									language === "fa"
-										? conditions.then.matches[0]
-										: conditions.then.matchesEN[0]
-								),
-								language === "fa"
-									? conditions.then.matches[1]
-									: conditions.then.matchesEN[1]
-							);
-						}
-						if (conditions.then.required === false) {
-							thenSchema = thenSchema.notRequired();
-						} else if (conditions.then.required) {
-							thenSchema = thenSchema.required(
-								language === "fa"
-									? conditions.then.required
-									: conditions.then.requiredEN
-							);
-						}
+						thenSchema = thenSchema.optional();
 						return thenSchema;
 					},
 					otherwise: (schema) => {
 						let otherwiseSchema = schema;
-						if (conditions.otherwise.matches) {
+						if (rule.matches) {
 							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(
-									language === "fa"
-										? conditions.otherwise.matches[0]
-										: conditions.otherwise.matchesEN[0]
-								),
-								language === "fa"
-									? conditions.otherwise.matches[1]
-									: conditions.otherwise.matchesEN[1]
+								new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
+								language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
 							);
 						}
-						if (conditions.otherwise.required === false) {
-							otherwiseSchema = otherwiseSchema.notRequired();
-						} else if (conditions.otherwise.required) {
+						if (rule.required) {
 							otherwiseSchema = otherwiseSchema.required(
 								language === "fa"
-									? conditions.otherwise.required
-									: conditions.otherwise.requiredEN
+									? rule.requiredMessage
+									: rule.requiredMessageEN
 							);
 						}
 						return otherwiseSchema;
@@ -269,9 +332,9 @@ function UserInformation() {
 				// Apply default required rule if no 'when' condition is specified
 				if (rule.required) {
 					fieldSchema = fieldSchema.required(
-						language === "fa" ? rule.required : rule.requiredEN
+						language === "fa" ? rule.requiredMessage : rule.requiredMessageEN
 					);
-				} else if (rule.optional) {
+				} else {
 					fieldSchema = fieldSchema.notRequired();
 				}
 			}
@@ -284,7 +347,8 @@ function UserInformation() {
 
 	const formik = useFormik({
 		initialValues: initialFormData,
-		validationSchema,
+		validationSchema: validationSchema,
+
 		onSubmit: async (values) => {
 			const updatedData: UserFormData = {
 				...handleConditionalEmptyFields(values),
@@ -302,6 +366,7 @@ function UserInformation() {
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
+		validateOnMount: true,
 	});
 
 	const handleProfilePictureChange = async (

@@ -13,6 +13,7 @@ interface FAQsProps {
 function AdminDashboardFAQPageContent() {
 	const [FAQsData, setFAQsData] = useState<FAQsProps[]>([]);
 	const [initialFAQsData, setInitialFAQsData] = useState<FAQsProps[]>([]);
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -53,7 +54,7 @@ function AdminDashboardFAQPageContent() {
 		};
 
 		fetchFAQ();
-	}, []);
+	}, [dataUpdateFlag]);
 
 	const addFAQ = async () => {
 		const newFAQ = {
@@ -71,6 +72,7 @@ function AdminDashboardFAQPageContent() {
 		} catch (error) {
 			console.error("Failed to add FAQ", error);
 		}
+		setDataUpdateFlag((prev) => !prev); // Trigger refetch
 	};
 
 	// Remove a specific FAQ by its index
@@ -86,6 +88,7 @@ function AdminDashboardFAQPageContent() {
 		} catch (error) {
 			console.error("Failed to remove FAQ", error);
 		}
+		setDataUpdateFlag((prev) => !prev); // Trigger refetch
 	};
 
 	// Handle change in question or answer textarea
@@ -99,7 +102,13 @@ function AdminDashboardFAQPageContent() {
 		setFAQsData(updatedFAQsData);
 	};
 
-	const handleSubmit = async () => {};
+	const handleSubmit = async () => {
+		try {
+			await axiosInstance.post("/api/Admin/UpdateFAQs", FAQsData);
+		} catch (error) {
+			console.log("Failed to send new FAQs to server", error);
+		}
+	};
 
 	// @ts-ignore
 	const handleCancel = () => {
@@ -150,7 +159,8 @@ function AdminDashboardFAQPageContent() {
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									rows={3}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									rows={2}
 									placeholder={
 										language === "fa"
 											? "متن خود را وارد کنید"
@@ -176,7 +186,8 @@ function AdminDashboardFAQPageContent() {
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									rows={3}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									rows={2}
 									placeholder={
 										language === "fa"
 											? "متن خود را وارد کنید"
@@ -202,7 +213,8 @@ function AdminDashboardFAQPageContent() {
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									rows={3}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									rows={2}
 									placeholder={
 										language === "fa"
 											? "متن خود را وارد کنید"
@@ -228,7 +240,8 @@ function AdminDashboardFAQPageContent() {
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									rows={3}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									rows={2}
 									placeholder={
 										language === "fa"
 											? "متن خود را وارد کنید"

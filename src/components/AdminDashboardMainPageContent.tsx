@@ -77,24 +77,32 @@ function AdminDashboardMainPageContent() {
 		fetchHomeTextData();
 	}, []);
 
-	const handleSubmit = () => {
-		// Collect and prepare data to be sent to the backend
-		const updatedData = {
-			homePageData,
+	const handleSubmit = async () => {
+		// Convert homePageData to a JSON string
+		const updatedData = JSON.stringify(homePageData);
+
+		// Create an object that wraps the string if the API expects it that way
+		const payload = {
+			data: updatedData, // Wrap it in an object with key 'data' or the expected key
 		};
 
-		console.log("Updated Data to Send:", updatedData);
+		try {
+			const response = await axiosInstance.post(
+				"/api/Admin/UpdateHomePageData",
+				payload, // Send the object here
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
 
-		// Send to backend using fetch/axios etc.
-		// Example:
-		// fetch('/your-backend-endpoint', {
-		//   method: 'POST',
-		//   headers: { 'Content-Type': 'application/json' },
-		//   body: JSON.stringify(updatedData),
-		// }).then(response => {
-		//   if (!response.ok) throw new Error('Error in updating');
-		//   return response.json();
-		// }).catch(error => console.error('Update error:', error));
+			if (response.status === 200) {
+				console.log("Updated Data to Send:", updatedData);
+			}
+		} catch (error) {
+			console.log("Failed to update home page data", error);
+		}
 	};
 
 	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -119,7 +127,7 @@ function AdminDashboardMainPageContent() {
 					</h3>
 				</div>
 				{/* farsi */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -129,16 +137,17 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						name="openingQuoteTitleFa" // Name attribute for corresponding data in homePageData
+						name="openingQuoteTitle" // Name attribute for corresponding data in homePageData
 						value={homePageData?.openingQuoteTitle || ""} // Set value to corresponding homePageData property
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -150,17 +159,18 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						name="openingQuoteDescriptionFa"
+						name="openingQuoteDescription"
 						value={homePageData?.openingQuoteDescription || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
 				{/* english */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -172,16 +182,17 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						name="openingQuoteTitleEn"
+						name="openingQuoteTitleEN"
 						value={homePageData?.openingQuoteTitleEN || ""}
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -193,11 +204,12 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						name="openingQuoteDescriptionEn"
+						name="openingQuoteDescriptionEN"
 						value={homePageData?.openingQuoteDescriptionEN || ""}
 						onChange={handleChange}
 					></textarea>
@@ -211,7 +223,7 @@ function AdminDashboardMainPageContent() {
 					</h3>
 				</div>
 				{/* farsi */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -223,7 +235,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -232,7 +245,7 @@ function AdminDashboardMainPageContent() {
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -244,7 +257,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -254,7 +268,7 @@ function AdminDashboardMainPageContent() {
 					></textarea>
 				</div>
 				{/* english */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -266,7 +280,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -275,7 +290,7 @@ function AdminDashboardMainPageContent() {
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -287,7 +302,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -305,7 +321,7 @@ function AdminDashboardMainPageContent() {
 					</h3>
 				</div>
 				{/* farsi */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -315,7 +331,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -324,7 +341,7 @@ function AdminDashboardMainPageContent() {
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -334,7 +351,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -344,7 +362,7 @@ function AdminDashboardMainPageContent() {
 					></textarea>
 				</div>
 				{/* english */}
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -354,7 +372,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
@@ -363,7 +382,7 @@ function AdminDashboardMainPageContent() {
 						onChange={handleChange}
 					></textarea>
 				</div>
-				<div className="d-flex flex-column px-3 my-4 mx-4 py-2">
+				<div className="d-flex flex-column px-3 m-4 py-2">
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
@@ -375,7 +394,8 @@ function AdminDashboardMainPageContent() {
 						className={`form-control text-${
 							language === "fa" ? "end" : "start"
 						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						rows={3}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						rows={2}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
