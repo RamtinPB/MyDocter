@@ -238,8 +238,8 @@ function UserInformation() {
 				setFormFields(newFormFields);
 				setValidationSchemaData(newValidationSchemaData);
 
-				console.log(newFormFields);
-				console.log(newValidationSchemaData);
+				//console.log(newFormFields);
+				//console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);

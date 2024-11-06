@@ -6,6 +6,89 @@ import "/src/cssFiles/userIEInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 
+interface validationSchemaIEDataProps {
+	name: string;
+	required: boolean;
+	type: string;
+	checkboxName: string;
+
+	matches: string;
+	matchesMessage: string;
+
+	matchesEN: string;
+	matchesMessageEN: string;
+
+	requiredMessage: string;
+	requiredMessageEN: string;
+}
+
+interface formFieldsIEProps {
+	name: string;
+	type: string;
+	required: boolean;
+
+	parent: string;
+
+	group: string;
+	groupEN: string;
+
+	label: string;
+	labelEN: string;
+
+	placeholder: string;
+	placeholderEN: string;
+
+	options: string;
+	optionsEN: string;
+
+	checkboxName: string;
+	checkboxLabel: string;
+	checkboxLabelEN: string;
+}
+
+// Create a utility function to process the data
+const processData = (
+	data: any[]
+): {
+	formFieldsProps: formFieldsIEProps[];
+	validationSchemaData: validationSchemaIEDataProps[];
+} => {
+	const formFields: formFieldsIEProps[] = data.map((field) => ({
+		name: field.name,
+		type: field.type,
+		required: field.required, // Assuming this is already a boolean
+		parent: field.parent,
+		group: field.group,
+		groupEN: field.groupEN,
+		label: field.label,
+		labelEN: field.labelEN,
+		placeholder: field.placeholder,
+		placeholderEN: field.placeholderEN,
+		options: field.options, // Assuming options might be an array
+		optionsEN: field.optionsEN, // Assuming optionsEN might be an array
+		checkboxName: field.checkboxName,
+		checkboxLabel: field.checkboxLabel,
+		checkboxLabelEN: field.checkboxLabelEN,
+	}));
+
+	const validationSchemaData: validationSchemaIEDataProps[] = data
+		.filter((field) => field.type || field.matches || field.checkboxName)
+		.map((field) => ({
+			name: field.name,
+			required: field.required,
+			type: field.type,
+			matches: field.matches,
+			matchesMessage: field.matchesMessage,
+			matchesEN: field.matchesEN,
+			matchesMessageEN: field.matchesMessageEN,
+			requiredMessage: field.requiredMessage,
+			requiredMessageEN: field.requiredMessageEN,
+			checkboxName: field.checkboxName,
+		}));
+
+	return { formFieldsProps: formFields, validationSchemaData };
+};
+
 interface UserInfo {
 	gender: string;
 }
@@ -93,9 +176,7 @@ const initialFormData: UserIEFormData = {
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-	const [formSections, setFormSections] = useState<{ [key: string]: any[] }>(
-		{}
-	);
+	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
@@ -181,9 +262,18 @@ function UserIEInformation() {
 		axiosInstance
 			.post("/api/User/GetUserInformationFormFields") // Call the API to get user data
 			.then((response) => {
-				// Update form fields
-				const sections = response.data[0]; // Adjust based on structure
-				setFormSections(sections);
+				const data = response.data;
+
+				const {
+					formFieldsProps: newFormFields,
+					validationSchemaData: newValidationSchemaData,
+				} = processData(data);
+
+				setFormFields(newFormFields);
+				setValidationSchemaData(newValidationSchemaData);
+
+				console.log(newFormFields);
+				console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
 				console.error(
@@ -202,50 +292,20 @@ function UserIEInformation() {
 						return response.json();
 					})
 					.then((data) => {
-						// Update form fields
-						const sections = data.formFieldsIE[0]; // Adjust based on structure
-						setFormSections(sections);
+						const {
+							formFieldsProps: newFormFields,
+							validationSchemaData: newValidationSchemaData,
+						} = processData(data);
+
+						setFormFields(newFormFields);
+						setValidationSchemaData(newValidationSchemaData);
+
+						console.log(newFormFields);
+						console.log(newValidationSchemaData);
 					})
 					.catch((jsonError) => {
 						console.error(
 							"Failed to fetch user data form fields from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, []);
-
-	// fetch user infomation form validation schema
-	useEffect(() => {
-		axiosInstance
-			.post("/api/User/GetUserInformationFormValidationSchemas") // Call the API to get user data
-			.then((response) => {
-				// Update validation schema data
-				setValidationSchemaData(response.data);
-			})
-			.catch((error) => {
-				console.error(
-					"API request for user data form validation schema failed, trying local db.json",
-					error
-				);
-
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(
-								"Failed to fetch user data form validation schema from db.json"
-							);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						// Update validation schema data
-						setValidationSchemaData(data.validationSchemaDataIE);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data form validation schema from both API and db.json",
 							jsonError
 						);
 					});
@@ -393,27 +453,9 @@ function UserIEInformation() {
 		);
 	};
 
-	const sectionNameMap = {
-		"اطلاعات پایه": "Basic Information",
-		"تاریخچه سلامتی و بیماری": "Health and Illness History",
-		"حساسیت ها": "Allergies",
-		"محدودیت ها و توانایی ها": "Limitations and Abilities",
-		"سابقه مصرف دارو (اختیاری)": "Medication History (Optional)",
-		"بیماران خانم": "Female Patients",
-		"انجام فعالیت های روزانه زندگی": "Performing daily life activities",
-		// Add any additional sections here
-	};
-
 	const handleTestSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
-		const errors = await formik.validateForm();
-		console.log("Validation errors on submit:", errors);
-
-		if (Object.keys(errors).length === 0) {
-			formik.handleSubmit();
-		} else {
-			console.log("Form submission blocked due to validation errors.");
-		}
+		formik.handleSubmit();
 	};
 
 	return (
@@ -425,74 +467,71 @@ function UserIEInformation() {
 					noValidate
 				>
 					<div className="accordion" id="accordionExample">
-						{Object.keys(formSections).map(
-							(section, index) =>
-								!(section === "id") &&
-								!(userInfo?.gender === "مرد" && section === "بیماران خانم") && (
-									<div
-										className="accordion-item shadow-sm rounded-5 mb-5"
-										key={index}
-									>
+						{Array.from(new Set(formFields.map((field) => field.group))).map(
+							(group, index) => {
+								const sampleField = formFields.find(
+									(field) => field.group === group
+								);
+								return (
+									!(group === undefined) &&
+									!(userInfo?.gender === "مرد" && group === "بیماران خانم") && (
 										<div
-											className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
-											id={`heading${index}`}
-											style={{ direction: language === "fa" ? "ltr" : "rtl" }}
-										>
-											<h4 className="mb-0  mx-2 mx-md-3 mx-lg-4">
-												{language === "fa"
-													? section
-													: sectionNameMap[
-															section as keyof typeof sectionNameMap
-													  ]}
-											</h4>
-											<img
-												src="/images/plus-border.png"
-												alt="+"
-												className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
-													openIndexes.includes(index) ? "rotate" : ""
-												}`}
-												onClick={() => toggleForm(index)}
-												data-bs-toggle="collapse"
-												data-bs-target={`#collapse${index}`}
-												itemType="button"
-												aria-expanded={false}
-												aria-controls={`collapse${index}`}
-											/>
-										</div>
-										<div
-											id={`collapse${index}`}
-											className={`accordion-collapse collapse `}
+											className="accordion-item shadow-sm rounded-5 mb-5"
+											key={index}
 										>
 											<div
-												className={`accordion-body text-${
-													language === "fa" ? "end" : "start"
-												} pt-0 mb-1`}
+												className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
+												id={`heading${index}`}
+												style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+											>
+												<h4 className="mb-0  mx-2 mx-md-3 mx-lg-4">
+													{language === "fa"
+														? sampleField.group
+														: sampleField.groupEN}
+												</h4>
+												<img
+													src="/images/plus-border.png"
+													alt="+"
+													className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
+														openIndexes.includes(index) ? "rotate" : ""
+													}`}
+													onClick={() => toggleForm(index)}
+													data-bs-toggle="collapse"
+													data-bs-target={`#collapse${index}`}
+													itemType="button"
+													aria-expanded={false}
+													aria-controls={`collapse${index}`}
+												/>
+											</div>
+											<div
+												id={`collapse${index}`}
+												className={`accordion-collapse collapse `}
 											>
 												<div
-													className="row d-flex align-items-start g-5 my-1"
-													style={{
-														direction: language === "fa" ? "rtl" : "ltr",
-													}}
+													className={`accordion-body text-${
+														language === "fa" ? "end" : "start"
+													} pt-0 mb-1`}
 												>
-													{Array.isArray(formSections[section]) &&
-														formSections[section].map(
-															(field: any, idx: number) => {
+													<div
+														className="row d-flex align-items-start g-5 my-1"
+														style={{
+															direction: language === "fa" ? "rtl" : "ltr",
+														}}
+													>
+														{formFields
+															.filter((field) => field.group === group)
+															.map((field: formFieldsIEProps, idx: number) => {
 																if (field.type === "placeholder") {
 																	return (
 																		<h6 key={idx} className="col-6 mb-2">
-																			{language === "fa"
-																				? field.name
-																				: field.nameEN}
-																			{(language === "fa"
-																				? field.name
-																				: field.nameEN) && <hr />}
+																			{field.name}
+																			{field.name && <hr />}
 																		</h6>
 																	); // Empty column for placeholder
 																}
 																const isSelect = field.type === "select";
 																const isCheckbox = field.checkboxName;
 																const isCheckMenu = field.type === "checkmenu";
-																const isRadio = field.type === "radio";
 
 																return (
 																	<div
@@ -546,8 +585,8 @@ function UserIEInformation() {
 																					{field.placeholder || "..."}
 																				</option>
 																				{(language === "fa"
-																					? field.options
-																					: field.optionsEN
+																					? (field.options as unknown as string[])
+																					: (field.optionsEN as unknown as string[])
 																				).map((option: string, i: number) => (
 																					<option key={i} value={option}>
 																						{option}
@@ -562,8 +601,11 @@ function UserIEInformation() {
 																						language === "fa" ? "rtl" : "ltr",
 																				}}
 																			>
-																				{field.options.map(
-																					(option: any, i: number) => (
+																				{formFields
+																					.filter(
+																						(item) => item.parent === field.name
+																					)
+																					.map((option, i) => (
 																						<div
 																							key={i}
 																							className={`d-flex justify-content-start mt-2`}
@@ -610,45 +652,8 @@ function UserIEInformation() {
 																									: option.labelEN}
 																							</label>
 																						</div>
-																					)
-																				)}
+																					))}
 																			</div>
-																		) : isRadio ? (
-																			field.options.map(
-																				(option: any, i: number) => (
-																					<div key={i} className="form-check">
-																						<input
-																							type="radio"
-																							id={`${field.name}-${i}`}
-																							name={field.name}
-																							value={option.value}
-																							checked={
-																								formik.values[
-																									field.name as keyof UserIEFormData
-																								] === option.value
-																							}
-																							onChange={formik.handleChange}
-																							onBlur={formik.handleBlur}
-																							className={`form-check-input ${
-																								formik.touched[
-																									field.name as keyof UserIEFormData
-																								] &&
-																								formik.errors[
-																									field.name as keyof UserIEFormData
-																								]
-																									? "is-invalid"
-																									: ""
-																							}`}
-																						/>
-																						<label
-																							htmlFor={`${field.name}-${i}`}
-																							className="form-check-label"
-																						>
-																							{option.label}
-																						</label>
-																					</div>
-																				)
-																			)
 																		) : (
 																			<input
 																				type={field.type}
@@ -742,13 +747,14 @@ function UserIEInformation() {
 																			)}
 																	</div>
 																);
-															}
-														)}
+															})}
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-								)
+									)
+								);
+							}
 						)}
 					</div>
 					<div className="d-flex justify-content-center mt-4 mt-md-5">
