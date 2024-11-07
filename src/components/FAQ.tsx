@@ -8,8 +8,8 @@ interface FAQs {
 	id: string;
 	question: string;
 	answer: string;
-	questionEN: string;
-	answerEN: string;
+	questionEn: string;
+	answerEn: string;
 }
 
 function FAQ() {
@@ -90,7 +90,7 @@ function FAQ() {
 							style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 						>
 							<h3 className=" mb-0 mx-3">
-								{language === "fa" ? question.question : question.questionEN}
+								{language === "fa" ? question.question : question.questionEn}
 							</h3>
 							<img
 								src="\images\plus-border.png"
@@ -117,7 +117,7 @@ function FAQ() {
 								}`}
 							>
 								<p className=" mb-0">
-									{language === "fa" ? question.answer : question.answerEN}
+									{language === "fa" ? question.answer : question.answerEn}
 								</p>
 							</div>
 						</div>

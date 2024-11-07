@@ -274,7 +274,7 @@ function UserInformation() {
 
 			// Determine the type of the field
 			switch (rule.type) {
-				case "string":
+				case "text":
 					fieldSchema = Yup.string();
 					break;
 				case "date":
@@ -283,12 +283,15 @@ function UserInformation() {
 				case "select":
 					fieldSchema = Yup.string();
 					break;
+				case "email":
+					fieldSchema = Yup.string();
+					break;
 				default:
 					fieldSchema = Yup.mixed();
 			}
 
 			// Apply common rules
-			if (rule.matches && rule.type === "string") {
+			if (rule.matches && rule.type === "text") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
 					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
 					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
@@ -307,7 +310,7 @@ function UserInformation() {
 					is: true,
 					then: (schema) => {
 						let thenSchema = schema;
-						thenSchema = thenSchema.optional();
+						thenSchema = thenSchema.notRequired();
 						return thenSchema;
 					},
 					otherwise: (schema) => {
@@ -513,14 +516,13 @@ function UserInformation() {
 												}
 											>
 												<option value="">...</option>
-												{(language === "fa"
-													? field.options
-													: field.optionsEN
-												).map((option: string, i: number) => (
-													<option key={i} value={option}>
-														{option}
-													</option>
-												))}
+												{(language === "fa" ? field.options : field.optionsEN)
+													.split(",")
+													.map((option: string, i: number) => (
+														<option key={i} value={option}>
+															{option}
+														</option>
+													))}
 											</select>
 										) : (
 											<input

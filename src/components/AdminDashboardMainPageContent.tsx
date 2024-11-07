@@ -78,27 +78,14 @@ function AdminDashboardMainPageContent() {
 	}, []);
 
 	const handleSubmit = async () => {
-		// Convert homePageData to a JSON string
-		const updatedData = JSON.stringify(homePageData);
-
-		// Create an object that wraps the string if the API expects it that way
-		const payload = {
-			data: updatedData, // Wrap it in an object with key 'data' or the expected key
-		};
-
 		try {
 			const response = await axiosInstance.post(
 				"/api/Admin/UpdateHomePageData",
-				payload, // Send the object here
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
+				homePageData
 			);
 
 			if (response.status === 200) {
-				console.log("Updated Data to Send:", updatedData);
+				console.log("Updated Data to Send:", homePageData);
 			}
 		} catch (error) {
 			console.log("Failed to update home page data", error);

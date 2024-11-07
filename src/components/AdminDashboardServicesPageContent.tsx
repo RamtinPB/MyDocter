@@ -1,10 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
-	description: string;
+	type: string;
+	enabled: boolean;
+	pageTitle: string;
+	pageDescription: string;
+	pageBannerUrl: string;
+	reviewByDoctor: boolean;
+
+	displayTitle: string;
+	displayDescription: string;
+	displayBannerUrl: string;
+
+	importantNotes: string;
+	insurancePlanId: number;
+	basePrice: number;
+
+	//displayTitle: string;
+	//displayDescription: string;
 
 	nameEN: string;
 	descriptionEN: string;
@@ -12,62 +29,103 @@ interface Service {
 	price: string;
 	subsidy: string;
 	image: string;
-	id: string;
-	type: string;
+	id: string | number | undefined;
 }
 
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<Service[]>([]);
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
 		const fetchServices = async () => {
 			try {
-				const response = await fetch("/db.json"); // Adjust path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+				const response = await axiosInstance.post(
+					"/api/Service/GetAvailableServices",
+					{
+						serviceType: null,
+					}
+				);
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				const data = await response.json();
 
-				// Assuming services is an array available in the root of db.json
-				setServices(data.services || []); // Default to empty array if data.services is undefined
+				setServices(response.data);
 			} catch (err) {
-				console.error("Failed to fetch services", err);
+				try {
+					const response = await fetch("/db.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Network response was not ok");
+					}
+					const data = await response.json();
+
+					// Assuming services is an array available in the root of db.json
+					setServices(data.services || []); // Default to empty array if data.services is undefined
+				} catch (err) {
+					console.error("Failed to fetch services", err);
+				}
 			}
 		};
 
 		fetchServices();
-	}, []);
+	}, [dataUpdateFlag]);
 
 	// Add a new blank card to the appropriate type
-	const addCard = (type: "General" | "Specialist") => {
+	const addCard = async (type: "General" | "Specialist") => {
 		const newCard: Service = {
 			name: "New Service",
-			description: "New description",
 			nameEN: "New Service",
 			descriptionEN: "description",
 			price: "0",
 			subsidy: "0",
 			image: "/src/images/placeholder.jpg",
-			id: (services.length + 1).toString(), // Generate a unique id
-			type,
+			id: undefined,
+			type: type,
+
+			enabled: true,
+			pageTitle: "",
+			pageDescription: "",
+			pageBannerUrl: "",
+			reviewByDoctor: false,
+			displayTitle: "",
+			displayDescription: "",
+			displayBannerUrl: "",
+			importantNotes: "",
+			insurancePlanId: 0,
+			basePrice: 0,
 		};
-		setServices([...services, newCard]);
+
+		try {
+			const response = await axiosInstance.post(
+				"/api/Admin/AddService",
+				newCard
+			);
+			if (response.status === 200) {
+				setServices([...services, newCard]);
+			}
+		} catch (error) {
+			console.error("Failed to add Service", error);
+		}
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	// Remove a card by its unique id
-	const removeCard = (id: string) => {
-		const updatedServices = services.filter((service) => service.id !== id);
-		setServices(updatedServices);
+	const removeCard = async (id: string) => {
+		try {
+			const response = await axiosInstance.post("/api/Admin/RemoveService", {
+				serviceId: id,
+			});
+			if (response.status === 200) {
+				const updatedServices = services.filter((service) => service.id !== id);
+				setServices(updatedServices);
+			}
+		} catch (error) {
+			console.error("Failed to remove Service", error);
+		}
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	const navigate = useNavigate();
-
-	// @ts-ignore
-	const handleSubmit = () => {};
-
-	// @ts-ignore
-	const handleCancel = () => {};
 
 	// Render service cards based on type
 	const renderServiceCards = (type: "General" | "Specialist") => {
@@ -93,7 +151,7 @@ function AdminDashboardServicesPageContent() {
 											id="btn-delete"
 											className="rounded-circle btn shadow p-0 my-3"
 											type="button"
-											onClick={() => removeCard(service.id)} // Use unique id for deletion
+											onClick={() => removeCard(service.id as string)} // Use unique id for deletion
 										>
 											<img
 												src="/images/red-delete.png"
@@ -169,7 +227,7 @@ function AdminDashboardServicesPageContent() {
 				{renderServiceCards("General")}
 			</div>
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
+			{/* <div className="d-flex justify-content-evenly px-3 py-2 my-2">
 				<button
 					className="btn btn-secondary rounded-pill px-3"
 					onClick={handleCancel}
@@ -182,7 +240,7 @@ function AdminDashboardServicesPageContent() {
 				>
 					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
 				</button>
-			</div>
+			</div> */}
 		</div>
 	);
 }

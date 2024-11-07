@@ -3,46 +3,82 @@ import { useLanguage } from "./LanguageContext";
 import { useNavigate } from "react-router-dom";
 import "../cssFiles/tableOverflow.css";
 import "../cssFiles/adminbuttons.css";
+import axiosInstance from "../myAPI/axiosInstance";
 
-interface Users {
-	[key: string]: any;
+interface usersListDataProps {
+	id: string | number;
+	name: string;
+	lastName: string;
+	emailAddress: string;
 }
 
 function AdminDashboardManageUsers() {
-	const { language } = useLanguage(); // Get language and toggle function from context
-	const [users, setUsers] = useState<Users[]>([]);
+	const [usersList, setUsersList] = useState<usersListDataProps[]>([]);
+
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(10); // Default page size
+	const [sortBy, setSortBy] = useState("id");
+	const [descending, setDescending] = useState(false);
+
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
+
 	const navigate = useNavigate();
+	const { language } = useLanguage();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const response = await fetch("/db.json");
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+				const response = await axiosInstance.post("/api/Admin/GetUsersList", {
+					sortBy: 1,
+					descending,
+					page,
+					pageSize,
+				});
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				const data = await response.json();
-				const users = data.users;
-				setUsers(users);
-			} catch (err) {
-				console.error("Error fetching users:", err);
+
+				setUsersList(response.data);
+			} catch (error) {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+				try {
+					const response = await fetch("/db.json");
+					if (!response.ok) {
+						throw new Error("Failed to fetch user data from db.json");
+					}
+					const data = await response.json();
+					const users = data.users;
+					setUsersList(users);
+				} catch (err) {
+					console.error(
+						"Failed to fetch user data from both API and db.json",
+						err
+					);
+				}
 			}
 		};
 
 		fetchUsers();
-	}, []);
+	}, [sortBy, descending, page, pageSize, dataUpdateFlag]);
 
 	const addUser = () => {
 		const newUser = {
-			firstName: "",
+			id: "",
+			name: "",
 			lastName: "",
-			userId: "", // You might want to generate a unique ID here
+			emailAddress: "",
 		};
-		setUsers([...users, newUser]);
+		setUsersList([...usersList, newUser]);
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	const removeUser = (index: number) => {
-		const updatedUsers = users.filter((_, i) => i !== index);
-		setUsers(updatedUsers);
+		const updatedUsersList = usersList.filter((_, i) => i !== index);
+		setUsersList(updatedUsersList);
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	return (
@@ -57,7 +93,73 @@ function AdminDashboardManageUsers() {
 						{language === "fa" ? "لیست کاربران" : "List of Users"}
 					</h3>
 				</div>
+
 				<div className="container">
+					<div
+						className="d-flex justify-content-evenly align-items-center mt-2 mb-4"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
+						<div className="d-flex align-items-center">
+							<label className="px-2">
+								{language === "fa" ? "ترتیب بر اساس" : "Sort By"}
+							</label>
+							<select
+								className="text-center rounded-3"
+								value={sortBy}
+								onChange={(e) => setSortBy(e.target.value)}
+							>
+								<option value="id">{language === "fa" ? "شناسه" : "ID"}</option>
+								<option value="name">
+									{language === "fa" ? "نام" : "First Name"}
+								</option>
+								<option value="lastName">
+									{language === "fa" ? "نام خانوادگی" : "Last Name"}
+								</option>
+							</select>
+						</div>
+						<div className="d-flex align-items-center">
+							<label className="px-2">
+								{language === "fa" ? "تعداد آیتم در صفحه" : "Items per page"}
+							</label>
+							<input
+								className=" rounded-3"
+								type="number"
+								value={pageSize}
+								min="1"
+								max="100"
+								onChange={(e) => setPageSize(parseInt(e.target.value) || 10)}
+							/>
+						</div>
+						<div className="d-flex align-items-center">
+							<label className="px-2">
+								{language === "fa" ? "نزولی" : "Descending"}
+							</label>
+							<input
+								type="checkbox"
+								checked={descending}
+								onChange={(e) => setDescending(e.target.checked)}
+							/>
+						</div>
+					</div>
+					<div className="pagination d-flex justify-content-center mb-4">
+						<button
+							className="btn btn-primary rounded-4"
+							onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+							disabled={page === 1}
+						>
+							{language === "fa" ? "قبلی" : "Previous"}
+						</button>
+						<span className="mx-3">{`${
+							language === "fa" ? "صفحه" : "Page"
+						}: ${page}`}</span>
+						<button
+							className="btn btn-primary rounded-4"
+							onClick={() => setPage((prev) => prev + 1)}
+						>
+							{language === "fa" ? "بعدی" : "Next"}
+						</button>
+					</div>
+
 					<div className="table-responsive-container">
 						<table
 							className="table table-hover text-center mb-5"
@@ -65,41 +167,37 @@ function AdminDashboardManageUsers() {
 						>
 							<thead>
 								<tr>
-									<th scope="col">#</th>
+									<th scope="col">
+										{language === "fa" ? "شناسه کاربر" : "User ID"}
+									</th>
 									<th scope="col">
 										{language === "fa" ? "نام" : "First Name"}
 									</th>
 									<th scope="col">
 										{language === "fa" ? "نام خانوادگی" : "Last Name"}
 									</th>
-									<th scope="col">
-										{language === "fa" ? "شناسه کاربر" : "User ID"}
-									</th>
 									<th scope="col">{language === "fa" ? "ایمیل" : "Email"}</th>
-									<th scope="col">
+									{/* <th scope="col">
 										{language === "fa" ? "شماره همراه" : "Phone Number"}
-									</th>
+									</th> */}
 									<th scope="col">{language === "fa" ? "ویرایش" : "Edit"}</th>
 									<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
 								</tr>
 							</thead>
 							<tbody>
-								{users.map((user, index) => (
+								{usersList.map((user, index) => (
 									<tr key={index}>
-										<th scope="row" className="align-middle">
-											<span className="px-1">{index + 1}</span>
-										</th>
-										<td className="align-middle">{user.firstName}</td>
+										<td className="align-middle">{user.id}</td>
+										<td className="align-middle">{user.name}</td>
 										<td className="align-middle">{user.lastName}</td>
-										<td className="align-middle">{user.userId}</td>
-										<td className="align-middle">{user.email}</td>
-										<td className="align-middle">{user.phoneNumber}</td>
+										<td className="align-middle">{user.emailAddress}</td>
+										{/* <td className="align-middle">{user.phoneNumber}</td> */}
 										<td className="align-middle">
 											<a
-												href={`/edit-user/${user.userId}`} // Change this
+												href={`/edit-user/${user.id}`} // Change this
 												onClick={(e) => {
 													e.preventDefault();
-													navigate(`/edit-user/${user.userId}`, {
+													navigate(`/edit-user/${user.id}`, {
 														state: { section: "manageUsers" },
 													});
 												}}

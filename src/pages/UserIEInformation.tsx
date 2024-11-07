@@ -91,30 +91,35 @@ const processData = (
 
 interface UserInfo {
 	gender: string;
+	age?: string;
 }
 
 interface UserIEFormData {
 	// Basic Information
 	weight?: string;
 	height?: string;
-	userAge?: string;
+	age?: string;
 	bodyMassIndex?: string; // Optional field
 
 	// Health and Illness History
 	illnessHistory?: string;
-	noIllnessHistory?: boolean; // Checkbox for conditional validation
+	noIllnessHistory?: boolean;
+
 	illnessHistoryInFamily?: string;
-	noIllnessHistoryInFamily?: boolean; // Checkbox for conditional validation
+	noIllnessHistoryInFamily?: boolean;
+
 	userFamilyMemberRelation?: string;
+
 	bloodTransfusionHistory?: string;
 	bloodTransfusionReactionHistory?: string;
 	noBloodTransfusionReactionHistory?: boolean;
-	riskFactors?: string[]; // For the checkmenu type
+
+	riskFactors?: string[];
 	pets?: string;
 	noPets?: boolean;
 	sleepStatus?: string;
 	sleepIssues?: string;
-	hasSleepIssues?: boolean;
+	noSleepIssues?: boolean;
 
 	// Allergies
 	allergyToDrug?: string;
@@ -151,7 +156,7 @@ interface UserIEFormData {
 const initialFormData: UserIEFormData = {
 	weight: "",
 	height: "",
-	userAge: "",
+	age: "",
 	illnessHistory: "",
 	illnessHistoryInFamily: "",
 	bloodTransfusionHistory: "",
@@ -171,6 +176,17 @@ const initialFormData: UserIEFormData = {
 	ableToFreelyMove: "",
 	pregnancyStatus: "",
 	lactationStatus: "",
+
+	noIllnessHistory: false,
+	noIllnessHistoryInFamily: false,
+	noBloodTransfusionReactionHistory: false,
+	noPets: false,
+	noSleepIssues: false,
+	noAllergyToDrug: false,
+	noAllergyToFood: false,
+	noHearingDisability: false,
+	noSightDisability: false,
+	noDisabilityOrAmputation: false,
 };
 
 function UserIEInformation() {
@@ -229,6 +245,7 @@ function UserIEInformation() {
 
 				// Update form values with userInfoIE data
 				formik.setValues(data);
+				console.log(data);
 			})
 			.catch((error) => {
 				console.error(
@@ -324,100 +341,57 @@ function UserIEInformation() {
 				case "date":
 					fieldSchema = Yup.date();
 					break;
+				case "select":
+					fieldSchema = Yup.string();
+					break;
 				default:
 					fieldSchema = Yup.mixed();
 			}
 
-			if (rule.checkboxName) {
-				const baseSchema = Yup.string();
-
-				fieldSchema = baseSchema.when(
-					rule.checkboxName as string,
-					(value: any, schema) => {
-						return value === true
-							? schema.notRequired().nullable()
-							: schema.required("field is required");
-					}
+			// Apply common rules
+			if (rule.matches && rule.type === "string") {
+				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
+					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
+					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
 				);
-			} else {
-				// Apply common rules
-				if (rule.matches && rule.type === "string") {
-					fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-						new RegExp(language === "fa" ? rule.matches[0] : rule.matchesEN[0]),
-						language === "fa" ? rule.matches[1] : rule.matchesEN[1]
-					);
-				}
-				if (rule.email) {
-					fieldSchema = (fieldSchema as Yup.StringSchema).email(
-						language === "fa" ? rule.email : rule.emailEN
-					);
-				}
+			}
 
-				// Apply conditional rules
-				if (rule.when) {
-					const [depField, conditions] = rule.when;
-					fieldSchema = fieldSchema.when(depField, {
-						is: conditions.is,
-						then: (schema) => {
-							let thenSchema = schema;
-							if (conditions.then.matches) {
-								thenSchema = (thenSchema as Yup.StringSchema).matches(
-									new RegExp(
-										language === "fa"
-											? conditions.then.matches[0]
-											: conditions.then.matchesEN[0]
-									),
-									language === "fa"
-										? conditions.then.matches[1]
-										: conditions.then.matchesEN[1]
-								);
-							}
-							if (conditions.then.required === false) {
-								thenSchema = thenSchema.notRequired();
-							} else if (conditions.then.required) {
-								thenSchema = thenSchema.required(
-									language === "fa"
-										? conditions.then.required
-										: conditions.then.requiredEN
-								);
-							}
-							return thenSchema;
-						},
-						otherwise: (schema) => {
-							let otherwiseSchema = schema;
-							if (conditions.otherwise.matches) {
-								otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-									new RegExp(
-										language === "fa"
-											? conditions.otherwise.matches[0]
-											: conditions.otherwise.matchesEN[0]
-									),
-									language === "fa"
-										? conditions.otherwise.matches[1]
-										: conditions.otherwise.matchesEN[1]
-								);
-							}
-							if (conditions.otherwise.required === false) {
-								otherwiseSchema = otherwiseSchema.notRequired();
-							} else if (conditions.otherwise.required) {
-								otherwiseSchema = otherwiseSchema.required(
-									language === "fa"
-										? conditions.otherwise.required
-										: conditions.otherwise.requiredEN
-								);
-							}
-							return otherwiseSchema;
-						},
-					});
+			// Apply conditional rules
+			if (rule.checkboxName && rule.required) {
+				const depField = rule.checkboxName;
+				fieldSchema = fieldSchema.when(depField, {
+					is: true,
+					then: (schema) => {
+						let thenSchema = schema;
+						thenSchema = thenSchema.notRequired().nullable();
+						return thenSchema;
+					},
+					otherwise: (schema) => {
+						let otherwiseSchema = schema;
+						if (rule.matches) {
+							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
+								new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
+								language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+							);
+						}
+						if (rule.required) {
+							otherwiseSchema = otherwiseSchema.required(
+								language === "fa"
+									? rule.requiredMessage
+									: rule.requiredMessageEN
+							);
+						}
+						return otherwiseSchema;
+					},
+				});
+			} else {
+				// Apply default required rule if no 'when' condition is specified
+				if (rule.required) {
+					fieldSchema = fieldSchema.required(
+						language === "fa" ? rule.requiredMessage : rule.requiredMessageEN
+					);
 				} else {
-					// Apply default required rule if no 'when' condition is specified
-					if (rule.required) {
-						fieldSchema = fieldSchema.required(
-							language === "fa" ? rule.required : rule.requiredEN
-						);
-					} else if (rule.optional) {
-						fieldSchema = fieldSchema.notRequired();
-					}
+					fieldSchema = fieldSchema.notRequired().nullable();
 				}
 			}
 
@@ -443,6 +417,7 @@ function UserIEInformation() {
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
+		validateOnMount: true,
 	});
 
 	const toggleForm = (index: number) => {
@@ -455,6 +430,7 @@ function UserIEInformation() {
 
 	const handleTestSubmit = async (e: { preventDefault: () => void }) => {
 		e.preventDefault();
+		console.log(formik.errors);
 		formik.handleSubmit();
 	};
 
@@ -473,7 +449,7 @@ function UserIEInformation() {
 									(field) => field.group === group
 								);
 								return (
-									!(group === undefined) &&
+									!(group === undefined || group === null) &&
 									!(userInfo?.gender === "مرد" && group === "بیماران خانم") && (
 										<div
 											className="accordion-item shadow-sm rounded-5 mb-5"
@@ -585,13 +561,15 @@ function UserIEInformation() {
 																					{field.placeholder || "..."}
 																				</option>
 																				{(language === "fa"
-																					? (field.options as unknown as string[])
-																					: (field.optionsEN as unknown as string[])
-																				).map((option: string, i: number) => (
-																					<option key={i} value={option}>
-																						{option}
-																					</option>
-																				))}
+																					? field.options
+																					: field.optionsEN
+																				)
+																					.split(",")
+																					.map((option: string, i: number) => (
+																						<option key={i} value={option}>
+																							{option}
+																						</option>
+																					))}
 																			</select>
 																		) : isCheckMenu ? (
 																			<div
