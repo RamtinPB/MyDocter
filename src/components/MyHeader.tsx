@@ -14,6 +14,7 @@ import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
+// import axios from "axios";
 
 interface UserData {
 	name: string;
@@ -44,6 +45,34 @@ function MyHeader() {
 				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
+				// let errorMessage = "";
+
+				// if (axios.isAxiosError(error)) {
+				// 	// Check for error response and errorCode
+				// 	const errorCode = error.response?.data?.errorCode;
+				// 	const apiErrorMessage = error.response?.data?.message;
+
+				// 	if (error.response?.status === 400 && errorCode) {
+				// 		// Handle specific error codes
+				// 		switch (errorCode) {
+				// 			case 1007:
+				// 				errorMessage =
+				// 					language === "fa"
+				// 						? apiErrorMessage
+				// 						: "This User was not found.";
+
+				// 				break;
+				// 			case 1010:
+				// 				errorMessage = apiErrorMessage;
+				// 				break;
+				// 			default:
+				// 				errorMessage = "خطای ناشناخته‌ای رخ داده است";
+				// 		}
+				// 	} else {
+				// 		errorMessage = "خطای ناشناخته‌ای رخ داده است";
+				// 	}
+				// }
+
 				try {
 					const response = await fetch("/db.json"); // Adjust path if necessary
 					if (!response.ok) {
