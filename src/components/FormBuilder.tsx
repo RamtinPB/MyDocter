@@ -193,6 +193,8 @@ function FormBuilder() {
 	};
 
 	const saveFormSchema = async () => {
+		console.log(serviceId, schema);
+
 		try {
 			// Attempt to save the form schema to the API
 			const response = await axiosInstance.post("/api/Forms/SaveFormSchema", {

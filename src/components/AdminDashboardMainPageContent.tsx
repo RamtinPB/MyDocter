@@ -38,8 +38,10 @@ function AdminDashboardMainPageContent() {
 		null
 	);
 
-	const [initialHomePageData, setInitialHomePageData] =
-		useState<homePageDataProps | null>(null);
+	//const [initialHomePageData, setInitialHomePageData] =
+	// 	useState<homePageDataProps | null>(null);
+
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	useEffect(() => {
 		const fetchHomeTextData = async () => {
@@ -51,7 +53,7 @@ function AdminDashboardMainPageContent() {
 				}
 
 				setHomePageData(response.data);
-				setInitialHomePageData(response.data);
+				//setInitialHomePageData(response.data);
 			} catch (err) {
 				console.error("API request failed, trying local db.json", err);
 
@@ -64,7 +66,7 @@ function AdminDashboardMainPageContent() {
 
 					const data = await response.json();
 					setHomePageData(data.homeTextData[0]);
-					setInitialHomePageData(data.homeTextData[0]);
+					//setInitialHomePageData(data.homeTextData[0]);
 				} catch (jsonErr) {
 					console.error(
 						"Failed to fetch data from both API and db.json",
@@ -75,13 +77,19 @@ function AdminDashboardMainPageContent() {
 		};
 
 		fetchHomeTextData();
-	}, []);
+	}, [dataUpdateFlag]);
 
 	const handleSubmit = async () => {
+		const alteredHomePageData = JSON.stringify(homePageData);
 		try {
 			const response = await axiosInstance.post(
 				"/api/Admin/UpdateHomePageData",
-				homePageData
+				alteredHomePageData,
+				{
+					headers: {
+						"Content-Type": "application/json", // Set header to JSON
+					},
+				}
 			);
 
 			if (response.status === 200) {
@@ -101,7 +109,7 @@ function AdminDashboardMainPageContent() {
 	};
 
 	const handleCancel = () => {
-		setHomePageData(JSON.parse(JSON.stringify(initialHomePageData)));
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	return (

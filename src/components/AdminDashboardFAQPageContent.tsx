@@ -62,10 +62,10 @@ function AdminDashboardFAQPageContent() {
 			answerEn: "",
 		};
 		try {
-			const response = await axiosInstance.post("/api/Admin/AddFAQ", newFAQ);
-			if (response.status === 200) {
-				setFAQsData([...FAQsData, newFAQ]);
-			}
+			await axiosInstance.post("/api/Admin/AddFAQ", newFAQ);
+			// if (response.status === 200) {
+			// 	setFAQsData([...FAQsData, newFAQ]);
+			// }
 		} catch (error) {
 			console.error("Failed to add FAQ", error);
 		}
@@ -76,12 +76,12 @@ function AdminDashboardFAQPageContent() {
 	const removeFAQ = async (indexToRemove: number) => {
 		const faqToRemove = FAQsData[indexToRemove];
 		try {
-			const response = await axiosInstance.post("/api/Admin/RemoveFAQ", {
+			await axiosInstance.post("/api/Admin/RemoveFAQ", {
 				faqId: faqToRemove.id,
 			});
-			if (response.status === 200) {
-				setFAQsData(FAQsData.filter((_, index) => index !== indexToRemove));
-			}
+			// if (response.status === 200) {
+			// 	setFAQsData(FAQsData.filter((_, index) => index !== indexToRemove));
+			// }
 		} catch (error) {
 			console.error("Failed to remove FAQ", error);
 		}

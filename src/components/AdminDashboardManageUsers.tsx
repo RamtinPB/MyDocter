@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../cssFiles/tableOverflow.css";
 import "../cssFiles/adminbuttons.css";
 import axiosInstance from "../myAPI/axiosInstance";
+import AdminDashboardManageUsersModel from "./AdminDashboardManageUsersModel";
 
 interface usersListDataProps {
 	id: string | number;
@@ -15,10 +16,14 @@ interface usersListDataProps {
 function AdminDashboardManageUsers() {
 	const [usersList, setUsersList] = useState<usersListDataProps[]>([]);
 
+	const [userToRemoveId, setUserToRemoveId] = useState<number | null>(null);
+
+	const [showModel, setShowModal] = useState(false);
+
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10); // Default page size
-	const [sortBy, setSortBy] = useState("id");
-	const [descending, setDescending] = useState(false);
+	const [sortBy, setSortBy] = useState("0");
+	const [descending, setDescending] = useState(true);
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
@@ -29,7 +34,7 @@ function AdminDashboardManageUsers() {
 		const fetchUsers = async () => {
 			try {
 				const response = await axiosInstance.post("/api/Admin/GetUsersList", {
-					sortBy: 1,
+					sortBy: Number(sortBy),
 					descending,
 					page,
 					pageSize,
@@ -64,21 +69,26 @@ function AdminDashboardManageUsers() {
 		fetchUsers();
 	}, [sortBy, descending, page, pageSize, dataUpdateFlag]);
 
-	const addUser = () => {
-		const newUser = {
-			id: "",
-			name: "",
-			lastName: "",
-			emailAddress: "",
-		};
-		setUsersList([...usersList, newUser]);
-		setDataUpdateFlag((prev) => !prev);
+	const removeUser = (indexToRemove: number) => {
+		const userToRemove = usersList[indexToRemove];
+		setUserToRemoveId(userToRemove.id as number); // Store the user ID in state
+		setShowModal(true); // Trigger modal display
 	};
 
-	const removeUser = (index: number) => {
-		const updatedUsersList = usersList.filter((_, i) => i !== index);
-		setUsersList(updatedUsersList);
-		setDataUpdateFlag((prev) => !prev);
+	const handleConfirmRemoveUser = async (captchaValue: string) => {
+		console.log(captchaValue);
+		try {
+			await axiosInstance.post("/api/Admin/RemoveUser", {
+				userId: userToRemoveId,
+				captcha: captchaValue,
+			});
+			setDataUpdateFlag((prev) => !prev); // Trigger re-fetch
+		} catch (error) {
+			console.error("Failed to remove user", error);
+		} finally {
+			setUserToRemoveId(null); // Reset `userId`
+			setShowModal(false); // Close the modal
+		}
 	};
 
 	return (
@@ -108,11 +118,11 @@ function AdminDashboardManageUsers() {
 								value={sortBy}
 								onChange={(e) => setSortBy(e.target.value)}
 							>
-								<option value="id">{language === "fa" ? "شناسه" : "ID"}</option>
-								<option value="name">
+								<option value="0">{language === "fa" ? "شناسه" : "ID"}</option>
+								<option value="1">
 									{language === "fa" ? "نام" : "First Name"}
 								</option>
-								<option value="lastName">
+								<option value="2">
 									{language === "fa" ? "نام خانوادگی" : "Last Name"}
 								</option>
 							</select>
@@ -140,24 +150,6 @@ function AdminDashboardManageUsers() {
 								onChange={(e) => setDescending(e.target.checked)}
 							/>
 						</div>
-					</div>
-					<div className="pagination d-flex justify-content-center mb-4">
-						<button
-							className="btn btn-primary rounded-4"
-							onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-							disabled={page === 1}
-						>
-							{language === "fa" ? "قبلی" : "Previous"}
-						</button>
-						<span className="mx-3">{`${
-							language === "fa" ? "صفحه" : "Page"
-						}: ${page}`}</span>
-						<button
-							className="btn btn-primary rounded-4"
-							onClick={() => setPage((prev) => prev + 1)}
-						>
-							{language === "fa" ? "بعدی" : "Next"}
-						</button>
 					</div>
 
 					<div className="table-responsive-container">
@@ -217,6 +209,8 @@ function AdminDashboardManageUsers() {
 												className="rounded-circle btn p-0 m-1 m-md-3"
 												type="button"
 												onClick={() => removeUser(index)}
+												data-bs-toggle="modal"
+												data-bs-target="#staticBackdrop"
 											>
 												<img
 													src="/images/red-delete.png"
@@ -226,30 +220,34 @@ function AdminDashboardManageUsers() {
 										</td>
 									</tr>
 								))}
-								<tr>
-									<td colSpan={8} className="align-middle">
-										<div
-											id="btn-add"
-											className="d-flex justify-content-center align-items-center"
-										>
-											<button
-												className="rounded-circle btn p-0 m-1"
-												type="button"
-												onClick={addUser}
-											>
-												<img
-													src="/images/green-add.png"
-													className="custom-admin-btn rounded-circle"
-												/>
-											</button>
-										</div>
-									</td>
-								</tr>
 							</tbody>
 						</table>
+						<div className="pagination d-flex justify-content-center mb-4">
+							<button
+								className="btn btn-primary rounded-4"
+								onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+								disabled={page === 1}
+							>
+								{language === "fa" ? "قبلی" : "Previous"}
+							</button>
+							<span className="mx-3">{`${
+								language === "fa" ? "صفحه" : "Page"
+							}: ${page}`}</span>
+							<button
+								className="btn btn-primary rounded-4"
+								onClick={() => setPage((prev) => prev + 1)}
+							>
+								{language === "fa" ? "بعدی" : "Next"}
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
+			<AdminDashboardManageUsersModel
+				onConfirm={handleConfirmRemoveUser}
+				show={showModel}
+				onClose={() => setShowModal(false)}
+			/>
 		</div>
 	);
 }
