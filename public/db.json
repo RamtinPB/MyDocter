@@ -219,8 +219,8 @@
 		"postalCode": "",
 		"city": "",
 		"address": "",
-		"maritalStatus": "",
-		"educationLevel": ""
+		"maritalStatus": "مجرد",
+		"educationLevel": "دیپلم"
 	},
 
 	"users": [
