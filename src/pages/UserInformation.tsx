@@ -157,6 +157,57 @@ function handleConditionalEmptyFields(values: UserFormData): UserFormData {
 	return values;
 }
 
+function formatBirthdateToYYYYMMDD(birthdate: string): string {
+	// Check if the birthdate is in a valid format, otherwise return an empty string
+	if (!birthdate) return "";
+
+	try {
+		// Convert the birthdate to a Date object and format as "YYYY-MM-DD"
+		return new Date(birthdate).toISOString().split("T")[0];
+	} catch (error) {
+		console.error("Invalid birthdate format:", birthdate);
+		return "";
+	}
+}
+
+function convertGenderToFrontData(gender: string): string {
+	if (gender === "Male") return "مرد";
+	if (gender === "Female") return "زن";
+	if (gender === "Other") return "";
+	return "";
+}
+
+function convertGenderToEnum(gender: string): string {
+	if (gender === "مرد") return "Male";
+	if (gender === "زن") return "Female";
+	if (gender === "") return "Other";
+	return "";
+}
+
+function convertEducationLevelToEnum(educationLevel: string): string {
+	if (educationLevel === "کم سواد") return "None";
+	if (educationLevel === "ابتدایی") return "Primary";
+	if (educationLevel === "دیپلم") return "Diploma";
+	if (educationLevel === "کاردانی") return "Associate";
+	if (educationLevel === "کارشناسی") return "Bachelor";
+	if (educationLevel === "کارشناسی ارشد") return "Master";
+	if (educationLevel === "دکترا") return "PHD";
+	if (educationLevel === "فوق دکترا") return "PostDoc";
+	return "";
+}
+
+function convertEducationLevelToFrontData(educationLevel: string): string {
+	if (educationLevel === "None") return "کم سواد";
+	if (educationLevel === "Primary") return "ابتدایی";
+	if (educationLevel === "Diploma") return "دیپلم";
+	if (educationLevel === "Associate") return "کاردانی";
+	if (educationLevel === "Bachelor") return "کارشناسی";
+	if (educationLevel === "Master") return "کارشناسی ارشد";
+	if (educationLevel === "PHD") return "دکترا";
+	if (educationLevel === "PostDoc") return "فوق دکترا";
+	return "";
+}
+
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
@@ -181,6 +232,9 @@ function UserInformation() {
 					isIranian: convertIsIranianToString(data.isIranian),
 					isMarried: convertIsMarriedToString(data.isMarried),
 					profilePicture: data.profileImageUrl,
+					birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
+					gender: convertGenderToFrontData(data.gender),
+					educationLevel: convertEducationLevelToFrontData(data.educationLevel),
 				};
 
 				// Populate form fields with the formatted response
@@ -357,6 +411,8 @@ function UserInformation() {
 				...handleConditionalEmptyFields(values),
 				isIranian: convertIsIranianToBoolean(values.isIranian),
 				isMarried: convertIsMarriedToBoolean(values.isMarried),
+				gender: convertGenderToEnum(values.gender),
+				educationLevel: convertEducationLevelToEnum(values.educationLevel),
 			};
 
 			try {

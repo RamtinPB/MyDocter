@@ -114,7 +114,7 @@ interface UserIEFormData {
 	bloodTransfusionReactionHistory?: string;
 	noBloodTransfusionReactionHistory?: boolean;
 
-	riskFactors?: string[];
+	riskFactors?: string;
 	pets?: string;
 	noPets?: boolean;
 	sleepStatus?: string;
@@ -136,21 +136,21 @@ interface UserIEFormData {
 	noSightDisability?: boolean;
 	disabilityOrAmputation?: string;
 	noDisabilityOrAmputation?: boolean;
-	assistiveDevicesProsthetics?: string[]; // For the checkmenu type
+	additionalDisabilityOptions?: string; // For the checkmenu type
 
 	// Daily Activities
-	ableToEat?: string;
-	ableToDress?: string;
-	ableToBathe?: string;
-	ableToGoToBathroom?: string;
-	ableToFreelyMove?: string;
+	independentlyEats?: string | boolean;
+	independentlyDresses?: string | boolean;
+	independentlyBathes?: string | boolean;
+	independentlyDefecates?: string | boolean;
+	independentlyMoves?: string | boolean;
 
 	// Medication History (Optional)
 	regularDrugUseHistory?: string;
 
 	// Women-specific Information
-	pregnancyStatus?: string;
-	lactationStatus?: string;
+	isPregnant?: string | boolean;
+	isLactating?: string | boolean;
 }
 
 const initialFormData: UserIEFormData = {
@@ -169,13 +169,13 @@ const initialFormData: UserIEFormData = {
 	hearingDisability: "",
 	sightDisability: "",
 	disabilityOrAmputation: "",
-	ableToEat: "",
-	ableToDress: "",
-	ableToBathe: "",
-	ableToGoToBathroom: "",
-	ableToFreelyMove: "",
-	pregnancyStatus: "",
-	lactationStatus: "",
+	independentlyEats: "",
+	independentlyDresses: "",
+	independentlyBathes: "",
+	independentlyDefecates: "",
+	independentlyMoves: "",
+	isPregnant: "",
+	isLactating: "",
 
 	noIllnessHistory: false,
 	noIllnessHistoryInFamily: false,
@@ -188,6 +188,120 @@ const initialFormData: UserIEFormData = {
 	noSightDisability: false,
 	noDisabilityOrAmputation: false,
 };
+
+function handleRiskFactors(values: any): string {
+	const riskFactors = [
+		{ name: "drugAbuse", value: values.drugAbuse },
+		{ name: "substanceAbuse", value: values.substanceAbuse },
+		{ name: "smoking", value: values.smoking },
+		{ name: "hookah", value: values.hookah },
+		{ name: "alcohol", value: values.alcohol },
+		{ name: "miningExperience", value: values.miningExperience },
+		{ name: "chemicalExposure", value: values.chemicalExposure },
+	];
+
+	// Filter risk factors that have a true value and map to their names
+	const activeRiskFactors = riskFactors
+		.filter((factor) => factor.value === true)
+		.map((factor) => factor.name)
+		.join(",");
+
+	return activeRiskFactors;
+}
+
+function handleAdditionalDisabilityOptions(values: any): string {
+	const riskFactors = [
+		{ name: "cane", value: values.cane },
+		{ name: "walker", value: values.walker },
+		{ name: "wheelChair", value: values.wheelChair },
+		{ name: "armpitStick", value: values.armpitStick },
+		{ name: "prostheticLimb", value: values.prostheticLimb },
+		{ name: "denture", value: values.denture },
+		{ name: "hearingAid", value: values.hearingAid },
+		{ name: "glasses", value: values.glasses },
+		{ name: "prostheticEye", value: values.prostheticEye },
+	];
+
+	// Filter risk factors that have a true value and map to their names
+	const activeRiskFactors = riskFactors
+		.filter((factor) => factor.value === true)
+		.map((factor) => factor.name)
+		.join(",");
+
+	return activeRiskFactors;
+}
+
+function parseDisabilityOptions(disabilityString: string) {
+	const allDisabilityOptions = {
+		cane: false,
+		walker: false,
+		wheelChair: false,
+		armpitStick: false,
+		prostheticLimb: false,
+		denture: false,
+		hearingAid: false,
+		glasses: false,
+		prostheticEye: false,
+	};
+
+	// Split the input string and mark each option as true if it's present
+	disabilityString.split(",").forEach((option) => {
+		const trimmedOption = option.trim();
+		if (trimmedOption in allDisabilityOptions) {
+			allDisabilityOptions[trimmedOption as keyof typeof allDisabilityOptions] =
+				true;
+		}
+	});
+
+	return allDisabilityOptions;
+}
+
+function parseRiskFactors(riskFactorString: string) {
+	const allriRkFactors = {
+		drugAbuse: false,
+		substanceAbuse: false,
+		smoking: false,
+		hookah: false,
+		miningExperience: false,
+		chemicalExposure: false,
+	};
+
+	// Split the input string and mark each option as true if it's present
+	riskFactorString.split(",").forEach((option) => {
+		const trimmedOption = option.trim();
+		if (trimmedOption in allriRkFactors) {
+			allriRkFactors[trimmedOption as keyof typeof allriRkFactors] = true;
+		}
+	});
+
+	return allriRkFactors;
+}
+
+function convertDependenceToBoolean(
+	item: string | boolean | undefined
+): boolean {
+	if (item === "مستقل") return true;
+	if (item === "وابسته (نیازمند کمک)") return false;
+	return Boolean(item);
+}
+
+function convertDependenceTostring(item: string | boolean | undefined): string {
+	if (item === true) return "مستقل";
+	if (item === false) return "وابسته (نیازمند کمک)";
+	return String(item);
+}
+
+function convertYesNoToBoolean(item: string | boolean | undefined): boolean {
+	if (item === "بله") return true;
+	if (item === "خیر") return false;
+	return Boolean(item);
+}
+
+function convertYesNoToString(item: string | boolean | undefined): string {
+	if (item === true) return "بله";
+	if (item === false) return "خیر";
+	return String(item);
+}
 
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -243,9 +357,30 @@ function UserIEInformation() {
 			.then((response) => {
 				const data = response.data;
 
+				const formattedData = {
+					...data,
+					isLactating: convertYesNoToString(data.isLactating),
+					isPregnant: convertYesNoToString(data.isPregnant),
+
+					independentlyEats: convertDependenceTostring(data.independentlyEats),
+					independentlyDresses: convertDependenceTostring(
+						data.independentlyDresses
+					),
+					independentlyBathes: convertDependenceTostring(
+						data.independentlyBathes
+					),
+					independentlyDefecates: convertDependenceTostring(
+						data.independentlyDefecates
+					),
+					independentlyMoves: convertDependenceTostring(
+						data.independentlyMoves
+					),
+
+					...parseDisabilityOptions(data.additionalDisabilityOptions),
+					...parseRiskFactors(data.riskFactors),
+				};
 				// Update form values with userInfoIE data
-				formik.setValues(data);
-				console.log(data);
+				formik.setValues(formattedData);
 			})
 			.catch((error) => {
 				console.error(
@@ -288,9 +423,6 @@ function UserIEInformation() {
 
 				setFormFields(newFormFields);
 				setValidationSchemaData(newValidationSchemaData);
-
-				console.log(newFormFields);
-				console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
 				console.error(
@@ -406,11 +538,32 @@ function UserIEInformation() {
 		validationSchema: validationSchema,
 
 		onSubmit: async (values) => {
+			values.riskFactors = handleRiskFactors(values);
+			values.additionalDisabilityOptions =
+				handleAdditionalDisabilityOptions(values);
+
+			values.independentlyBathes = convertDependenceToBoolean(
+				values.independentlyBathes
+			);
+			values.independentlyDefecates = convertDependenceToBoolean(
+				values.independentlyDefecates
+			);
+			values.independentlyDresses = convertDependenceToBoolean(
+				values.independentlyDresses
+			);
+			values.independentlyEats = convertDependenceToBoolean(
+				values.independentlyEats
+			);
+			values.independentlyMoves = convertDependenceToBoolean(
+				values.independentlyMoves
+			);
+
+			values.isLactating = convertYesNoToBoolean(values.isLactating);
+			values.isPregnant = convertYesNoToBoolean(values.isPregnant);
+
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserInformation", values);
-				console.log("User data updated successfully");
-				console.log(formik.errors);
 			} catch (error) {
 				console.error("Error updating user data:", error);
 			}
@@ -656,11 +809,17 @@ function UserIEInformation() {
 																						? "is-invalid"
 																						: ""
 																				}`}
-																				required={field.required}
+																				required={
+																					field.name === "age"
+																						? false
+																						: field.required
+																				}
 																				disabled={
-																					!!formik.values[
-																						field.checkboxName as keyof UserIEFormData
-																					]
+																					field.name === "age"
+																						? true
+																						: !!formik.values[
+																								field.checkboxName as keyof UserIEFormData
+																						  ]
 																				}
 																				placeholder={
 																					(language === "fa"

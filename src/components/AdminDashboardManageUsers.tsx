@@ -76,18 +76,25 @@ function AdminDashboardManageUsers() {
 	};
 
 	const handleConfirmRemoveUser = async (captchaValue: string) => {
-		console.log(captchaValue);
 		try {
-			await axiosInstance.post("/api/Admin/RemoveUser", {
-				userId: userToRemoveId,
-				captcha: captchaValue,
-			});
-			setDataUpdateFlag((prev) => !prev); // Trigger re-fetch
+			const response = await axiosInstance.post(
+				"/api/Admin/RemoveUser",
+				{
+					userId: userToRemoveId,
+					captcha: captchaValue,
+				},
+				{
+					withCredentials: true,
+				}
+			);
+			if (response.status == 200) {
+				setUserToRemoveId(null); // Reset `userId`
+			}
 		} catch (error) {
 			console.error("Failed to remove user", error);
 		} finally {
-			setUserToRemoveId(null); // Reset `userId`
 			setShowModal(false); // Close the modal
+			setDataUpdateFlag((prev) => !prev); // Trigger re-fetch
 		}
 	};
 

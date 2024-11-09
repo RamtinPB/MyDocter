@@ -87,7 +87,7 @@ function AdminDashboardMainPageContent() {
 				alteredHomePageData,
 				{
 					headers: {
-						"Content-Type": "application/json", // Set header to JSON
+						"Content-Type": "text/json", // Set header to JSON
 					},
 				}
 			);

@@ -1,7 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "./LanguageContext";
-import { ErrorMessage, Field } from "formik";
 
 interface AdminDashboardManageUsersModelProps {
 	onConfirm: (captchaValue: string) => void;
@@ -123,7 +122,6 @@ function AdminDashboardManageUsersModel({
 								onClick={() => onConfirm(captchaValue)}
 								className="btn btn-primary mt-3"
 								data-bs-toggle="modal"
-								data-bs-target="#staticBackdrop"
 							>
 								{language === "fa" ? "تأیید" : "Confirm"}
 							</button>
