@@ -157,6 +157,21 @@ function handleConditionalEmptyFields(values: UserFormData): UserFormData {
 	return values;
 }
 
+function handleConditionalEmptyFieldsForFront(
+	values: UserFormData
+): UserFormData {
+	if (values.insuranceType === "" || values.insuranceType === null)
+		values.noInsurance = true;
+	if (values.nationalCode === "" || values.nationalCode === null)
+		values.noNationalCode = true;
+	if (
+		values.supplementaryInsuranceType === "" ||
+		values.supplementaryInsuranceType === null
+	)
+		values.noSupplementaryInsurance = true;
+	return values;
+}
+
 function formatBirthdateToYYYYMMDD(birthdate: string): string {
 	// Check if the birthdate is in a valid format, otherwise return an empty string
 	if (!birthdate) return "";
@@ -229,6 +244,7 @@ function UserInformation() {
 				// Convert `isIranian` and `isMarried` booleans to strings
 				const formattedData = {
 					...data,
+					//...handleConditionalEmptyFieldsForFront(data),
 					isIranian: convertIsIranianToString(data.isIranian),
 					isMarried: convertIsMarriedToString(data.isMarried),
 					profilePicture: data.profileImageUrl,

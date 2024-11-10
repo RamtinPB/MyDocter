@@ -112,7 +112,7 @@ interface UserIEFormData {
 
 	bloodTransfusionHistory?: string;
 	bloodTransfusionReactionHistory?: string;
-	noBloodTransfusionReactionHistory?: boolean;
+	noBloodTransfusionReactionHistor?: boolean;
 
 	riskFactors?: string;
 	pets?: string;
@@ -179,7 +179,7 @@ const initialFormData: UserIEFormData = {
 
 	noIllnessHistory: false,
 	noIllnessHistoryInFamily: false,
-	noBloodTransfusionReactionHistory: false,
+	noBloodTransfusionReactionHistor: false,
 	noPets: false,
 	noSleepIssues: false,
 	noAllergyToDrug: false,
@@ -303,6 +303,64 @@ function convertYesNoToString(item: string | boolean | undefined): string {
 	return String(item);
 }
 
+function handleConditionalEmptyFields(values: UserIEFormData): UserIEFormData {
+	if (values.noIllnessHistory) values.illnessHistory = "";
+	if (values.noIllnessHistoryInFamily) {
+		values.illnessHistoryInFamily = "";
+		values.userFamilyMemberRelation = "";
+	}
+	if (values.noBloodTransfusionReactionHistor)
+		values.bloodTransfusionReactionHistory = "";
+	if (values.noPets) values.pets = "";
+	if (values.noSleepIssues) values.sleepIssues = "";
+	if (values.noAllergyToDrug) {
+		values.allergyToDrug = "";
+		values.allergyToDrugReaction = "";
+	}
+	if (values.noAllergyToFood) {
+		values.allergyToFood = "";
+		values.allergyToFoodReaction = "";
+	}
+	if (values.noHearingDisability) values.hearingDisability = "";
+	if (values.noSightDisability) values.sightDisability = "";
+	if (values.noDisabilityOrAmputation) values.disabilityOrAmputation = "";
+	return values;
+}
+
+function handleConditionalEmptyFieldsForFront(
+	values: UserIEFormData
+): UserIEFormData {
+	if (values.illnessHistory === "" || values.illnessHistory === null)
+		values.noIllnessHistory = true;
+	if (
+		values.illnessHistoryInFamily === "" ||
+		values.illnessHistoryInFamily === null
+	)
+		values.noIllnessHistoryInFamily = true;
+	if (
+		values.bloodTransfusionReactionHistory === "" ||
+		values.bloodTransfusionReactionHistory === null
+	)
+		values.noBloodTransfusionReactionHistor = true;
+	if (values.pets === "" || values.pets === null) values.noPets = true;
+	if (values.sleepIssues === "" || values.sleepIssues === null)
+		values.noSleepIssues = true;
+	if (values.allergyToDrug === "" || values.allergyToDrug === null)
+		values.noAllergyToDrug = true;
+	if (values.allergyToFood === "" || values.allergyToFood === null)
+		values.noAllergyToFood = true;
+	if (values.hearingDisability === "" || values.hearingDisability === null)
+		values.noHearingDisability = true;
+	if (values.sightDisability === "" || values.sightDisability === null)
+		values.noSightDisability = true;
+	if (
+		values.disabilityOrAmputation === "" ||
+		values.disabilityOrAmputation === null
+	)
+		values.noDisabilityOrAmputation = true;
+	return values;
+}
+
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
@@ -311,6 +369,7 @@ function UserIEInformation() {
 
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
 
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	// fetch user data
@@ -359,6 +418,8 @@ function UserIEInformation() {
 
 				const formattedData = {
 					...data,
+
+					//...handleConditionalEmptyFieldsForFront(data),
 					isLactating: convertYesNoToString(data.isLactating),
 					isPregnant: convertYesNoToString(data.isPregnant),
 
@@ -407,7 +468,7 @@ function UserIEInformation() {
 						);
 					});
 			});
-	}, []);
+	}, [dataUpdateFlag]);
 
 	// fetch user information form fields
 	useEffect(() => {
@@ -561,16 +622,19 @@ function UserIEInformation() {
 			values.isLactating = convertYesNoToBoolean(values.isLactating);
 			values.isPregnant = convertYesNoToBoolean(values.isPregnant);
 
+			values = handleConditionalEmptyFields(values);
+
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserInformation", values);
 			} catch (error) {
 				console.error("Error updating user data:", error);
+			} finally {
+				setDataUpdateFlag((prev) => !prev);
 			}
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
-		validateOnMount: true,
 	});
 
 	const toggleForm = (index: number) => {
