@@ -3,37 +3,55 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
-interface Service {
+interface addServiceProps {
 	name: string;
-	type: string;
 	enabled: boolean;
+	type: string;
+
 	pageTitle: string;
+	pageTitleEN: string;
 	pageDescription: string;
+	pageDescriptionEN: string;
 	pageBannerUrl: string;
+
 	reviewByDoctor: boolean;
 
 	displayTitle: string;
+	displayTitleEN: string;
 	displayDescription: string;
+	displayDescriptionEN: string;
 	displayBannerUrl: string;
 
 	importantNotes: string;
+
 	insurancePlanId: number;
 	basePrice: number;
+	subsidy: number;
 
-	//displayTitle: string;
-	//displayDescription: string;
-
-	nameEN: string;
-	descriptionEN: string;
-
-	price: string;
-	subsidy: string;
-	image: string;
+	//////////////////////////////////
+	title: string;
+	titleEN: string;
+	imageUrl: string;
 	id: string | number | undefined;
+	describtion: string;
+	describtionEN: string;
+	usedByUser: boolean;
+}
+
+interface servicesProps {
+	name: string;
+	type: string;
+	title: string;
+	titleEN: string;
+	imageUrl: string;
+	id: string | number | undefined;
+	describtion: string;
+	describtionEN: string;
+	usedByUser: boolean;
 }
 
 function AdminDashboardServicesPageContent() {
-	const [services, setServices] = useState<Service[]>([]);
+	const [services, setServices] = useState<servicesProps[]>([]);
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -72,27 +90,39 @@ function AdminDashboardServicesPageContent() {
 
 	// Add a new blank card to the appropriate type
 	const addCard = async (type: "General" | "Specialist") => {
-		const newCard: Service = {
+		const newCard: addServiceProps = {
 			name: "New Service",
-			nameEN: "New Service",
-			descriptionEN: "description",
-			price: "0",
-			subsidy: "0",
-			image: "/src/images/placeholder.jpg",
-			id: undefined,
+			enabled: true,
 			type: type,
 
-			enabled: true,
 			pageTitle: "",
+			pageTitleEN: "",
 			pageDescription: "",
+			pageDescriptionEN: "",
 			pageBannerUrl: "",
+
 			reviewByDoctor: false,
+
 			displayTitle: "",
+			displayTitleEN: "",
 			displayDescription: "",
+			displayDescriptionEN: "",
 			displayBannerUrl: "",
+
 			importantNotes: "",
+
 			insurancePlanId: 0,
 			basePrice: 0,
+			subsidy: 0,
+
+			//////////////////////////////
+			title: "",
+			titleEN: "",
+			imageUrl: "",
+			id: 0,
+			describtion: "",
+			describtionEN: "",
+			usedByUser: false,
 		};
 
 		try {
@@ -138,12 +168,12 @@ function AdminDashboardServicesPageContent() {
 							<div className="card shadow rounded-4 p-0">
 								<div className="text-center">
 									<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-										{language === "fa" ? service.name : service.nameEN}
+										{language === "fa" ? service.title : service.titleEN}
 									</h5>
 									<img
-										src={service.image}
+										src={service.imageUrl}
 										className="img-fluid m-0"
-										alt={service.name}
+										alt={service.title}
 									/>
 									<div className="d-flex justify-content-around align-items-center">
 										{/* Delete button */}

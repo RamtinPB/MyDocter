@@ -157,20 +157,20 @@ function handleConditionalEmptyFields(values: UserFormData): UserFormData {
 	return values;
 }
 
-function handleConditionalEmptyFieldsForFront(
-	values: UserFormData
-): UserFormData {
-	if (values.insuranceType === "" || values.insuranceType === null)
-		values.noInsurance = true;
-	if (values.nationalCode === "" || values.nationalCode === null)
-		values.noNationalCode = true;
-	if (
-		values.supplementaryInsuranceType === "" ||
-		values.supplementaryInsuranceType === null
-	)
-		values.noSupplementaryInsurance = true;
-	return values;
-}
+// function handleConditionalEmptyFieldsForFront(
+// 	values: UserFormData
+// ): UserFormData {
+// 	if (values.insuranceType === "" || values.insuranceType === null)
+// 		values.noInsurance = true;
+// 	if (values.nationalCode === "" || values.nationalCode === null)
+// 		values.noNationalCode = true;
+// 	if (
+// 		values.supplementaryInsuranceType === "" ||
+// 		values.supplementaryInsuranceType === null
+// 	)
+// 		values.noSupplementaryInsurance = true;
+// 	return values;
+// }
 
 function formatBirthdateToYYYYMMDD(birthdate: string): string {
 	// Check if the birthdate is in a valid format, otherwise return an empty string

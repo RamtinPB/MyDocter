@@ -327,39 +327,39 @@ function handleConditionalEmptyFields(values: UserIEFormData): UserIEFormData {
 	return values;
 }
 
-function handleConditionalEmptyFieldsForFront(
-	values: UserIEFormData
-): UserIEFormData {
-	if (values.illnessHistory === "" || values.illnessHistory === null)
-		values.noIllnessHistory = true;
-	if (
-		values.illnessHistoryInFamily === "" ||
-		values.illnessHistoryInFamily === null
-	)
-		values.noIllnessHistoryInFamily = true;
-	if (
-		values.bloodTransfusionReactionHistory === "" ||
-		values.bloodTransfusionReactionHistory === null
-	)
-		values.noBloodTransfusionReactionHistor = true;
-	if (values.pets === "" || values.pets === null) values.noPets = true;
-	if (values.sleepIssues === "" || values.sleepIssues === null)
-		values.noSleepIssues = true;
-	if (values.allergyToDrug === "" || values.allergyToDrug === null)
-		values.noAllergyToDrug = true;
-	if (values.allergyToFood === "" || values.allergyToFood === null)
-		values.noAllergyToFood = true;
-	if (values.hearingDisability === "" || values.hearingDisability === null)
-		values.noHearingDisability = true;
-	if (values.sightDisability === "" || values.sightDisability === null)
-		values.noSightDisability = true;
-	if (
-		values.disabilityOrAmputation === "" ||
-		values.disabilityOrAmputation === null
-	)
-		values.noDisabilityOrAmputation = true;
-	return values;
-}
+// function handleConditionalEmptyFieldsForFront(
+// 	values: UserIEFormData
+// ): UserIEFormData {
+// 	if (values.illnessHistory === "" || values.illnessHistory === null)
+// 		values.noIllnessHistory = true;
+// 	if (
+// 		values.illnessHistoryInFamily === "" ||
+// 		values.illnessHistoryInFamily === null
+// 	)
+// 		values.noIllnessHistoryInFamily = true;
+// 	if (
+// 		values.bloodTransfusionReactionHistory === "" ||
+// 		values.bloodTransfusionReactionHistory === null
+// 	)
+// 		values.noBloodTransfusionReactionHistor = true;
+// 	if (values.pets === "" || values.pets === null) values.noPets = true;
+// 	if (values.sleepIssues === "" || values.sleepIssues === null)
+// 		values.noSleepIssues = true;
+// 	if (values.allergyToDrug === "" || values.allergyToDrug === null)
+// 		values.noAllergyToDrug = true;
+// 	if (values.allergyToFood === "" || values.allergyToFood === null)
+// 		values.noAllergyToFood = true;
+// 	if (values.hearingDisability === "" || values.hearingDisability === null)
+// 		values.noHearingDisability = true;
+// 	if (values.sightDisability === "" || values.sightDisability === null)
+// 		values.noSightDisability = true;
+// 	if (
+// 		values.disabilityOrAmputation === "" ||
+// 		values.disabilityOrAmputation === null
+// 	)
+// 		values.noDisabilityOrAmputation = true;
+// 	return values;
+// }
 
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
