@@ -11,8 +11,6 @@ interface insuranceDataProps {
 	discountPercentage: string;
 }
 
-function d() {}
-
 function AdminDashboardInsurancePageContent() {
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const { language } = useLanguage(); // Get language and toggle function from context
@@ -68,29 +66,41 @@ function AdminDashboardInsurancePageContent() {
 	};
 
 	// Handle change in the input fields for Basic Insurance
-	const handleBasicInsuranceChange = (
-		index: number,
+	const handleInsuranceDataChange = (
+		id: number,
 		field: "companyName" | "companyNameEN" | "discountPercentage",
 		value: string
 	) => {
-		const updatedItems = [...insuranceData];
-		updatedItems[index][field] = value;
+		const updatedItems = insuranceData.map((item) =>
+			item.id === id ? { ...item, [field]: value } : item
+		);
 		setInsuranceData(updatedItems);
 	};
 
 	// @ts-ignore
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {
+		try {
+			// Send the data to the API
+			await axiosInstance.post("/api/Admin/UpdateInsurances", insuranceData);
+			console.log("Data submitted successfully");
+		} catch (error) {
+			console.error("Error submitting data:", error);
+		}
+		setDataUpdateFlag((prev) => !prev);
+	};
 
 	// @ts-ignore
-	const handleCancel = () => {};
+	const handleCancel = () => {
+		setDataUpdateFlag((prev) => !prev);
+	};
 
 	const renderInsuranceTables = (type: 0 | 1) => {
 		return (
 			<tbody>
 				{insuranceData
 					.filter((item) => item.type === type)
-					.map((item, index) => (
-						<tr key={index}>
+					.map((item) => (
+						<tr key={item.id}>
 							<th scope="row" className="align-middle">
 								<span className="px-1">{item.id}</span>
 							</th>
@@ -98,10 +108,10 @@ function AdminDashboardInsurancePageContent() {
 								<input
 									type="text"
 									className="form-control"
-									value={item.companyName}
+									value={item.companyName || ""}
 									onChange={(e) =>
-										handleBasicInsuranceChange(
-											index,
+										handleInsuranceDataChange(
+											item.id,
 											"companyName",
 											e.target.value
 										)
@@ -115,10 +125,10 @@ function AdminDashboardInsurancePageContent() {
 								<input
 									type="text"
 									className="form-control"
-									value={item.companyNameEN}
+									value={item.companyNameEN || ""}
 									onChange={(e) =>
-										handleBasicInsuranceChange(
-											index,
+										handleInsuranceDataChange(
+											item.id,
 											"companyNameEN",
 											e.target.value
 										)
@@ -134,10 +144,10 @@ function AdminDashboardInsurancePageContent() {
 								<input
 									type="text"
 									className="form-control"
-									value={item.discountPercentage}
+									value={item.discountPercentage || ""}
 									onChange={(e) =>
-										handleBasicInsuranceChange(
-											index,
+										handleInsuranceDataChange(
+											item.id,
 											"discountPercentage",
 											e.target.value
 										)
@@ -206,7 +216,7 @@ function AdminDashboardInsurancePageContent() {
 								{language === "fa" ? "شناسه" : "Insurance id"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "نام بیمه" : "Insurance name"}
+								{language === "fa" ? "نام بیمه" : "Insurance name Farsi"}
 							</th>
 							<th scope="col">
 								{language === "fa"
@@ -272,7 +282,7 @@ function AdminDashboardInsurancePageContent() {
 					className="btn btn-success rounded-pill px-3"
 					onClick={handleSubmit}
 				>
-					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
+					{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
 				</button>
 			</div>
 		</div>

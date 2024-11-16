@@ -202,7 +202,7 @@ function convertGenderToEnum(gender: string): string {
 }
 
 function convertEducationLevelToEnum(educationLevel: string): string {
-	if (educationLevel === "کم سواد") return "None";
+	if (educationLevel === "بی سواد") return "None";
 	if (educationLevel === "ابتدایی") return "Primary";
 	if (educationLevel === "دیپلم") return "Diploma";
 	if (educationLevel === "کاردانی") return "Associate";
@@ -214,7 +214,7 @@ function convertEducationLevelToEnum(educationLevel: string): string {
 }
 
 function convertEducationLevelToFrontData(educationLevel: string): string {
-	if (educationLevel === "None") return "کم سواد";
+	if (educationLevel === "None") return "بی سواد";
 	if (educationLevel === "Primary") return "ابتدایی";
 	if (educationLevel === "Diploma") return "دیپلم";
 	if (educationLevel === "Associate") return "کاردانی";

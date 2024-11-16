@@ -20,8 +20,10 @@ function AdminDashboardFormPageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
-	const [formFieldsData, setFormFieldsData] = useState<any[]>([]);
-	const [formFieldsIEData, setFormFieldsIEData] = useState<any[]>([]);
+	const [formFieldsData, setFormFieldsData] = useState<formFieldsProps[]>([]);
+	const [formFieldsIEData, setFormFieldsIEData] = useState<formFieldsProps[]>(
+		[]
+	);
 
 	const [changedData, setChangedData] = useState<any[]>([]);
 	const [changedDataIE, setChangedDataIE] = useState<any[]>([]);
@@ -138,6 +140,8 @@ function AdminDashboardFormPageContent() {
 		}
 	};
 
+	const handleChangeEnabled = () => {};
+
 	const handleSubmit = async () => {
 		const payload = {
 			formFieldsData: changedData,
@@ -176,12 +180,16 @@ function AdminDashboardFormPageContent() {
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					{formFieldsData.map((field, index) => {
-						function handleChangeEnabled(): void {
-							throw new Error("Function not implemented.");
-						}
-
 						return (
-							<div key={index} className="col-6 d-flex flex-column py-2 px-5">
+							<div key={index} className="col-6 d-flex flex-column py-3 px-5">
+								<h6
+									className="px-2 "
+									style={{
+										direction: language === "fa" ? "ltr" : "rtl",
+									}}
+								>
+									{language === "fa" ? field.label : field.labelEN}
+								</h6>
 								<div className="d-flex ">
 									<input
 										type="checkbox"
@@ -190,19 +198,22 @@ function AdminDashboardFormPageContent() {
 										className="form-check-input shadow-sm mx-2"
 									/>
 									<label htmlFor={field.name} className="form-label">
-										{language === "fa" ? field.label : field.labelEN}
+										{language === "fa"
+											? "(الزامی / غیر الزامی)"
+											: "Required / Not Required"}
 									</label>
 								</div>
-
 								<div className="d-flex">
 									<input
 										type="checkbox"
-										checked={field.required}
+										checked={field.enabled}
 										onChange={() => handleChangeEnabled()}
 										className="form-check-input shadow-sm mx-2"
 									/>
 									<label htmlFor={field.name} className="form-label">
-										(فعال / غیر فعال)
+										{language === "fa"
+											? "(فعال / غیر فعال)"
+											: "Enabled / Not Enabled"}
 									</label>
 								</div>
 							</div>
@@ -230,9 +241,8 @@ function AdminDashboardFormPageContent() {
 							(field) => field.group === group
 						);
 						return (
-							!(
-								sampleField.group === undefined || sampleField.group === null
-							) && (
+							sampleField &&
+							sampleField.group && (
 								<div key={index}>
 									<h4 className="text-center pt-4">
 										{language === "fa"
@@ -252,7 +262,15 @@ function AdminDashboardFormPageContent() {
 												if (field.name === "age") return null;
 												if (field.name === "") return null;
 												return (
-													<div key={index} className="col-6 py-2 px-5">
+													<div key={index} className="col-6 py-3 px-5">
+														<h6
+															className="px-2 "
+															style={{
+																direction: language === "fa" ? "ltr" : "rtl",
+															}}
+														>
+															{language === "fa" ? field.label : field.labelEN}
+														</h6>
 														<input
 															type="checkbox"
 															checked={field.required}
@@ -261,15 +279,27 @@ function AdminDashboardFormPageContent() {
 															}
 															className="form-check-input shadow-sm mx-2"
 														/>
-														<label
-															htmlFor={field.name}
-															className="form-label"
-															style={{
-																direction: language === "fa" ? "ltr" : "rtl",
-															}}
-														>
-															{language === "fa" ? field.label : field.labelEN}
+														<label htmlFor={field.name} className="form-label">
+															{language === "fa"
+																? "(الزامی / غیر الزامی)"
+																: "Required / Not Required"}
 														</label>
+														<div className="d-flex">
+															<input
+																type="checkbox"
+																checked={field.enabled}
+																onChange={() => handleChangeEnabled()}
+																className="form-check-input shadow-sm mx-2"
+															/>
+															<label
+																htmlFor={field.name}
+																className="form-label"
+															>
+																{language === "fa"
+																	? "(فعال / غیر فعال)"
+																	: "Enabled / Not Enabled"}
+															</label>
+														</div>
 													</div>
 												);
 											})}

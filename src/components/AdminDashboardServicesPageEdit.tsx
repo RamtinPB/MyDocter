@@ -7,26 +7,25 @@ import FormBuilder from "./FormBuilder";
 import axios from "axios";
 import { useLanguage } from "./LanguageContext";
 
-interface Service {
+interface serviceProps {
+	id: number;
 	name: string;
-	description: string;
-	detailedDescription: string;
-
-	nameEN: string;
-	descriptionEN: string;
-	detailedDescriptionEN: string;
-
-	price: string;
-	subsidy: string;
-	image: string;
-	id: string;
 	type: string;
+
+	title: string;
+	titleEN: string;
+
+	description: string;
+	descriptionEN: string;
+
+	imageUrl: string;
+	enabled: boolean;
 }
 
 function ServicePageEdit() {
 	const { id } = useParams();
 
-	const [service, setService] = useState<Service | null>(null);
+	const [service, setService] = useState<serviceProps | null>(null);
 	const [servicePicture, setServicePicture] = useState<string | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
@@ -137,7 +136,7 @@ function ServicePageEdit() {
 					</div>
 					<div className="col-8 d-flex flex-column justify-content-center text-center text-white">
 						<h4 className="mb-0">
-							{language === "fa" ? service.name : service.nameEN}
+							{language === "fa" ? service.title : service.titleEN}
 						</h4>
 					</div>
 				</div>
@@ -161,6 +160,7 @@ function ServicePageEdit() {
 							className={`form-control text-${
 								language === "fa" ? "end" : "start"
 							} h-100`}
+							value={service.description}
 							rows={3}
 							placeholder={
 								language === "fa" ? "متن خود را وارد کنید" : "Write your input"
@@ -172,7 +172,7 @@ function ServicePageEdit() {
 					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
 						{servicePicture ? (
 							<img
-								src={servicePicture}
+								src={service.imageUrl}
 								alt="service"
 								className="custom-service-img shadow-sm rounded-5"
 							/>

@@ -233,7 +233,7 @@ function handleAdditionalDisabilityOptions(values: any): string {
 	return activeRiskFactors;
 }
 
-function parseDisabilityOptions(disabilityString: string) {
+function parseDisabilityOptions(disabilityString: string | null) {
 	const allDisabilityOptions = {
 		cane: false,
 		walker: false,
@@ -245,6 +245,11 @@ function parseDisabilityOptions(disabilityString: string) {
 		glasses: false,
 		prostheticEye: false,
 	};
+
+	// If the input string is null or empty, return all options as false
+	if (!disabilityString || disabilityString.trim() === "") {
+		return allDisabilityOptions;
+	}
 
 	// Split the input string and mark each option as true if it's present
 	disabilityString.split(",").forEach((option) => {
@@ -258,7 +263,7 @@ function parseDisabilityOptions(disabilityString: string) {
 	return allDisabilityOptions;
 }
 
-function parseRiskFactors(riskFactorString: string) {
+function parseRiskFactors(riskFactorString: string | null) {
 	const allRiskFactors = {
 		drugAbuse: false,
 		substanceAbuse: false,
@@ -267,6 +272,11 @@ function parseRiskFactors(riskFactorString: string) {
 		miningExperience: false,
 		chemicalExposure: false,
 	};
+
+	// If the input string is null or empty, return all options as false
+	if (!riskFactorString || riskFactorString.trim() === "") {
+		return allRiskFactors;
+	}
 
 	// Split the input string and mark each option as true if it's present
 	riskFactorString.split(",").forEach((option) => {
@@ -329,39 +339,24 @@ function handleConditionalEmptyFields(values: UserIEFormData): UserIEFormData {
 	return values;
 }
 
-// function handleConditionalEmptyFieldsForFront(
-// 	values: UserIEFormData
-// ): UserIEFormData {
-// 	if (values.illnessHistory === "" || values.illnessHistory === null)
-// 		values.noIllnessHistory = true;
-// 	if (
-// 		values.illnessHistoryInFamily === "" ||
-// 		values.illnessHistoryInFamily === null
-// 	)
-// 		values.noIllnessHistoryInFamily = true;
-// 	if (
-// 		values.bloodTransfusionReactionHistory === "" ||
-// 		values.bloodTransfusionReactionHistory === null
-// 	)
-// 		values.noBloodTransfusionReactionHistor = true;
-// 	if (values.pets === "" || values.pets === null) values.noPets = true;
-// 	if (values.sleepIssues === "" || values.sleepIssues === null)
-// 		values.noSleepIssues = true;
-// 	if (values.allergyToDrug === "" || values.allergyToDrug === null)
-// 		values.noAllergyToDrug = true;
-// 	if (values.allergyToFood === "" || values.allergyToFood === null)
-// 		values.noAllergyToFood = true;
-// 	if (values.hearingDisability === "" || values.hearingDisability === null)
-// 		values.noHearingDisability = true;
-// 	if (values.sightDisability === "" || values.sightDisability === null)
-// 		values.noSightDisability = true;
-// 	if (
-// 		values.disabilityOrAmputation === "" ||
-// 		values.disabilityOrAmputation === null
-// 	)
-// 		values.noDisabilityOrAmputation = true;
-// 	return values;
-// }
+function handleConditionalEmptyFieldsForFront(
+	values: UserIEFormData
+): UserIEFormData {
+	if (values.illnessHistory === "") values.noIllnessHistory = true;
+	if (values.illnessHistoryInFamily === "")
+		values.noIllnessHistoryInFamily = true;
+	if (values.bloodTransfusionReactionHistory === "")
+		values.noBloodTransfusionReactionHistor = true;
+	if (values.pets === "") values.noPets = true;
+	if (values.sleepIssues === "") values.noSleepIssues = true;
+	if (values.allergyToDrug === "") values.noAllergyToDrug = true;
+	if (values.allergyToFood === "") values.noAllergyToFood = true;
+	if (values.hearingDisability === "") values.noHearingDisability = true;
+	if (values.sightDisability === "") values.noSightDisability = true;
+	if (values.disabilityOrAmputation === "")
+		values.noDisabilityOrAmputation = true;
+	return values;
+}
 
 function UserIEInformation() {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -421,7 +416,7 @@ function UserIEInformation() {
 				const formattedData = {
 					...data,
 
-					//...handleConditionalEmptyFieldsForFront(data),
+					...handleConditionalEmptyFieldsForFront(data),
 					isLactating: convertYesNoToString(data.isLactating),
 					isPregnant: convertYesNoToString(data.isPregnant),
 
@@ -620,9 +615,13 @@ function UserIEInformation() {
 			values.independentlyMoves = convertDependenceToBoolean(
 				values.independentlyMoves
 			);
-
-			values.isLactating = convertYesNoToBoolean(values.isLactating);
-			values.isPregnant = convertYesNoToBoolean(values.isPregnant);
+			if (userInfo?.gender === "Female") {
+				values.isLactating = convertYesNoToBoolean(values.isLactating);
+				values.isPregnant = convertYesNoToBoolean(values.isPregnant);
+			} else if (userInfo?.gender === "Male") {
+				values.isLactating = false;
+				values.isPregnant = false;
+			}
 
 			values = handleConditionalEmptyFields(values);
 
@@ -676,7 +675,7 @@ function UserIEInformation() {
 										sampleField.group === null
 									) &&
 									!(
-										userInfo?.gender === "مرد" &&
+										userInfo?.gender === "Male" &&
 										sampleField.group === "بیماران خانم"
 									) && (
 										<div
