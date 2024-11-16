@@ -26,6 +26,7 @@ interface formFieldsIEProps {
 	name: string;
 	type: string;
 	required: boolean;
+	enabled: boolean;
 
 	parent: string;
 
@@ -56,7 +57,8 @@ const processData = (
 	const formFields: formFieldsIEProps[] = data.map((field) => ({
 		name: field.name,
 		type: field.type,
-		required: field.required, // Assuming this is already a boolean
+		required: field.required,
+		enabled: field.enabled,
 		parent: field.parent,
 		group: field.group,
 		groupEN: field.groupEN,
@@ -257,7 +259,7 @@ function parseDisabilityOptions(disabilityString: string) {
 }
 
 function parseRiskFactors(riskFactorString: string) {
-	const allriRkFactors = {
+	const allRiskFactors = {
 		drugAbuse: false,
 		substanceAbuse: false,
 		smoking: false,
@@ -269,12 +271,12 @@ function parseRiskFactors(riskFactorString: string) {
 	// Split the input string and mark each option as true if it's present
 	riskFactorString.split(",").forEach((option) => {
 		const trimmedOption = option.trim();
-		if (trimmedOption in allriRkFactors) {
-			allriRkFactors[trimmedOption as keyof typeof allriRkFactors] = true;
+		if (trimmedOption in allRiskFactors) {
+			allRiskFactors[trimmedOption as keyof typeof allRiskFactors] = true;
 		}
 	});
 
-	return allriRkFactors;
+	return allRiskFactors;
 }
 
 function convertDependenceToBoolean(
@@ -666,8 +668,17 @@ function UserIEInformation() {
 									(field) => field.group === group
 								);
 								return (
-									!(group === undefined || group === null) &&
-									!(userInfo?.gender === "مرد" && group === "بیماران خانم") && (
+									(sampleField.enabled === true ||
+										sampleField.enabled === null ||
+										sampleField.enabled === undefined) &&
+									!(
+										sampleField.group === undefined ||
+										sampleField.group === null
+									) &&
+									!(
+										userInfo?.gender === "مرد" &&
+										sampleField.group === "بیماران خانم"
+									) && (
 										<div
 											className="accordion-item shadow-sm rounded-5 mb-5"
 											key={index}

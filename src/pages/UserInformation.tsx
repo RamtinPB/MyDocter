@@ -27,7 +27,8 @@ interface validationSchemaDataProps {
 interface formFieldsProps {
 	name: string;
 	type: string;
-	required: string;
+	required: boolean;
+	enabled: boolean;
 
 	label: string;
 	labelEN: string;
@@ -51,6 +52,7 @@ const processData = (
 		name: field.name,
 		type: field.type,
 		required: field.required, // Assuming this is already a boolean
+		enabled: field.boolean,
 		label: field.label,
 		labelEN: field.labelEN,
 		options: field.options, // Assuming options might be an array
@@ -227,9 +229,9 @@ function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
-	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	// fetch user data
@@ -450,22 +452,36 @@ function UserInformation() {
 		if (e.target.files && e.target.files[0]) {
 			const selectedFile = e.target.files[0];
 
+			if (selectedFile.size > 2 * 1024 * 1024) {
+				console.error("File is too large. Max size is 2MB.");
+				return;
+			}
+			if (
+				!["image/png", "image/jpeg", "image/jpg"].includes(selectedFile.type)
+			) {
+				console.error(
+					"Invalid file type. Only PNG, JPEG, and JPG are allowed."
+				);
+				return;
+			}
+
 			// Update the profile picture preview
 			setProfilePicture(URL.createObjectURL(selectedFile));
 
 			// Prepare FormData for API upload
 			const formData = new FormData();
-			formData.append("profilePicture", selectedFile);
+			formData.append("file", selectedFile);
 
 			try {
 				// Upload profile picture
 				const uploadResponse = await axiosInstance.post(
-					"/UploadProfileImage",
+					"/api/File/UploadProfileImage",
 					formData,
 					{
 						headers: {
 							"Content-Type": "multipart/form-data",
 						},
+						withCredentials: true,
 					}
 				);
 
@@ -555,122 +571,128 @@ function UserInformation() {
 								const isCheckbox = field.checkboxName;
 
 								return (
-									<div
-										key={index}
-										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									>
-										<label htmlFor={field.name} className="form-label">
-											{language === "fa" ? field.label : field.labelEN}
-										</label>
-										{isSelect ? (
-											<select
-												id={field.name}
-												name={field.name}
-												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
-												)}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												className={`form-select select-resize text-${
-													language === "fa" ? "end" : "start"
-												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
-														? "is-invalid"
-														: ""
-												}`}
-												required={field.required}
-												disabled={
-													!!formik.values[
-														field.checkboxName as keyof UserFormData
-													]
-												}
-											>
-												<option value="">...</option>
-												{(language === "fa" ? field.options : field.optionsEN)
-													.split(",")
-													.map((option: string, i: number) => (
-														<option key={i} value={option}>
-															{option}
-														</option>
-													))}
-											</select>
-										) : (
-											<input
-												type={field.type}
-												id={field.name}
-												name={field.name}
-												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
-												)}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												className={`form-control text-${
-													language === "fa" ? "end" : "start"
-												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
-														? "is-invalid"
-														: ""
-												}`}
-												required={field.required}
-												disabled={
-													!!formik.values[
-														field.checkboxName as keyof UserFormData
-													]
-												}
-												placeholder={
-													(language === "fa"
-														? field.placeholder
-														: field.placeholderEN) || ""
-												}
-											/>
-										)}
-										{isCheckbox && (
-											<div
-												className={`text-${
-													language === "fa" ? "end" : "start"
-												} mt-2`}
-											>
-												<label
-													htmlFor={field.checkboxName}
-													className="form-check-label mx-2"
-												>
-													{language === "fa"
-														? field.checkboxLabel
-														: field.checkboxLabelEN}
-												</label>
-												<input
-													type="checkbox"
-													id={field.checkboxName}
-													name={field.checkboxName}
-													checked={Boolean(
-														formik.values[
+									(field.enabled === true ||
+										field.enabled === null ||
+										field.enabled === undefined) && (
+										<div
+											key={index}
+											className="col mb-2"
+											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										>
+											<label htmlFor={field.name} className="form-label">
+												{language === "fa" ? field.label : field.labelEN}
+											</label>
+											{isSelect ? (
+												<select
+													id={field.name}
+													name={field.name}
+													value={String(
+														formik.values[field.name as keyof UserFormData] ||
+															""
+													)}
+													onChange={formik.handleChange}
+													onBlur={formik.handleBlur}
+													className={`form-select select-resize text-${
+														language === "fa" ? "end" : "start"
+													} shadow-sm ${
+														formik.touched[field.name as keyof UserFormData] &&
+														formik.errors[field.name as keyof UserFormData]
+															? "is-invalid"
+															: ""
+													}`}
+													required={field.required}
+													disabled={
+														!!formik.values[
 															field.checkboxName as keyof UserFormData
 														]
-													)}
-													onChange={(e) => {
-														formik.setFieldValue(
-															field.checkboxName,
-															e.target.checked
-														);
-													}}
-													className="form-check-input shadow-sm"
-												/>
-											</div>
-										)}
-										{formik.touched[field.name as keyof UserFormData] &&
-											formik.errors[field.name as keyof UserFormData] && (
-												<div className="invalid-feedback">
-													{
-														formik.errors[
-															field.name as keyof UserFormData
-														] as string
 													}
+												>
+													<option value="">...</option>
+													{(language === "fa" ? field.options : field.optionsEN)
+														.split(",")
+														.map((option: string, i: number) => (
+															<option key={i} value={option}>
+																{option}
+															</option>
+														))}
+												</select>
+											) : (
+												<input
+													type={field.type}
+													id={field.name}
+													name={field.name}
+													value={String(
+														formik.values[field.name as keyof UserFormData] ||
+															""
+													)}
+													onChange={formik.handleChange}
+													onBlur={formik.handleBlur}
+													className={`form-control text-${
+														language === "fa" ? "end" : "start"
+													} shadow-sm ${
+														formik.touched[field.name as keyof UserFormData] &&
+														formik.errors[field.name as keyof UserFormData]
+															? "is-invalid"
+															: ""
+													}`}
+													required={field.required}
+													disabled={
+														!!formik.values[
+															field.checkboxName as keyof UserFormData
+														]
+													}
+													placeholder={
+														(language === "fa"
+															? field.placeholder
+															: field.placeholderEN) || ""
+													}
+												/>
+											)}
+											{isCheckbox && (
+												<div
+													className={`text-${
+														language === "fa" ? "end" : "start"
+													} mt-2`}
+												>
+													<label
+														htmlFor={field.checkboxName}
+														className="form-check-label mx-2"
+													>
+														{language === "fa"
+															? field.checkboxLabel
+															: field.checkboxLabelEN}
+													</label>
+													<input
+														type="checkbox"
+														id={field.checkboxName}
+														name={field.checkboxName}
+														checked={Boolean(
+															formik.values[
+																field.checkboxName as keyof UserFormData
+															]
+														)}
+														onChange={(e) => {
+															formik.setFieldValue(
+																field.checkboxName,
+																e.target.checked
+															);
+														}}
+														className="form-check-input shadow-sm"
+													/>
 												</div>
 											)}
-									</div>
+											{formik.touched[field.name as keyof UserFormData] &&
+												formik.errors[field.name as keyof UserFormData] && (
+													<div className="invalid-feedback">
+														{
+															formik.errors[
+																field.name as keyof UserFormData
+															] as string
+														}
+													</div>
+												)}
+										</div>
+									)
 								);
 							})}
 						</div>

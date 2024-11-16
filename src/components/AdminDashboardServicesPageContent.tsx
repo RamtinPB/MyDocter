@@ -24,7 +24,7 @@ interface addServiceProps {
 
 	importantNotes: string;
 
-	insurancePlanId: number;
+	insurancePlanId: number | null;
 	basePrice: number;
 	subsidy: number;
 
@@ -53,6 +53,7 @@ interface servicesProps {
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<servicesProps[]>([]);
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
+	const [newServiceUpdateFlag, setNewServiceUpdateFlag] = useState(false);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
@@ -69,6 +70,7 @@ function AdminDashboardServicesPageContent() {
 				}
 
 				setServices(response.data);
+				setNewServiceUpdateFlag((prev) => !prev);
 			} catch (err) {
 				try {
 					const response = await fetch("/db.json"); // Adjust path if necessary
@@ -88,14 +90,40 @@ function AdminDashboardServicesPageContent() {
 		fetchServices();
 	}, [dataUpdateFlag]);
 
+	useEffect(() => {
+		const updateNewServices = async () => {
+			if (services && services.length > 0) {
+				const newServices = services.filter(
+					(service) => service.name === "NewService"
+				);
+
+				// Loop through each "NewService" and call the API to update its name
+				for (const service of newServices) {
+					try {
+						await axiosInstance.post("/api/Admin/EditService", {
+							id: service.id,
+							name: `${service.type}_${service.id}`,
+							type: service.type,
+						});
+
+						setDataUpdateFlag((prev) => !prev);
+					} catch (error) {
+						console.error(`Failed to update service ${service.id}`, error);
+					}
+				}
+			}
+		};
+		updateNewServices();
+	}, [newServiceUpdateFlag]);
+
 	// Add a new blank card to the appropriate type
 	const addCard = async (type: "General" | "Specialist") => {
 		const newCard: addServiceProps = {
-			name: "New Service",
+			name: "NewService",
 			enabled: true,
 			type: type,
 
-			pageTitle: "",
+			pageTitle: "New Service",
 			pageTitleEN: "",
 			pageDescription: "",
 			pageDescriptionEN: "",
@@ -103,7 +131,7 @@ function AdminDashboardServicesPageContent() {
 
 			reviewByDoctor: false,
 
-			displayTitle: "",
+			displayTitle: "New Service",
 			displayTitleEN: "",
 			displayDescription: "",
 			displayDescriptionEN: "",
@@ -111,7 +139,7 @@ function AdminDashboardServicesPageContent() {
 
 			importantNotes: "",
 
-			insurancePlanId: 0,
+			insurancePlanId: null,
 			basePrice: 0,
 			subsidy: 0,
 
@@ -128,7 +156,10 @@ function AdminDashboardServicesPageContent() {
 		try {
 			const response = await axiosInstance.post(
 				"/api/Admin/AddService",
-				newCard
+				newCard,
+				{
+					withCredentials: true,
+				}
 			);
 			if (response.status === 200) {
 				setServices([...services, newCard]);

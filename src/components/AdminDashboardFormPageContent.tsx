@@ -1,86 +1,161 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
+
+interface formFieldsProps {
+	id: number;
+	name: string;
+	type: string;
+	required: boolean;
+	enabled: boolean;
+
+	group: string;
+	groupEN: string;
+
+	label: string;
+	labelEN: string;
+}
 
 function AdminDashboardFormPageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
-	const [formFields, setFormFields] = useState<any[]>([]);
-	const [formSections, setFormSections] = useState<{ [key: string]: any[] }>(
-		{}
-	);
+	const [formFieldsData, setFormFieldsData] = useState<any[]>([]);
+	const [formFieldsIEData, setFormFieldsIEData] = useState<any[]>([]);
 
-	const [initialFormFields, setInitialFormFields] = useState<any[]>([]);
-	const [initialFormSections, setInitialFormSections] = useState<{
-		[key: string]: any[];
-	}>({});
+	const [changedData, setChangedData] = useState<any[]>([]);
+	const [changedDataIE, setChangedDataIE] = useState<any[]>([]);
 
+	// fetch user information form fields
 	useEffect(() => {
-		fetch("/db.json")
+		axiosInstance
+			.post("/api/User/GetUserInformationFormFields") // Call the API to get user data
 			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.json();
-			})
-			.then((data) => {
-				// Update state for form fields
-				setFormFields(data.formFields);
-
-				const sections = data.formFieldsIE[0]; // Adjust based on structure
-				setFormSections(sections);
-
-				// Set initial state for revert on cancel
-				setInitialFormFields(JSON.parse(JSON.stringify(data.formFields))); // Deep copy
-				setInitialFormSections(
-					JSON.parse(JSON.stringify(data.formFieldsIE[0]))
-				); // Deep copy
+				const data = response.data;
+				setFormFieldsIEData(data);
 			})
 			.catch((error) => {
-				console.error("Error fetching data:", error);
+				console.error(
+					"API request for user data form fields failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data form fields from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						// Update state for form fields
+						setFormFieldsIEData(data.formFields);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data form fields from both API and db.json",
+							jsonError
+						);
+					});
 			});
-	}, []);
+	}, [dataUpdateFlag]);
 
-	// @ts-ignore
-	const handleChange = () => {};
+	// Assuming that formData comes as a single structure from the API
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetUserDataFormFields") // API call for form data and validation
+			.then((response) => {
+				const data = response.data;
 
-	// @ts-ignore
-	const handleSubmit = () => {
-		// Collect and prepare data to be sent to the backend
-		const updatedData = {
-			formFields,
-			formSections,
+				setFormFieldsData(data);
+
+				//console.log(newFormFields);
+				//console.log(newValidationSchemaData);
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+
+				fetch("/db.json")
+					.then((response) => response.json())
+					.then((data) => {
+						setFormFieldsData(data);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, [dataUpdateFlag]);
+
+	const handleChange = (id: number, name: string, isIEData: boolean) => {
+		const updateData = (data: any[]) => {
+			return data.map((field) =>
+				field.id === id && field.name === name
+					? { ...field, required: !field.required }
+					: field
+			);
 		};
 
-		console.log("Updated Data to Send:", updatedData);
+		if (isIEData) {
+			setFormFieldsIEData((prevData) => updateData(prevData));
 
-		// Send to backend using fetch/axios etc.
-		// Example:
-		// fetch('/your-backend-endpoint', {
-		//   method: 'POST',
-		//   headers: { 'Content-Type': 'application/json' },
-		//   body: JSON.stringify(updatedData),
-		// }).then(response => {
-		//   if (!response.ok) throw new Error('Error in updating');
-		//   return response.json();
-		// }).catch(error => console.error('Update error:', error));
+			// Add or update the item in changedDataIE
+			setChangedDataIE((prevChanged) => {
+				const updatedField = {
+					id,
+					name,
+					required: !formFieldsIEData.find((f) => f.id === id)?.required,
+				};
+				const exists = prevChanged.find((f) => f.id === id && f.name === name);
+				return exists
+					? prevChanged.map((f) =>
+							f.id === id && f.name === name ? updatedField : f
+					  )
+					: [...prevChanged, updatedField];
+			});
+		} else {
+			setFormFieldsData((prevData) => updateData(prevData));
+
+			// Add or update the item in changedData
+			setChangedData((prevChanged) => {
+				const updatedField = {
+					id,
+					name,
+					required: !formFieldsData.find((f) => f.id === id)?.required,
+				};
+				const exists = prevChanged.find((f) => f.id === id && f.name === name);
+				return exists
+					? prevChanged.map((f) =>
+							f.id === id && f.name === name ? updatedField : f
+					  )
+					: [...prevChanged, updatedField];
+			});
+		}
+	};
+
+	const handleSubmit = async () => {
+		const payload = {
+			formFieldsData: changedData,
+			formFieldsIEData: changedDataIE,
+		};
+
+		try {
+			// Send the data to the API
+			await axiosInstance.post("/api/Admin/UpdateFormFields", payload);
+			console.log("Data submitted successfully");
+		} catch (error) {
+			console.error("Error submitting data:", error);
+		}
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	const handleCancel = () => {
-		// Reset form fields and sections to their original initial values (deep copy)
-		setFormFields(JSON.parse(JSON.stringify(initialFormFields)));
-		setFormSections(JSON.parse(JSON.stringify(initialFormSections)));
-		// window.location.reload();
-	};
-
-	const sectionNameMap = {
-		"اطلاعات پایه": "Basic Information",
-		"تاریخچه سلامتی و بیماری": "Health and Illness History",
-		"حساسیت ها": "Allergies",
-		"محدودیت ها و توانایی ها": "Limitations and Abilities",
-		"سابقه مصرف دارو (اختیاری)": "Medication History (Optional)",
-		"بیماران خانم": "Female Patients",
-		"انجام فعالیت های روزانه زندگی": "Performing daily life activities",
-		// Add any additional sections here
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	return (
@@ -100,23 +175,36 @@ function AdminDashboardFormPageContent() {
 					className={`row row-cols-2 mt-1 mb-5`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					{formFields.map((field, index) => {
+					{formFieldsData.map((field, index) => {
+						function handleChangeEnabled(): void {
+							throw new Error("Function not implemented.");
+						}
+
 						return (
-							<div key={index} className="col-6 py-2 px-5">
-								<input
-									type="checkbox"
-									checked={field.required}
-									onChange={() => {
-										const updatedFields = [...formFields];
-										updatedFields[index].required =
-											!updatedFields[index].required;
-										setFormFields(updatedFields);
-									}}
-									className="form-check-input shadow-sm mx-2"
-								/>
-								<label htmlFor={field.name} className="form-label">
-									{language === "fa" ? field.label : field.labelEN}
-								</label>
+							<div key={index} className="col-6 d-flex flex-column py-2 px-5">
+								<div className="d-flex ">
+									<input
+										type="checkbox"
+										checked={field.required}
+										onChange={() => handleChange(field.id, field.name, false)}
+										className="form-check-input shadow-sm mx-2"
+									/>
+									<label htmlFor={field.name} className="form-label">
+										{language === "fa" ? field.label : field.labelEN}
+									</label>
+								</div>
+
+								<div className="d-flex">
+									<input
+										type="checkbox"
+										checked={field.required}
+										onChange={() => handleChangeEnabled()}
+										className="form-check-input shadow-sm mx-2"
+									/>
+									<label htmlFor={field.name} className="form-label">
+										(فعال / غیر فعال)
+									</label>
+								</div>
 							</div>
 						);
 					})}
@@ -136,53 +224,61 @@ function AdminDashboardFormPageContent() {
 							: "Initial Evaluation Form"}
 					</h3>
 				</div>
-				{Object.keys(formSections).map((section, index) => {
-					return (
-						<div key={index}>
-							<h4 className="text-center pt-4">
-								{language === "fa"
-									? section
-									: sectionNameMap[section as keyof typeof sectionNameMap]}
-							</h4>
-							<hr className=" rounded-pill mx-4 my-2" />
-							<div
-								className={`row row-cols-2 mt-4 mb-5`}
-								style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-							>
-								{Array.isArray(formSections[section]) &&
-									formSections[section].map((field: any, index: number) => {
-										if (field.type === "placeholder") {
-											return null;
-										}
-										return (
-											<div key={index} className="col-6 py-2 px-5">
-												<input
-													type="checkbox"
-													checked={field.required}
-													onChange={() => {
-														const updatedSections = { ...formSections };
-														updatedSections[section][index].required =
-															!updatedSections[section][index].required;
-														setFormSections(updatedSections);
-													}}
-													className="form-check-input shadow-sm mx-2"
-												/>
-												<label
-													htmlFor={field.name}
-													className="form-label"
-													style={{
-														direction: language === "fa" ? "ltr" : "rtl",
-													}}
-												>
-													{language === "fa" ? field.label : field.labelEN}
-												</label>
-											</div>
-										);
-									})}
-							</div>
-						</div>
-					);
-				})}
+				{Array.from(new Set(formFieldsIEData.map((field) => field.group))).map(
+					(group, index) => {
+						const sampleField = formFieldsIEData.find(
+							(field) => field.group === group
+						);
+						return (
+							!(
+								sampleField.group === undefined || sampleField.group === null
+							) && (
+								<div key={index}>
+									<h4 className="text-center pt-4">
+										{language === "fa"
+											? sampleField.group
+											: sampleField.groupEN}
+									</h4>
+									<hr className=" rounded-pill mx-4 my-2" />
+									<div
+										className={`row row-cols-2 mt-4 mb-5`}
+										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									>
+										{formFieldsIEData
+											.filter((field) => field.group === group)
+											.map((field: formFieldsProps, index: number) => {
+												if (field.type === "placeholder") return null;
+												if (field.type === "checkmenu") return null;
+												if (field.name === "age") return null;
+												if (field.name === "") return null;
+												return (
+													<div key={index} className="col-6 py-2 px-5">
+														<input
+															type="checkbox"
+															checked={field.required}
+															onChange={() =>
+																handleChange(field.id, field.name, true)
+															}
+															className="form-check-input shadow-sm mx-2"
+														/>
+														<label
+															htmlFor={field.name}
+															className="form-label"
+															style={{
+																direction: language === "fa" ? "ltr" : "rtl",
+															}}
+														>
+															{language === "fa" ? field.label : field.labelEN}
+														</label>
+													</div>
+												);
+											})}
+									</div>
+								</div>
+							)
+						);
+					}
+				)}
 			</div>
 
 			{/* Submit and Cancel buttons */}

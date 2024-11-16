@@ -55,7 +55,6 @@ function AdminDashboardFAQPageContent() {
 
 	const addFAQ = async () => {
 		const newFAQ = {
-			id: 0,
 			question: "",
 			answer: "",
 			questionEn: "",
@@ -73,15 +72,11 @@ function AdminDashboardFAQPageContent() {
 	};
 
 	// Remove a specific FAQ by its index
-	const removeFAQ = async (indexToRemove: number) => {
-		const faqToRemove = FAQsData[indexToRemove];
+	const removeFAQ = async (faqToRemoveId: number) => {
 		try {
 			await axiosInstance.post("/api/Admin/RemoveFAQ", {
-				faqId: faqToRemove.id,
+				faqId: faqToRemoveId,
 			});
-			// if (response.status === 200) {
-			// 	setFAQsData(FAQsData.filter((_, index) => index !== indexToRemove));
-			// }
 		} catch (error) {
 			console.error("Failed to remove FAQ", error);
 		}
@@ -129,7 +124,7 @@ function AdminDashboardFAQPageContent() {
 							id="btn-delete"
 							className="rounded-circle btn p-0 m-3"
 							type="button"
-							onClick={() => removeFAQ(index)}
+							onClick={() => removeFAQ(faq.id)}
 						>
 							<img
 								src="\images\red-delete.png"
