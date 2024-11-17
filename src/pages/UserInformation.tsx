@@ -7,6 +7,14 @@ import "/src/cssFiles/userInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 
+interface insuranceDataProps {
+	id: number;
+	companyName: string;
+	companyNameEN: string;
+	type: number;
+	discountPercentage: number;
+}
+
 // Define a type for the relevant fields to filter
 interface validationSchemaDataProps {
 	name: string;
@@ -159,20 +167,15 @@ function handleConditionalEmptyFields(values: UserFormData): UserFormData {
 	return values;
 }
 
-// function handleConditionalEmptyFieldsForFront(
-// 	values: UserFormData
-// ): UserFormData {
-// 	if (values.insuranceType === "" || values.insuranceType === null)
-// 		values.noInsurance = true;
-// 	if (values.nationalCode === "" || values.nationalCode === null)
-// 		values.noNationalCode = true;
-// 	if (
-// 		values.supplementaryInsuranceType === "" ||
-// 		values.supplementaryInsuranceType === null
-// 	)
-// 		values.noSupplementaryInsurance = true;
-// 	return values;
-// }
+function handleConditionalEmptyFieldsForFront(
+	values: UserFormData
+): UserFormData {
+	if (values.insuranceType === "") values.noInsurance = true;
+	if (values.nationalCode === "") values.noNationalCode = true;
+	if (values.supplementaryInsuranceType === "")
+		values.noSupplementaryInsurance = true;
+	return values;
+}
 
 function formatBirthdateToYYYYMMDD(birthdate: string): string {
 	// Check if the birthdate is in a valid format, otherwise return an empty string
@@ -225,11 +228,42 @@ function convertEducationLevelToFrontData(educationLevel: string): string {
 	return "";
 }
 
+const updateFormFieldsWithInsuranceData = (
+	formFields: any[],
+	insuranceData: insuranceDataProps[]
+) => {
+	// Separate insurance data by type
+	const type0Data = insuranceData.filter((item) => item.type === 0);
+	const type1Data = insuranceData.filter((item) => item.type === 1);
+
+	// Update options for insuranceType and supplementaryInsuranceType
+	return formFields.map((field) => {
+		if (field.name === "insuranceType") {
+			return {
+				...field,
+				options: type0Data.map((item) => item.companyName).join(","),
+				optionsEN: type0Data.map((item) => item.companyNameEN).join(","),
+			};
+		}
+		if (field.name === "supplementaryInsuranceType") {
+			return {
+				...field,
+				options: type1Data.map((item) => item.companyName).join(","),
+				optionsEN: type1Data.map((item) => item.companyNameEN).join(","),
+			};
+		}
+		return field;
+	});
+};
+
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
+	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
+
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -246,7 +280,7 @@ function UserInformation() {
 				// Convert `isIranian` and `isMarried` booleans to strings
 				const formattedData = {
 					...data,
-					//...handleConditionalEmptyFieldsForFront(data),
+					...handleConditionalEmptyFieldsForFront(data),
 					isIranian: convertIsIranianToString(data.isIranian),
 					isMarried: convertIsMarriedToString(data.isMarried),
 					profilePicture: data.profileImageUrl,
@@ -295,23 +329,14 @@ function UserInformation() {
 			});
 	}, []);
 
-	// Assuming that formData comes as a single structure from the API
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetUserDataFormFields") // API call for form data and validation
+			.post("/api/Admin/GetInsurances")
 			.then((response) => {
 				const data = response.data;
+				setInsuranceData(data);
 
-				const {
-					formFieldsProps: newFormFields,
-					validationSchemaData: newValidationSchemaData,
-				} = processData(data);
-
-				setFormFields(newFormFields);
-				setValidationSchemaData(newValidationSchemaData);
-
-				//console.log(newFormFields);
-				//console.log(newValidationSchemaData);
+				setDataUpdateFlag((prev) => !prev);
 			})
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);
@@ -319,25 +344,78 @@ function UserInformation() {
 				fetch("/db.json")
 					.then((response) => response.json())
 					.then((data) => {
-						const {
-							formFieldsProps: newFormFields,
-							validationSchemaData: newValidationSchemaData,
-						} = processData(data);
+						setInsuranceData(data);
 
-						setFormFields(newFormFields);
-						setValidationSchemaData(newValidationSchemaData);
-
-						console.log(newFormFields);
-						console.log(newValidationSchemaData);
+						setDataUpdateFlag((prev) => !prev);
 					})
 					.catch((jsonError) => {
 						console.error(
 							"Failed to fetch data from both API and db.json",
 							jsonError
 						);
+
+						setDataUpdateFlag((prev) => !prev);
 					});
 			});
 	}, []);
+
+	// Assuming that formData comes as a single structure from the API
+	useEffect(() => {
+		if (dataUpdateFlag) {
+			axiosInstance
+				.post("/api/User/GetUserDataFormFields") // API call for form data and validation
+				.then((response) => {
+					const data = response.data;
+
+					const {
+						formFieldsProps: newFormFields,
+						validationSchemaData: newValidationSchemaData,
+					} = processData(data);
+
+					// Update form fields with insurance data
+					const updatedFormFields = updateFormFieldsWithInsuranceData(
+						newFormFields,
+						insuranceData
+					);
+
+					setFormFields(updatedFormFields);
+					setValidationSchemaData(newValidationSchemaData);
+
+					console.log(updatedFormFields);
+					//console.log(newValidationSchemaData);
+				})
+				.catch((error) => {
+					console.error("API request failed, trying local db.json", error);
+
+					fetch("/db.json")
+						.then((response) => response.json())
+						.then((data) => {
+							const {
+								formFieldsProps: newFormFields,
+								validationSchemaData: newValidationSchemaData,
+							} = processData(data);
+
+							// Update form fields with insurance data
+							const updatedFormFields = updateFormFieldsWithInsuranceData(
+								newFormFields,
+								insuranceData
+							);
+
+							setFormFields(updatedFormFields);
+							setValidationSchemaData(newValidationSchemaData);
+
+							console.log(newFormFields);
+							console.log(newValidationSchemaData);
+						})
+						.catch((jsonError) => {
+							console.error(
+								"Failed to fetch data from both API and db.json",
+								jsonError
+							);
+						});
+				});
+		}
+	}, [dataUpdateFlag]);
 
 	// Create the Yup validation schema based on validationSchemaData
 	const validationSchema = Yup.object().shape(

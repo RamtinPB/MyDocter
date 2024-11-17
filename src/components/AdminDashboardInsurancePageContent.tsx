@@ -8,7 +8,7 @@ interface insuranceDataProps {
 	companyName: string;
 	companyNameEN: string;
 	type: number;
-	discountPercentage: string;
+	discountPercentage: number;
 }
 
 function AdminDashboardInsurancePageContent() {
