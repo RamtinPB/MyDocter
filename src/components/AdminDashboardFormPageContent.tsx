@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
+interface payloadProps {
+	formFieldId: number;
+	required: boolean;
+	enabled: boolean;
+}
+
 interface formFieldsProps {
 	id: number;
 	name: string;
@@ -25,8 +31,8 @@ function AdminDashboardFormPageContent() {
 		[]
 	);
 
-	const [changedData, setChangedData] = useState<any[]>([]);
-	const [changedDataIE, setChangedDataIE] = useState<any[]>([]);
+	const [changedData, setChangedData] = useState<payloadProps[]>([]);
+	const [changedDataIE, setChangedDataIE] = useState<payloadProps[]>([]);
 
 	// fetch user information form fields
 	useEffect(() => {
@@ -73,9 +79,6 @@ function AdminDashboardFormPageContent() {
 				const data = response.data;
 
 				setFormFieldsData(data);
-
-				//console.log(newFormFields);
-				//console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);
@@ -94,66 +97,148 @@ function AdminDashboardFormPageContent() {
 			});
 	}, [dataUpdateFlag]);
 
-	const handleChange = (id: number, name: string, isIEData: boolean) => {
-		const updateData = (data: any[]) => {
-			return data.map((field) =>
-				field.id === id && field.name === name
-					? { ...field, required: !field.required }
-					: field
+	useEffect(() => {
+		setChangedData([]);
+		setChangedDataIE([]);
+	}, [dataUpdateFlag]);
+
+	// Handle changes to the "required" checkbox
+	const handleRequiredChange = (
+		formFieldId: number,
+		isIEData: boolean,
+		newValue: boolean
+	) => {
+		const updateData = (data: formFieldsProps[]) =>
+			data.map((field) =>
+				field.id === formFieldId ? { ...field, required: newValue } : field
 			);
-		};
 
 		if (isIEData) {
+			// Update the IE form fields state
 			setFormFieldsIEData((prevData) => updateData(prevData));
 
-			// Add or update the item in changedDataIE
+			// Update the changedDataIE
 			setChangedDataIE((prevChanged) => {
-				const updatedField = {
-					id,
-					name,
-					required: !formFieldsIEData.find((f) => f.id === id)?.required,
+				const updatedField: payloadProps = {
+					formFieldId,
+					required: newValue,
+					enabled:
+						formFieldsIEData.find((f) => f.id === formFieldId)?.enabled ??
+						false,
 				};
-				const exists = prevChanged.find((f) => f.id === id && f.name === name);
+
+				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
 				return exists
 					? prevChanged.map((f) =>
-							f.id === id && f.name === name ? updatedField : f
+							f.formFieldId === formFieldId ? updatedField : f
 					  )
 					: [...prevChanged, updatedField];
 			});
 		} else {
+			// Update the form fields state
 			setFormFieldsData((prevData) => updateData(prevData));
 
-			// Add or update the item in changedData
+			// Update the changedData
 			setChangedData((prevChanged) => {
-				const updatedField = {
-					id,
-					name,
-					required: !formFieldsData.find((f) => f.id === id)?.required,
+				const updatedField: payloadProps = {
+					formFieldId,
+					required: newValue,
+					enabled:
+						formFieldsData.find((f) => f.id === formFieldId)?.enabled ?? false,
 				};
-				const exists = prevChanged.find((f) => f.id === id && f.name === name);
+
+				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
 				return exists
 					? prevChanged.map((f) =>
-							f.id === id && f.name === name ? updatedField : f
+							f.formFieldId === formFieldId ? updatedField : f
 					  )
 					: [...prevChanged, updatedField];
 			});
 		}
 	};
 
-	const handleChangeEnabled = () => {};
+	// Handle changes to the "enabled" checkbox
+	const handleEnabledChange = (
+		formFieldId: number,
+		isIEData: boolean,
+		newValue: boolean
+	) => {
+		const updateData = (data: formFieldsProps[]) =>
+			data.map((field) =>
+				field.id === formFieldId ? { ...field, enabled: newValue } : field
+			);
+
+		if (isIEData) {
+			// Update the IE form fields state
+			setFormFieldsIEData((prevData) => updateData(prevData));
+
+			// Update the changedDataIE
+			setChangedDataIE((prevChanged) => {
+				const updatedField: payloadProps = {
+					formFieldId,
+					required:
+						formFieldsIEData.find((f) => f.id === formFieldId)?.required ??
+						false,
+					enabled: newValue,
+				};
+
+				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				return exists
+					? prevChanged.map((f) =>
+							f.formFieldId === formFieldId ? updatedField : f
+					  )
+					: [...prevChanged, updatedField];
+			});
+		} else {
+			// Update the form fields state
+			setFormFieldsData((prevData) => updateData(prevData));
+
+			// Update the changedData
+			setChangedData((prevChanged) => {
+				const updatedField: payloadProps = {
+					formFieldId,
+					required:
+						formFieldsData.find((f) => f.id === formFieldId)?.required ?? false,
+					enabled: newValue,
+				};
+
+				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				return exists
+					? prevChanged.map((f) =>
+							f.formFieldId === formFieldId ? updatedField : f
+					  )
+					: [...prevChanged, updatedField];
+			});
+		}
+	};
 
 	const handleSubmit = async () => {
-		const payload = {
-			formFieldsData: changedData,
-			formFieldsIEData: changedDataIE,
-		};
-
-		try {
-			// Send the data to the API
-			await axiosInstance.post("/api/Admin/UpdateFormFields", payload);
-			console.log("Data submitted successfully");
-		} catch (error) {
-			console.error("Error submitting data:", error);
+		if (changedData.length !== 0) {
+			try {
+				// Send the data to the API
+				await axiosInstance.post(
+					"/api/Admin/UpdateUserDataFormFields",
+					changedData
+				);
+				console.log("user data form fields data submitted successfully");
+			} catch (error) {
+				console.error("Error submitting user data form fields data:", error);
+			}
+		}
+		if (changedDataIE.length !== 0) {
+			try {
+				// Send the data to the API
+				await axiosInstance.post(
+					"/api/Admin/UpdateUserInformationFormFields",
+					changedDataIE
+				);
+				console.log("user information form fields data submitted successfully");
+			} catch (error) {
+				console.error(
+					"Error submitting user information form fields data:",
+					error
+				);
+			}
 		}
 		setDataUpdateFlag((prev) => !prev);
 	};
@@ -194,7 +279,9 @@ function AdminDashboardFormPageContent() {
 									<input
 										type="checkbox"
 										checked={field.required}
-										onChange={() => handleChange(field.id, field.name, false)}
+										onChange={(e) =>
+											handleRequiredChange(field.id, false, e.target.checked)
+										}
 										className="form-check-input shadow-sm mx-2"
 									/>
 									<label htmlFor={field.name} className="form-label">
@@ -207,7 +294,9 @@ function AdminDashboardFormPageContent() {
 									<input
 										type="checkbox"
 										checked={field.enabled}
-										onChange={() => handleChangeEnabled()}
+										onChange={(e) =>
+											handleEnabledChange(field.id, false, e.target.checked)
+										}
 										className="form-check-input shadow-sm mx-2"
 									/>
 									<label htmlFor={field.name} className="form-label">
@@ -274,8 +363,12 @@ function AdminDashboardFormPageContent() {
 														<input
 															type="checkbox"
 															checked={field.required}
-															onChange={() =>
-																handleChange(field.id, field.name, true)
+															onChange={(e) =>
+																handleRequiredChange(
+																	field.id,
+																	true,
+																	e.target.checked
+																)
 															}
 															className="form-check-input shadow-sm mx-2"
 														/>
@@ -288,7 +381,13 @@ function AdminDashboardFormPageContent() {
 															<input
 																type="checkbox"
 																checked={field.enabled}
-																onChange={() => handleChangeEnabled()}
+																onChange={(e) =>
+																	handleEnabledChange(
+																		field.id,
+																		true,
+																		e.target.checked
+																	)
+																}
 																className="form-check-input shadow-sm mx-2"
 															/>
 															<label

@@ -213,7 +213,7 @@ function AdminDashboardManageUsers() {
 										<td className="align-middle">
 											<button
 												id="btn-delete"
-												className="rounded-circle btn p-0 m-1 m-md-3"
+												className="rounded-circle btn shadow p-0 m-1 m-md-3"
 												type="button"
 												onClick={() => removeUser(index)}
 												data-bs-toggle="modal"

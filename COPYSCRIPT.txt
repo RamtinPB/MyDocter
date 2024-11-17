@@ -1,201 +1,52 @@
-import { useState, useEffect, useRef } from "react";
-import { FaUser } from "react-icons/fa";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import "/src/cssFiles/customColors.css";
-import "/src/cssFiles/userInformation.css";
+given this code:
+import { useEffect, useState } from "react";
+import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
-import { useLanguage } from "../components/LanguageContext";
 
-// Define a type for the relevant fields to filter
-interface validationSchemaDataProps {
-	name: string;
+interface payloadProps {
+	formFieldId: number;
 	required: boolean;
-	validationType: string;
-	checkboxName: string;
-
-	matches: string;
-	matchesMessage: string;
-
-	matchesEN: string;
-	matchesMessageEN: string;
-
-	requiredMessage: string;
-	requiredMessageEN: string;
+	enabled: boolean;
 }
 
 interface formFieldsProps {
+	id: number;
 	name: string;
 	type: string;
-	required: string;
+	required: boolean;
+	enabled: boolean;
+
+	group: string;
+	groupEN: string;
 
 	label: string;
 	labelEN: string;
-
-	options: string;
-	optionsEN: string;
-
-	checkboxName: string;
-	checkboxLabel: string;
-	checkboxLabelEN: string;
 }
 
-// Create a utility function to process the data
-const processData = (
-	data: any[]
-): {
-	formFieldsProps: formFieldsProps[];
-	validationSchemaData: validationSchemaDataProps[];
-} => {
-	const formFields: formFieldsProps[] = data.map((field) => ({
-		name: field.name,
-		type: field.type,
-		required: field.required, // Assuming this is already a boolean
-		label: field.label,
-		labelEN: field.labelEN,
-		options: field.options, // Assuming options might be an array
-		optionsEN: field.optionsEN, // Assuming optionsEN might be an array
-		checkboxName: field.checkboxName,
-		checkboxLabel: field.checkboxLabel,
-		checkboxLabelEN: field.checkboxLabelEN,
-	}));
-
-	const validationSchemaData: validationSchemaDataProps[] = data
-		.filter(
-			(field) => field.validationType || field.matches || field.checkboxName
-		)
-		.map((field) => ({
-			name: field.name,
-			required: field.required,
-			validationType: field.validationType,
-			matches: field.matches,
-			matchesMessage: field.matchesMessage,
-			matchesEN: field.matchesEN,
-			matchesMessageEN: field.matchesMessageEN,
-			requiredMessage: field.requiredMessage,
-			requiredMessageEN: field.requiredMessageEN,
-			checkboxName: field.checkboxName,
-		}));
-
-	return { formFieldsProps: formFields, validationSchemaData };
-};
-
-interface UserFormData {
-	name: string;
-	lastName: string;
-	phoneNumber: string;
-	email: string;
-	gender: string;
-	insuranceType: string;
-	supplementaryInsuranceType: string;
-	nationalCode: string;
-	isIranian: string | boolean;
-	isMarried: string | boolean;
-	noInsurance: boolean;
-	noNationalCode: boolean;
-	noSupplementaryInsurance: boolean;
-	residenceProvince: string;
-	residenceCity: string;
-	residenceAddress: string;
-	residencePostalCode: string;
-	educationLevel: string;
-	birthdate: string;
-}
-
-const initialFormData: UserFormData = {
-	name: "",
-	lastName: "",
-	phoneNumber: "",
-	email: "",
-	gender: "",
-	insuranceType: "",
-	supplementaryInsuranceType: "",
-	nationalCode: "",
-	isIranian: "",
-	isMarried: "",
-	noInsurance: false,
-	noNationalCode: false,
-	noSupplementaryInsurance: false,
-	residenceProvince: "",
-	residenceCity: "",
-	residenceAddress: "",
-	residencePostalCode: "",
-	educationLevel: "",
-	birthdate: "",
-};
-
-function convertIsIranianToBoolean(
-	isIranian: string | boolean | undefined
-): boolean {
-	if (isIranian === "ایرانی") return true;
-	if (isIranian === "غیر ایرانی") return false;
-	return Boolean(isIranian);
-}
-
-function convertIsMarriedToBoolean(
-	isMarried: string | boolean | undefined
-): boolean {
-	if (isMarried === "متاهل") return true;
-	if (isMarried === "مجرد") return false;
-	return Boolean(isMarried);
-}
-
-function convertIsIranianToString(isIranian: boolean | undefined): string {
-	if (isIranian === true) return "ایرانی";
-	if (isIranian === false) return "غیر ایرانی";
-	return "";
-}
-
-function convertIsMarriedToString(isMarried: boolean | undefined): string {
-	if (isMarried === true) return "متاهل";
-	if (isMarried === false) return "مجرد";
-	return "";
-}
-
-function handleConditionalEmptyFields(values: UserFormData): UserFormData {
-	if (values.noInsurance) values.insuranceType = "";
-	if (values.noNationalCode) values.nationalCode = "";
-	if (values.noSupplementaryInsurance) values.supplementaryInsuranceType = "";
-	return values;
-}
-
-function UserInformation() {
-	const [formFields, setFormFields] = useState<any[]>([]);
-	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
-
-	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+function AdminDashboardFormPageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [formFieldsData, setFormFieldsData] = useState<formFieldsProps[]>([]);
+	const [formFieldsIEData, setFormFieldsIEData] = useState<formFieldsProps[]>(
+		[]
+	);
 
-	// fetch user data
+	
+	const [changedData, setChangedData] = useState<payloadProps[]>([]);
+	const [changedDataIE, setChangedDataIE] = useState<payloadProps[]>([]); 
+
+	// fetch user information form fields
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetUserData") // Call the API to get user data
+			.post("/api/User/GetUserInformationFormFields") // Call the API to get user data
 			.then((response) => {
 				const data = response.data;
-				console.log(data);
-
-				// Populate form fields with API response
-				// Convert `isIranian` and `isMarried` booleans to strings
-				const formattedData = {
-					...data,
-					isIranian: convertIsIranianToString(data.isIranian),
-					isMarried: convertIsMarriedToString(data.isMarried),
-					profilePicture: data.profileImageUrl,
-				};
-
-				// Populate form fields with the formatted response
-				formik.setValues(formattedData);
-
-				// Set profile picture if available
-				if (data.profileImageUrl) {
-					setProfilePicture(data.profileImageUrl);
-				}
+				setFormFieldsIEData(data);
 			})
 			.catch((error) => {
 				console.error(
-					"API request for user data failed, trying local db.json",
+					"API request for user data form fields failed, trying local db.json",
 					error
 				);
 
@@ -203,27 +54,24 @@ function UserInformation() {
 				fetch("/db.json")
 					.then((response) => {
 						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
+							throw new Error(
+								"Failed to fetch user data form fields from db.json"
+							);
 						}
 						return response.json();
 					})
 					.then((data) => {
-						// Update form values with user info from db.json
-						formik.setValues(data.userInfo);
-
-						// Set profile picture if available
-						if (data.userInfo.profilePicture) {
-							setProfilePicture(data.userInfo.profilePicture);
-						}
+						// Update state for form fields
+						setFormFieldsIEData(data.formFields);
 					})
 					.catch((jsonError) => {
 						console.error(
-							"Failed to fetch user data from both API and db.json",
+							"Failed to fetch user data form fields from both API and db.json",
 							jsonError
 						);
 					});
 			});
-	}, []);
+	}, [dataUpdateFlag]);
 
 	// Assuming that formData comes as a single structure from the API
 	useEffect(() => {
@@ -232,16 +80,10 @@ function UserInformation() {
 			.then((response) => {
 				const data = response.data;
 
-				const {
-					formFieldsProps: newFormFields,
-					validationSchemaData: newValidationSchemaData,
-				} = processData(data);
+				setFormFieldsData(data);
 
-				setFormFields(newFormFields);
-				setValidationSchemaData(newValidationSchemaData);
-
-				console.log(newFormFields);
-				console.log(newValidationSchemaData);
+				//console.log(newFormFields);
+				//console.log(newValidationSchemaData);
 			})
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);
@@ -249,16 +91,7 @@ function UserInformation() {
 				fetch("/db.json")
 					.then((response) => response.json())
 					.then((data) => {
-						const {
-							formFieldsProps: newFormFields,
-							validationSchemaData: newValidationSchemaData,
-						} = processData(data);
-
-						setFormFields(newFormFields);
-						setValidationSchemaData(newValidationSchemaData);
-
-						console.log(newFormFields);
-						console.log(newValidationSchemaData);
+						setFormFieldsData(data);
 					})
 					.catch((jsonError) => {
 						console.error(
@@ -267,351 +100,204 @@ function UserInformation() {
 						);
 					});
 			});
-	}, []);
+	}, [dataUpdateFlag]);
 
-	// Create the Yup validation schema based on validationSchemaData
-	const validationSchema = Yup.object().shape(
-		validationSchemaData.reduce((acc, rule) => {
-			let fieldSchema: Yup.AnySchema = Yup.mixed();
+	const handleChange = () => {};
 
-			// Determine the type of the field
-			switch (rule.validationType) {
-				case "string":
-					fieldSchema = Yup.string();
-					break;
-				case "date":
-					fieldSchema = Yup.date();
-					break;
-				default:
-					fieldSchema = Yup.mixed();
-			}
+	const handleSubmit = async () => {
+		const payload = {
+			formFieldsData: changedData,
+			formFieldsIEData: changedDataIE,
+		};
 
-			// Apply common rules
-			if (rule.matches && rule.validationType === "string") {
-				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
-				);
-			}
-			if (rule.name === "email") {
-				fieldSchema = (fieldSchema as Yup.StringSchema).email(
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
-				);
-			}
-
-			// Apply conditional rules
-			if (rule.checkboxName) {
-				const depField = rule.checkboxName;
-				fieldSchema = fieldSchema.when(depField, {
-					is: true,
-					then: (schema) => {
-						let thenSchema = schema;
-						thenSchema = thenSchema.optional();
-						return thenSchema;
-					},
-					otherwise: (schema) => {
-						let otherwiseSchema = schema;
-						if (rule.matches) {
-							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-								language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
-							);
-						}
-						if (rule.required) {
-							otherwiseSchema = otherwiseSchema.required(
-								language === "fa"
-									? rule.requiredMessage
-									: rule.requiredMessageEN
-							);
-						}
-						return otherwiseSchema;
-					},
-				});
-			} else {
-				// Apply default required rule if no 'when' condition is specified
-				if (rule.required) {
-					fieldSchema = fieldSchema.required(
-						language === "fa" ? rule.requiredMessage : rule.requiredMessageEN
-					);
-				} else {
-					fieldSchema = fieldSchema.notRequired();
-				}
-			}
-
-			// Assign the field schema to the accumulator object
-			acc[rule.name] = fieldSchema as Yup.Schema<any>;
-			return acc;
-		}, {} as Yup.ObjectSchema<any>)
-	);
-
-	const formik = useFormik({
-		initialValues: initialFormData,
-		validationSchema: validationSchema,
-
-		onSubmit: async (values) => {
-			const updatedData: UserFormData = {
-				...handleConditionalEmptyFields(values),
-				isIranian: convertIsIranianToBoolean(values.isIranian),
-				isMarried: convertIsMarriedToBoolean(values.isMarried),
-			};
-
-			try {
-				// Send the transformed data to the update API
-				await axiosInstance.post("/api/User/UpdateUserData", updatedData);
-				console.log("User data updated successfully");
-			} catch (error) {
-				console.error("Error updating user data:", error);
-			}
-		},
-		validateOnBlur: true,
-		validateOnChange: true,
-		validateOnMount: true,
-	});
-
-	const handleProfilePictureChange = async (
-		e: React.ChangeEvent<HTMLInputElement>
-	) => {
-		if (e.target.files && e.target.files[0]) {
-			const selectedFile = e.target.files[0];
-
-			// Update the profile picture preview
-			setProfilePicture(URL.createObjectURL(selectedFile));
-
-			// Prepare FormData for API upload
-			const formData = new FormData();
-			formData.append("profilePicture", selectedFile);
-
-			try {
-				// Upload profile picture
-				const uploadResponse = await axiosInstance.post(
-					"/UploadProfileImage",
-					formData,
-					{
-						headers: {
-							"Content-Type": "multipart/form-data",
-						},
-					}
-				);
-
-				// Extract the uploaded image URL from the response
-				const profileImageUrl = uploadResponse.data.profileImageUrl;
-
-				// Update the user's data with the new profile picture URL
-				await axiosInstance.post("/api/User/UpdateUserData", {
-					profileImageUrl,
-				});
-
-				// Update local profile picture state with the new URL
-				setProfilePicture(profileImageUrl);
-
-				console.log(
-					"Profile picture uploaded and user data updated successfully."
-				);
-			} catch (error) {
-				console.error("Error uploading profile picture:", error);
-			}
+		try {
+			// Send the data to the API
+			await axiosInstance.post("/api/Admin/UpdateFormFields", payload);
+			console.log("Data submitted successfully");
+		} catch (error) {
+			console.error("Error submitting data:", error);
 		}
+		setDataUpdateFlag((prev) => !prev);
 	};
 
-	const handleButtonClick = () => {
-		if (fileInputRef.current) {
-			fileInputRef.current.click();
-		}
+	const handleCancel = () => {
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	return (
-		<div className="custom-bg-4 min-vh-100">
-			<div className="container d-flex flex-column">
-				<form onSubmit={formik.handleSubmit} className="mt-4 mt-md-5">
-					<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">
-						<button
-							className="btn btn-light shadow rounded-pill  my-auto"
-							onClick={() => setProfilePicture(null)}
-						>
-							<span>{language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
-						</button>
-						{profilePicture ? (
-							<img
-								src={profilePicture}
-								alt="Profile"
-								className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
-							/>
-						) : (
-							<FaUser
-								className="custom-user-icon-pic rounded-circle border border-3 border-light p-2 p-md-3 my-auto"
-								color="white"
-							/>
-						)}
-						<button
-							className="btn btn-light shadow rounded-pill my-auto"
-							type="button"
-							style={{ cursor: "pointer" }}
-							onClick={handleButtonClick}
-						>
-							<span>{language === "fa" ? "انتخاب عکس" : "Upload Picture"}</span>
-							<input
-								type="file"
-								accept="image/*"
-								ref={fileInputRef}
-								onChange={handleProfilePictureChange}
-								style={{ display: "none" }}
-							/>
-						</button>
-					</div>
-				</form>
-				<form
-					onSubmit={formik.handleSubmit}
-					className="needs-validation"
-					noValidate
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
+			{/* User Information Form */}
+			<div
+				className={`d-flex flex-column bg-white shadow text-${
+					language === "fa" ? "end" : "start"
+				} rounded-5 m-3 m-md-4 m-lg-5`}
+			>
+				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
+					<h3 className="text-center text-white m-0">
+						{language === "fa" ? "فرم اطلاعات کاربر" : "User Information Form"}
+					</h3>
+				</div>
+				<div
+					className={`row row-cols-2 mt-1 mb-5`}
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<div
-						className={`bg-white text-${
-							language === "fa" ? "end" : "start"
-						} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
-					>
-						<h2>{language === "fa" ? "اطلاعات کاربر" : "User Information"}</h2>
-						<div
-							className="row row-cols-2 g-4 g-md-5 my-1"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						>
-							{formFields.map((field, index) => {
-								const isSelect = field.type === "select";
-								const isCheckbox = field.checkboxName;
+					{formFieldsData.map((field, index) => {
+						return (
+							<div key={index} className="col-6 d-flex flex-column py-3 px-5">
+								<h6
+									className="px-2 "
+									style={{
+										direction: language === "fa" ? "ltr" : "rtl",
+									}}
+								>
+									{language === "fa" ? field.label : field.labelEN}
+								</h6>
+								<div className="d-flex ">
+									<input
+										type="checkbox"
+										checked={field.required}
+										onChange={() => handleChange()}
+										className="form-check-input shadow-sm mx-2"
+									/>
+									<label htmlFor={field.name} className="form-label">
+										{language === "fa"
+											? "(الزامی / غیر الزامی)"
+											: "Required / Not Required"}
+									</label>
+								</div>
+								<div className="d-flex">
+									<input
+										type="checkbox"
+										checked={field.enabled}
+										onChange={() => handleChange()}
+										className="form-check-input shadow-sm mx-2"
+									/>
+									<label htmlFor={field.name} className="form-label">
+										{language === "fa"
+											? "(فعال / غیر فعال)"
+											: "Enabled / Not Enabled"}
+									</label>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
 
-								return (
+			{/* Initial Evaluation Form */}
+			<div
+				className={`d-flex flex-column bg-white shadow text-${
+					language === "fa" ? "end" : "start"
+				} rounded-5 m-3 m-md-4 m-lg-5`}
+			>
+				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
+					<h3 className="text-center text-white m-0">
+						{language === "fa"
+							? "فرم ارزیابی اولیه کاربر"
+							: "Initial Evaluation Form"}
+					</h3>
+				</div>
+				{Array.from(new Set(formFieldsIEData.map((field) => field.group))).map(
+					(group, index) => {
+						const sampleField = formFieldsIEData.find(
+							(field) => field.group === group
+						);
+						return (
+							sampleField &&
+							sampleField.group && (
+								<div key={index}>
+									<h4 className="text-center pt-4">
+										{language === "fa"
+											? sampleField.group
+											: sampleField.groupEN}
+									</h4>
+									<hr className=" rounded-pill mx-4 my-2" />
 									<div
-										key={index}
-										className="col mb-2"
+										className={`row row-cols-2 mt-4 mb-5`}
 										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 									>
-										<label htmlFor={field.name} className="form-label">
-											{language === "fa" ? field.label : field.labelEN}
-										</label>
-										{isSelect ? (
-											<select
-												id={field.name}
-												name={field.name}
-												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
-												)}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												className={`form-select select-resize text-${
-													language === "fa" ? "end" : "start"
-												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
-														? "is-invalid"
-														: ""
-												}`}
-												required={field.required}
-												disabled={
-													!!formik.values[
-														field.checkboxName as keyof UserFormData
-													]
-												}
-											>
-												<option value="">...</option>
-												{(language === "fa"
-													? field.options
-													: field.optionsEN
-												).map((option: string, i: number) => (
-													<option key={i} value={option}>
-														{option}
-													</option>
-												))}
-											</select>
-										) : (
-											<input
-												type={field.type}
-												id={field.name}
-												name={field.name}
-												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
-												)}
-												onChange={formik.handleChange}
-												onBlur={formik.handleBlur}
-												className={`form-control text-${
-													language === "fa" ? "end" : "start"
-												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
-														? "is-invalid"
-														: ""
-												}`}
-												required={field.required}
-												disabled={
-													!!formik.values[
-														field.checkboxName as keyof UserFormData
-													]
-												}
-												placeholder={
-													(language === "fa"
-														? field.placeholder
-														: field.placeholderEN) || ""
-												}
-											/>
-										)}
-										{isCheckbox && (
-											<div
-												className={`text-${
-													language === "fa" ? "end" : "start"
-												} mt-2`}
-											>
-												<label
-													htmlFor={field.checkboxName}
-													className="form-check-label mx-2"
-												>
-													{language === "fa"
-														? field.checkboxLabel
-														: field.checkboxLabelEN}
-												</label>
-												<input
-													type="checkbox"
-													id={field.checkboxName}
-													name={field.checkboxName}
-													checked={Boolean(
-														formik.values[
-															field.checkboxName as keyof UserFormData
-														]
-													)}
-													onChange={(e) => {
-														formik.setFieldValue(
-															field.checkboxName,
-															e.target.checked
-														);
-													}}
-													className="form-check-input shadow-sm"
-												/>
-											</div>
-										)}
-										{formik.touched[field.name as keyof UserFormData] &&
-											formik.errors[field.name as keyof UserFormData] && (
-												<div className="invalid-feedback">
-													{
-														formik.errors[
-															field.name as keyof UserFormData
-														] as string
-													}
-												</div>
-											)}
+										{formFieldsIEData
+											.filter((field) => field.group === group)
+											.map((field: formFieldsProps, index: number) => {
+												if (field.type === "placeholder") return null;
+												if (field.type === "checkmenu") return null;
+												if (field.name === "age") return null;
+												if (field.name === "") return null;
+												return (
+													<div key={index} className="col-6 py-3 px-5">
+														<h6
+															className="px-2 "
+															style={{
+																direction: language === "fa" ? "ltr" : "rtl",
+															}}
+														>
+															{language === "fa" ? field.label : field.labelEN}
+														</h6>
+														<input
+															type="checkbox"
+															checked={field.required}
+															onChange={() => handleChange()}
+															className="form-check-input shadow-sm mx-2"
+														/>
+														<label htmlFor={field.name} className="form-label">
+															{language === "fa"
+																? "(الزامی / غیر الزامی)"
+																: "Required / Not Required"}
+														</label>
+														<div className="d-flex">
+															<input
+																type="checkbox"
+																checked={field.enabled}
+																onChange={() => handleChange()}
+																className="form-check-input shadow-sm mx-2"
+															/>
+															<label
+																htmlFor={field.name}
+																className="form-label"
+															>
+																{language === "fa"
+																	? "(فعال / غیر فعال)"
+																	: "Enabled / Not Enabled"}
+															</label>
+														</div>
+													</div>
+												);
+											})}
 									</div>
-								);
-							})}
-						</div>
-						<div className="d-flex justify-content-center mt-4 mt-md-5">
-							<button
-								type="submit"
-								className="btn btn-primary rounded-pill px-3 py-2"
-							>
-								{language === "fa" ? "ذخیره" : "Save"}
-							</button>
-						</div>
-					</div>
-				</form>
+								</div>
+							)
+						);
+					}
+				)}
+			</div>
+
+			{/* Submit and Cancel buttons */}
+			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+				<button
+					className="btn btn-secondary rounded-pill px-3"
+					onClick={handleCancel}
+				>
+					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
+				</button>
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={handleSubmit}
+				>
+					{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
+				</button>
 			</div>
 		</div>
 	);
 }
 
-export default UserInformation;
+export default AdminDashboardFormPageContent;
+
+i need you to make the handleChange function for me to handle the changes made to required and enabled based on the last input made by the user to them via the input elements;
+if need be make two handleChanges for required and enabled each, but the results should be the same,
+by which i mean that at the end, regardless of how, the data in changedData and changedDataIE should include the items in the payloadProps, meaning formFieldId (the specific id if the formField that was altered), required, and enabled;
+
+so to recap, the handleChange(s) function(s) should be able to alter the data so that the correct visuals are in place,
+meaning the user can correctly see the results of interacting with the inputs, and likewise the new inputs should then be correctly placed in the changedData and changedDataIE.
+
+based on the information i have given you please make the necessary changes as instructed.
+dont rewrite the entire code, just tell me what and where to make changes.
