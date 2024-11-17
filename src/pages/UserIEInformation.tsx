@@ -292,27 +292,40 @@ function parseRiskFactors(riskFactorString: string | null) {
 function convertDependenceToBoolean(
 	item: string | boolean | undefined
 ): boolean {
-	if (item === "مستقل") return true;
-	if (item === "وابسته (نیازمند کمک)") return false;
+	if (item === "مستقل" || item === "Independent") return true;
+	if (
+		item === "وابسته (نیازمند کمک)" ||
+		item === "Dependent (needs assistance)"
+	)
+		return false;
 	return Boolean(item);
 }
 
-function convertDependenceTostring(item: string | boolean | undefined): string {
-	if (item === true) return "مستقل";
-	if (item === false) return "وابسته (نیازمند کمک)";
-	return String(item);
+function convertDependenceTostring(
+	item: boolean | undefined,
+	language: string
+): string {
+	if (item === true) return language === "fa" ? "مستقل" : "Independent";
+	if (item === false)
+		return language === "fa"
+			? "وابسته (نیازمند کمک)"
+			: "Dependent (needs assistance)";
+	return "";
 }
 
 function convertYesNoToBoolean(item: string | boolean | undefined): boolean {
-	if (item === "بله") return true;
-	if (item === "خیر") return false;
+	if (item === "بله" || item === "Yes") return true;
+	if (item === "خیر" || item === "No") return false;
 	return Boolean(item);
 }
 
-function convertYesNoToString(item: string | boolean | undefined): string {
-	if (item === true) return "بله";
-	if (item === false) return "خیر";
-	return String(item);
+function convertYesNoToString(
+	item: boolean | undefined,
+	language: string
+): string {
+	if (item === true) return language === "fa" ? "بله" : "Yes";
+	if (item === false) return language === "fa" ? "خیر" : "No";
+	return "";
 }
 
 function handleConditionalEmptyFields(values: UserIEFormData): UserIEFormData {
@@ -367,7 +380,7 @@ function UserIEInformation() {
 	const [openIndexes, setOpenIndexes] = useState<number[]>([]); // Track which sections are open
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
-	const { language } = useLanguage(); // Get language and toggle function from context
+	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 
 	// fetch user data
 	useEffect(() => {
@@ -408,64 +421,75 @@ function UserIEInformation() {
 
 	// fetch user information data
 	useEffect(() => {
-		axiosInstance
-			.post("/api/User/GetUserInformation") // Call the API to get user data
-			.then((response) => {
-				const data = response.data;
+		if (isLanguageReady) {
+			axiosInstance
+				.post("/api/User/GetUserInformation") // Call the API to get user data
+				.then((response) => {
+					const data = response.data;
 
-				const formattedData = {
-					...data,
+					const formattedData = {
+						...data,
 
-					...handleConditionalEmptyFieldsForFront(data),
-					isLactating: convertYesNoToString(data.isLactating),
-					isPregnant: convertYesNoToString(data.isPregnant),
+						...handleConditionalEmptyFieldsForFront(data),
 
-					independentlyEats: convertDependenceTostring(data.independentlyEats),
-					independentlyDresses: convertDependenceTostring(
-						data.independentlyDresses
-					),
-					independentlyBathes: convertDependenceTostring(
-						data.independentlyBathes
-					),
-					independentlyDefecates: convertDependenceTostring(
-						data.independentlyDefecates
-					),
-					independentlyMoves: convertDependenceTostring(
-						data.independentlyMoves
-					),
+						...parseDisabilityOptions(data.additionalDisabilityOptions),
+						...parseRiskFactors(data.riskFactors),
 
-					...parseDisabilityOptions(data.additionalDisabilityOptions),
-					...parseRiskFactors(data.riskFactors),
-				};
-				// Update form values with userInfoIE data
-				formik.setValues(formattedData);
-			})
-			.catch((error) => {
-				console.error(
-					"API request for user data failed, trying local db.json",
-					error
-				);
+						isLactating: convertYesNoToString(data.isLactating, language),
+						isPregnant: convertYesNoToString(data.isPregnant, language),
 
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
-						}
-						return response.json();
-					})
-					.then((data) => {
-						// Update form values with userInfoIE data
-						formik.setValues(data.userInfoIE);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, [dataUpdateFlag]);
+						independentlyEats: convertDependenceTostring(
+							data.independentlyEats,
+							language
+						),
+						independentlyDresses: convertDependenceTostring(
+							data.independentlyDresses,
+							language
+						),
+						independentlyBathes: convertDependenceTostring(
+							data.independentlyBathes,
+							language
+						),
+						independentlyDefecates: convertDependenceTostring(
+							data.independentlyDefecates,
+							language
+						),
+						independentlyMoves: convertDependenceTostring(
+							data.independentlyMoves,
+							language
+						),
+					};
+					// Update form values with userInfoIE data
+					formik.setValues(formattedData);
+					console.log(formattedData);
+				})
+				.catch((error) => {
+					console.error(
+						"API request for user data failed, trying local db.json",
+						error
+					);
+
+					// Fetch from local db.json if API fails
+					fetch("/db.json")
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error("Failed to fetch user data from db.json");
+							}
+							return response.json();
+						})
+						.then((data) => {
+							// Update form values with userInfoIE data
+							formik.setValues(data.userInfoIE);
+						})
+						.catch((jsonError) => {
+							console.error(
+								"Failed to fetch user data from both API and db.json",
+								jsonError
+							);
+						});
+				});
+		}
+	}, [dataUpdateFlag, isLanguageReady]);
 
 	// fetch user information form fields
 	useEffect(() => {

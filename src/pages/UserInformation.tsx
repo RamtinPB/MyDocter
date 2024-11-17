@@ -95,7 +95,9 @@ interface UserFormData {
 	email: string;
 	gender: string;
 	insuranceType: string;
+	insuranceId: number | null;
 	supplementaryInsuranceType: string;
+	supplementalInsuranceId: number | null;
 	nationalCode: string;
 	isIranian: string | boolean;
 	isMarried: string | boolean;
@@ -117,7 +119,9 @@ const initialFormData: UserFormData = {
 	email: "",
 	gender: "",
 	insuranceType: "",
+	insuranceId: 0,
 	supplementaryInsuranceType: "",
+	supplementalInsuranceId: 0,
 	nationalCode: "",
 	isIranian: "",
 	isMarried: "",
@@ -135,28 +139,35 @@ const initialFormData: UserFormData = {
 function convertIsIranianToBoolean(
 	isIranian: string | boolean | undefined
 ): boolean {
-	if (isIranian === "ایرانی") return true;
-	if (isIranian === "غیر ایرانی") return false;
+	if (isIranian === "ایرانی" || isIranian === "Iranian") return true;
+	if (isIranian === "غیر ایرانی" || isIranian === "non-Iranian") return false;
 	return Boolean(isIranian);
+}
+
+function convertIsIranianToString(
+	isIranian: boolean | undefined,
+	language: string
+): string {
+	if (isIranian === true) return language === "fa" ? "ایرانی" : "Iranian";
+	if (isIranian === false)
+		return language === "fa" ? "غیر ایرانی" : "non-Iranian";
+	return "";
 }
 
 function convertIsMarriedToBoolean(
 	isMarried: string | boolean | undefined
 ): boolean {
-	if (isMarried === "متاهل") return true;
-	if (isMarried === "مجرد") return false;
+	if (isMarried === "متاهل" || isMarried === "Engaged") return true;
+	if (isMarried === "مجرد" || isMarried === "Single") return false;
 	return Boolean(isMarried);
 }
 
-function convertIsIranianToString(isIranian: boolean | undefined): string {
-	if (isIranian === true) return "ایرانی";
-	if (isIranian === false) return "غیر ایرانی";
-	return "";
-}
-
-function convertIsMarriedToString(isMarried: boolean | undefined): string {
-	if (isMarried === true) return "متاهل";
-	if (isMarried === false) return "مجرد";
+function convertIsMarriedToString(
+	isMarried: boolean | undefined,
+	language: string
+): string {
+	if (isMarried === true) return language === "fa" ? "متاهل" : "Engaged";
+	if (isMarried === false) return language === "fa" ? "مجرد" : "Single";
 	return "";
 }
 
@@ -190,41 +201,56 @@ function formatBirthdateToYYYYMMDD(birthdate: string): string {
 	}
 }
 
-function convertGenderToFrontData(gender: string): string {
-	if (gender === "Male") return "مرد";
-	if (gender === "Female") return "زن";
+function convertGenderToFrontData(gender: string, language: string): string {
+	if (gender === "Male") return language === "fa" ? "مرد" : "Male";
+	if (gender === "Female") return language === "fa" ? "زن" : "Female";
 	if (gender === "Other") return "";
 	return "";
 }
 
 function convertGenderToEnum(gender: string): string {
-	if (gender === "مرد") return "Male";
-	if (gender === "زن") return "Female";
+	if (gender === "مرد" || gender === "Male") return "Male";
+	if (gender === "زن" || gender === "Female") return "Female";
 	if (gender === "") return "Other";
 	return "";
 }
 
 function convertEducationLevelToEnum(educationLevel: string): string {
-	if (educationLevel === "بی سواد") return "None";
-	if (educationLevel === "ابتدایی") return "Primary";
-	if (educationLevel === "دیپلم") return "Diploma";
-	if (educationLevel === "کاردانی") return "Associate";
-	if (educationLevel === "کارشناسی") return "Bachelor";
-	if (educationLevel === "کارشناسی ارشد") return "Master";
-	if (educationLevel === "دکترا") return "PHD";
-	if (educationLevel === "فوق دکترا") return "PostDoc";
+	if (educationLevel === "بی سواد" || educationLevel === "None") return "None";
+	if (educationLevel === "ابتدایی" || educationLevel === "Primary")
+		return "Primary";
+	if (educationLevel === "دیپلم" || educationLevel === "Diploma")
+		return "Diploma";
+	if (educationLevel === "کاردانی" || educationLevel === "Associate")
+		return "Associate";
+	if (educationLevel === "کارشناسی" || educationLevel === "Bachelor")
+		return "Bachelor";
+	if (educationLevel === "کارشناسی ارشد" || educationLevel === "Master")
+		return "Master";
+	if (educationLevel === "دکترا" || educationLevel === "PHD") return "PHD";
+	if (educationLevel === "فوق دکترا" || educationLevel === "PostDoc")
+		return "PostDoc";
 	return "";
 }
 
-function convertEducationLevelToFrontData(educationLevel: string): string {
-	if (educationLevel === "None") return "بی سواد";
-	if (educationLevel === "Primary") return "ابتدایی";
-	if (educationLevel === "Diploma") return "دیپلم";
-	if (educationLevel === "Associate") return "کاردانی";
-	if (educationLevel === "Bachelor") return "کارشناسی";
-	if (educationLevel === "Master") return "کارشناسی ارشد";
-	if (educationLevel === "PHD") return "دکترا";
-	if (educationLevel === "PostDoc") return "فوق دکترا";
+function convertEducationLevelToFrontData(
+	educationLevel: string,
+	language: string
+): string {
+	if (educationLevel === "None") return language === "fa" ? "بی سواد" : "None";
+	if (educationLevel === "Primary")
+		return language === "fa" ? "ابتدایی" : "Primary";
+	if (educationLevel === "Diploma")
+		return language === "fa" ? "دیپلم" : "Diploma";
+	if (educationLevel === "Associate")
+		return language === "fa" ? "کاردانی" : "Associate";
+	if (educationLevel === "Bachelor")
+		return language === "fa" ? "کارشناسی" : "Bachelor";
+	if (educationLevel === "Master")
+		return language === "fa" ? "کارشناسی ارشد" : "Master";
+	if (educationLevel === "PHD") return language === "fa" ? "دکترا" : "PHD";
+	if (educationLevel === "PostDoc")
+		return language === "fa" ? "فوق دکترا" : "PostDoc";
 	return "";
 }
 
@@ -256,78 +282,46 @@ const updateFormFieldsWithInsuranceData = (
 	});
 };
 
+const getInsuranceIdByName = (
+	insuranceType: string | null,
+	insuranceData: insuranceDataProps[]
+): number | null => {
+	if (!insuranceType) return null;
+
+	const match = insuranceData.find(
+		(data) =>
+			data.companyName === insuranceType || data.companyNameEN === insuranceType
+	);
+
+	return match ? match.id : null;
+};
+
+const getInsuranceNameById = (
+	insuranceId: number | null,
+	insuranceData: insuranceDataProps[],
+	language: string
+): string | null => {
+	if (insuranceId === null || !insuranceData.length) return null;
+
+	const match = insuranceData.find((data) => data.id === insuranceId);
+
+	if (!match) return null;
+
+	// Return the appropriate name based on the language
+	return language === "fa" ? match.companyName : match.companyNameEN;
+};
+
 function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
 	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
 
-	const { language } = useLanguage(); // Get language and toggle function from context
+	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-
-	// fetch user data
-	useEffect(() => {
-		axiosInstance
-			.post("/api/User/GetUserData") // Call the API to get user data
-			.then((response) => {
-				const data = response.data;
-				console.log(data);
-
-				// Populate form fields with API response
-				// Convert `isIranian` and `isMarried` booleans to strings
-				const formattedData = {
-					...data,
-					...handleConditionalEmptyFieldsForFront(data),
-					isIranian: convertIsIranianToString(data.isIranian),
-					isMarried: convertIsMarriedToString(data.isMarried),
-					profilePicture: data.profileImageUrl,
-					birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
-					gender: convertGenderToFrontData(data.gender),
-					educationLevel: convertEducationLevelToFrontData(data.educationLevel),
-				};
-
-				// Populate form fields with the formatted response
-				formik.setValues(formattedData);
-
-				// Set profile picture if available
-				if (data.profileImageUrl) {
-					setProfilePicture(data.profileImageUrl);
-				}
-			})
-			.catch((error) => {
-				console.error(
-					"API request for user data failed, trying local db.json",
-					error
-				);
-
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
-						}
-						return response.json();
-					})
-					.then((data) => {
-						// Update form values with user info from db.json
-						formik.setValues(data.userInfo);
-
-						// Set profile picture if available
-						if (data.userInfo.profilePicture) {
-							setProfilePicture(data.userInfo.profilePicture);
-						}
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, []);
 
 	useEffect(() => {
 		axiosInstance
@@ -359,6 +353,74 @@ function UserInformation() {
 			});
 	}, []);
 
+	// fetch user data
+	useEffect(() => {
+		if (dataUpdateFlag && isLanguageReady) {
+			axiosInstance
+				.post("/api/User/GetUserData") // Call the API to get user data
+				.then((response) => {
+					const data = response.data;
+
+					// Use getInsuranceNameById to map insuranceId and supplementalInsuranceId to names
+					const insuranceName = getInsuranceNameById(
+						data.insuranceId,
+						insuranceData,
+						language
+					);
+					const supplementaryInsuranceName = getInsuranceNameById(
+						data.supplementalInsuranceId,
+						insuranceData,
+						language
+					);
+
+					const formattedData = {
+						...data,
+						...handleConditionalEmptyFieldsForFront(data),
+						isIranian: convertIsIranianToString(data.isIranian, language),
+						isMarried: convertIsMarriedToString(data.isMarried, language),
+						profilePicture: data.profileImageUrl,
+						birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
+						gender: convertGenderToFrontData(data.gender, language),
+						educationLevel: convertEducationLevelToFrontData(
+							data.educationLevel,
+							language
+						),
+						insuranceType: (insuranceName as string) || "",
+						supplementaryInsuranceType:
+							(supplementaryInsuranceName as string) || "",
+					};
+
+					// Populate form fields with the formatted response
+					formik.setValues(formattedData);
+				})
+				.catch((error) => {
+					console.error(
+						"API request for user data failed, trying local db.json",
+						error
+					);
+
+					// Fetch from local db.json if API fails
+					fetch("/db.json")
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error("Failed to fetch user data from db.json");
+							}
+							return response.json();
+						})
+						.then((data) => {
+							// Update form values with user info from db.json
+							formik.setValues(data.userInfo);
+						})
+						.catch((jsonError) => {
+							console.error(
+								"Failed to fetch user data from both API and db.json",
+								jsonError
+							);
+						});
+				});
+		}
+	}, [dataUpdateFlag, isLanguageReady]);
+
 	// Assuming that formData comes as a single structure from the API
 	useEffect(() => {
 		if (dataUpdateFlag) {
@@ -381,7 +443,7 @@ function UserInformation() {
 					setFormFields(updatedFormFields);
 					setValidationSchemaData(newValidationSchemaData);
 
-					console.log(updatedFormFields);
+					//console.log(updatedFormFields);
 					//console.log(newValidationSchemaData);
 				})
 				.catch((error) => {
@@ -503,12 +565,23 @@ function UserInformation() {
 		validationSchema: validationSchema,
 
 		onSubmit: async (values) => {
+			const insuranceId = getInsuranceIdByName(
+				values.insuranceType,
+				insuranceData
+			);
+			const supplementalInsuranceId = getInsuranceIdByName(
+				values.supplementaryInsuranceType,
+				insuranceData
+			);
+
 			const updatedData: UserFormData = {
 				...handleConditionalEmptyFields(values),
 				isIranian: convertIsIranianToBoolean(values.isIranian),
 				isMarried: convertIsMarriedToBoolean(values.isMarried),
 				gender: convertGenderToEnum(values.gender),
 				educationLevel: convertEducationLevelToEnum(values.educationLevel),
+				insuranceId,
+				supplementalInsuranceId,
 			};
 
 			try {
