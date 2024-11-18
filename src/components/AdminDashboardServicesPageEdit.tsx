@@ -186,7 +186,7 @@ function ServicePageEdit() {
 
 				{/*  */}
 				<div
-					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-5 pt-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<div className="col-6">
@@ -206,6 +206,11 @@ function ServicePageEdit() {
 									language === "fa" ? "end" : "start"
 								}`}
 								onChange={(e) => handleChange("displayTitle", e.target.value)}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
 								value={service?.displayTitle || ""}
 							/>
 						</div>
@@ -222,6 +227,11 @@ function ServicePageEdit() {
 									language === "fa" ? "end" : "start"
 								}`}
 								onChange={(e) => handleChange("displayTitleEN", e.target.value)}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
 								value={service?.displayTitleEN || ""}
 							/>
 						</div>
@@ -315,6 +325,11 @@ function ServicePageEdit() {
 									language === "fa" ? "end" : "start"
 								}`}
 								onChange={(e) => handleChange("pageTitle", e.target.value)}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
 								value={service?.pageTitle || ""}
 							/>
 						</div>
@@ -331,6 +346,11 @@ function ServicePageEdit() {
 									language === "fa" ? "end" : "start"
 								}`}
 								onChange={(e) => handleChange("pageTitleEN", e.target.value)}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
 								value={service?.pageTitleEN || ""}
 							/>
 						</div>
@@ -410,7 +430,7 @@ function ServicePageEdit() {
 
 				{/* Image and Description Section */}
 				<div
-					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<div className="d-flex flex-column flex-grow-1 px-1 mx-1">
@@ -419,10 +439,54 @@ function ServicePageEdit() {
 								language === "fa" ? "end" : "start"
 							} px-1 mx-1`}
 						>
-							{language === "fa"
-								? "توضیحات کوتاه مربوط به سرویس"
-								: "Short description of the service"}
+							{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
 						</h5>
+
+						<div className="d-flex flex-column my-2">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "نکات مهم سرویس"
+									: "Service Important Notes (Farsi"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) => handleChange("importantNotes", e.target.value)}
+								value={service?.importantNotes || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
+
+						<div className="d-flex flex-column my-2">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "نکات مهم سرویس (انگلیسی)"
+									: "Service Important Notes (English)"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) =>
+									handleChange("importantNotesEN", e.target.value)
+								}
+								value={service?.importantNotesEN || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
 					</div>
 				</div>
 
@@ -431,20 +495,47 @@ function ServicePageEdit() {
 					<h5
 						className={` text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
-						{language === "fa"
-							? "توضیحات تکمیلی مربوط به سرویس"
-							: "Detailed description of the service"}
+						{language === "fa" ? "قیمت گذاری سرویس" : "Service Pricing Section"}
 					</h5>
-					<textarea
-						id="userInput"
-						className={`form-control  text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						rows={3}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
-					></textarea>
+
+					<div className="d-flex flex-row justify-content-between align-items-center">
+						<div className="col-6 px-2 py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa" ? "قیمت پایه سرویس" : "Service Base Price"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("basePrice", e.target.value)}
+								value={
+									service?.basePrice !== undefined &&
+									service?.basePrice !== null
+										? service.basePrice
+										: ""
+								}
+							/>
+						</div>
+
+						<div className="col-6 px-2 py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa" ? "تخفیف سرویس" : "Service Subsidy"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("subsidy", e.target.value)}
+								value={
+									service?.subsidy !== undefined && service?.subsidy !== null
+										? service.subsidy
+										: ""
+								}
+							/>
+						</div>
+					</div>
 				</div>
 
 				{/* Form Builder Section */}
