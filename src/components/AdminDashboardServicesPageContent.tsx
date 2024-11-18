@@ -5,8 +5,8 @@ import axiosInstance from "../myAPI/axiosInstance";
 
 interface addServiceProps {
 	name: string;
-	enabled: boolean;
 	type: string;
+	enabled: boolean;
 
 	pageTitle: string;
 	pageTitleEN: string;
@@ -20,22 +20,16 @@ interface addServiceProps {
 	displayTitleEN: string;
 	displayDescription: string;
 	displayDescriptionEN: string;
-	displayBannerUrl: string;
+	displayImageUrl: string;
 
 	importantNotes: string;
+	importantNotesEN: string;
 
 	insurancePlanId: number | null;
 	basePrice: number;
-	subsidy: number;
 
-	//////////////////////////////////
-	title: string;
-	titleEN: string;
-	imageUrl: string;
-	id: string | number | undefined;
-	describtion: string;
-	describtionEN: string;
-	usedByUser: boolean;
+	///////////////////////////////////
+	subsidy: number;
 }
 
 interface servicesProps {
@@ -52,8 +46,10 @@ interface servicesProps {
 
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<servicesProps[]>([]);
+
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const [newServiceUpdateFlag, setNewServiceUpdateFlag] = useState(false);
+
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
@@ -135,35 +131,21 @@ function AdminDashboardServicesPageContent() {
 			displayTitleEN: "",
 			displayDescription: "",
 			displayDescriptionEN: "",
-			displayBannerUrl: "",
+			displayImageUrl: "",
 
 			importantNotes: "",
+			importantNotesEN: "",
 
 			insurancePlanId: null,
 			basePrice: 0,
+			/////////////////////////////
 			subsidy: 0,
-
-			//////////////////////////////
-			title: "",
-			titleEN: "",
-			imageUrl: "",
-			id: 0,
-			describtion: "",
-			describtionEN: "",
-			usedByUser: false,
 		};
 
 		try {
-			const response = await axiosInstance.post(
-				"/api/Admin/AddService",
-				newCard,
-				{
-					withCredentials: true,
-				}
-			);
-			if (response.status === 200) {
-				setServices([...services, newCard]);
-			}
+			await axiosInstance.post("/api/Admin/AddService", newCard, {
+				withCredentials: true,
+			});
 		} catch (error) {
 			console.error("Failed to add Service", error);
 		}

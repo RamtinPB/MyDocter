@@ -5,14 +5,17 @@ import axiosInstance from "../myAPI/axiosInstance";
 
 interface Service {
 	name: string;
-	description: string;
 
-	nameEN: string;
+	title: string;
+	titleEN: string;
+
+	description: string;
 	descriptionEN: string;
 
-	image: string;
+	imageUrl: string;
 	id: string;
 	type: string;
+	usedByUser: boolean;
 }
 
 function GeneralDoctorPrescription() {
@@ -36,8 +39,6 @@ function GeneralDoctorPrescription() {
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
-				console.log(response); // Log the full response to check structure
-				console.log("Base URL: ", import.meta.env.VITE_API_BASE_URL);
 
 				setServices(response.data); // Assuming 'data' is the correct structure
 				setLoading(false);
@@ -98,13 +99,13 @@ function GeneralDoctorPrescription() {
 										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">
 												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-													{language === "fa" ? service.name : service.nameEN}
+													{language === "fa" ? service.title : service.titleEN}
 												</h5>
 												<img
-													src={service.image}
+													src={service.imageUrl}
 													className="img-fluid m-0"
 													style={{ width: "546.22px" }}
-													alt={service.name}
+													alt={service.title}
 												/>
 												<p
 													className={` card-text my-3 mx-3 text-${

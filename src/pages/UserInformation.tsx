@@ -319,13 +319,14 @@ function UserInformation() {
 
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
+	const [profileImageUpdateFlag, setprofileImageUpdateFlag] = useState(false);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		axiosInstance
-			.post("/api/Admin/GetInsurances")
+			.post("/api/Service/GetInsurances")
 			.then((response) => {
 				const data = response.data;
 				setInsuranceData(data);
@@ -587,15 +588,50 @@ function UserInformation() {
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserData", updatedData);
-				console.log("User data updated successfully");
+				alert("User information updated successfully");
 			} catch (error) {
 				console.error("Error updating user data:", error);
+				alert("User information update failed");
 			}
 		},
 		validateOnBlur: true,
 		validateOnChange: true,
 		validateOnMount: true,
 	});
+
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetProfileImage", {}, { responseType: "blob" }) // Specify blob as the response type
+			.then((response) => {
+				const imageBlob = response.data; // Binary image data
+				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+				setProfilePicture(imageUrl); // Set the profile picture state
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+
+				fetch("/db.json")
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data); // Handle local fallback logic here, if needed
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, [profileImageUpdateFlag]);
+
+	// Clean up the object URL when the component unmounts
+	useEffect(() => {
+		return () => {
+			if (profilePicture) {
+				URL.revokeObjectURL(profilePicture);
+			}
+		};
+	}, [profilePicture]);
 
 	const handleProfilePictureChange = async (
 		e: React.ChangeEvent<HTMLInputElement>
@@ -625,31 +661,16 @@ function UserInformation() {
 
 			try {
 				// Upload profile picture
-				const uploadResponse = await axiosInstance.post(
-					"/api/File/UploadProfileImage",
-					formData,
-					{
-						headers: {
-							"Content-Type": "multipart/form-data",
-						},
-						withCredentials: true,
-					}
-				);
-
-				// Extract the uploaded image URL from the response
-				const profileImageUrl = uploadResponse.data.profileImageUrl;
-
-				// Update the user's data with the new profile picture URL
-				await axiosInstance.post("/api/User/UpdateUserData", {
-					profileImageUrl,
+				await axiosInstance.post("/api/File/UploadProfileImage", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+					withCredentials: true,
 				});
 
-				// Update local profile picture state with the new URL
-				setProfilePicture(profileImageUrl);
+				setprofileImageUpdateFlag((prev) => !prev);
 
-				console.log(
-					"Profile picture uploaded and user data updated successfully."
-				);
+				alert("Profile picture uploaded successfully.");
 			} catch (error) {
 				console.error("Error uploading profile picture:", error);
 			}

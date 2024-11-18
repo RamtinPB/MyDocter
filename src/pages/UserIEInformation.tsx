@@ -314,8 +314,8 @@ function convertDependenceTostring(
 }
 
 function convertYesNoToBoolean(item: string | boolean | undefined): boolean {
-	if (item === "بله" || item === "Yes") return true;
-	if (item === "خیر" || item === "No") return false;
+	if (item === "بله" || item === "دارم" || item === "Yes") return true;
+	if (item === "خیر" || item === "ندارم" || item === "No") return false;
 	return Boolean(item);
 }
 
@@ -369,6 +369,40 @@ function handleConditionalEmptyFieldsForFront(
 	if (values.disabilityOrAmputation === "")
 		values.noDisabilityOrAmputation = true;
 	return values;
+}
+
+function convertHasOrNotToString(
+	item: string | undefined,
+	language: string
+): string {
+	if (item === "Yes" || item === "دارم")
+		return language === "fa" ? "دارم" : "Yes";
+	if (item === "No" || item === "ندارم")
+		return language === "fa" ? "ندارم" : "No";
+	return "";
+}
+
+function convertSleepStatusToString(
+	item: string | boolean | undefined,
+	language: string
+): string {
+	if (item === "Normal" || item === "طبیعی")
+		return language === "fa" ? "طبیعی" : "Normal";
+	if (
+		item === "Less than normal (less than 5 hours)" ||
+		item === "کمتر از حد طبیعی (کمتر از 5 ساعت)"
+	)
+		return language === "fa"
+			? "کمتر از حد طبیعی (کمتر از 5 ساعت)"
+			: "Less than normal (less than 5 hours)";
+	if (
+		item === "More than normal (more than 9 hours)" ||
+		item === "بیشتر از حد طبیعی (کمتر از 9 ساعت)"
+	)
+		return language === "fa"
+			? "بیشتر از حد طبیعی (کمتر از 9 ساعت)"
+			: "More than normal (more than 9 hours)";
+	return "";
 }
 
 function UserIEInformation() {
@@ -437,6 +471,12 @@ function UserIEInformation() {
 
 						isLactating: convertYesNoToString(data.isLactating, language),
 						isPregnant: convertYesNoToString(data.isPregnant, language),
+
+						bloodTransfusionHistory: convertHasOrNotToString(
+							data.bloodTransfusionHistory,
+							language
+						),
+						sleepStatus: convertSleepStatusToString(data.sleepStatus, language),
 
 						independentlyEats: convertDependenceTostring(
 							data.independentlyEats,
@@ -652,8 +692,11 @@ function UserIEInformation() {
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserInformation", values);
+				alert("Initial Evaluation information updated successfully");
 			} catch (error) {
 				console.error("Error updating user data:", error);
+
+				alert("Initial Evaluation information update failed");
 			} finally {
 				setDataUpdateFlag((prev) => !prev);
 			}

@@ -6,30 +6,47 @@ import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
 import axios from "axios";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface serviceProps {
-	id: number;
+	ID: number;
 	name: string;
+	enabled: boolean;
 	type: string;
 
-	title: string;
-	titleEN: string;
+	pageTitle: string;
+	pageTitleEN: string;
+	pageDescription: string;
+	pageDescriptionEN: string;
+	pageBannerUrl: string;
 
-	description: string;
-	descriptionEN: string;
+	reviewByDoctor: boolean;
 
-	imageUrl: string;
-	enabled: boolean;
+	displayTitle: string;
+	displayTitleEN: string;
+	displayDescription: string;
+	displayDescriptionEN: string;
+	displayImageUrl: string;
+
+	importantNotes: string;
+	importantNotesEN: string;
+
+	insurancePlanId: number;
+	basePrice: number;
+	subsidy: number;
 }
 
 function ServicePageEdit() {
 	const { id } = useParams();
 
 	const [service, setService] = useState<serviceProps | null>(null);
-	const [servicePicture, setServicePicture] = useState<string | null>(null);
+	const [displayImageUrlData, setDisplayImageUrlData] = useState<File | null>(
+		null
+	);
 
-	const [loading, setLoading] = useState<boolean>(true);
-	const [error, setError] = useState<string | null>(null);
+	const [pageBannerUrlData, setPageBannerUrlData] = useState<File | null>(null);
+
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -37,51 +54,38 @@ function ServicePageEdit() {
 	const location = useLocation();
 
 	useEffect(() => {
-		const fetchService = async () => {
+		const fetchServices = async () => {
 			try {
-				const response = await fetch("/db.json"); // Adjust path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				const data = await response.json();
-
-				// Assuming services is an array available in the root of db.json
-				const services = data.services;
-
-				const selectedService = services.find(
-					(s: { id: any }) => `${s.id}` === id
+				const response = await axiosInstance.post(
+					"/api/Service/GetServiceData",
+					{
+						serviceId: id,
+					}
 				);
-
-				if (selectedService) {
-					setService(selectedService);
-					setServicePicture(selectedService.image);
-				} else {
-					setError("Service not found");
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				setLoading(false);
+				const data = response.data;
+
+				setService(data.service);
 			} catch (err) {
-				console.error("Error fetching service details:", err);
-				setError("Failed to fetch service details");
-				setLoading(false);
+				try {
+					const response = await fetch("/db.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Network response was not ok");
+					}
+					const data = await response.json();
+
+					// Assuming services is an array available in the root of db.json
+					setService(data.services || []); // Default to empty array if data.services is undefined
+				} catch (err) {
+					console.error("Failed to fetch services", err);
+				}
 			}
 		};
 
-		fetchService();
-	}, [id]);
-
-	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
-	}
-
-	if (error) {
-		return <div className="text-center my-5 text-danger">{error}</div>;
-	}
-
-	if (!service) {
-		return (
-			<div className="text-center my-5 text-danger">Service not found</div>
-		);
-	}
+		fetchServices();
+	}, [dataUpdateFlag, id]);
 
 	// Function to handle the back button
 	const handleBackClick = () => {
@@ -92,14 +96,20 @@ function ServicePageEdit() {
 		});
 	};
 
-	const handleServicePictureChange = (
+	const handledisplayImageUrlDataChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		if (e.target.files && e.target.files[0]) {
-			setServicePicture(URL.createObjectURL(e.target.files[0]));
+			const file = e.target.files[0];
+			setDisplayImageUrlData(file); // Store the file for submission
+
+			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
+			setService((prevService) =>
+				prevService ? { ...prevService, displayImageUrl: previewUrl } : null
+			);
 
 			const formData = new FormData();
-			formData.append("servicePicture", e.target.files[0]);
+			formData.append("displayImageUrlData", file);
 
 			axios
 				.post("/api/upload-service-picture", formData)
@@ -112,14 +122,49 @@ function ServicePageEdit() {
 		}
 	};
 
-	// @ts-ignore
-	const handleChange = () => {};
+	const handlePageBannerUrlDataChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		if (e.target.files && e.target.files[0]) {
+			const file = e.target.files[0];
+			setPageBannerUrlData(file); // Store the file for submission
+			console.log(file);
+
+			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
+			setService((prevService) =>
+				prevService ? { ...prevService, pageBannerUrl: previewUrl } : null
+			);
+
+			const formData = new FormData();
+			formData.append("PageBannerUrlData", file);
+
+			axios
+				.post("/api/upload-service-picture", formData)
+				.then((response) => {
+					console.log("service picture uploaded successfully:", response.data);
+				})
+				.catch((error) => {
+					console.error("Error uploading service picture:", error);
+				});
+		}
+	};
+
+	const handleChange = (
+		field: keyof serviceProps,
+		value: string | number | boolean
+	) => {
+		setService((prevService) =>
+			prevService ? { ...prevService, [field]: value } : null
+		);
+	};
 
 	// @ts-ignore
 	const handleSubmit = () => {};
 
 	// @ts-ignore
-	const handleCancel = () => {};
+	const handleCancel = () => {
+		setDataUpdateFlag((prev) => !prev);
+	};
 
 	return (
 		<div className="container">
@@ -135,9 +180,231 @@ function ServicePageEdit() {
 						/>
 					</div>
 					<div className="col-8 d-flex flex-column justify-content-center text-center text-white">
-						<h4 className="mb-0">
-							{language === "fa" ? service.title : service.titleEN}
-						</h4>
+						<h4 className="mb-0">{service?.name}</h4>
+					</div>
+				</div>
+
+				{/*  */}
+				<div
+					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+				>
+					<div className="col-6">
+						<h5 className="text-center">
+							{language === "fa" ? "اطلاعات کارت سرویس" : "Service Card Data"}
+						</h5>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "تیتر کارت سرویس"
+									: "Service Card Title (Farsi)"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("displayTitle", e.target.value)}
+								value={service?.displayTitle || ""}
+							/>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "تیتر کارت سرویس (انگلیسی)"
+									: "Service Card Title (English)"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("displayTitleEN", e.target.value)}
+								value={service?.displayTitleEN || ""}
+							/>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "توضیحات کارت سرویس"
+									: "Service Card Desctiption (Farsi)"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) =>
+									handleChange("displayDescription", e.target.value)
+								}
+								value={service?.displayDescription || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "توضیحات کارت سرویس (انگلیسی)"
+									: "Service Card Desctiption (English)"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) =>
+									handleChange("displayDescriptionEN", e.target.value)
+								}
+								value={service?.displayDescriptionEN || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
+
+						<div className="d-flex flex-column justify-content-center align-items-center gap-3 py-3">
+							{service?.displayImageUrl ? (
+								<img
+									src={service?.displayImageUrl}
+									alt="service"
+									className="custom-service-img shadow-sm rounded-5"
+								/>
+							) : (
+								<input
+									type="file"
+									accept="image/*"
+									className="custom-service-img text-center btn btn-light shadow rounded-pill"
+									onChange={handledisplayImageUrlDataChange}
+								/>
+							)}
+							<button
+								className="btn btn-sm btn-warning shadow-sm rounded-pill"
+								onClick={() => setDisplayImageUrlData(null)}
+							>
+								<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
+							</button>
+						</div>
+					</div>
+
+					<div className="col-6">
+						<h5 className="text-center">
+							{language === "fa" ? "اطلاعات صفحه سرویس" : "Service Page Data"}
+						</h5>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "تیتر صفحه سرویس"
+									: "Service Page Title (Farsi)"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("pageTitle", e.target.value)}
+								value={service?.pageTitle || ""}
+							/>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "تیتر صفحه سرویس (انگلیسی)"
+									: "Service Page Title (English)"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) => handleChange("pageTitleEN", e.target.value)}
+								value={service?.pageTitleEN || ""}
+							/>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "توضیحات کارت سرویس"
+									: "Service Card Desctiption (Farsi)"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) =>
+									handleChange("pageDescription", e.target.value)
+								}
+								value={service?.pageDescription || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
+
+						<div className="py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "توضیحات کارت سرویس (انگلیسی)"
+									: "Service Card Desctiption (English)"}
+							</label>
+							<textarea
+								className={`form-control text-${
+									language === "fa" ? "end" : "start"
+								} h-100`}
+								onChange={(e) =>
+									handleChange("pageDescriptionEN", e.target.value)
+								}
+								value={service?.pageDescriptionEN || ""}
+								rows={3}
+								placeholder={
+									language === "fa"
+										? "متن خود را وارد کنید"
+										: "Write your input"
+								}
+								style={{ resize: "none" }}
+							></textarea>
+						</div>
+
+						<div className="d-flex flex-column justify-content-center align-items-center gap-3 py-3">
+							{service?.pageBannerUrl ? (
+								<img
+									src={service?.pageBannerUrl}
+									alt="service"
+									className="custom-service-img shadow-sm rounded-5"
+								/>
+							) : (
+								<input
+									type="file"
+									accept="image/*"
+									className="custom-service-img text-center btn btn-light shadow rounded-pill"
+									onChange={handlePageBannerUrlDataChange}
+								/>
+							)}
+							<button
+								className="btn btn-sm btn-warning shadow-sm rounded-pill"
+								onClick={() => setPageBannerUrlData(null)}
+							>
+								<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
+							</button>
+						</div>
 					</div>
 				</div>
 
@@ -147,7 +414,7 @@ function ServicePageEdit() {
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<div className="d-flex flex-column flex-grow-1 px-1 mx-1">
-						<h6
+						<h5
 							className={`text-${
 								language === "fa" ? "end" : "start"
 							} px-1 mx-1`}
@@ -155,53 +422,19 @@ function ServicePageEdit() {
 							{language === "fa"
 								? "توضیحات کوتاه مربوط به سرویس"
 								: "Short description of the service"}
-						</h6>
-						<textarea
-							className={`form-control text-${
-								language === "fa" ? "end" : "start"
-							} h-100`}
-							value={service.description}
-							rows={3}
-							placeholder={
-								language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-							}
-							style={{ resize: "none" }}
-						></textarea>
-					</div>
-
-					<div className="d-flex flex-column justify-content-center align-items-center gap-3">
-						{servicePicture ? (
-							<img
-								src={service.imageUrl}
-								alt="service"
-								className="custom-service-img shadow-sm rounded-5"
-							/>
-						) : (
-							<input
-								type="file"
-								accept="image/*"
-								className="custom-service-img text-center btn btn-light shadow rounded-pill"
-								onChange={handleServicePictureChange}
-							/>
-						)}
-						<button
-							className="btn btn-sm btn-warning shadow-sm rounded-pill"
-							onClick={() => setServicePicture(null)}
-						>
-							<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
-						</button>
+						</h5>
 					</div>
 				</div>
 
 				{/* Detailed Description Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h6
+					<h5
 						className={` text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
 						{language === "fa"
 							? "توضیحات تکمیلی مربوط به سرویس"
 							: "Detailed description of the service"}
-					</h6>
+					</h5>
 					<textarea
 						id="userInput"
 						className={`form-control  text-${
@@ -220,9 +453,9 @@ function ServicePageEdit() {
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
-					<h6 className="px-4 mx-1">
+					<h5 className="px-4 mx-1">
 						{language === "fa" ? "فرم سرویس" : "Service Form"}
-					</h6>
+					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
 							<FormBuilder />
@@ -236,47 +469,6 @@ function ServicePageEdit() {
 							</div>
 						)}
 					</div>
-				</div>
-
-				{/* Pricing & Subsidy Section */}
-				<div
-					className="d-flex flex-column flex-lg-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
-					style={{ direction: "ltr" }}
-				>
-					<input
-						type="text"
-						className={`form-control  text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						placeholder={
-							language === "fa" ? "نام سرویس" : "Service Name (Farsi)"
-						}
-					/>
-					<input
-						type="text"
-						className={`form-control  text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						placeholder={
-							language === "fa"
-								? "نام سرویس (انگلیسی)"
-								: "Service Name (English)"
-						}
-					/>
-					<input
-						type="text"
-						className={`form-control  text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						placeholder={language === "fa" ? "قیمت سرویس" : "Service Cost"}
-					/>
-					<input
-						type="text"
-						className={`form-control  text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						placeholder={language === "fa" ? "یارانه" : "Subsidy"}
-					/>
 				</div>
 
 				{/* Submit and Cancel buttons */}
