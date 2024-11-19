@@ -8,8 +8,14 @@ import axios from "axios";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
+// function convertTypeToString(type: number | string): string {
+// 	if (type === 0 || type === "0") return "General";
+// 	if (type === 1 || type === "1") return "Specialist";
+// 	return "";
+// }
+
 interface serviceProps {
-	ID: number;
+	id: number;
 	name: string;
 	enabled: boolean;
 	type: string;
@@ -40,14 +46,13 @@ function ServicePageEdit() {
 	const { id } = useParams();
 
 	const [service, setService] = useState<serviceProps | null>(null);
+
 	const [displayImageUrlData, setDisplayImageUrlData] = useState<File | null>(
 		null
 	);
-
 	const [pageBannerUrlData, setPageBannerUrlData] = useState<File | null>(null);
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
-
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const navigate = useNavigate();
@@ -65,9 +70,9 @@ function ServicePageEdit() {
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
-				const data = response.data;
+				const serviceData = response.data.service;
 
-				setService(data.service);
+				setService(serviceData);
 			} catch (err) {
 				try {
 					const response = await fetch("/db.json"); // Adjust path if necessary
@@ -158,8 +163,33 @@ function ServicePageEdit() {
 		);
 	};
 
-	// @ts-ignore
-	const handleSubmit = () => {};
+	const handleSubmit = async () => {
+		const modifiedService = {
+			...service,
+			type: service?.type.toString(), // Ensure `type` is sent as a string
+		};
+		try {
+			const response = await axiosInstance.post(
+				"/api/Admin/EditService",
+				modifiedService
+			);
+			if (response.status === 200) {
+				alert(
+					language === "fa"
+						? "ارسال اطلاعات انجام شد"
+						: "Submited Information successfuly"
+				);
+			}
+		} catch (error) {
+			alert(
+				language === "fa"
+					? "ارسال اطلاعات انجام نشد"
+					: "Failed to submit Information"
+			);
+		}
+
+		setDataUpdateFlag((prev) => !prev);
+	};
 
 	// @ts-ignore
 	const handleCancel = () => {
@@ -184,7 +214,7 @@ function ServicePageEdit() {
 					</div>
 				</div>
 
-				{/*  */}
+				{/* Service Information section */}
 				<div
 					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-5 pt-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -428,7 +458,7 @@ function ServicePageEdit() {
 					</div>
 				</div>
 
-				{/* Image and Description Section */}
+				{/* Important Notes Section */}
 				<div
 					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -490,7 +520,7 @@ function ServicePageEdit() {
 					</div>
 				</div>
 
-				{/* Detailed Description Section */}
+				{/* Service Pricing Section */}
 				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
 					<h5
 						className={` text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
@@ -498,8 +528,11 @@ function ServicePageEdit() {
 						{language === "fa" ? "قیمت گذاری سرویس" : "Service Pricing Section"}
 					</h5>
 
-					<div className="d-flex flex-row justify-content-between align-items-center">
-						<div className="col-6 px-2 py-3">
+					<div
+						className="d-flex flex-row justify-content-between align-items-center"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
+						<div className="col-4 px-2 py-3">
 							<label htmlFor="" className="py-2">
 								{language === "fa" ? "قیمت پایه سرویس" : "Service Base Price"}
 							</label>
@@ -518,7 +551,7 @@ function ServicePageEdit() {
 							/>
 						</div>
 
-						<div className="col-6 px-2 py-3">
+						<div className="col-4 px-2 py-3">
 							<label htmlFor="" className="py-2">
 								{language === "fa" ? "تخفیف سرویس" : "Service Subsidy"}
 							</label>
@@ -531,6 +564,29 @@ function ServicePageEdit() {
 								value={
 									service?.subsidy !== undefined && service?.subsidy !== null
 										? service.subsidy
+										: ""
+								}
+							/>
+						</div>
+
+						<div className="col-4 px-2 py-3">
+							<label htmlFor="" className="py-2">
+								{language === "fa"
+									? "شناسه طرح بیمه تحت پوشش"
+									: "Supporting Insurance Id"}
+							</label>
+							<input
+								type="text"
+								className={`form-control  text-${
+									language === "fa" ? "end" : "start"
+								}`}
+								onChange={(e) =>
+									handleChange("insurancePlanId", e.target.value)
+								}
+								value={
+									service?.insurancePlanId !== undefined &&
+									service?.insurancePlanId !== null
+										? service.insurancePlanId
 										: ""
 								}
 							/>

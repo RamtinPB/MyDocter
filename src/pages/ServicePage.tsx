@@ -19,40 +19,45 @@ interface FileData {
 	fileUrl: string;
 }
 
-interface Service {
+interface serviceProps {
+	id: number;
 	name: string;
-	description: string;
-	detailedDescription: string;
+	enabled: boolean;
+	type: string;
 
-	nameEN: string;
-	descriptionEN: string;
-	detailedDescriptionEN: string;
+	pageTitle: string;
+	pageTitleEN: string;
+	pageDescription: string;
+	pageDescriptionEN: string;
+	pageBannerUrl: string;
 
-	price: string;
-	subsidy: string;
-	image: string;
-	id: string;
-	type: Number;
-	files?: FileData[]; // File data interface
+	reviewByDoctor: boolean;
+
+	displayTitle: string;
+	displayTitleEN: string;
+	displayDescription: string;
+	displayDescriptionEN: string;
+	displayImageUrl: string;
+
+	importantNotes: string;
+	importantNotesEN: string;
+
+	insurancePlanId: number;
+	basePrice: number;
+	subsidy: number;
 }
+
 interface UserInfo {
-	insuranceType: string;
-	supplementaryInsuranceType: string;
-
-	insuranceTypeEN: string;
-	supplementaryInsuranceTypeEN: string;
+	insuranceId: number;
+	supplementalInsuranceId: number;
 }
 
-interface Insurance {
-	insuranceType: string;
-	insuranceTypeEN: string;
-	insuranceContribution: string;
-}
-
-interface SupplementaryInsurance {
-	supplementaryInsuranceType: string;
-	supplementaryInsuranceTypeEN: string;
-	supplementaryInsuranceContribution: string;
+interface insuranceDataProps {
+	id: number;
+	companyName: string;
+	companyNameEN: string;
+	type: number;
+	discountPercentage: number;
 }
 
 const icons = {
@@ -77,12 +82,12 @@ const getIconForFileType = (fileName: string) => {
 function ServicePage() {
 	const { id } = useParams<{ id: string }>();
 
-	const [service, setService] = useState<Service | null>(null);
+	const [service, setService] = useState<serviceProps | null>(null);
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-	const [insurance, setInsurance] = useState<Insurance | null>(null);
+	const [insurance, setInsurance] = useState<insuranceDataProps | null>(null);
 	const [supplementaryInsurance, setSupplementaryInsurance] =
-		useState<SupplementaryInsurance | null>(null);
+		useState<insuranceDataProps | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -143,20 +148,18 @@ function ServicePage() {
 		if (!userInfo) return;
 
 		axiosInstance
-			.post("/api/Insurance/GetAllInsuranceData") // Call the API to get user data
+			.post("/api/Service/GetInsurances") // Call the API to get user data
 			.then((response) => {
 				const data = response.data;
 
-				const matchedInsurance = data.insurance.find(
-					(ins: { insuranceType: any }) =>
-						ins.insuranceType === userInfo.insuranceType
+				const matchedInsurance = data.find(
+					(ins: { id: any }) => ins.id === userInfo.insuranceId
 				);
 				setInsurance(matchedInsurance || null);
 
-				const matchedSupplementaryInsurance = data.supplementaryInsurance.find(
-					(suppIns: { supplementaryInsuranceType: any }) =>
-						suppIns.supplementaryInsuranceType ===
-						userInfo.supplementaryInsuranceType
+				const matchedSupplementaryInsurance = data.find(
+					(suppIns: { id: any }) =>
+						suppIns.id === userInfo.supplementalInsuranceId
 				);
 				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
 
@@ -179,7 +182,7 @@ function ServicePage() {
 					.then((data) => {
 						const matchedInsurance = data.insurance.find(
 							(ins: { insuranceType: any }) =>
-								ins.insuranceType === userInfo.insuranceType
+								ins.insuranceType === userInfo.insuranceId
 						);
 						setInsurance(matchedInsurance || null);
 
@@ -187,7 +190,7 @@ function ServicePage() {
 							data.supplementaryInsurance.find(
 								(suppIns: { supplementaryInsuranceType: any }) =>
 									suppIns.supplementaryInsuranceType ===
-									userInfo.supplementaryInsuranceType
+									userInfo.supplementalInsuranceId
 							);
 						setSupplementaryInsurance(matchedSupplementaryInsurance || null);
 
@@ -209,10 +212,10 @@ function ServicePage() {
 		axiosInstance
 			.post("/api/Service/GetServiceData", { serviceId: id }) // Call the API to get user data
 			.then((response) => {
-				const data = response.data;
+				const data = response.data.service;
 
-				setService(data.service);
-				console.log(data.service);
+				setService(data);
+				console.log(data);
 				setLoading(false);
 			})
 			.catch((error) => {
@@ -249,74 +252,6 @@ function ServicePage() {
 					});
 			});
 	}, [id]);
-
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		try {
-	// 			setLoading(true);
-
-	// 			// Fetch user info
-	// 			const userInfoResponse = await fetch("/db.json");
-	// 			if (!userInfoResponse.ok) {
-	// 				throw new Error("Network response was not ok");
-	// 			}
-	// 			const data = await userInfoResponse.json();
-	// 			const userInfo = data.userInfo;
-	// 			setUserInfo(userInfo);
-	// 			console.log(userInfo);
-
-	// 			// Fetch insurance data
-	// 			const insuranceResponse = await fetch("/db.json");
-	// 			if (!insuranceResponse.ok) {
-	// 				throw new Error("Network response was not ok");
-	// 			}
-	// 			const insuranceData = await insuranceResponse.json();
-	// 			const matchedInsurance = insuranceData.insurance.find(
-	// 				(ins: { insuranceType: any }) =>
-	// 					ins.insuranceType === userInfo.insuranceType
-	// 			);
-	// 			setInsurance(matchedInsurance || null);
-
-	// 			// Fetch supplementary insurance data
-	// 			const supplementaryInsuranceResponse = await fetch("/db.json");
-	// 			if (!supplementaryInsuranceResponse.ok) {
-	// 				throw new Error("Network response was not ok");
-	// 			}
-	// 			const supplementaryInsuranceData =
-	// 				await supplementaryInsuranceResponse.json();
-	// 			const matchedSupplementaryInsurance =
-	// 				supplementaryInsuranceData.supplementaryInsurance.find(
-	// 					(suppIns: { supplementaryInsuranceType: any }) =>
-	// 						suppIns.supplementaryInsuranceType ===
-	// 						userInfo.supplementaryInsuranceType
-	// 				);
-	// 			setSupplementaryInsurance(matchedSupplementaryInsurance || null);
-
-	// 			// Fetch service data
-	// 			const serviceResponse = await fetch("/db.json");
-	// 			if (!serviceResponse.ok) {
-	// 				throw new Error("Network response was not ok");
-	// 			}
-	// 			const serviceData = await serviceResponse.json();
-	// 			const selectedService = serviceData.services.find(
-	// 				(s: { id: any }) => `${s.id}` === id
-	// 			);
-	// 			if (selectedService) {
-	// 				setService(selectedService);
-	// 			} else {
-	// 				setError("Service not found");
-	// 			}
-
-	// 			setLoading(false);
-	// 		} catch (err) {
-	// 			console.error("Error fetching data:", err);
-	// 			setError("Failed to fetch data");
-	// 			setLoading(false);
-	// 		}
-	// 	};
-
-	// 	fetchData();
-	// }, [id]); // Only re-run if `id` changes
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
@@ -355,9 +290,9 @@ function ServicePage() {
 	};
 
 	const handleBackClick = () => {
-		if (service.type === 1) {
+		if (service.type === "1") {
 			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
-		} else if (service.type === 0) {
+		} else if (service.type === "0") {
 			navigate("/GeneralDoctorPrescription"); // Replace with actual route
 		} else {
 			console.log(service.type);
@@ -369,13 +304,16 @@ function ServicePage() {
 			return "N/A"; // Return a default value if any required data is missing
 		}
 
-		const servicePrice = parseFloat(service.price) || 0;
+		const servicePrice =
+			parseFloat(service.basePrice as unknown as string) || 0;
 		const insuranceContribution =
-			parseFloat(insurance.insuranceContribution) || 0;
+			parseFloat(insurance.discountPercentage as unknown as string) || 0;
 		const supplementaryContribution =
-			parseFloat(supplementaryInsurance.supplementaryInsuranceContribution) ||
-			0;
-		const serviceSubsidy = parseFloat(service.subsidy) || 0;
+			parseFloat(
+				supplementaryInsurance.discountPercentage as unknown as string
+			) || 0;
+		const serviceSubsidy =
+			parseFloat(service.subsidy as unknown as string) || 0;
 
 		// Step 1: Calculate the price after insurance contribution
 		let amountAfterInsurance =
@@ -383,8 +321,7 @@ function ServicePage() {
 
 		// Step 2: Apply supplementary insurance contribution
 		let amountAfterSupplementary =
-			amountAfterInsurance -
-			amountAfterInsurance * (supplementaryContribution / 100);
+			amountAfterInsurance - servicePrice * (supplementaryContribution / 100);
 
 		// Step 3: Subtract the service subsidy
 		let finalAmount = amountAfterSupplementary - serviceSubsidy;
@@ -395,6 +332,11 @@ function ServicePage() {
 		// Return the final amount formatted as currency
 		return finalAmount.toFixed(0); // This will round the result to two decimal places
 	};
+
+	function formatImportantNotes(text: string) {
+		if (!text || typeof text !== "string") return text; // Ensure valid input
+		return text.replace(/\. /g, ".\n");
+	}
 
 	return (
 		<div className="container">
@@ -411,7 +353,7 @@ function ServicePage() {
 					</div>
 					<div className="col-8 d-flex flex-column justify-content-center text-center text-white">
 						<h4 className="mb-0">
-							{language === "fa" ? service.name : service.nameEN}
+							{language === "fa" ? service.pageTitle : service.pageTitleEN}
 						</h4>
 					</div>
 				</div>
@@ -425,11 +367,11 @@ function ServicePage() {
 				>
 					<p className="px-3 mx-1">
 						{language === "fa"
-							? service.detailedDescription
-							: service.detailedDescriptionEN}
+							? service.pageDescription
+							: service.pageDescriptionEN}
 					</p>
 					<img
-						src={service.image}
+						src={service.pageBannerUrl}
 						alt="Service"
 						className="custom-service-img img-fluid shadow-sm rounded-5"
 					/>
@@ -546,6 +488,22 @@ function ServicePage() {
 					></textarea>
 				</div>
 
+				{/* Important Notes Section */}
+				<div
+					className={`bg-white border border-2 shadow text-${
+						language === "fa" ? "end" : "start"
+					} rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
+				>
+					<h5 className="px-1 mx-1">
+						{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
+					</h5>
+					<p className="px-3 mx-1">
+						{language === "fa"
+							? service.importantNotes
+							: service.importantNotesEN}
+					</p>
+				</div>
+
 				{/* Pricing Table Section */}
 				<div
 					className={`bg-white border border-2 shadow text-${
@@ -583,19 +541,17 @@ function ServicePage() {
 								<tr>
 									<td>
 										{language === "fa"
-											? userInfo?.insuranceType
-											: userInfo?.insuranceTypeEN}
+											? insurance?.companyName
+											: insurance?.companyNameEN}
 									</td>
-									<td>{insurance?.insuranceContribution}</td>
+									<td>{insurance?.discountPercentage}</td>
 									<td>
 										{language === "fa"
-											? userInfo?.supplementaryInsuranceType
-											: userInfo?.supplementaryInsuranceTypeEN}
+											? supplementaryInsurance?.companyName
+											: supplementaryInsurance?.companyNameEN}
 									</td>
-									<td>
-										{supplementaryInsurance?.supplementaryInsuranceContribution}
-									</td>
-									<td>{service.price}</td>
+									<td>{supplementaryInsurance?.discountPercentage}</td>
+									<td>{service.basePrice}</td>
 									<td>{service.subsidy}</td>
 								</tr>
 								{/* Add more rows as needed */}
