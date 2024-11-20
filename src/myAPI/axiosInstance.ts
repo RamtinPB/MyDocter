@@ -34,7 +34,9 @@ export const configureAxios = (
         isLoggedOut = true; // Set flag to prevent multiple executions
         setAuthData(null); // Clear token data
         setLoginState(false); // Immediately set login state to false
-        window.location.assign("/"); // Redirect to login page
+        if (window.location.pathname !== "/"){
+          window.location.assign("/"); // Redirect to login page
+        }
 
         // Optional: reset the flag after a delay to prevent issues with subsequent errors
         setTimeout(() => {

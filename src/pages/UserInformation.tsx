@@ -673,7 +673,37 @@ function UserInformation() {
 				alert("Profile picture uploaded successfully.");
 			} catch (error) {
 				console.error("Error uploading profile picture:", error);
+				alert(
+					language === "fa"
+						? "خطا در ارسال عکس"
+						: "Profile picture upload failed."
+				);
 			}
+		}
+	};
+
+	const handleDeleteProfilePicture = async () => {
+		try {
+			const formData = new FormData();
+			// Do not append any file
+			await axiosInstance.post("/api/File/UploadProfileImage", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+				withCredentials: true,
+			});
+			setProfilePicture(null);
+			setprofileImageUpdateFlag((prev) => !prev);
+			alert(
+				language === "fa"
+					? "عکس با موفقیت حذف شد."
+					: "Picture removed successfully."
+			);
+		} catch (error) {
+			console.error("Error removing profile picture:", error);
+			alert(
+				language === "fa" ? "خطا در حذف عکس" : "Profile picture removal failed."
+			);
 		}
 	};
 
@@ -689,8 +719,9 @@ function UserInformation() {
 				<form onSubmit={formik.handleSubmit} className="mt-4 mt-md-5">
 					<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">
 						<button
+							type="button"
 							className="btn btn-light shadow rounded-pill  my-auto"
-							onClick={() => setProfilePicture(null)}
+							onClick={handleDeleteProfilePicture}
 						>
 							<span>{language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
 						</button>

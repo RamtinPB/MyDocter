@@ -365,11 +365,23 @@ function ServicePage() {
 					} rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<p className="px-3 mx-1">
-						{language === "fa"
-							? service.pageDescription
-							: service.pageDescriptionEN}
-					</p>
+					<p
+						className={`text-justify ${
+							language === "fa"
+								? "ps-3 ps-md-4 pe-1 pt-1"
+								: "pe-3 pe-md-4 ps-1 pt-1"
+						} mx-1 `}
+						dangerouslySetInnerHTML={{
+							__html:
+								language === "fa"
+									? service.pageDescription?.replace(/\n/g, "<br>")
+									: service.pageDescriptionEN?.replace(/\n/g, "<br>"),
+						}}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							textAlign: "justify",
+						}}
+					></p>
 					<img
 						src={service.pageBannerUrl}
 						alt="Service"
@@ -497,11 +509,16 @@ function ServicePage() {
 					<h5 className="px-1 mx-1">
 						{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
 					</h5>
-					<p className="px-3 mx-1">
-						{language === "fa"
-							? service.importantNotes
-							: service.importantNotesEN}
-					</p>
+					<p
+						className="px-3 mx-1"
+						dangerouslySetInnerHTML={{
+							__html:
+								language === "fa"
+									? service.importantNotes?.replace(/\n/g, "<br>")
+									: service.importantNotesEN?.replace(/\n/g, "<br>"),
+						}}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					></p>
 				</div>
 
 				{/* Pricing Table Section */}

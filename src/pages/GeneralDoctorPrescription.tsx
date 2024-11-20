@@ -108,14 +108,20 @@ function GeneralDoctorPrescription() {
 													alt={service.title}
 												/>
 												<p
-													className={` card-text my-3 mx-3 text-${
+													className={`text-justify card-text my-3 mx-3 text-${
 														language === "fa" ? "end" : "start"
 													} `}
-												>
-													{language === "fa"
-														? service.description
-														: service.descriptionEN}
-												</p>
+													dangerouslySetInnerHTML={{
+														__html:
+															language === "fa"
+																? service.description?.replace(/\n/g, "<br>")
+																: service.descriptionEN?.replace(/\n/g, "<br>"),
+													}}
+													style={{
+														direction: language === "fa" ? "rtl" : "ltr",
+														textAlign: "justify",
+													}}
+												></p>
 												<button
 													className="btn btn-primary rounded-pill my-3"
 													onClick={() =>

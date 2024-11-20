@@ -23,7 +23,7 @@ interface Schema {
 }
 
 function FormBuilder() {
-	const { serviceId } = useParams<{ serviceId: string }>();
+	const { id } = useParams();
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
@@ -192,42 +192,109 @@ function FormBuilder() {
 		setOptions(updatedOptions);
 	};
 
-	const saveFormSchema = async () => {
-		console.log(serviceId, schema);
+	const saveFormElement = async (key: string, element: any) => {
+		const apiData = {
+			serviceId: Number(id),
+			type: mapTypeToApiType(element.type), // Map your type to the API type
+			tag: key, // Use the key as the unique tag
+			label: element.title || "", // Map the element title
+			description: "", // Add a description if needed (optional)
+			required: element.required || false, // Add required field logic if available
+			maxLength: element.maxLength || 0, // Add maxLength logic if available
+			allowedFormats: element.allowedFormats || "", // Handle formats (e.g., enum or regex)
+			enabled: true, // Set to true by default
+		};
 
 		try {
-			// Attempt to save the form schema to the API
-			const response = await axiosInstance.post("/api/Forms/SaveFormSchema", {
-				serviceId, // Add any necessary identifiers like serviceId
-				schema, // Include the form schema data
-			});
-
-			if (response.status !== 200) {
-				throw new Error("Failed to save form schema to the API");
-			}
-
-			alert("Form saved successfully to the server!");
-		} catch (apiError) {
-			console.error(
-				"API request failed, falling back to local storage:",
-				apiError
+			const response = await axiosInstance.post(
+				"/api/Admin/AddServiceFormField",
+				apiData
 			);
-
-			// Fallback: Save form schema to localStorage for testing purposes
-			try {
-				const storedForms = JSON.parse(
-					localStorage.getItem("customForms") || "{}"
-				);
-				storedForms[serviceId as string] = schema; // Associate schema with serviceId in local storage
-				localStorage.setItem("customForms", JSON.stringify(storedForms));
-
-				alert("Form saved locally for testing!");
-			} catch (localError) {
-				console.error("Failed to save form schema locally:", localError);
-				alert("Failed to save form schema both to the server and locally.");
+			if (response.status !== 200) {
+				throw new Error("Failed to save form field to the API");
 			}
+			console.log(`Field ${key} saved successfully!`);
+		} catch (error) {
+			console.error(`Failed to save field ${key}:`, error);
+			alert(`Failed to save field ${key}. Check the console for details.`);
 		}
 	};
+
+	const mapTypeToApiType = (type: string): number => {
+		switch (type) {
+			case "string":
+				return 2; // Text Input
+			case "number":
+				return 1; // Number Input
+			case "boolean":
+				return 3; // Checkbox
+			case "radio":
+				return 4; // Radio Button
+			case "select":
+				return 5; // Dropdown
+			case "text-checkbox":
+				return 6; // Custom Type
+			default:
+				return 0; // Default or unknown type
+		}
+	};
+
+	const saveFormSchema = async () => {
+		if (!schema.properties || Object.keys(schema.properties).length === 0) {
+			alert("No fields to save.");
+			return;
+		}
+
+		console.log(id, schema);
+
+		try {
+			for (const [key, element] of Object.entries(schema.properties)) {
+				await saveFormElement(key, element); // Call the API for each field
+			}
+
+			alert("All fields saved successfully!");
+		} catch (error) {
+			console.error("Failed to save the form schema:", error);
+			alert("Failed to save the form schema. Check the console for details.");
+		}
+	};
+
+	// const saveFormSchema = async () => {
+	// 	console.log(serviceId, schema);
+
+	// 	try {
+	// 		// Attempt to save the form schema to the API
+	// 		const response = await axiosInstance.post("/api/Forms/SaveFormSchema", {
+	// 			serviceId, // Add any necessary identifiers like serviceId
+	// 			schema, // Include the form schema data
+	// 		});
+
+	// 		if (response.status !== 200) {
+	// 			throw new Error("Failed to save form schema to the API");
+	// 		}
+
+	// 		alert("Form saved successfully to the server!");
+	// 	} catch (apiError) {
+	// 		console.error(
+	// 			"API request failed, falling back to local storage:",
+	// 			apiError
+	// 		);
+
+	// 		// Fallback: Save form schema to localStorage for testing purposes
+	// 		try {
+	// 			const storedForms = JSON.parse(
+	// 				localStorage.getItem("customForms") || "{}"
+	// 			);
+	// 			storedForms[serviceId as string] = schema; // Associate schema with serviceId in local storage
+	// 			localStorage.setItem("customForms", JSON.stringify(storedForms));
+
+	// 			alert("Form saved locally for testing!");
+	// 		} catch (localError) {
+	// 			console.error("Failed to save form schema locally:", localError);
+	// 			alert("Failed to save form schema both to the server and locally.");
+	// 		}
+	// 	}
+	// };
 
 	return (
 		<div className="container my-5">

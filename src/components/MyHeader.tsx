@@ -14,6 +14,7 @@ import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import axios from "axios";
 // import axios from "axios";
 
 interface UserData {
@@ -21,13 +22,14 @@ interface UserData {
 	lastName: string;
 	phoneNumber: string;
 	email: string;
-	profileImageURL: string;
 }
 
 function MyHeader() {
 	const { isAdministrator, loginState } = useAuth();
 
 	const [userData, setUserData] = useState<UserData | null>(null);
+
+	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
@@ -45,33 +47,34 @@ function MyHeader() {
 				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
-				// let errorMessage = "";
+				let errorMessage = "";
 
-				// if (axios.isAxiosError(error)) {
-				// 	// Check for error response and errorCode
-				// 	const errorCode = error.response?.data?.errorCode;
-				// 	const apiErrorMessage = error.response?.data?.message;
+				if (axios.isAxiosError(error)) {
+					// Check for error response and errorCode
+					const errorCode = error.response?.data?.errorCode;
+					const apiErrorMessage = error.response?.data?.message;
 
-				// 	if (error.response?.status === 400 && errorCode) {
-				// 		// Handle specific error codes
-				// 		switch (errorCode) {
-				// 			case 1007:
-				// 				errorMessage =
-				// 					language === "fa"
-				// 						? apiErrorMessage
-				// 						: "This User was not found.";
+					if (error.response?.status === 400 && errorCode) {
+						// Handle specific error codes
+						switch (errorCode) {
+							case 1007:
+								errorMessage =
+									language === "fa"
+										? apiErrorMessage
+										: "This User was not found.";
 
-				// 				break;
-				// 			case 1010:
-				// 				errorMessage = apiErrorMessage;
-				// 				break;
-				// 			default:
-				// 				errorMessage = "خطای ناشناخته‌ای رخ داده است";
-				// 		}
-				// 	} else {
-				// 		errorMessage = "خطای ناشناخته‌ای رخ داده است";
-				// 	}
-				// }
+								break;
+							case 1010:
+								errorMessage = apiErrorMessage;
+								break;
+							default:
+								errorMessage = "خطای ناشناخته‌ای رخ داده است";
+						}
+					} else {
+						errorMessage = "خطای ناشناخته‌ای رخ داده است";
+					}
+				}
+				alert(errorMessage);
 
 				try {
 					const response = await fetch("/db.json"); // Adjust path if necessary
@@ -99,6 +102,37 @@ function MyHeader() {
 		fetchUserData();
 	}, []);
 
+	useEffect(() => {
+		const fetchProfileImage = async () => {
+			try {
+				const response = await axiosInstance.post(
+					"/api/User/GetProfileImage",
+					{},
+					{ responseType: "blob" }
+				);
+				const imageBlob = response.data;
+				setProfilePicture(URL.createObjectURL(imageBlob));
+			} catch {
+				console.error("Failed to load profile image.");
+			}
+		};
+		fetchProfileImage();
+	}, []);
+
+	// Clean up the object URL when the component unmounts
+	useEffect(() => {
+		return () => {
+			if (profilePicture) {
+				URL.revokeObjectURL(profilePicture);
+			}
+		};
+	}, [profilePicture]);
+
+	const username =
+		userData && userData.name && userData.lastName
+			? `${userData.name} ${userData.lastName}`
+			: userData?.email || ""; // Fallback to email if name and lastName are missing
+
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
 	}
@@ -106,11 +140,6 @@ function MyHeader() {
 	if (error) {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
-
-	const username =
-		userData && userData.name && userData.lastName
-			? `${userData.name} ${userData.lastName}`
-			: userData?.email || ""; // Fallback to email if name and lastName are missing
 
 	return (
 		<>
@@ -128,9 +157,9 @@ function MyHeader() {
 								data-bs-target="#myOffcanvas"
 								aria-controls="myOffcanvas"
 							>
-								{userData && userData.profileImageURL ? (
+								{profilePicture ? (
 									<img
-										src={userData.profileImageURL}
+										src={profilePicture}
 										alt="Profile"
 										className="img-fluid custom-user-img-icon rounded-circle border border-3 border-light"
 									/>

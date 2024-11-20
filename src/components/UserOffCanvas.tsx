@@ -13,13 +13,13 @@ import "/src/cssFiles/myoffcanvas.css";
 import { useLanguage } from "./LanguageContext";
 import { LuLogOut } from "react-icons/lu";
 import { useAuth } from "./AuthContext";
+import axiosInstance from "../myAPI/axiosInstance";
 
 interface UserData {
 	name: string;
 	lastName: string;
 	email: string;
 	phoneNumber: string;
-	profileImageURL: string;
 }
 
 interface UserOffCanvasProps {
@@ -30,8 +30,44 @@ interface UserOffCanvasProps {
 function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
 
+	const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
 	const { language } = useLanguage(); // Get language and toggle function from context
 	const { setAuthData } = useAuth();
+
+	useEffect(() => {
+		axiosInstance
+			.post("/api/User/GetProfileImage", {}, { responseType: "blob" }) // Specify blob as the response type
+			.then((response) => {
+				const imageBlob = response.data; // Binary image data
+				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+				setProfilePicture(imageUrl); // Set the profile picture state
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+
+				fetch("/db.json")
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data); // Handle local fallback logic here, if needed
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// Clean up the object URL when the component unmounts
+	useEffect(() => {
+		return () => {
+			if (profilePicture) {
+				URL.revokeObjectURL(profilePicture);
+			}
+		};
+	}, [profilePicture]);
 
 	useEffect(() => {
 		// Function to check the screen size and update the offcanvas class
@@ -66,6 +102,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 		setAuthData(null); // Clear token and reset login state
 		window.location.assign("/"); // Optionally, redirect to the homepage or login page
 	};
+
 	return (
 		<div
 			className={`offcanvas ${offcanvasClass}`}
@@ -94,9 +131,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 			</div>
 			<div className="offcanvas-body shadow p-0">
 				<div className="d-flex flex-column justify-content-center align-items-center custom-bg-2">
-					{userData?.profileImageURL ? (
+					{profilePicture ? (
 						<img
-							src={userData.profileImageURL}
+							src={profilePicture}
 							alt="Profile"
 							className="custom-user-icon-pic img-fluid rounded-circle border border-2 border-light my-3 mx-4"
 						/>
