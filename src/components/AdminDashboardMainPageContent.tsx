@@ -94,9 +94,19 @@ function AdminDashboardMainPageContent() {
 
 			if (response.status === 200) {
 				console.log("Updated Data to Send:", homePageData);
+				alert(
+					language === "fa"
+						? "اطلاعات صفحه اصلی بروزرسانی شد"
+						: "Landing page updated"
+				);
 			}
 		} catch (error) {
 			console.log("Failed to update home page data", error);
+			alert(
+				language === "fa"
+					? "بروزرسانی اطلاعات صفحه اصلی ناموفق بود"
+					: "Landing page update failed"
+			);
 		}
 	};
 
@@ -129,14 +139,13 @@ function AdminDashboardMainPageContent() {
 						{language === "fa" ? "شعار سایت" : "Opening quote title (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="openingQuoteTitle" // Name attribute for corresponding data in homePageData
 						value={homePageData?.openingQuoteTitle || ""} // Set value to corresponding homePageData property
 						onChange={handleChange}
@@ -151,14 +160,13 @@ function AdminDashboardMainPageContent() {
 							: "Opening quote description (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="openingQuoteDescription"
 						value={homePageData?.openingQuoteDescription || ""}
 						onChange={handleChange}
@@ -174,14 +182,13 @@ function AdminDashboardMainPageContent() {
 							: "Opening quote title (English)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="openingQuoteTitleEN"
 						value={homePageData?.openingQuoteTitleEN || ""}
 						onChange={handleChange}
@@ -196,14 +203,13 @@ function AdminDashboardMainPageContent() {
 							: "Opening quote description (English)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="openingQuoteDescriptionEN"
 						value={homePageData?.openingQuoteDescriptionEN || ""}
 						onChange={handleChange}
@@ -227,14 +233,13 @@ function AdminDashboardMainPageContent() {
 							: "Specialist services card description (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="servicesLeftCardDescription"
 						value={homePageData?.servicesLeftCardDescription || ""}
 						onChange={handleChange}
@@ -249,14 +254,13 @@ function AdminDashboardMainPageContent() {
 							: "General services card description (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="servicesRightCardDescription"
 						value={homePageData?.servicesRightCardDescription || ""}
 						onChange={handleChange}
@@ -272,14 +276,13 @@ function AdminDashboardMainPageContent() {
 							: "Specialist services card description (English)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="servicesLeftCardDescriptionEN"
 						value={homePageData?.servicesLeftCardDescriptionEN || ""}
 						onChange={handleChange}
@@ -294,14 +297,13 @@ function AdminDashboardMainPageContent() {
 							: "General services card description (English)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="servicesRightCardDescriptionEN"
 						value={homePageData?.servicesRightCardDescriptionEN || ""}
 						onChange={handleChange}
@@ -323,14 +325,13 @@ function AdminDashboardMainPageContent() {
 						{language === "fa" ? "سر تیتر" : "Main title (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="docTitle"
 						value={homePageData?.docTitle || ""}
 						onChange={handleChange}
@@ -343,14 +344,13 @@ function AdminDashboardMainPageContent() {
 						{language === "fa" ? "متن اصلی" : "Main Description (Farsi)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"متن خود را وارد کنید"}
 						name="docDescription"
 						value={homePageData?.docDescription || ""}
 						onChange={handleChange}
@@ -364,14 +364,13 @@ function AdminDashboardMainPageContent() {
 						{language === "fa" ? "(انگلیسی) سر تیتر" : "Main title (Egnlish)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="docTitleEN"
 						value={homePageData?.docTitleEN || ""}
 						onChange={handleChange}
@@ -386,14 +385,13 @@ function AdminDashboardMainPageContent() {
 							: "Main Description (English)"}
 					</h4>
 					<textarea
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						} border border-1 shadow-sm rounded-4 py-2 my-1`}
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-						rows={2}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
+						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+						style={{
+							direction: language === "fa" ? "rtl" : "ltr",
+							resize: "none",
+						}}
+						rows={3}
+						placeholder={"Write your input"}
 						name="docDescriptionEN"
 						value={homePageData?.docDescriptionEN || ""}
 						onChange={handleChange}

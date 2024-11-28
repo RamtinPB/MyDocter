@@ -6,6 +6,7 @@ import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/userInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
+import { useProfile } from "../components/ProfileContext";
 
 interface insuranceDataProps {
 	id: number;
@@ -318,11 +319,13 @@ function UserInformation() {
 	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
 
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
+	const { triggerImageUpdate } = useProfile();
+
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
-	const [profileImageUpdateFlag, setprofileImageUpdateFlag] = useState(false);
+	const [profileImageUpdateFlag, setProfileImageUpdateFlag] = useState(false);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 	useEffect(() => {
 		axiosInstance
@@ -443,9 +446,6 @@ function UserInformation() {
 
 					setFormFields(updatedFormFields);
 					setValidationSchemaData(newValidationSchemaData);
-
-					//console.log(updatedFormFields);
-					//console.log(newValidationSchemaData);
 				})
 				.catch((error) => {
 					console.error("API request failed, trying local db.json", error);
@@ -466,9 +466,6 @@ function UserInformation() {
 
 							setFormFields(updatedFormFields);
 							setValidationSchemaData(newValidationSchemaData);
-
-							console.log(newFormFields);
-							console.log(newValidationSchemaData);
 						})
 						.catch((jsonError) => {
 							console.error(
@@ -588,10 +585,18 @@ function UserInformation() {
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserData", updatedData);
-				alert("User information updated successfully");
+				alert(
+					language === "fa"
+						? "اطلاعات کاربر بروزرسانی شد"
+						: "User information updated successfully"
+				);
 			} catch (error) {
 				console.error("Error updating user data:", error);
-				alert("User information update failed");
+				alert(
+					language === "fa"
+						? "بروزرسان اطلاعات کاربر ناموفق بود"
+						: "User information update failed"
+				);
 			}
 		},
 		validateOnBlur: true,
@@ -652,8 +657,18 @@ function UserInformation() {
 				return;
 			}
 
+			// Revoke the previous object URL before creating a new one
+			if (profilePicture) {
+				URL.revokeObjectURL(profilePicture);
+			}
+
 			// Update the profile picture preview
 			setProfilePicture(URL.createObjectURL(selectedFile));
+
+			// Reset the file input value to allow re-selection of the same file
+			if (fileInputRef.current) {
+				fileInputRef.current.value = "";
+			}
 
 			// Prepare FormData for API upload
 			const formData = new FormData();
@@ -667,10 +682,14 @@ function UserInformation() {
 					},
 					withCredentials: true,
 				});
+				triggerImageUpdate();
+				setProfileImageUpdateFlag((prev) => !prev);
 
-				setprofileImageUpdateFlag((prev) => !prev);
-
-				alert("Profile picture uploaded successfully.");
+				alert(
+					language === "fa"
+						? "ارسال عکس با موفقیت انجام شد"
+						: "Profile picture uploaded."
+				);
 			} catch (error) {
 				console.error("Error uploading profile picture:", error);
 				alert(
@@ -684,16 +703,16 @@ function UserInformation() {
 
 	const handleDeleteProfilePicture = async () => {
 		try {
-			const formData = new FormData();
-			// Do not append any file
-			await axiosInstance.post("/api/File/UploadProfileImage", formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
+			await axiosInstance.post("/api/File/RemoveProfileImage", {
 				withCredentials: true,
 			});
-			setProfilePicture(null);
-			setprofileImageUpdateFlag((prev) => !prev);
+			if (profilePicture) {
+				URL.revokeObjectURL(profilePicture); // Revoke object URL
+			}
+			setProfilePicture(null); // Clear local state
+
+			triggerImageUpdate();
+			setProfileImageUpdateFlag((prev) => !prev);
 			alert(
 				language === "fa"
 					? "عکس با موفقیت حذف شد."

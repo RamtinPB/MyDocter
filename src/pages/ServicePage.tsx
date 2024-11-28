@@ -1,29 +1,18 @@
 import { FaCaretLeft } from "react-icons/fa";
-import FormRender from "../components/FormRender";
+import FormRender, { FormRenderHandle } from "../components/FormRender";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import "/src/cssFiles/textOverflow.css";
-
-import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
-import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
-import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
-import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
-
-interface FileData {
-	fileName: string;
-	fileType: string;
-	fileUrl: string;
-}
 
 interface serviceProps {
 	id: number;
 	name: string;
 	enabled: boolean;
-	type: string;
+	type: number;
 
 	pageTitle: string;
 	pageTitleEN: string;
@@ -44,7 +33,7 @@ interface serviceProps {
 
 	insurancePlanId: number;
 	basePrice: number;
-	subsidy: number;
+	discount: number;
 }
 
 interface UserInfo {
@@ -60,29 +49,13 @@ interface insuranceDataProps {
 	discountPercentage: number;
 }
 
-const icons = {
-	pdf: pdfIcon,
-	zip: zipIcon,
-	rar: zipIcon,
-	jpg: imgIcon,
-	jpeg: imgIcon,
-	png: imgIcon,
-	default: fileIcon,
-};
-
-// Function to get the appropriate icon based on file extension
-const getIconForFileType = (fileName: string) => {
-	const extension = fileName
-		.split(".")
-		.pop()
-		?.toLowerCase() as keyof typeof icons;
-	return icons[extension] || icons["default"];
-};
-
 function ServicePage() {
 	const { id } = useParams<{ id: string }>();
 
 	const [service, setService] = useState<serviceProps | null>(null);
+	const [servicePageBanner, setServicePageBanner] = useState<string | null>(
+		null
+	);
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
 	const [insurance, setInsurance] = useState<insuranceDataProps | null>(null);
@@ -92,12 +65,11 @@ function ServicePage() {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
-	const fileInputRef = useRef<HTMLInputElement>(null);
-
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	const navigate = useNavigate();
+
+	const formRef = useRef<FormRenderHandle>(null);
 
 	// fetch user data
 	useEffect(() => {
@@ -137,6 +109,28 @@ function ServicePage() {
 						);
 						setLoading(false);
 					});
+			});
+	}, [id]);
+
+	useEffect(() => {
+		axiosInstance
+			.post(
+				"/api/Service/GetServicePageBanner",
+				{
+					serviceId: id,
+				},
+				{ responseType: "blob" }
+			) // Specify blob as the response type
+			.then((response) => {
+				const imageBlob = response.data; // Binary image data
+				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+				setServicePageBanner(imageUrl); // Set the profile picture state
+			})
+			.catch((error) => {
+				console.error(
+					"API request for /api/Service/GetServicePageBanner failed.",
+					error
+				);
 			});
 	}, [id]);
 
@@ -267,32 +261,10 @@ function ServicePage() {
 		);
 	}
 
-	const handleFileUploadClick = () => {
-		fileInputRef.current?.click(); // Trigger file input click
-	};
-
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const files = Array.from(event.target.files || []); // Get selected files
-		const newFiles = files.map((file) => ({
-			fileName: file.name,
-			fileType: file.type,
-			fileUrl: URL.createObjectURL(file),
-		}));
-
-		// Update the state with newly uploaded files
-		setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
-	};
-
-	const handleFileDelete = (fileIndex: number) => {
-		setUploadedFiles((prevFiles) =>
-			prevFiles.filter((_, index) => index !== fileIndex)
-		);
-	};
-
 	const handleBackClick = () => {
-		if (service.type === "1") {
+		if (service.type === 1) {
 			navigate("/SpecialistDoctorPrescription"); // Replace with actual route
-		} else if (service.type === "0") {
+		} else if (service.type === 0) {
 			navigate("/GeneralDoctorPrescription"); // Replace with actual route
 		} else {
 			console.log(service.type);
@@ -312,8 +284,8 @@ function ServicePage() {
 			parseFloat(
 				supplementaryInsurance.discountPercentage as unknown as string
 			) || 0;
-		const serviceSubsidy =
-			parseFloat(service.subsidy as unknown as string) || 0;
+		const serviceDiscount =
+			parseFloat(service.discount as unknown as string) || 0;
 
 		// Step 1: Calculate the price after insurance contribution
 		let amountAfterInsurance =
@@ -323,8 +295,8 @@ function ServicePage() {
 		let amountAfterSupplementary =
 			amountAfterInsurance - servicePrice * (supplementaryContribution / 100);
 
-		// Step 3: Subtract the service subsidy
-		let finalAmount = amountAfterSupplementary - serviceSubsidy;
+		// Step 3: Subtract the service discount
+		let finalAmount = amountAfterSupplementary - serviceDiscount;
 
 		// Ensure the final amount is not negative
 		finalAmount = finalAmount < 0 ? 0 : finalAmount;
@@ -333,10 +305,16 @@ function ServicePage() {
 		return finalAmount.toFixed(0); // This will round the result to two decimal places
 	};
 
-	function formatImportantNotes(text: string) {
-		if (!text || typeof text !== "string") return text; // Ensure valid input
-		return text.replace(/\. /g, ".\n");
-	}
+	// function formatImportantNotes(text: string) {
+	// 	if (!text || typeof text !== "string") return text; // Ensure valid input
+	// 	return text.replace(/\. /g, ".\n");
+	// }
+
+	const handleSubmit = () => {
+		if (formRef.current) {
+			formRef.current.submitForm(); // No TypeScript error here
+		}
+	};
 
 	return (
 		<div className="container">
@@ -383,76 +361,10 @@ function ServicePage() {
 						}}
 					></p>
 					<img
-						src={service.pageBannerUrl}
+						src={servicePageBanner || ""}
 						alt="Service"
 						className="custom-service-img img-fluid shadow-sm rounded-5"
 					/>
-				</div>
-
-				{/* File Upload Section */}
-				<div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
-				>
-					<h5 className="px-4 mx-1">
-						{language === "fa" ? "ارسال فایل" : "Send Files"}
-					</h5>
-					<div
-						className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 mx-4"
-						style={{ direction: "ltr" }}
-					>
-						<div
-							className={`d-flex flex-wrap justify-content-start align-items-center`}
-						>
-							{/* Display uploaded files with icons */}
-							{uploadedFiles.map((file, index) => (
-								<div className="d-flex flex-column p-1 mx-1">
-									<a
-										href={file.fileUrl}
-										key={index}
-										className="d-flex flex-column justify-content-center align-items-center d-block "
-										download
-									>
-										<img
-											src={getIconForFileType(file.fileName)}
-											alt={`${file.fileName} Icon`}
-											className="custom-file-icon"
-										/>
-										<span className={`scrollable-text text-center mt-1`}>
-											{file.fileName}
-										</span>
-									</a>
-									{/* Delete Button */}
-									<button
-										className="btn btn-sm btn-danger rounded-pill mt-1"
-										onClick={() => handleFileDelete(index)}
-									>
-										{language === "fa" ? "حذف" : "Delete"}
-									</button>
-								</div>
-							))}
-						</div>
-						<div className="d-flex flex-wrap justify-content-end align-items-center">
-							{/* Upload button */}
-							<button
-								type="button"
-								className="btn btn-outline-secondary ms-2"
-								onClick={handleFileUploadClick}
-							>
-								<i className="fas fa-file-upload"></i>
-								{language === "fa" ? "ارسال فایل" : "Upload"}
-							</button>
-							{/* Hidden file input */}
-							<input
-								type="file"
-								ref={fileInputRef}
-								style={{ display: "none" }}
-								onChange={handleFileChange}
-								multiple // Allow multiple file selection
-							/>
-						</div>
-					</div>
 				</div>
 
 				{/* Form Render Section */}
@@ -466,7 +378,7 @@ function ServicePage() {
 					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
-							<FormRender />
+							<FormRender ref={formRef} />
 						) : (
 							<div className="text-center py-3">
 								<p>
@@ -479,7 +391,7 @@ function ServicePage() {
 					</div>
 				</div>
 
-				{/* User Input Section */}
+				{/* 
 				<div
 					className={`bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
@@ -498,7 +410,8 @@ function ServicePage() {
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
 					></textarea>
-				</div>
+				</div> 
+				*/}
 
 				{/* Important Notes Section */}
 				<div
@@ -550,7 +463,7 @@ function ServicePage() {
 									</th>
 									<th>{language === "fa" ? "قیمت سرویس" : "Service Cost"}</th>
 									<th>
-										{language === "fa" ? "مبالغ یارانه" : "Subsidy Amount"}
+										{language === "fa" ? "مبالغ یارانه" : "Discount Amount"}
 									</th>
 								</tr>
 							</thead>
@@ -569,7 +482,7 @@ function ServicePage() {
 									</td>
 									<td>{supplementaryInsurance?.discountPercentage}</td>
 									<td>{service.basePrice}</td>
-									<td>{service.subsidy}</td>
+									<td>{service.discount}</td>
 								</tr>
 								{/* Add more rows as needed */}
 							</tbody>
@@ -589,7 +502,11 @@ function ServicePage() {
 								? `مبلغ نهایی خرید: ${handleFinalPurchaseAmount()} تومان`
 								: `Final Purchase Amount ${handleFinalPurchaseAmount()} Toman(s)`}
 						</span>
-						<button className="btn btn-success rounded-pill px-4 py-2">
+						<button
+							className="btn btn-success rounded-pill px-4 py-2"
+							type="button"
+							onClick={handleSubmit}
+						>
 							{language === "fa" ? "خریداری سرویس" : "Purchase Service"}
 						</button>
 					</div>

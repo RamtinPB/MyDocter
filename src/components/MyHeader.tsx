@@ -15,6 +15,7 @@ import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import axios from "axios";
+import { useProfile } from "./ProfileContext";
 // import axios from "axios";
 
 interface UserData {
@@ -26,6 +27,7 @@ interface UserData {
 
 function MyHeader() {
 	const { isAdministrator, loginState } = useAuth();
+	const { profileImageVersion } = useProfile();
 
 	const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -47,7 +49,7 @@ function MyHeader() {
 				setUserData(response.data);
 				setLoading(false);
 			} catch (err) {
-				let errorMessage = "";
+				let errorMessage = "خطای ناشناخته‌ای رخ داده است";
 
 				if (axios.isAxiosError(error)) {
 					// Check for error response and errorCode
@@ -67,11 +69,7 @@ function MyHeader() {
 							case 1010:
 								errorMessage = apiErrorMessage;
 								break;
-							default:
-								errorMessage = "خطای ناشناخته‌ای رخ داده است";
 						}
-					} else {
-						errorMessage = "خطای ناشناخته‌ای رخ داده است";
 					}
 				}
 				alert(errorMessage);
@@ -106,7 +104,7 @@ function MyHeader() {
 		const fetchProfileImage = async () => {
 			try {
 				const response = await axiosInstance.post(
-					"/api/User/GetProfileImage",
+					`/api/User/GetProfileImage?version=${profileImageVersion}`,
 					{},
 					{ responseType: "blob" }
 				);
@@ -114,10 +112,11 @@ function MyHeader() {
 				setProfilePicture(URL.createObjectURL(imageBlob));
 			} catch {
 				console.error("Failed to load profile image.");
+				setProfilePicture(null);
 			}
 		};
 		fetchProfileImage();
-	}, []);
+	}, [profileImageVersion]);
 
 	// Clean up the object URL when the component unmounts
 	useEffect(() => {
@@ -161,7 +160,7 @@ function MyHeader() {
 									<img
 										src={profilePicture}
 										alt="Profile"
-										className="img-fluid custom-user-img-icon rounded-circle border border-3 border-light"
+										className="custom-user-img-icon rounded-circle border border-3 border-light "
 									/>
 								) : (
 									<FaUser

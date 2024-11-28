@@ -37,7 +37,7 @@ function AdminDashboardFormPageContent() {
 	// fetch user information form fields
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetUserInformationFormFields") // Call the API to get user data
+			.post("/api/Admin/GetUserInformationFormFields") // Call the API to get user data
 			.then((response) => {
 				const data = response.data;
 				setFormFieldsIEData(data);
@@ -74,7 +74,7 @@ function AdminDashboardFormPageContent() {
 	// Assuming that formData comes as a single structure from the API
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetUserDataFormFields") // API call for form data and validation
+			.post("/api/Admin/GetUserDataFormFields") // API call for form data and validation
 			.then((response) => {
 				const data = response.data;
 
@@ -221,8 +221,18 @@ function AdminDashboardFormPageContent() {
 					changedData
 				);
 				console.log("user data form fields data submitted successfully");
+				alert(
+					language === "fa"
+						? "بروزرسانی تنظیمات صفحه اطلاعات کاربر موفق بود"
+						: "user information form fields data updated"
+				);
 			} catch (error) {
 				console.error("Error submitting user data form fields data:", error);
+				alert(
+					language === "fa"
+						? "بروزرسانی تنظیمات صفحه اطلاعات کاربر ناموفق بود"
+						: "user information form fields data update failed"
+				);
 			}
 		}
 		if (changedDataIE.length !== 0) {
@@ -233,10 +243,20 @@ function AdminDashboardFormPageContent() {
 					changedDataIE
 				);
 				console.log("user information form fields data submitted successfully");
+				alert(
+					language === "fa"
+						? "بروزرسانی تنظیمات صفحه اطلاعات ارزیابی اولیه کاربر موفق بود"
+						: "user initial evaluation form fields data updated"
+				);
 			} catch (error) {
 				console.error(
 					"Error submitting user information form fields data:",
 					error
+				);
+				alert(
+					language === "fa"
+						? "بروزرسانی تنظیمات صفحه اطلاعات ارزیابی اولیه کاربر ناموفق بود"
+						: "user initial evaluation form fields data update failed"
 				);
 			}
 		}

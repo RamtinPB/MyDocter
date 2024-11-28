@@ -692,10 +692,18 @@ function UserIEInformation() {
 			try {
 				// Send the transformed data to the update API
 				await axiosInstance.post("/api/User/UpdateUserInformation", values);
-				alert("Initial Evaluation information updated successfully");
+				alert(
+					language === "fa"
+						? "اطلاعات ارزیابی اولیه کاربر بروزرسانی شد"
+						: "Initial Evaluation information updated successfully"
+				);
 			} catch (error) {
 				console.error("Error updating user data:", error);
-
+				alert(
+					language === "fa"
+						? "بروزرسان اطلاعات ارزیابی اولیه کاربر ناموفق بود"
+						: "Initial Evaluation information update failed"
+				);
 				alert("Initial Evaluation information update failed");
 			} finally {
 				setDataUpdateFlag((prev) => !prev);

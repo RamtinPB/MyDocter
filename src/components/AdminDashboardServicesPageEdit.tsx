@@ -1,6 +1,6 @@
 import { FaCaretLeft } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
@@ -39,7 +39,7 @@ interface serviceProps {
 
 	insurancePlanId: number;
 	basePrice: number;
-	subsidy: number;
+	discount: number;
 }
 
 function ServicePageEdit() {
@@ -47,14 +47,18 @@ function ServicePageEdit() {
 
 	const [service, setService] = useState<serviceProps | null>(null);
 
-	const [displayImageUrlData, setDisplayImageUrlData] = useState<File | null>(
+	const [displayImageUrlData, setDisplayImageUrlData] = useState<string | null>(
 		null
 	);
-	const [pageBannerUrlData, setPageBannerUrlData] = useState<File | null>(null);
+	const [pageBannerUrlData, setPageBannerUrlData] = useState<string | null>(
+		null
+	);
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
-	const { language } = useLanguage(); // Get language and toggle function from context
 
+	const { language } = useLanguage(); // Get language and toggle function from context
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -92,6 +96,80 @@ function ServicePageEdit() {
 		fetchServices();
 	}, [dataUpdateFlag, id]);
 
+	useEffect(() => {
+		axiosInstance
+			.post(
+				"/api/Service/GetServicePageBanner",
+				{
+					serviceId: id,
+				},
+				{ responseType: "blob" }
+			) // Specify blob as the response type
+			.then((response) => {
+				const imageBlob = response.data; // Binary image data
+				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+				setPageBannerUrlData(imageUrl); // Set the profile picture state
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+
+				fetch("/db.json")
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data); // Handle local fallback logic here, if needed
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	useEffect(() => {
+		axiosInstance
+			.post(
+				"/api/Service/GetServiceDisplayBanner",
+				{
+					serviceId: id,
+				},
+				{ responseType: "blob" }
+			) // Specify blob as the response type
+			.then((response) => {
+				const imageBlob = response.data; // Binary image data
+				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+				setDisplayImageUrlData(imageUrl); // Set the profile picture state
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+
+				fetch("/db.json")
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data); // Handle local fallback logic here, if needed
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
+			});
+	}, []);
+
+	// Clean up the object URL when the component unmounts
+	useEffect(() => {
+		return () => {
+			if (displayImageUrlData) {
+				URL.revokeObjectURL(displayImageUrlData);
+			}
+			if (pageBannerUrlData) {
+				URL.revokeObjectURL(pageBannerUrlData);
+			}
+		};
+	}, [displayImageUrlData, pageBannerUrlData]);
+
 	// Function to handle the back button
 	const handleBackClick = () => {
 		// Check the section passed in the location state
@@ -101,12 +179,12 @@ function ServicePageEdit() {
 		});
 	};
 
-	const handledisplayImageUrlDataChange = (
+	const handleDisplayImageUrlDataChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
 		if (e.target.files && e.target.files[0]) {
 			const file = e.target.files[0];
-			setDisplayImageUrlData(file); // Store the file for submission
+			setDisplayImageUrlData(URL.createObjectURL(file));
 
 			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
 			setService((prevService) =>
@@ -114,10 +192,15 @@ function ServicePageEdit() {
 			);
 
 			const formData = new FormData();
-			formData.append("displayImageUrlData", file);
+			formData.append("file", file);
+			formData.append("serviceId", String(id));
 
-			axios
-				.post("/api/upload-service-picture", formData)
+			axiosInstance
+				.post("/api/File/UploadServiceDisplayBanner", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				})
 				.then((response) => {
 					console.log("service picture uploaded successfully:", response.data);
 				})
@@ -132,8 +215,7 @@ function ServicePageEdit() {
 	) => {
 		if (e.target.files && e.target.files[0]) {
 			const file = e.target.files[0];
-			setPageBannerUrlData(file); // Store the file for submission
-			console.log(file);
+			setPageBannerUrlData(URL.createObjectURL(file)); // Store the file for submission
 
 			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
 			setService((prevService) =>
@@ -141,10 +223,15 @@ function ServicePageEdit() {
 			);
 
 			const formData = new FormData();
-			formData.append("PageBannerUrlData", file);
+			formData.append("file", file);
+			formData.append("serviceId", String(id));
 
-			axios
-				.post("/api/upload-service-picture", formData)
+			axiosInstance
+				.post("/api/File/UploadServicePageBanner", formData, {
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				})
 				.then((response) => {
 					console.log("service picture uploaded successfully:", response.data);
 				})
@@ -200,6 +287,12 @@ function ServicePageEdit() {
 		return value.replace(/\n/g, "<br>");
 	};
 
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
 	return (
 		<div className="container">
 			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
@@ -228,8 +321,11 @@ function ServicePageEdit() {
 							{language === "fa" ? "اطلاعات کارت سرویس" : "Service Card Data"}
 						</h5>
 
-						<div className="py-3">
-							<label htmlFor="" className="py-2">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
+							<label htmlFor="displayTitle" className="py-2">
 								{language === "fa"
 									? "تیتر کارت سرویس"
 									: "Service Card Title (Farsi)"}
@@ -242,16 +338,15 @@ function ServicePageEdit() {
 								onChange={(e) =>
 									handleChange("displayTitle", preprocessNotes(e.target.value))
 								}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"متن خود را وارد کنید"}
 								value={service?.displayTitle?.replace(/<br>/g, "\n") || ""}
 							/>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "تیتر کارت سرویس (انگلیسی)"
@@ -259,7 +354,9 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-start`}
+								className={`form-control text-${
+									language === "fa" ? "start" : "end"
+								}`}
 								onChange={(e) =>
 									handleChange(
 										"displayTitleEN",
@@ -271,7 +368,10 @@ function ServicePageEdit() {
 							/>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "توضیحات کارت سرویس"
@@ -291,23 +391,24 @@ function ServicePageEdit() {
 									service?.displayDescription?.replace(/<br>/g, "\n") || ""
 								}
 								rows={3}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"متن خود را وارد کنید"}
 								style={{ resize: "none" }}
 							></textarea>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "توضیحات کارت سرویس (انگلیسی)"
 									: "Service Card Desctiption (English)"}
 							</label>
 							<textarea
-								className={`form-control text-start h-100`}
+								className={`form-control text-${
+									language === "fa" ? "start" : "end"
+								} h-100`}
 								onChange={(e) =>
 									handleChange(
 										"displayDescriptionEN",
@@ -324,9 +425,9 @@ function ServicePageEdit() {
 						</div>
 
 						<div className="d-flex flex-column justify-content-center align-items-center gap-3 py-3">
-							{service?.displayImageUrl ? (
+							{displayImageUrlData ? (
 								<img
-									src={service?.displayImageUrl}
+									src={displayImageUrlData}
 									alt="service"
 									className="custom-service-img shadow-sm rounded-5"
 								/>
@@ -335,7 +436,7 @@ function ServicePageEdit() {
 									type="file"
 									accept="image/*"
 									className="custom-service-img text-center btn btn-light shadow rounded-pill"
-									onChange={handledisplayImageUrlDataChange}
+									onChange={handleDisplayImageUrlDataChange}
 								/>
 							)}
 							<button
@@ -352,7 +453,10 @@ function ServicePageEdit() {
 							{language === "fa" ? "اطلاعات صفحه سرویس" : "Service Page Data"}
 						</h5>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "تیتر صفحه سرویس"
@@ -366,16 +470,15 @@ function ServicePageEdit() {
 								onChange={(e) =>
 									handleChange("pageTitle", preprocessNotes(e.target.value))
 								}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"متن خود را وارد کنید"}
 								value={service?.pageTitle?.replace(/<br>/g, "\n") || ""}
 							/>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "تیتر صفحه سرویس (انگلیسی)"
@@ -383,7 +486,9 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-start`}
+								className={`form-control text-${
+									language === "fa" ? "start" : "end"
+								}`}
 								onChange={(e) =>
 									handleChange("pageTitleEN", preprocessNotes(e.target.value))
 								}
@@ -392,7 +497,10 @@ function ServicePageEdit() {
 							/>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "توضیحات کارت سرویس"
@@ -410,23 +518,24 @@ function ServicePageEdit() {
 								}
 								value={service?.pageDescription?.replace(/<br>/g, "\n") || ""}
 								rows={3}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"متن خود را وارد کنید"}
 								style={{ resize: "none" }}
 							></textarea>
 						</div>
 
-						<div className="py-3">
+						<div
+							className="py-3"
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
 									? "توضیحات کارت سرویس (انگلیسی)"
 									: "Service Card Desctiption (English)"}
 							</label>
 							<textarea
-								className={`form-control text-start h-100`}
+								className={`form-control text-${
+									language === "fa" ? "start" : "end"
+								} h-100`}
 								onChange={(e) =>
 									handleChange(
 										"pageDescriptionEN",
@@ -441,9 +550,9 @@ function ServicePageEdit() {
 						</div>
 
 						<div className="d-flex flex-column justify-content-center align-items-center gap-3 py-3">
-							{service?.pageBannerUrl ? (
+							{pageBannerUrlData ? (
 								<img
-									src={service?.pageBannerUrl}
+									src={pageBannerUrlData}
 									alt="service"
 									className="custom-service-img shadow-sm rounded-5"
 								/>
@@ -471,11 +580,7 @@ function ServicePageEdit() {
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<div className="d-flex flex-column flex-grow-1 px-1 mx-1">
-						<h5
-							className={`text-${
-								language === "fa" ? "end" : "start"
-							} px-1 mx-1`}
-						>
+						<h5 className={`px-1 mx-1`}>
 							{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
 						</h5>
 
@@ -497,11 +602,7 @@ function ServicePageEdit() {
 								}
 								value={service?.importantNotes?.replace(/<br>/g, "\n") || ""}
 								rows={3}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"متن خود را وارد کنید"}
 								style={{ resize: "none" }}
 							></textarea>
 						</div>
@@ -513,7 +614,9 @@ function ServicePageEdit() {
 									: "Service Important Notes (English)"}
 							</label>
 							<textarea
-								className={`form-control text-start h-100`}
+								className={`form-control text-${
+									language === "fa" ? "start" : "end"
+								} h-100`}
 								onChange={(e) =>
 									handleChange(
 										"importantNotesEN",
@@ -522,11 +625,7 @@ function ServicePageEdit() {
 								}
 								value={service?.importantNotesEN?.replace(/<br>/g, "\n") || ""}
 								rows={3}
-								placeholder={
-									language === "fa"
-										? "متن خود را وارد کنید"
-										: "Write your input"
-								}
+								placeholder={"Write your input"}
 								style={{ resize: "none", direction: "ltr" }}
 							></textarea>
 						</div>
@@ -534,10 +633,11 @@ function ServicePageEdit() {
 				</div>
 
 				{/* Service Pricing Section */}
-				<div className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h5
-						className={` text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
-					>
+				<div
+					className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4"
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+				>
+					<h5 className={`px-1 mx-1`}>
 						{language === "fa" ? "قیمت گذاری سرویس" : "Service Pricing Section"}
 					</h5>
 
@@ -551,7 +651,7 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-${
+								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								}`}
 								onChange={(e) => handleChange("basePrice", e.target.value)}
@@ -566,17 +666,17 @@ function ServicePageEdit() {
 
 						<div className="col-6 px-2 py-3">
 							<label htmlFor="" className="py-2">
-								{language === "fa" ? "تخفیف سرویس" : "Service Subsidy"}
+								{language === "fa" ? "تخفیف سرویس" : "Service discount"}
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-${
+								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								}`}
-								onChange={(e) => handleChange("subsidy", e.target.value)}
+								onChange={(e) => handleChange("discount", e.target.value)}
 								value={
-									service?.subsidy !== undefined && service?.subsidy !== null
-										? service.subsidy
+									service?.discount !== undefined && service?.discount !== null
+										? service.discount
 										: ""
 								}
 							/>
@@ -609,9 +709,8 @@ function ServicePageEdit() {
 
 				{/* Form Builder Section */}
 				<div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
+					className={`bg-white border border-2 shadow rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<h5 className="px-4 mx-1">
 						{language === "fa" ? "فرم سرویس" : "Service Form"}

@@ -83,8 +83,18 @@ function AdminDashboardInsurancePageContent() {
 			// Send the data to the API
 			await axiosInstance.post("/api/Admin/UpdateInsurances", insuranceData);
 			console.log("Data submitted successfully");
+			alert(
+				language === "fa"
+					? "بروزرسانی اطلاعات بیمه ها موفق بود"
+					: "Insurance data updated"
+			);
 		} catch (error) {
 			console.error("Error submitting data:", error);
+			alert(
+				language === "fa"
+					? "بروزرسانی اطلاعات بیمه ها ناموفق بود"
+					: "Insurance data update failed"
+			);
 		}
 		setDataUpdateFlag((prev) => !prev);
 	};
@@ -119,6 +129,7 @@ function AdminDashboardInsurancePageContent() {
 									placeholder={
 										language === "fa" ? "نام بیمه" : "Insurance name Farsi"
 									}
+									style={{ direction: "rtl" }}
 								/>
 							</td>
 							<td className="align-middle">
@@ -138,6 +149,7 @@ function AdminDashboardInsurancePageContent() {
 											? "نام بیمه (انگلیسی)"
 											: "Insurance name English"
 									}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 								/>
 							</td>
 							<td className="align-middle">
@@ -157,6 +169,7 @@ function AdminDashboardInsurancePageContent() {
 											? "درصد سهم بیمه"
 											: "Contribution percentage"
 									}
+									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 								/>
 							</td>
 							<td className="align-middle">
@@ -251,7 +264,7 @@ function AdminDashboardInsurancePageContent() {
 								{language === "fa" ? "شناسه" : "Insurance id"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "نام بیمه" : "Insurance name"}
+								{language === "fa" ? "نام بیمه" : "Insurance name Farsi"}
 							</th>
 							<th scope="col">
 								{language === "fa"

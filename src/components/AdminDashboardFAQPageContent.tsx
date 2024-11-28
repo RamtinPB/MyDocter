@@ -97,8 +97,18 @@ function AdminDashboardFAQPageContent() {
 	const handleSubmit = async () => {
 		try {
 			await axiosInstance.post("/api/Admin/UpdateFAQs", FAQsData);
+			alert(
+				language === "fa"
+					? "اطلاعات سوالات متداول بروزرسانی شد"
+					: "FAQs data updated"
+			);
 		} catch (error) {
 			console.log("Failed to send new FAQs to server", error);
+			alert(
+				language === "fa"
+					? "بروزرسانی اطلاعات سوالات متداول ناموفق بود"
+					: "FAQs data update failed"
+			);
 		}
 	};
 
@@ -143,16 +153,13 @@ function AdminDashboardFAQPageContent() {
 									</h5>
 								</div>
 								<textarea
-									className={`form-control text-${
-										language === "fa" ? "end" : "start"
-									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									rows={2}
-									placeholder={
-										language === "fa"
-											? "متن خود را وارد کنید"
-											: "Write your input"
-									}
+									className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+									style={{
+										direction: language === "fa" ? "rtl" : "ltr",
+										resize: "none",
+									}}
+									rows={3}
+									placeholder={"متن خود را وارد کنید"}
 									value={faq.question}
 									onChange={(e) =>
 										handleChange(index, "question", e.target.value)
@@ -170,11 +177,12 @@ function AdminDashboardFAQPageContent() {
 									</h5>
 								</div>
 								<textarea
-									className={`form-control text-${
-										language === "fa" ? "end" : "start"
-									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									rows={2}
+									className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
+									style={{
+										direction: language === "fa" ? "rtl" : "ltr",
+										resize: "none",
+									}}
+									rows={3}
 									placeholder={
 										language === "fa"
 											? "متن خود را وارد کنید"
@@ -197,16 +205,13 @@ function AdminDashboardFAQPageContent() {
 									</h5>
 								</div>
 								<textarea
-									className={`form-control text-${
-										language === "fa" ? "end" : "start"
-									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									rows={2}
-									placeholder={
-										language === "fa"
-											? "متن خود را وارد کنید"
-											: "Write your input"
-									}
+									className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+									style={{
+										direction: language === "fa" ? "rtl" : "ltr",
+										resize: "none",
+									}}
+									rows={3}
+									placeholder={"Write your input"}
 									value={faq.questionEn}
 									onChange={(e) =>
 										handleChange(index, "questionEn", e.target.value)
@@ -224,16 +229,13 @@ function AdminDashboardFAQPageContent() {
 									</h5>
 								</div>
 								<textarea
-									className={`form-control text-${
-										language === "fa" ? "end" : "start"
-									} border border-1 shadow-sm rounded-4 py-2 my-1`}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									rows={2}
-									placeholder={
-										language === "fa"
-											? "متن خود را وارد کنید"
-											: "Write your input"
-									}
+									className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
+									style={{
+										direction: language === "fa" ? "rtl" : "ltr",
+										resize: "none",
+									}}
+									rows={3}
+									placeholder={"Write your input"}
 									value={faq.answerEn}
 									onChange={(e) =>
 										handleChange(index, "answerEn", e.target.value)

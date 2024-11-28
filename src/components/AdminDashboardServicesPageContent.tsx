@@ -46,6 +46,9 @@ interface servicesProps {
 
 function AdminDashboardServicesPageContent() {
 	const [services, setServices] = useState<servicesProps[]>([]);
+	const [serviceDisplayBanners, setServiceDisplayBanners] = useState<{
+		[id: string]: string; // Map service id to image file URL
+	}>({});
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const [newServiceUpdateFlag, setNewServiceUpdateFlag] = useState(false);
@@ -65,7 +68,34 @@ function AdminDashboardServicesPageContent() {
 					throw new Error("Failed to fetch data from API");
 				}
 
-				setServices(response.data);
+				const servicesData: servicesProps[] = response.data;
+				setServices(servicesData); // Assuming 'data' is the correct structure
+
+				// Fetch banners for each service ID
+				const banners: { [id: string]: string } = {};
+				await Promise.all(
+					servicesData.map(async (service) => {
+						try {
+							const bannerResponse = await axiosInstance.post(
+								"/api/Service/GetServiceDisplayBanner",
+								{
+									serviceId: service.id,
+								},
+								{ responseType: "blob" } // Specify blob for binary image data
+							);
+							const imageBlob = bannerResponse.data;
+							const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+							banners[service.id as number] = imageUrl; // Map id to image URL
+						} catch (bannerErr) {
+							console.error(
+								`Failed to fetch banner for service ID: ${service.id}`,
+								bannerErr
+							);
+						}
+					})
+				);
+				setServiceDisplayBanners(banners); // Update state with fetched banners
+
 				setNewServiceUpdateFlag((prev) => !prev);
 			} catch (err) {
 				try {
@@ -184,8 +214,9 @@ function AdminDashboardServicesPageContent() {
 										{language === "fa" ? service.title : service.titleEN}
 									</h5>
 									<img
-										src={service.imageUrl}
+										src={serviceDisplayBanners[service.id as number] || ""}
 										className="img-fluid m-0"
+										style={{ width: "546.22px" }}
 										alt={service.title}
 									/>
 									<div className="d-flex justify-content-around align-items-center">

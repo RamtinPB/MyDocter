@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { FaCaretLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface Service {
 	name: string;
@@ -20,11 +22,15 @@ interface Service {
 
 function SpecialistDoctorPrescription() {
 	const [services, setServices] = useState<Service[]>([]);
+	const [serviceDisplayBanners, setServiceDisplayBanners] = useState<{
+		[id: string]: string; // Map service id to image file URL
+	}>({});
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -40,7 +46,34 @@ function SpecialistDoctorPrescription() {
 					throw new Error("Failed to fetch data from API");
 				}
 
-				setServices(response.data); // Assuming 'data' is the correct structure
+				const servicesData: Service[] = response.data;
+				setServices(servicesData); // Assuming 'data' is the correct structure
+
+				// Fetch banners for each service ID
+				const banners: { [id: string]: string } = {};
+				await Promise.all(
+					servicesData.map(async (service) => {
+						try {
+							const bannerResponse = await axiosInstance.post(
+								"/api/Service/GetServiceDisplayBanner",
+								{
+									serviceId: service.id,
+								},
+								{ responseType: "blob" } // Specify blob for binary image data
+							);
+							const imageBlob = bannerResponse.data;
+							const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
+							banners[service.id] = imageUrl; // Map id to image URL
+						} catch (bannerErr) {
+							console.error(
+								`Failed to fetch banner for service ID: ${service.id}`,
+								bannerErr
+							);
+						}
+					})
+				);
+				setServiceDisplayBanners(banners); // Update state with fetched banners
+
 				setLoading(false);
 			} catch (err) {
 				console.error("API request failed, trying local db.json", err);
@@ -77,17 +110,32 @@ function SpecialistDoctorPrescription() {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
 
+	const handleBackClick = () => {
+		navigate("/");
+	};
+
 	return (
 		<div className="custom-bg-4 min-vh-100">
 			<div className="container d-flex flex-column px-3 px-md-4">
-				<div className="custom-bg-1 d-flex justify-content-center align-items-center text-white rounded-pill shadow p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
-					<h4 className="m-1">
-						{language === "fa"
-							? "خدمات پزشک متخصص و فوق تخصص"
-							: "Specialist Practitioner Services"}
-					</h4>
+				{/* Header Section with Back Button and Service Name */}
+				<div className="row custom-bg-1 shadow rounded-pill p-2 p-md-3 p-lg-4 mt-4 mt-md-5 mb-3 mb-md-4">
+					<div className="col-2">
+						<FaCaretLeft
+							type="button"
+							onClick={handleBackClick}
+							className="custom-back-btn"
+							color="white"
+						/>
+					</div>
+					<div className="col-8 d-flex flex-column justify-content-center text-center text-white">
+						<h4 className="m-0">
+							{language === "fa"
+								? "خدمات پزشک متخصص و فوق تخصص"
+								: "Specialist Practitioner Services"}
+						</h4>
+					</div>
 				</div>
-				<div className="text-end bg-white border border-2 shadow rounded-5 px-0 px-md-4 px-lg-5 py-5 mb-3">
+				<div className="text-end bg-white border border-2 shadow rounded-5 px-0 px-md-4 px-lg-5 py-5 mb-5">
 					<div
 						className="row row-cols-1 row-cols-md-2 g-5 mx-1"
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -102,7 +150,7 @@ function SpecialistDoctorPrescription() {
 													{language === "fa" ? service.title : service.titleEN}
 												</h5>
 												<img
-													src={service.imageUrl}
+													src={serviceDisplayBanners[service.id] || ""}
 													className="img-fluid m-0"
 													alt={service.title}
 												/>

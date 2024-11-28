@@ -14,6 +14,7 @@ import { useLanguage } from "./LanguageContext";
 import { LuLogOut } from "react-icons/lu";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useProfile } from "./ProfileContext";
 
 interface UserData {
 	name: string;
@@ -34,10 +35,15 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 	const { setAuthData } = useAuth();
+	const { profileImageVersion } = useProfile();
 
 	useEffect(() => {
 		axiosInstance
-			.post("/api/User/GetProfileImage", {}, { responseType: "blob" }) // Specify blob as the response type
+			.post(
+				`/api/User/GetProfileImage?version=${profileImageVersion}`,
+				{},
+				{ responseType: "blob" }
+			) // Specify blob as the response type
 			.then((response) => {
 				const imageBlob = response.data; // Binary image data
 				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
@@ -45,20 +51,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 			})
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						console.log(data); // Handle local fallback logic here, if needed
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
+				setProfilePicture(null);
 			});
-	}, []);
+	}, [profileImageVersion]);
 
 	// Clean up the object URL when the component unmounts
 	useEffect(() => {
@@ -135,7 +130,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 						<img
 							src={profilePicture}
 							alt="Profile"
-							className="custom-user-icon-pic img-fluid rounded-circle border border-2 border-light my-3 mx-4"
+							className="custom-user-icon-pic rounded-circle border border-2 border-light my-3 mx-4"
 						/>
 					) : (
 						<FaUser
