@@ -51,7 +51,7 @@ function FormBuilder() {
 		useState<serviceFormFieldProps["type"]>("string");
 
 	const [fieldRequired, setFieldRequired] = useState(false);
-	const [fieldEnabled, setFieldEnabled] = useState(false);
+	const [fieldEnabled, setFieldEnabled] = useState(true);
 
 	const [fieldAllowedFormats, setfieldAllowedFormats] = useState("");
 
@@ -189,6 +189,25 @@ function FormBuilder() {
 		setDataUpdateFlag((prev) => !prev);
 	};
 
+	const defaultFormFieldData = () => {
+		// Reset all field-specific states
+		setFieldLabel("");
+		setFieldLabelEN("");
+
+		setFieldDescription("");
+		setFieldDescriptionEN("");
+
+		setFieldTag("");
+		setFieldType("string");
+
+		setFieldRequired(false);
+		setFieldEnabled(false);
+
+		setfieldAllowedFormats(""); // Clear allowed formats for "file"
+
+		setDataEditFlag(false);
+	};
+
 	const handleEditFieldState = (formFieldToEdit: serviceFormFieldProps) => {
 		// Reset all field-specific states
 		setFieldLabel(formFieldToEdit.label);
@@ -320,6 +339,30 @@ function FormBuilder() {
 				field.tag === fieldTag ? { ...field, enabled: isEnabled } : field
 			)
 		);
+	};
+
+	const saveFormFieldsData = async () => {
+		// Transform the `type` field in the payload
+		const transformedPayload = serviceFormFieldData.map((field) => ({
+			...field,
+			type: mapTypeToApiType(field.type), // Map the type to its numeric value
+		}));
+		try {
+			// Send each field to the API
+			const response = await axiosInstance.post(
+				"/api/Admin/UpdateServiceFormFields",
+				transformedPayload,
+				{ withCredentials: true }
+			);
+
+			if (response.status === 200) {
+				console.log(`Form fields data saved successfully!`);
+			}
+		} catch (error) {
+			console.error("Error saving form fields:", error);
+			alert("Failed to save fields. Check the console for details.");
+		}
+		setDataUpdateFlag((prev) => !prev);
 	};
 
 	return (
@@ -480,7 +523,13 @@ function FormBuilder() {
 				)}
 			</div>
 			{dataEditFlag ? (
-				<div className="d-flex flex-row justify-content-center align-items-center my-4">
+				<div className="d-flex flex-row justify-content-center align-items-center gap-3 my-4">
+					<button
+						type="button"
+						className="btn-close"
+						aria-label="Close"
+						onClick={() => defaultFormFieldData()}
+					></button>
 					<button
 						className="btn btn-secondary"
 						onClick={() =>
@@ -744,6 +793,14 @@ function FormBuilder() {
 						);
 					})}
 				</div>
+			</div>
+			<div className="d-flex flex-row justify-content-center align-items-center my-4">
+				<button
+					className="btn btn-success rounded-pill px-3"
+					onClick={() => saveFormFieldsData()}
+				>
+					{language === "fa" ? "ذخیره فرم" : "Save Form"}
+				</button>
 			</div>
 		</div>
 	);
