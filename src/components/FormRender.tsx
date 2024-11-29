@@ -192,20 +192,30 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 		validationSchema: validationSchema,
 
 		onSubmit: async (values: any) => {
+			// Transform form values to API format
+			const formInputs = Object.entries(values).map(([tag, value]) => ({
+				tag,
+				value: String(value), // Ensure all values are strings
+			}));
+			const payload = {
+				serviceId: id,
+				formInputs,
+			};
+
 			try {
 				// Send the transformed data to the update API
-				await axiosInstance.post("/api/User/UpdateUserData", values);
+				await axiosInstance.post("/api/Service/PurchaseService", payload);
 				alert(
 					language === "fa"
-						? "اطلاعات کاربر بروزرسانی شد"
-						: "User information updated successfully"
+						? "سرویس خریداری شد"
+						: "Service purchased successfully"
 				);
 			} catch (error) {
 				console.error("Error updating user data:", error);
 				alert(
 					language === "fa"
-						? "بروزرسان اطلاعات کاربر ناموفق بود"
-						: "User information update failed"
+						? "خرید سرویس ناموفق بود"
+						: "Service purchase failed"
 				);
 			}
 		},
@@ -289,6 +299,16 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 								: field.type === "float"
 								? "any"
 								: undefined;
+
+						// Parse allowed formats
+						const allowedFormats = field.allowedFormats
+							? field.allowedFormats
+									.split(",") // Split by commas
+									.map((format) => `.${format.trim()}`) // Add a leading dot for file extensions
+									.filter((format) => format !== ".") // Remove empty or invalid formats
+									.join(",") // Rejoin as a comma-separated list
+							: ""; // Default to accepting no formats if empty
+
 						return (
 							field.enabled && (
 								<div className="my-2" key={field.tag}>
@@ -372,7 +392,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 													</label>
 												</div>
 												<div
-													className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 my-2 w-100"
+													className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 w-100"
 													style={{ direction: "ltr" }}
 												>
 													<div
@@ -425,6 +445,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 															style={{ display: "none" }}
 															onChange={handleFileChange}
 															multiple // Allow multiple file selection
+															accept={allowedFormats || ""}
 														/>
 													</div>
 												</div>

@@ -116,6 +116,22 @@ function FormBuilder() {
 			return;
 		}
 
+		if (fieldAllowedFormats) {
+			// Check if the fieldAllowedFormats is a valid format
+			if (
+				!/^([a-zA-Z0-9]+)(,[a-zA-Z0-9]+)*$/.test(fieldAllowedFormats) && // Case 1: Comma-separated list like "jpeg,jpg,png"
+				!/^[a-zA-Z0-9]+$/.test(fieldAllowedFormats) // Case 2: Single format like "jpeg"
+			) {
+				// Invalid format, return
+				alert(
+					language === "fa"
+						? "فرمز های غیر مجاز برای ورود نوع فایل وارد شده است"
+						: "Invalid allowed file format entered"
+				);
+				return;
+			}
+		}
+
 		const apiData = {
 			serviceId: Number(id),
 			type: mapTypeToApiType(newFormField.type), // Map the type using mapTypeToApiType
@@ -515,7 +531,7 @@ function FormBuilder() {
 							className="form-control"
 							value={fieldAllowedFormats || ""}
 							onChange={(e) => setfieldAllowedFormats(e.target.value)}
-							placeholder="jpeg, jpg, rar, zip, txt, pdf, etc."
+							placeholder="jpeg,jpg,rar,zip,txt,pdf,etc."
 							style={{ direction: "ltr" }}
 							required={fieldType === "file"}
 						/>
@@ -639,6 +655,11 @@ function FormBuilder() {
 														onChange={(e) =>
 															handleRequiredChange(field.tag, e.target.checked)
 														}
+														placeholder={
+															(language === "fa"
+																? field.description
+																: field.descriptionEN) || ""
+														}
 														className="form-check-input shadow-sm"
 														required={true}
 													/>
@@ -756,9 +777,9 @@ function FormBuilder() {
 											}
 											rows={3}
 											placeholder={
-												language === "fa"
-													? "متن خود را وارد کنید"
-													: "Write your input"
+												(language === "fa"
+													? field.description
+													: field.descriptionEN) || ""
 											}
 											style={{
 												resize: "none",
