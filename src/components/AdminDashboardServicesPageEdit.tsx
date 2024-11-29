@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
-import axios from "axios";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
@@ -287,11 +286,11 @@ function ServicePageEdit() {
 		return value.replace(/\n/g, "<br>");
 	};
 
-	const handleButtonClick = () => {
-		if (fileInputRef.current) {
-			fileInputRef.current.click();
-		}
-	};
+	// const handleButtonClick = () => {
+	// 	if (fileInputRef.current) {
+	// 		fileInputRef.current.click();
+	// 	}
+	// };
 
 	return (
 		<div className="container">
@@ -712,7 +711,7 @@ function ServicePageEdit() {
 					className={`bg-white border border-2 shadow rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<h5 className="px-4 mx-1">
+					<h5 className="px-4 mx-1 pb-2">
 						{language === "fa" ? "فرم سرویس" : "Service Form"}
 					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">

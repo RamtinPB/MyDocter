@@ -373,7 +373,7 @@ function ServicePage() {
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
-					<h5 className="px-4 mx-1">
+					<h5 className="px-4 mx-1 pb-2">
 						{language === "fa" ? "فرم سرویس" : "Service Form"}
 					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
