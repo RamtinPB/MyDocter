@@ -55,12 +55,13 @@ function FormBuilder() {
 
 	const [fieldAllowedFormats, setfieldAllowedFormats] = useState("");
 
-	// const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
+	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
+	const [dataEditFlag, setDataEditFlag] = useState(false);
 
 	useEffect(() => {
 		axiosInstance
 			.post(
-				"/api/Service/GetServiceFormFields",
+				"/api/Admin/GetAllServiceFormFields",
 				{
 					serviceId: id,
 				},
@@ -87,9 +88,9 @@ function FormBuilder() {
 						: "Failed to capture the previouslly saved service form data."
 				);
 			});
-	}, []);
+	}, [dataUpdateFlag]);
 
-	const addFormField = (newFormField: serviceFormFieldProps) => {
+	const addFormField = async (newFormField: serviceFormFieldProps) => {
 		if (!fieldTag.trim()) {
 			alert(
 				language === "fa"
@@ -115,95 +116,153 @@ function FormBuilder() {
 			return;
 		}
 
-		setServiceFormFieldData((prevFields) => [
-			...prevFields,
-			{ ...newFormField, tag: fieldTag.trim() },
-		]);
+		const apiData = {
+			serviceId: Number(id),
+			type: mapTypeToApiType(newFormField.type), // Map the type using mapTypeToApiType
+			tag: newFormField.tag, // Use the tag for unique identification
+			label: newFormField.label, // Farsi label
+			labelEN: newFormField.labelEN, // English label
+			description: newFormField.description, // Farsi description
+			descriptionEN: newFormField.descriptionEN, // English description
+			required: newFormField.required, // Required newFormField logic
+			maxLength: newFormField.maxLength, // Max length for input
+			allowedFormats: newFormField.allowedFormats, // Allowed formats (e.g., regex)
+			enabled: newFormField.enabled, // Enabled status
+		};
 
-		// Reset all field-specific states
-		setFieldLabel("");
-		setFieldLabelEN("");
-
-		setFieldTag("");
-
-		setFieldRequired(false);
-		setFieldEnabled(false);
-
-		setfieldAllowedFormats(""); // Clear allowed formats for "file"
-	};
-
-	const handleDeleteField = (index: number) => {
-		setServiceFormFieldData((prevFields) =>
-			prevFields.filter((_, i) => i !== index)
-		);
-	};
-
-	const saveServiceFormFieldData = async () => {
 		try {
-			// Create a Set of existing tags in serviceFormFieldData for quick lookups
-			const existingTags = new Set(
-				initialServiceFormFieldData.map((field) => field.tag)
+			// Send each field to the API
+			const response = await axiosInstance.post(
+				"/api/Admin/AddServiceFormField",
+				apiData
 			);
-			console.log(existingTags);
 
-			// Iterate over all form fields
-			for (const field of serviceFormFieldData) {
-				if (existingTags.has(field.tag)) {
-					console.warn(`Field ${field.tag} already exists locally. Skipping.`);
-					continue;
-				}
-
-				const apiData = {
-					serviceId: Number(id),
-					type: mapTypeToApiType(field.type), // Map the type using mapTypeToApiType
-					tag: field.tag, // Use the tag for unique identification
-					label: field.label, // Farsi label
-					labelEN: field.labelEN, // English label
-					description: field.description, // Farsi description
-					descriptionEN: field.descriptionEN, // English description
-					required: field.required, // Required field logic
-					maxLength: field.maxLength, // Max length for input
-					allowedFormats: field.allowedFormats, // Allowed formats (e.g., regex)
-					enabled: field.enabled, // Enabled status
-				};
-
-				try {
-					// Send each field to the API
-					const response = await axiosInstance.post(
-						"/api/Admin/AddServiceFormField",
-						apiData
-					);
-
-					if (response.status === 200) {
-						console.log(`Field ${field.tag} saved successfully!`);
-					} else {
-						throw new Error(`Unexpected response: ${response.status}`);
-					}
-				} catch (err) {
-					// Cast the error to AxiosError to access its properties
-					const error = err as AxiosError<ErrorResponseData>;
-
-					// Handle API errors
-					if (
-						error.response?.status === 400 &&
-						error.response?.data?.errorCode === 1027
-					) {
-						// Log and continue if the field already exists
-						console.log(`Field ${field.tag} already exists. Skipping.`);
-						continue;
-					} else {
-						// Re-throw for unexpected errors
-						throw new Error(
-							`Failed to save form field ${field.tag}: ${error.message}`
-						);
-					}
-				}
+			if (response.status === 200) {
+				console.log(`Field ${newFormField.tag} saved successfully!`);
+			} else {
+				throw new Error(`Unexpected response: ${response.status}`);
 			}
 		} catch (error) {
 			console.error("Error saving form fields:", error);
 			alert(
 				"Failed to save one or more fields. Check the console for details."
 			);
+		} finally {
+			// Reset all field-specific states
+			setFieldLabel("");
+			setFieldLabelEN("");
+
+			setFieldDescription("");
+			setFieldDescriptionEN("");
+
+			setFieldTag("");
+
+			setFieldRequired(false);
+			setFieldEnabled(false);
+
+			setfieldAllowedFormats(""); // Clear allowed formats for "file"
+		}
+		setDataUpdateFlag((prev) => !prev);
+	};
+
+	const handleDeleteField = async (
+		formFieldToDelete: serviceFormFieldProps
+	) => {
+		try {
+			// Send each field to the API
+			const response = await axiosInstance.post(
+				"/api/Admin/RemoveServiceFormField",
+				{ formFieldId: formFieldToDelete.id }
+			);
+
+			if (response.status === 200) {
+				console.log(`Field ${formFieldToDelete.tag} saved successfully!`);
+			} else {
+				throw new Error(`Unexpected response: ${response.status}`);
+			}
+		} catch (error) {
+			console.error("Error saving form fields:", error);
+			alert(
+				"Failed to save one or more fields. Check the console for details."
+			);
+		}
+		setDataUpdateFlag((prev) => !prev);
+	};
+
+	const handleEditFieldState = (formFieldToEdit: serviceFormFieldProps) => {
+		// Reset all field-specific states
+		setFieldLabel(formFieldToEdit.label);
+		setFieldLabelEN(formFieldToEdit.labelEN);
+
+		setFieldDescription(formFieldToEdit.description);
+		setFieldDescriptionEN(formFieldToEdit.descriptionEN);
+
+		setFieldTag(formFieldToEdit.tag);
+		setFieldType(formFieldToEdit.type);
+
+		setFieldRequired(formFieldToEdit.required);
+		setFieldEnabled(formFieldToEdit.enabled);
+
+		setfieldAllowedFormats(formFieldToEdit.allowedFormats); // Clear allowed formats for "file"
+		setDataEditFlag(true);
+	};
+
+	const editFormField = async (formFieldToEdit: serviceFormFieldProps) => {
+		// Find the matching field in serviceFormFieldData by tag
+		const matchingField = serviceFormFieldData.find(
+			(field) => field.tag === formFieldToEdit.tag
+		);
+		// Extract the id if a matching field is found
+		const formFieldId = matchingField ? matchingField.id : undefined;
+		const apiData = {
+			serviceId: Number(id),
+			formFieldId: formFieldId,
+			type: mapTypeToApiType(formFieldToEdit.type), // Map the type using mapTypeToApiType
+			tag: formFieldToEdit.tag, // Use the tag for unique identification
+			label: formFieldToEdit.label, // Farsi label
+			labelEN: formFieldToEdit.labelEN, // English label
+			description: formFieldToEdit.description, // Farsi description
+			descriptionEN: formFieldToEdit.descriptionEN, // English description
+			required: formFieldToEdit.required, // Required formFieldToEdit logic
+			maxLength: formFieldToEdit.maxLength, // Max length for input
+			allowedFormats: formFieldToEdit.allowedFormats, // Allowed formats (e.g., regex)
+			enabled: formFieldToEdit.enabled, // Enabled status
+		};
+		try {
+			// Send each field to the API
+			const response = await axiosInstance.post(
+				"/api/Admin/EditServiceFormField",
+				apiData
+			);
+
+			if (response.status === 200) {
+				console.log(`Field ${formFieldToEdit.tag} edited successfully!`);
+			} else {
+				throw new Error(`Unexpected response: ${response.status}`);
+			}
+		} catch (error) {
+			console.error("Error saving form fields:", error);
+			alert(
+				"Failed to edit one or more fields. Check the console for details."
+			);
+		} finally {
+			// Reset all field-specific states
+			setFieldLabel("");
+			setFieldLabelEN("");
+
+			setFieldDescription("");
+			setFieldDescriptionEN("");
+
+			setFieldTag("");
+			setFieldType("string");
+
+			setFieldRequired(false);
+			setFieldEnabled(false);
+
+			setfieldAllowedFormats(""); // Clear allowed formats for "file"
+
+			setDataEditFlag(false);
+			setDataUpdateFlag((prev) => !prev);
 		}
 	};
 
@@ -273,7 +332,7 @@ function FormBuilder() {
 					id="fieldType"
 					className="form-select"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-					value={fieldType}
+					value={fieldType || ""}
 					onChange={(e) =>
 						setFieldType(
 							e.target.value as
@@ -323,12 +382,11 @@ function FormBuilder() {
 						type="text"
 						id="FieldLabel"
 						className="form-control"
-						value={fieldLabel}
+						value={fieldLabel || ""}
 						onChange={(e) => setFieldLabel(e.target.value)}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						required={true}
 					/>
 				</div>
 
@@ -342,11 +400,10 @@ function FormBuilder() {
 						type="text"
 						id="FieldLabelEN"
 						className="form-control"
-						value={fieldLabelEN}
+						value={fieldLabelEN || ""}
 						onChange={(e) => setFieldLabelEN(e.target.value)}
 						placeholder={"Write your input"}
 						style={{ direction: "ltr" }}
-						required={true}
 					/>
 				</div>
 
@@ -360,13 +417,12 @@ function FormBuilder() {
 						type="text"
 						id="FieldTag"
 						className="form-control"
-						value={fieldTag}
+						value={fieldTag || ""}
 						onChange={(e) => {
 							setFieldTag(e.target.value);
 						}}
 						placeholder="Example: exampleIllness"
 						style={{ direction: "ltr" }}
-						required={true}
 					/>
 				</div>
 
@@ -378,12 +434,11 @@ function FormBuilder() {
 						type="text"
 						id="FieldDescription"
 						className="form-control"
-						value={fieldDescription}
+						value={fieldDescription || ""}
 						onChange={(e) => setFieldDescription(e.target.value)}
 						placeholder={
 							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
 						}
-						required={true}
 					/>
 				</div>
 
@@ -397,11 +452,10 @@ function FormBuilder() {
 						type="text"
 						id="FieldDescriptionEN"
 						className="form-control"
-						value={fieldDescriptionEN}
+						value={fieldDescriptionEN || ""}
 						onChange={(e) => setFieldDescriptionEN(e.target.value)}
 						placeholder={"Write your input"}
 						style={{ direction: "ltr" }}
-						required={true}
 					/>
 				</div>
 
@@ -416,7 +470,7 @@ function FormBuilder() {
 							type="text"
 							id="FieldAllowedFormats"
 							className="form-control"
-							value={fieldAllowedFormats}
+							value={fieldAllowedFormats || ""}
 							onChange={(e) => setfieldAllowedFormats(e.target.value)}
 							placeholder="jpeg, jpg, rar, zip, txt, pdf, etc."
 							style={{ direction: "ltr" }}
@@ -425,31 +479,59 @@ function FormBuilder() {
 					</div>
 				)}
 			</div>
-
-			<div className="d-flex flex-row justify-content-center align-items-center my-4">
-				<button
-					className="btn btn-primary"
-					onClick={() =>
-						addFormField({
-							id: Number(id),
-							type: fieldType, // Use the selected field type
-							tag: fieldTag.trim(), // Will be autogenerated in addFormField
-							label: fieldLabel,
-							labelEN: fieldLabelEN,
-							description: fieldDescription,
-							descriptionEN: fieldDescriptionEN,
-							required: fieldRequired,
-							enabled: fieldEnabled,
-							maxLength:
-								fieldType === "string" || fieldType === "longString" ? 256 : 0,
-							allowedFormats: fieldAllowedFormats,
-						})
-					}
-				>
-					{language === "fa" ? "اضافه کردن ورودی" : "Add input"}
-				</button>
-			</div>
-
+			{dataEditFlag ? (
+				<div className="d-flex flex-row justify-content-center align-items-center my-4">
+					<button
+						className="btn btn-secondary"
+						onClick={() =>
+							editFormField({
+								id: Number(id),
+								type: fieldType, // Use the selected field type
+								tag: fieldTag.trim(), // Will be autogenerated in addFormField
+								label: fieldLabel,
+								labelEN: fieldLabelEN,
+								description: fieldDescription,
+								descriptionEN: fieldDescriptionEN,
+								required: fieldRequired,
+								enabled: fieldEnabled,
+								maxLength:
+									fieldType === "string" || fieldType === "longString"
+										? 256
+										: 0,
+								allowedFormats: fieldAllowedFormats,
+							})
+						}
+					>
+						{language === "fa" ? "ویرایش کردن ورودی" : "Edit input"}
+					</button>
+				</div>
+			) : (
+				<div className="d-flex flex-row justify-content-center align-items-center my-4">
+					<button
+						className="btn btn-primary"
+						onClick={() =>
+							addFormField({
+								id: Number(id),
+								type: fieldType, // Use the selected field type
+								tag: fieldTag.trim(), // Will be autogenerated in addFormField
+								label: fieldLabel,
+								labelEN: fieldLabelEN,
+								description: fieldDescription,
+								descriptionEN: fieldDescriptionEN,
+								required: fieldRequired,
+								enabled: fieldEnabled,
+								maxLength:
+									fieldType === "string" || fieldType === "longString"
+										? 256
+										: 0,
+								allowedFormats: fieldAllowedFormats,
+							})
+						}
+					>
+						{language === "fa" ? "اضافه کردن ورودی" : "Add input"}
+					</button>
+				</div>
+			)}
 			<div
 				className=" pt-3 mt-5"
 				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -458,10 +540,10 @@ function FormBuilder() {
 					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
 				</h3>
 				<div
-					className="row row-cols-1 g-4 g-md-5 my-1"
+					className="row row-cols-2 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					{serviceFormFieldData.map((field, index) => {
+					{serviceFormFieldData.map((field) => {
 						const isCheckbox = field.type === "checkbox";
 						const isText = field.type === "string";
 						const isTextLong = field.type === "longString";
@@ -637,32 +719,31 @@ function FormBuilder() {
 								)}
 								<div
 									className={`d-flex justify-content-${
-										language === "fa" ? "end" : "start"
+										language === "fa" ? "between" : "start"
 									}  align-items-center my-2`}
-									style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+									style={{ direction: "rtl" }}
 								>
 									<button
 										className="btn btn-danger btn-sm rounded-3"
-										onClick={() => handleDeleteField(index)}
+										onClick={() => handleDeleteField(field)}
 									>
 										{language === "fa"
 											? "حذف ".concat(field.label)
 											: "Delete ".concat(field.labelEN)}
+									</button>
+									<button
+										className="btn btn-secondary btn-sm rounded-3"
+										onClick={() => handleEditFieldState(field)}
+									>
+										{language === "fa"
+											? "ویرایش ".concat(field.label)
+											: "Edit ".concat(field.labelEN)}
 									</button>
 								</div>
 							</div>
 						);
 					})}
 				</div>
-			</div>
-
-			<div className="d-flex flex-row justify-content-center align-items-center my-4">
-				<button
-					className="btn btn-success rounded-pill px-3"
-					onClick={saveServiceFormFieldData}
-				>
-					{language === "fa" ? "ذخیره فرم" : "Save Form"}
-				</button>
 			</div>
 		</div>
 	);

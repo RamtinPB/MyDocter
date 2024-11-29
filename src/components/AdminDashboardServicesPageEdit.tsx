@@ -503,7 +503,7 @@ function ServicePageEdit() {
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
-									? "توضیحات کارت سرویس"
+									? "توضیحات صفحه سرویس"
 									: "Service Card Desctiption (Farsi)"}
 							</label>
 							<textarea
@@ -529,7 +529,7 @@ function ServicePageEdit() {
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
-									? "توضیحات کارت سرویس (انگلیسی)"
+									? "توضیحات صفحه سرویس (انگلیسی)"
 									: "Service Card Desctiption (English)"}
 							</label>
 							<textarea
