@@ -38,7 +38,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [showModal, setShowModal] = useState(false);
 	const toggleModal = () => setShowModal(!showModal);
 
-	const [userBalance, setUserBalance] = useState<UserBalance[]>([]);
+	const [userBalance, setUserBalance] = useState<number>(0);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
@@ -171,7 +171,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 								{language === "fa" ? "کیف پول" : "Wallet Balance"}
 							</span>
 							<span className="text-white px-2">
-								{userBalance as unknown as string}
+								{String(userBalance).concat("T")}
 							</span>
 						</div>
 						<button

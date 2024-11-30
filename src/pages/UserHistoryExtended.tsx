@@ -179,7 +179,7 @@ function UserHistoryExtended() {
 								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.id}
+								{purchasedServiceData.serviceId}
 							</div>
 						</div>
 						<div
@@ -192,6 +192,18 @@ function UserHistoryExtended() {
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.date}
+							</div>
+						</div>
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
+								{purchasedServiceData.lastUpdateTime}
 							</div>
 						</div>
 						<div
@@ -235,8 +247,7 @@ function UserHistoryExtended() {
 					</div>
 				</div>
 
-				{/* Sent Files Section */}
-				<div
+				{/* <div
 					className={`bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
@@ -276,7 +287,7 @@ function UserHistoryExtended() {
 							</p>
 						</div>
 					)}
-				</div>
+				</div> */}
 
 				{/* Form Render Filled Section */}
 				<div
@@ -302,8 +313,7 @@ function UserHistoryExtended() {
 					</div>
 				</div>
 
-				{/* User Input Section */}
-				<div
+				{/* <div
 					className={`bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
@@ -322,7 +332,7 @@ function UserHistoryExtended() {
 							</div>
 						)}
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

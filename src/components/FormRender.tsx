@@ -245,7 +245,8 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 				// Send the final payload to the service purchase API
 				const purchaseResponse = await axiosInstance.post(
 					"/api/Service/PurchaseService",
-					payload
+					payload,
+					{ withCredentials: true }
 				);
 
 				if (purchaseResponse.status === 200) {
