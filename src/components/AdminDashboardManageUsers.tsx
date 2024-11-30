@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../cssFiles/tableOverflow.css";
 import "../cssFiles/adminbuttons.css";
 import axiosInstance from "../myAPI/axiosInstance";
-import AdminDashboardManageUsersModel from "./AdminDashboardManageUsersModel";
+import AdminDashboardManageUsersModal from "./AdminDashboardManageUsersModal";
 
 interface usersListDataProps {
 	id: string | number;
@@ -18,7 +18,7 @@ function AdminDashboardManageUsers() {
 
 	const [userToRemoveId, setUserToRemoveId] = useState<number | null>(null);
 
-	const [showModel, setShowModal] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10); // Default page size
@@ -250,9 +250,9 @@ function AdminDashboardManageUsers() {
 					</div>
 				</div>
 			</div>
-			<AdminDashboardManageUsersModel
+			<AdminDashboardManageUsersModal
 				onConfirm={handleConfirmRemoveUser}
-				show={showModel}
+				show={showModal}
 				onClose={() => setShowModal(false)}
 			/>
 		</div>

@@ -15,12 +15,17 @@ import { LuLogOut } from "react-icons/lu";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useProfile } from "./ProfileContext";
+import NewTransactionModal from "./NewTransactionModal";
 
 interface UserData {
 	name: string;
 	lastName: string;
 	email: string;
 	phoneNumber: string;
+}
+
+interface UserBalance {
+	balance: number;
 }
 
 interface UserOffCanvasProps {
@@ -30,12 +35,28 @@ interface UserOffCanvasProps {
 
 function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
+	const [showModal, setShowModal] = useState(false);
+	const toggleModal = () => setShowModal(!showModal);
+
+	const [userBalance, setUserBalance] = useState<UserBalance[]>([]);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 	const { setAuthData } = useAuth();
 	const { profileImageVersion } = useProfile();
+
+	useEffect(() => {
+		axiosInstance
+			.post(`/api/User/GetUserData`)
+			.then((response) => {
+				const userbal = response.data.balance;
+				setUserBalance(userbal);
+			})
+			.catch((error) => {
+				console.error("API request failed, trying local db.json", error);
+			});
+	}, [userBalance]);
 
 	useEffect(() => {
 		axiosInstance
@@ -125,22 +146,42 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				</h4>
 			</div>
 			<div className="offcanvas-body shadow p-0">
-				<div className="d-flex flex-column justify-content-center align-items-center custom-bg-2">
-					{profilePicture ? (
-						<img
-							src={profilePicture}
-							alt="Profile"
-							className="custom-user-icon-pic rounded-circle border border-2 border-light my-3 mx-4"
-						/>
-					) : (
-						<FaUser
-							className="custom-user-icon-pic rounded-circle border border-2 border-light mt-3 mb-1 mx-4 p-1"
-							color="white"
-						/>
-					)}
-					<span className="text-white text-center rounded-pill mb-2 py-1 px-3">
-						{username}
-					</span>
+				<div className="d-flex flex-row justify-content-between align-items-center custom-bg-2">
+					<div>
+						{profilePicture ? (
+							<img
+								src={profilePicture}
+								alt="Profile"
+								className="custom-user-icon-pic rounded-circle border border-2 border-light m-3"
+							/>
+						) : (
+							<FaUser
+								className="custom-user-icon-pic rounded-circle border border-2 border-light mt-3 mb-1 mx-4 p-1"
+								color="white"
+							/>
+						)}
+					</div>
+					<div className="d-flex flex-column justify-content-center align-items-end mb-2 py-1 px-4">
+						<span className="text-white mb-2 py-1 px-2">{username}</span>
+						<div
+							className="d-flex flex-row justify-content-between mb-2 py-1 "
+							style={{ direction: "rtl" }}
+						>
+							<span className="text-white px-2">
+								{language === "fa" ? "کیف پول" : "Wallet Balance"}
+							</span>
+							<span className="text-white px-2">
+								{userBalance as unknown as string}
+							</span>
+						</div>
+						<button
+							type="button"
+							onClick={toggleModal}
+							className="btn btn-light rounded-pill"
+						>
+							{language === "fa" ? "افزایش موجودی" : "Increase Balance"}
+						</button>
+					</div>
 				</div>
 				<ul
 					className={` dropdown-menu d-flex flex-column text-${
@@ -293,6 +334,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 					</li>
 				</ul>
 			</div>
+			<NewTransactionModal show={showModal} onClose={toggleModal} />
 		</div>
 	);
 }

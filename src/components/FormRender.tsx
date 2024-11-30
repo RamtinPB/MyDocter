@@ -20,6 +20,8 @@ interface FileData {
 	fileName: string;
 	fileType: string;
 	fileUrl: string;
+	file: File;
+	tag: string;
 }
 
 interface serviceFormFieldProps {
@@ -192,24 +194,67 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 		validationSchema: validationSchema,
 
 		onSubmit: async (values: any) => {
-			// Transform form values to API format
-			const formInputs = Object.entries(values).map(([tag, value]) => ({
-				tag,
-				value: String(value), // Ensure all values are strings
-			}));
-			const payload = {
-				serviceId: id,
-				formInputs,
-			};
+			// Array to hold formInputs
+			const formInputs: { tag: string; value: string }[] = [];
 
 			try {
-				// Send the transformed data to the update API
-				await axiosInstance.post("/api/Service/PurchaseService", payload);
-				alert(
-					language === "fa"
-						? "سرویس خریداری شد"
-						: "Service purchased successfully"
+				// Upload each file in uploadedFiles and update formInputs with the fileId
+				for (const file of uploadedFiles) {
+					const formData = new FormData(); // Create a new FormData instance
+
+					// Append data to FormData (including the binary file)
+					formData.append("serviceId", String(id)); // Example of adding other data
+					formData.append("FileTag", file.tag); // Add the tag for the file
+					formData.append(
+						"FileFormat",
+						file.fileType.split("/").pop() || "unknown"
+					); // Extract file format
+					formData.append("File", file.file); // This is the actual file (with binary data)
+
+					// Send the file to the API
+					const response = await axiosInstance.post(
+						"/api/File/UploadFile",
+						formData,
+						{
+							headers: {
+								"Content-Type": "multipart/form-data", // Ensure correct content type for file upload
+							},
+						}
+					);
+
+					if (response.status === 200) {
+						// Add the fileId to formInputs
+						formInputs.push({
+							tag: file.tag, // Tag associated with the file input
+							value: response.data.fileId.toString(),
+						});
+					}
+				}
+
+				// Add other form fields to formInputs (non-file inputs)
+				Object.entries(values).forEach(([tag, value]) => {
+					formInputs.push({ tag, value: String(value) });
+				});
+
+				// Prepare final payload
+				const payload = {
+					serviceId: id,
+					formInputs,
+				};
+
+				// Send the final payload to the service purchase API
+				const purchaseResponse = await axiosInstance.post(
+					"/api/Service/PurchaseService",
+					payload
 				);
+
+				if (purchaseResponse.status === 200) {
+					alert(
+						language === "fa"
+							? "سرویس خریداری شد"
+							: "Service purchased successfully"
+					);
+				}
 			} catch (error) {
 				console.error("Error updating user data:", error);
 				alert(
@@ -250,16 +295,19 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 	};
 	// type: text=0, integer=1, float=2, date=3, file=4,
 
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const files = Array.from(event.target.files || []); // Get selected files
-		const newFiles = files.map((file) => ({
+	const handleFileChange = (
+		event: React.ChangeEvent<HTMLInputElement>,
+		tag: string
+	) => {
+		const files = Array.from(event.target.files || []);
+		const filesWithTags = files.map((file) => ({
 			fileName: file.name,
 			fileType: file.type,
-			fileUrl: URL.createObjectURL(file),
+			fileUrl: URL.createObjectURL(file), // Just for preview
+			file, // This contains the actual file with binary data
+			tag, // Associate the file with the input's tag
 		}));
-
-		// Update the state with newly uploaded files
-		setUploadedFiles((prevFiles) => [...prevFiles, ...newFiles]);
+		setUploadedFiles((prev) => [...prev, ...filesWithTags]); // Add files to uploadedFiles state
 	};
 
 	const handleFileDelete = (fileIndex: number) => {
@@ -443,7 +491,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 															type="file"
 															ref={fileInputRef}
 															style={{ display: "none" }}
-															onChange={handleFileChange}
+															onChange={(e) => handleFileChange(e, field.tag)}
 															multiple // Allow multiple file selection
 															accept={allowedFormats || ""}
 														/>

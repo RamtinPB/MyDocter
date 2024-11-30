@@ -2,15 +2,15 @@ import { SetStateAction, useEffect, useState } from "react";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "./LanguageContext";
 
-interface AdminDashboardManageUsersModelProps {
+interface AdminDashboardManageUsersModalProps {
 	onConfirm: (captchaValue: string) => void;
 	show: boolean;
 	onClose: () => void;
 }
 
-function AdminDashboardManageUsersModel({
+function AdminDashboardManageUsersModal({
 	onConfirm,
-}: AdminDashboardManageUsersModelProps) {
+}: AdminDashboardManageUsersModalProps) {
 	const tabi = -1;
 	const [captchaImage, setCaptchaImage] = useState<string | null>(null);
 	const [loadingCaptcha, setLoadingCaptcha] = useState(false);
@@ -136,4 +136,4 @@ function AdminDashboardManageUsersModel({
 	);
 }
 
-export default AdminDashboardManageUsersModel;
+export default AdminDashboardManageUsersModal;
