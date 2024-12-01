@@ -108,20 +108,22 @@ const NotificationDropdown = () => {
 				)}
 			</button>
 
-			<div className="dropdown-menu dropdown-menu-center position-absolute top-100 start-50 translate-middle-x mt-3 shadow-sm">
-				{notifications.map((notification) => (
-					<Link
-						to={notification.targetUrl}
-						key={notification.id} // Using purchaseId-status for unique keys
-						className={`dropdown-item text-${
-							language === "fa" ? "end" : "start"
-						} ${notification.seen ? "text-muted" : "font-weight-bold"}`}
-						onClick={() => handleNotificationClick(notification.id)}
-					>
-						{notification.message}
-					</Link>
-				))}
-			</div>
+			{notifications && notifications.length > 0 && (
+				<div className="dropdown-menu dropdown-menu-center position-absolute top-100 start-50 translate-middle-x mt-3 shadow-sm">
+					{notifications.map((notification) => (
+						<Link
+							to={notification.targetUrl}
+							key={notification.id} // Using purchaseId-status for unique keys
+							className={`dropdown-item text-${
+								language === "fa" ? "end" : "start"
+							} ${notification.seen ? "text-muted" : "font-weight-bold"}`}
+							onClick={() => handleNotificationClick(notification.id)}
+						>
+							{notification.message}
+						</Link>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };

@@ -2,43 +2,41 @@ import { useEffect, useState } from "react";
 import "../cssFiles/customColors.css";
 import { useLanguage } from "../components/LanguageContext";
 import { useParams } from "react-router-dom";
+import axiosInstance from "../myAPI/axiosInstance";
 
-interface ServiceInfo {
-	[key: string]: any;
+interface purchasedServiceInfo {
+	id: string;
+	serviceId: string;
+	serviceName: string;
+	serviceStatus: string;
+	lastUpdate: string;
 }
 
 function ManageUserInterfaceUserPurchasedServices() {
 	const { userId } = useParams<{ userId: string }>(); // Retrieve userId from the URL
-	const [serviceInfo, setServiceInfo] = useState<ServiceInfo[]>([]);
+	const [purchasedserviceInfo, setPurchasedServiceInfo] = useState<
+		purchasedServiceInfo[]
+	>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
-		const fetchServices = async () => {
+		const fetchUserData = async () => {
 			try {
-				const response = await fetch("/db.json"); // Adjust the path if necessary
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+				const response = await axiosInstance.post("/api/User/GetUserProfile");
+				if (response.status !== 200) {
+					throw new Error("Failed to fetch data from API");
 				}
-				const data = await response.json();
-				const services = data.userPurchasedServices;
 
-				// Filter services by the specific userId
-				const filteredServices = services.filter(
-					(service: ServiceInfo) => service.userId === userId
-				);
-
-				setServiceInfo(filteredServices);
+				setPurchasedServiceInfo(response.data.purchasedServices);
 				setLoading(false);
 			} catch (err) {
-				console.error("Error fetching services:", err);
-				setError("Failed to fetch services");
-				setLoading(false);
+				setError(err as string);
 			}
 		};
 
-		fetchServices();
+		fetchUserData();
 	}, [userId]);
 
 	if (loading) {
@@ -80,7 +78,7 @@ function ManageUserInterfaceUserPurchasedServices() {
 									{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
 								</th>
 								<th scope="col">
-									{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+									{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
 								</th>
 								<th scope="col">
 									{language === "fa" ? "وضعیت پیگیری" : "Status"}
@@ -88,26 +86,26 @@ function ManageUserInterfaceUserPurchasedServices() {
 							</tr>
 						</thead>
 						<tbody>
-							{serviceInfo.map((service, index) => (
+							{purchasedserviceInfo.map((service, index) => (
 								<tr
-									key={service.purchaseId}
+									key={service.serviceId}
 									onClick={() =>
-										(window.location.href = `/purchased-services/${service.purchaseId}`)
+										(window.location.href = `/purchased-services/${service.id}`)
 									}
 								>
 									<th scope="row" className="align-middle">
 										{index + 1}
 									</th>
-									<td className="align-middle">{service.name}</td>
-									<td className="align-middle">{service.purchaseId}</td>
-									<td className="align-middle">{service.purchaseDate}</td>
+									<td className="align-middle">{service.serviceName}</td>
+									<td className="align-middle">{service.id}</td>
+									<td className="align-middle">{service.lastUpdate}</td>
 									<td className="align-middle">
 										<span
 											className={`align-middle badge ${getStatusClass(
-												service.status
+												service.serviceStatus
 											)} rounded-pill`}
 										>
-											{service.status}
+											{service.serviceStatus}
 										</span>
 									</td>
 								</tr>

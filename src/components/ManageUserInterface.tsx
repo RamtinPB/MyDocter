@@ -54,7 +54,7 @@ function ManageUserInterface() {
 		<>
 			<div
 				className="container text-center my-3 my-md-4 my-lg-5 pb-2 pb-md-3"
-				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+				style={{ direction: "ltr" }}
 			>
 				<FaCaretLeft
 					type="button"

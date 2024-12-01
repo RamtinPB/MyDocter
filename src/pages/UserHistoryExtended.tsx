@@ -9,7 +9,7 @@ import "/src/cssFiles/textOverflow.css";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import { FaCaretLeft } from "react-icons/fa";
-import FormRenderFilled from "../components/ForRenderFilled";
+import FormRenderFilled from "../components/FormRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
@@ -22,9 +22,8 @@ interface purchasedServiceProps {
 	lastUpdateTime: string;
 	finalPrice: string;
 	result: string;
-	approvedByDoctor: Boolean;
-	files?: { fileName: string; fileType: string; fileUrl: string }[]; // Added files property
-	userInput: string;
+	approvedByDoctor: boolean;
+	inputs?: { tag: string; value: string }[];
 }
 
 const icons = {
@@ -34,7 +33,6 @@ const icons = {
 	jpg: imgIcon,
 	jpeg: imgIcon,
 	png: imgIcon,
-	// Add other icons as needed
 	default: fileIcon,
 };
 
@@ -170,6 +168,19 @@ function UserHistoryExtended() {
 								{purchasedServiceData.serviceName}
 							</div>
 						</div>
+
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "وضعیت پیگیری" : "Status"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
+								{purchasedServiceData.status}
+							</div>
+						</div>
 						<div
 							className={`col-6 text-${
 								language === "fa" ? "end" : "start"
@@ -180,6 +191,19 @@ function UserHistoryExtended() {
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.serviceId}
+							</div>
+						</div>
+
+						<div
+							className={`col-6 text-${
+								language === "fa" ? "end" : "start"
+							} mb-5 px-3 px-md-5`}
+						>
+							<h6 className=" mx-1">
+								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+							</h6>
+							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
+								{purchasedServiceData.id}
 							</div>
 						</div>
 						<div
@@ -218,30 +242,6 @@ function UserHistoryExtended() {
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.finalPrice}
-							</div>
-						</div>
-						<div
-							className={`col-6 text-${
-								language === "fa" ? "end" : "start"
-							} mb-5 px-3 px-md-5`}
-						>
-							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
-							</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.id}
-							</div>
-						</div>
-						<div
-							className={`col-6 text-${
-								language === "fa" ? "end" : "start"
-							} mb-5 px-3 px-md-5`}
-						>
-							<h6 className=" mx-1">
-								{language === "fa" ? "وضعیت پیگیری" : "Status"}
-							</h6>
-							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.status}
 							</div>
 						</div>
 					</div>
@@ -299,40 +299,32 @@ function UserHistoryExtended() {
 						{language === "fa" ? "فرم تکمیل شده" : "Completed Form"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{true ? (
-							<FormRenderFilled />
-						) : (
-							<div className="text-center py-3">
-								<p>
-									{language === "fa"
-										? "اطلاعات فرم یافت نشد"
-										: "Form Data Not Found"}
-								</p>
-							</div>
-						)}
+						<FormRenderFilled inputs={purchasedServiceData.inputs} />
 					</div>
 				</div>
 
-				{/* <div
+				<div
 					className={`bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
 					<h5 className="px-4 mx-1">
-						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
+						{language === "fa" ? "نتایج" : "Results"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{purchasedServiceData.userInput ? (
-							<p>{purchasedServiceData.userInput}</p>
+						{purchasedServiceData.result ? (
+							<p>{purchasedServiceData.result}</p>
 						) : (
-							<div className="text-center px-3 mx-4 py-2">
-								<p>
-									{language === "fa" ? "ورودی داده نشد" : "No input was given"}
+							<div className="text-center px-3 mx-4 py-3">
+								<p className="m-0">
+									{language === "fa"
+										? "نتایج آماده نشده است"
+										: "Results are not ready yet"}
 								</p>
 							</div>
 						)}
 					</div>
-				</div> */}
+				</div>
 			</div>
 		</div>
 	);

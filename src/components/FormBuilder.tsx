@@ -309,8 +309,8 @@ function FormBuilder() {
 				return 1;
 			case "float":
 				return 2;
-			case "checkbox":
-				return 0; // boolean
+			// case "checkbox":
+			// 	return 10;
 			case "date":
 				return 3;
 			case "file":
@@ -329,8 +329,8 @@ function FormBuilder() {
 				return "integer";
 			case 2:
 				return "float";
-			case 10:
-				return "checkbox"; // boolean
+			// case 10:
+			// 	return "checkbox";
 			case 3:
 				return "date";
 			case 4:

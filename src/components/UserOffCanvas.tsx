@@ -146,7 +146,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				</h4>
 			</div>
 			<div className="offcanvas-body shadow p-0">
-				<div className="d-flex flex-row justify-content-between align-items-center custom-bg-2">
+				<div
+					className="d-flex flex-row justify-content-between align-items-center custom-bg-2"
+					style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+				>
 					<div>
 						{profilePicture ? (
 							<img
@@ -164,10 +167,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 					<div className="d-flex flex-column justify-content-center align-items-end mb-2 py-1 px-4">
 						<span className="text-white mb-2 py-1 px-2">{username}</span>
 						<div
-							className="d-flex flex-row justify-content-between mb-2 py-1 "
-							style={{ direction: "rtl" }}
+							className="d-flex flex-row justify-content-between align-items-center mb-2 py-1 "
+							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 						>
-							<span className="text-white px-2">
+							<span className="text-white d-inline px-2">
 								{language === "fa" ? "کیف پول" : "Wallet Balance"}
 							</span>
 							<span className="text-white px-2">
