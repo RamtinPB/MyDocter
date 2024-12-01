@@ -299,7 +299,7 @@ function UserHistoryExtended() {
 						{language === "fa" ? "فرم تکمیل شده" : "Completed Form"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						<FormRenderFilled inputs={purchasedServiceData.inputs} />
+						<FormRenderFilled purchasedServiceData={purchasedServiceData} />
 					</div>
 				</div>
 
