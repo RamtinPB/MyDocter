@@ -581,6 +581,7 @@ function UserInformation() {
 				insuranceId,
 				supplementalInsuranceId,
 			};
+			console.log(updatedData);
 
 			try {
 				// Send the transformed data to the update API

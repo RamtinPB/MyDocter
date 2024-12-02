@@ -84,7 +84,7 @@ function UserHistory() {
 		switch (status.toLowerCase()) {
 			case "Complete":
 				return "bg-success";
-			case "Active":
+			case "Waiting":
 				return "bg-warning";
 			case "error":
 				return "bg-danger";

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
-import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
-import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
-import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+// import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
+// import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
+// import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
+// import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import "/src/cssFiles/textOverflow.css";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
@@ -23,26 +23,31 @@ interface purchasedServiceProps {
 	finalPrice: string;
 	result: string;
 	approvedByDoctor: boolean;
-	inputs?: { tag: string; value: string }[];
+	inputs?: {
+		type: string;
+		value: string;
+		label: string;
+		labelEN: string;
+	}[];
 }
 
-const icons = {
-	pdf: pdfIcon,
-	zip: zipIcon,
-	rar: zipIcon,
-	jpg: imgIcon,
-	jpeg: imgIcon,
-	png: imgIcon,
-	default: fileIcon,
-};
+// const icons = {
+// 	pdf: pdfIcon,
+// 	zip: zipIcon,
+// 	rar: zipIcon,
+// 	jpg: imgIcon,
+// 	jpeg: imgIcon,
+// 	png: imgIcon,
+// 	default: fileIcon,
+// };
 
-const getIconForFileType = (fileName: string) => {
-	const extension = fileName
-		.split(".")
-		.pop()
-		?.toLowerCase() as keyof typeof icons;
-	return icons[extension] || icons["default"];
-};
+// const getIconForFileType = (fileName: string) => {
+// 	const extension = fileName
+// 		.split(".")
+// 		.pop()
+// 		?.toLowerCase() as keyof typeof icons;
+// 	return icons[extension] || icons["default"];
+// };
 
 function UserHistoryExtended() {
 	const { purchaseId } = useParams<{ purchaseId: string }>();
