@@ -93,6 +93,7 @@ interface UserFormData {
 	name: string;
 	lastName: string;
 	phoneNumber: string;
+	fixedPhoneNumber: string;
 	email: string;
 	gender: string;
 	insuranceType: string;
@@ -117,6 +118,7 @@ const initialFormData: UserFormData = {
 	name: "",
 	lastName: "",
 	phoneNumber: "",
+	fixedPhoneNumber: "",
 	email: "",
 	gender: "",
 	insuranceType: "",

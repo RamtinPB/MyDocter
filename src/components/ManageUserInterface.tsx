@@ -51,9 +51,9 @@ function ManageUserInterface() {
 	};
 
 	return (
-		<>
+		<div className="custom-bg-4">
 			<div
-				className="container text-center my-3 my-md-4 my-lg-5 pb-2 pb-md-3"
+				className="container text-center  py-3 py-md-4 py-lg-5"
 				style={{ direction: "ltr" }}
 			>
 				<FaCaretLeft
@@ -106,8 +106,8 @@ function ManageUserInterface() {
 			</div>
 
 			{/* Render the appropriate content based on active section */}
-			<div className="container">{renderContent()}</div>
-		</>
+			<div className="">{renderContent()}</div>
+		</div>
 	);
 }
 
