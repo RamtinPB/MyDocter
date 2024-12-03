@@ -24,15 +24,18 @@ function ManageUserInterfaceUserPurchasedServices() {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const response = await axiosInstance.post("/api/User/GetUserProfile");
+				const response = await axiosInstance.post(
+					"/api/Admin/GetUserPurchasedServices",
+					{ userId: userId }
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
 
 				setPurchasedServiceInfo(response.data.purchasedServices);
 				setLoading(false);
-			} catch (err) {
-				setError(err as string);
+			} catch (error) {
+				setError(error as string);
 			}
 		};
 
