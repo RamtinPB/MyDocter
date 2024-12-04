@@ -19,7 +19,7 @@ function ManageUserInterface() {
 		if (location.state?.activeSection) {
 			setActiveSection(location.state.activeSection);
 		}
-		console.log(location.state?.activeSection);
+		console.log("Active location:", location.state?.activeSection);
 	}, [location]);
 
 	// Function to handle setting activeSection and updating location.state

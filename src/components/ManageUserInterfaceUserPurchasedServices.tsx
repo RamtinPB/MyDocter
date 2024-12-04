@@ -8,9 +8,41 @@ interface purchasedServiceInfo {
 	id: string;
 	serviceId: string;
 	serviceName: string;
-	serviceStatus: string;
+	status: string;
 	lastUpdate: string;
 }
+
+const getStatusString = (status: number) => {
+	switch (status) {
+		case 0:
+			return "Initializing";
+		case 1:
+			return "Completed";
+		case 2:
+			return "Failed";
+		case 3:
+			return "Waiting";
+		case 4:
+			return "Processing";
+		case 5:
+			return "Canceled";
+	}
+};
+
+const getStatusClass = (status: string) => {
+	switch (status) {
+		case "complete":
+			return "bg-success";
+		case "processing":
+			return "bg-warning";
+		case "Failed":
+			return "bg-danger";
+		case "Canceled":
+			return "bg-danger";
+		default:
+			return "bg-secondary";
+	}
+};
 
 function ManageUserInterfaceUserPurchasedServices() {
 	const { userId } = useParams<{ userId: string }>(); // Retrieve userId from the URL
@@ -22,25 +54,31 @@ function ManageUserInterfaceUserPurchasedServices() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
-		const fetchUserData = async () => {
-			try {
-				const response = await axiosInstance.post(
-					"/api/Admin/GetUserPurchasedServices",
-					{ userId: userId }
-				);
+		axiosInstance
+			.post(
+				"/api/Admin/GetUserPurchasedServices",
+				{ userId: userId },
+				{ withCredentials: true }
+			)
+			.then((response) => {
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
 
-				setPurchasedServiceInfo(response.data.purchasedServices);
-				setLoading(false);
-			} catch (error) {
-				setError(error as string);
-			}
-		};
+				const updatedData = response.data.map((item: purchasedServiceInfo) => ({
+					...item,
+					status: getStatusString(Number(item.status)),
+				}));
 
-		fetchUserData();
-	}, [userId]);
+				console.log(updatedData); // Ensure this logs the correct transformed data
+				setPurchasedServiceInfo(updatedData);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(error); // Log the error for debugging
+				setError("Failed to load purchased services. Please try again later.");
+			});
+	}, []);
 
 	if (loading) {
 		return <div className="text-center my-5">Loading...</div>;
@@ -49,19 +87,6 @@ function ManageUserInterfaceUserPurchasedServices() {
 	if (error) {
 		return <div className="text-center my-5 text-danger">{error}</div>;
 	}
-
-	const getStatusClass = (status: string) => {
-		switch (status.toLowerCase()) {
-			case "complete":
-				return "bg-success";
-			case "processing":
-				return "bg-warning";
-			case "error":
-				return "bg-danger";
-			default:
-				return "bg-secondary";
-		}
-	};
 
 	return (
 		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
@@ -105,10 +130,10 @@ function ManageUserInterfaceUserPurchasedServices() {
 									<td className="align-middle">
 										<span
 											className={`align-middle badge ${getStatusClass(
-												service.serviceStatus
+												service.status
 											)} rounded-pill`}
 										>
-											{service.serviceStatus}
+											{service.status}
 										</span>
 									</td>
 								</tr>

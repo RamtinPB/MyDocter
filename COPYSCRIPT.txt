@@ -1,165 +1,149 @@
-given this piece of form fields data which i get from the GetUserDataFormFields api:
+given this code:
+import { useEffect, useState } from "react";
+import "../cssFiles/customColors.css";
+import { useLanguage } from "../components/LanguageContext";
+import { useParams } from "react-router-dom";
+import axiosInstance from "../myAPI/axiosInstance";
 
-10
-: 
-checkboxLabel
-: 
-"فاقد بیمه"
-checkboxLabelEN
-: 
-"Don't have Insurance"
-checkboxName
-: 
-"noInsurance"
-enabled
-: 
-undefined
-label
-: 
-"نوع بیمه"
-labelEN
-: 
-"Insurance Type"
-name
-: 
-"insuranceType"
-options
-: 
-"بیمه سلامت,بیمه تامین اجتماعی"
-optionsEN
-: 
-"insurance1,insurance2"
-required
-: 
-false
-type
-: 
-"select"
-
-
-11
-: 
-checkboxLabel
-: 
-"فاقد بیمه تکمیلی"
-checkboxLabelEN
-: 
-"Don't have Supplementary Insurance"
-checkboxName
-: 
-"noSupplementaryInsurance"
-enabled
-: 
-undefined
-label
-: 
-"نوع بیمه تکمیلی"
-labelEN
-: 
-"Supplementary Insurance Type"
-name
-: 
-"supplementaryInsuranceType"
-options
-: 
-"بیمه الف,بیمه ب"
-optionsEN
-: 
-"supplementaryInsuranceType1,supplementaryInsuranceType2"
-required
-: 
-false
-type
-: 
-"select"
-
-and given this GetUserDataFormFields api call:
-useEffect(() => {
-		axiosInstance
-			.post("/api/User/GetUserDataFormFields") // API call for form data and validation
-			.then((response) => {
-				const data = response.data;
-
-				const {
-					formFieldsProps: newFormFields,
-					validationSchemaData: newValidationSchemaData,
-				} = processData(data);
-
-				setFormFields(newFormFields);
-				setValidationSchemaData(newValidationSchemaData);
-
-				console.log(newFormFields);
-				//console.log(newValidationSchemaData);
-			})
-			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						const {
-							formFieldsProps: newFormFields,
-							validationSchemaData: newValidationSchemaData,
-						} = processData(data);
-
-						setFormFields(newFormFields);
-						setValidationSchemaData(newValidationSchemaData);
-
-						console.log(newFormFields);
-						console.log(newValidationSchemaData);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, []);
-
-and given this api call to get the insurance data:
-useEffect(() => {
-		axiosInstance
-			.post("/api/Admin/GetInsurances")
-			.then((response) => {
-				const data = response.data;
-				setInsuranceData(data);
-			})
-			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						setInsuranceData(data);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
-			});
-	}, []);
-
-
-
-which is then stores the data in insuranceData;
-
-	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
-
-and given these structure of the insuranceData:
-interface insuranceDataProps {
-	id: number;
-	companyName: string;
-	companyNameEN: string;
-	type: number;
-	discountPercentage: number;
+interface purchasedServiceInfo {
+	id: string;
+	serviceId: string;
+	serviceName: string;
+	status: string;
+	lastUpdate: string;
 }
 
+function ManageUserInterfaceUserPurchasedServices() {
+	const { userId } = useParams<{ userId: string }>(); // Retrieve userId from the URL
+	const [purchasedserviceInfo, setPurchasedServiceInfo] = useState<
+		purchasedServiceInfo[]
+	>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
+	const { language } = useLanguage(); // Get language and toggle function from context
 
-i need you to create a function that i can use before the part setFormFields(newFormFields); that store the formFields data;
-so that i can replace the options and optionsEN of the insuranceType and supplementaryInsuranceType respectivly, with the data in the insuranceData, based of course on the type of the item;
-by which i mean all the data with type = 0, should have their coresponding companyName and companyNameEN be placed in the options and optionsEN respectivly.
+	useEffect(() => {
+		axiosInstance
+			.post(
+				"/api/Admin/GetUserPurchasedServices",
+				{ userId: userId },
+				{ withCredentials: true }
+			)
+			.then((response) => {
+				const data = response.data;
+				const updatedData = {
+					...data,
+					status: getStatusString(data.status),
+				};
+				console.log(updatedData);
+				setPurchasedServiceInfo(updatedData);
+				setLoading(false);
+			})
+			.catch((error) => {
+				setError(error as string);
+			});
+	}, []);
 
-so to recap, create a function that i can call be for setting the formFields data, which this function replaces the options and optionsEN data in the items with the name = insuranceType and name = supplementaryInsuranceType respectivly;
+	if (loading) {
+		return <div className="text-center my-5">Loading...</div>;
+	}
+
+	if (error) {
+		return <div className="text-center my-5 text-danger">{error}</div>;
+	}
+
+	const getStatusString = (status: number) => {
+		switch (status) {
+			case 0:
+				return "Initializing";
+			case 1:
+				return "Completed";
+			case 2:
+				return "Failed";
+			case 3:
+				return "Waiting";
+			case 4:
+				return "Processing";
+			case 5:
+				return "Canceled";
+		}
+	};
+
+	const getStatusClass = (status: string) => {
+		switch (status) {
+			case "complete":
+				return "bg-success";
+			case "processing":
+				return "bg-warning";
+			case "Failed":
+				return "bg-danger";
+			case "Canceled":
+				return "bg-danger";
+			default:
+				return "bg-secondary";
+		}
+	};
+
+	return (
+		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
+			<div className="container py-5">
+				<div className="bg-white border border-3 border-primary rounded-5 p-3">
+					<table
+						className="table table-hover text-center"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">
+									{language === "fa" ? "نام سرویس" : "Service Name"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+								</th>
+								<th scope="col">
+									{language === "fa" ? "وضعیت پیگیری" : "Status"}
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{purchasedserviceInfo.map((service, index) => (
+								<tr
+									key={service.serviceId}
+									onClick={() =>
+										(window.location.href = `/purchased-services/${service.id}`)
+									}
+								>
+									<th scope="row" className="align-middle">
+										{index + 1}
+									</th>
+									<td className="align-middle">{service.serviceName}</td>
+									<td className="align-middle">{service.id}</td>
+									<td className="align-middle">{service.lastUpdate}</td>
+									<td className="align-middle">
+										<span
+											className={`align-middle badge ${getStatusClass(
+												service.status
+											)} rounded-pill`}
+										>
+											{service.status}
+										</span>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export default ManageUserInterfaceUserPurchasedServices;
+
+the website render only shows the loading...
+and the console.log in the .then of the GetUserPurchasedServices api call isnt displayed in the console.
+what is the issue with my code?
