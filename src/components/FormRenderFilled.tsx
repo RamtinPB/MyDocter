@@ -65,7 +65,7 @@ interface purchasedServiceProps {
 }
 
 interface FormRenderFilledProps {
-	purchasedServiceData: purchasedServiceProps; // Accepts the entire object
+	purchasedServiceData?: purchasedServiceProps; // Accepts the entire object
 }
 
 function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
@@ -139,7 +139,7 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 					className="row row-cols-2 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					{purchasedServiceData.inputs?.map((field) => {
+					{purchasedServiceData?.inputs?.map((field) => {
 						const isCheckbox = field.type.toLowerCase() === "checkbox";
 						const isText = field.type.toLowerCase() === "text";
 						const isTextLong = field.type.toLowerCase() === "longString";

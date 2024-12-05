@@ -18,6 +18,7 @@ import UserIEInformation from "./pages/UserIEInformation";
 import AdminDashboard from "./pages/AdminDashboard";
 import ServicePageEdit from "./components/AdminDashboardServicesPageEdit";
 import AdminDashboardManageUsersExtended from "./components/ManageUserInterface";
+import ManageUserInterfaceUserPurchasedServicesExtended from "./components/ManageUserInterfaceUserPurchasedServicesExtended";
 
 function App() {
 	return (
@@ -39,6 +40,10 @@ function App() {
 						path="/purchased-services/:purchaseId"
 						element={<UserHistoryExtended />}
 					/>
+					<Route
+						path="/purchased-services/:purchaseId/:userId"
+						element={<ManageUserInterfaceUserPurchasedServicesExtended />}
+					/>
 					<Route path="/services/:id" element={<ServicePage />} />
 					<Route
 						path="/GeneralDoctorPrescription"
@@ -52,7 +57,7 @@ function App() {
 					<Route path="/formRender" element={<FormRender />} />
 					<Route
 						path="/form-filled/:id/:purchaseId"
-						element={<FormRenderFilled />}
+						element={<FormRenderFilled purchasedServiceData={undefined} />}
 					/>
 				</Route>
 

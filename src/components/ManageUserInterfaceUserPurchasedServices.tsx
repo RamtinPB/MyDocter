@@ -7,9 +7,18 @@ import axiosInstance from "../myAPI/axiosInstance";
 interface purchasedServiceInfo {
 	id: string;
 	serviceId: string;
-	serviceName: string;
+	userId: string;
+	result: string;
+	finalPrice: string;
 	status: string;
-	lastUpdate: string;
+	lastUpdateTime: string;
+	approvedByDoctor: string;
+	date: string;
+	service: {
+		id: string;
+		pageTitle: string;
+		pageTitleEN: string;
+	};
 }
 
 const getStatusString = (status: number) => {
@@ -89,58 +98,60 @@ function ManageUserInterfaceUserPurchasedServices() {
 	}
 
 	return (
-		<div className="container custom-bg-4 shadow rounded-5 p-3 mb-4 mb-md-5">
-			<div className="container py-5">
-				<div className="bg-white border border-3 border-primary rounded-5 p-3">
-					<table
-						className="table table-hover text-center"
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-					>
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">
-									{language === "fa" ? "نام سرویس" : "Service Name"}
+		<div className="container py-5 min-vh-100">
+			<div className="bg-white border border-3 border-primary rounded-5 p-3">
+				<table
+					className="table table-hover text-center"
+					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+				>
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">
+								{language === "fa" ? "نام سرویس" : "Service Name"}
+							</th>
+							<th scope="col">
+								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+							</th>
+							<th scope="col">
+								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+							</th>
+							<th scope="col">
+								{language === "fa" ? "وضعیت پیگیری" : "Status"}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{purchasedserviceInfo.map((service, index) => (
+							<tr
+								key={service.serviceId}
+								onClick={() =>
+									(window.location.href = `/purchased-services/${service.id}/${service.userId}`)
+								}
+							>
+								<th scope="row" className="align-middle">
+									{index + 1}
 								</th>
-								<th scope="col">
-									{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
-								</th>
-								<th scope="col">
-									{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
-								</th>
-								<th scope="col">
-									{language === "fa" ? "وضعیت پیگیری" : "Status"}
-								</th>
+								<td className="align-middle">
+									{language === "fa"
+										? service.service.pageTitle
+										: service.service.pageTitleEN}
+								</td>
+								<td className="align-middle">{service.id}</td>
+								<td className="align-middle">{service.lastUpdateTime}</td>
+								<td className="align-middle">
+									<span
+										className={`align-middle badge ${getStatusClass(
+											service.status
+										)} rounded-pill`}
+									>
+										{service.status}
+									</span>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{purchasedserviceInfo.map((service, index) => (
-								<tr
-									key={service.serviceId}
-									onClick={() =>
-										(window.location.href = `/purchased-services/${service.id}`)
-									}
-								>
-									<th scope="row" className="align-middle">
-										{index + 1}
-									</th>
-									<td className="align-middle">{service.serviceName}</td>
-									<td className="align-middle">{service.id}</td>
-									<td className="align-middle">{service.lastUpdate}</td>
-									<td className="align-middle">
-										<span
-											className={`align-middle badge ${getStatusClass(
-												service.status
-											)} rounded-pill`}
-										>
-											{service.status}
-										</span>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
+						))}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	);
