@@ -19,8 +19,14 @@ function ManageUserInterface() {
 		if (location.state?.activeSection) {
 			setActiveSection(location.state.activeSection);
 		}
-		console.log("Active location:", location.state?.activeSection);
+		//console.log("Active location:", location.state?.activeSection);
 	}, [location]);
+
+	useEffect(() => {
+		if (!location.state?.activeSection) {
+			setActiveSection("userPersonalInfo");
+		}
+	}, [location.state]);
 
 	// Function to handle setting activeSection and updating location.state
 	const handleNavigation = (section: SetStateAction<string>) => {
