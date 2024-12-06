@@ -47,15 +47,6 @@ const formatDateToISO = (dateValue: string): string => {
 // };
 
 interface purchasedServiceProps {
-	id: string;
-	serviceId: string;
-	serviceName: string;
-	date: string;
-	status: string;
-	lastUpdateTime: string;
-	finalPrice: string;
-	result: string;
-	approvedByDoctor: boolean;
 	inputs?: {
 		type: string;
 		value: string;

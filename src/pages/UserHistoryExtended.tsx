@@ -17,6 +17,7 @@ interface purchasedServiceProps {
 	id: string;
 	serviceId: string;
 	serviceName: string;
+	serviceNameEN: string;
 	date: string;
 	status: string;
 	lastUpdateTime: string;
@@ -170,7 +171,9 @@ function UserHistoryExtended() {
 								{language === "fa" ? "نام سرویس" : "Service Name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.serviceName}
+								{language === "fa"
+									? purchasedServiceData.serviceName
+									: purchasedServiceData.serviceNameEN}
 							</div>
 						</div>
 

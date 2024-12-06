@@ -21,20 +21,20 @@ interface purchasedServiceInfo {
 	};
 }
 
-const getStatusString = (status: number) => {
+const getStatusString = (status: number, language: string) => {
 	switch (status) {
 		case 0:
-			return "Initializing";
+			return language === "fa" ? "مقداردهی" : "Initializing";
 		case 1:
-			return "Completed";
+			return language === "fa" ? "تکمیل شده" : "Completed";
 		case 2:
-			return "Failed";
+			return language === "fa" ? "ناموفق" : "Failed";
 		case 3:
-			return "Waiting";
+			return language === "fa" ? "در انتظار" : "Waiting";
 		case 4:
-			return "Processing";
+			return language === "fa" ? "پردازش" : "Processing";
 		case 5:
-			return "Canceled";
+			return language === "fa" ? "لغو شد" : "Cancelled";
 	}
 };
 
@@ -46,7 +46,7 @@ const getStatusClass = (status: string) => {
 			return "bg-warning";
 		case "Failed":
 			return "bg-danger";
-		case "Canceled":
+		case "Cancelled":
 			return "bg-danger";
 		default:
 			return "bg-secondary";
@@ -76,10 +76,9 @@ function ManageUserInterfaceUserPurchasedServices() {
 
 				const updatedData = response.data.map((item: purchasedServiceInfo) => ({
 					...item,
-					status: getStatusString(Number(item.status)),
+					status: getStatusString(Number(item.status), language),
 				}));
 
-				console.log(updatedData); // Ensure this logs the correct transformed data
 				setPurchasedServiceInfo(updatedData);
 				setLoading(false);
 			})
