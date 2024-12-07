@@ -50,12 +50,12 @@ function AdminDashboardManageUsers() {
 					error
 				);
 				try {
-					const response = await fetch("/db.json");
+					const response = await fetch("/UserList.json");
 					if (!response.ok) {
 						throw new Error("Failed to fetch user data from db.json");
 					}
 					const data = await response.json();
-					const users = data.users;
+					const users = data;
 					setUsersList(users);
 				} catch (err) {
 					console.error(
