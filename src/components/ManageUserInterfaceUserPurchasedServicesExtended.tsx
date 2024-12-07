@@ -271,7 +271,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 
 	const handleBackClick = () => {
 		navigate(`/edit-user/${purchasedServiceData.userId}`, {
-			state: { activeSection: "userPurchased" }, // Hardcode "manageUsers" as the active section
+			state: { activeSection: "userPurchased" },
 		});
 	};
 
