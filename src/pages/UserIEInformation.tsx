@@ -426,30 +426,23 @@ function UserIEInformation() {
 				// Update state for userInfo
 				setUserInfo(data);
 			})
-			.catch((error) => {
-				console.error(
-					"API request for user data failed, trying local db.json",
-					error
-				);
+			.catch(async (error) => {
+				console.error("API request failed, trying local db.json", error);
+				try {
+					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
 
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
-						}
-						return response.json();
-					})
-					.then((data) => {
-						// Update state for userInfo
-						setUserInfo(data.userInfo);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data from both API and db.json",
-							jsonError
-						);
-					});
+					// Update state for userInfo
+					setUserInfo(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, []);
 
@@ -501,32 +494,65 @@ function UserIEInformation() {
 					};
 					// Update form values with userInfoIE data
 					formik.setValues(formattedData);
-					console.log(formattedData);
 				})
-				.catch((error) => {
-					console.error(
-						"API request for user data failed, trying local db.json",
-						error
-					);
+				.catch(async (error) => {
+					console.error("API request failed, trying local db.json", error);
+					try {
+						const response = await fetch("/UserInitialEvaluation.json"); // Adjust path if necessary
+						if (!response.ok) {
+							throw new Error("Failed to fetch data from db.json");
+						}
+						const data = await response.json();
 
-					// Fetch from local db.json if API fails
-					fetch("/db.json")
-						.then((response) => {
-							if (!response.ok) {
-								throw new Error("Failed to fetch user data from db.json");
-							}
-							return response.json();
-						})
-						.then((data) => {
-							// Update form values with userInfoIE data
-							formik.setValues(data.userInfoIE);
-						})
-						.catch((jsonError) => {
-							console.error(
-								"Failed to fetch user data from both API and db.json",
-								jsonError
-							);
-						});
+						const formattedData = {
+							...data,
+
+							...handleConditionalEmptyFieldsForFront(data),
+
+							...parseDisabilityOptions(data.additionalDisabilityOptions),
+							...parseRiskFactors(data.riskFactors),
+
+							isLactating: convertYesNoToString(data.isLactating, language),
+							isPregnant: convertYesNoToString(data.isPregnant, language),
+
+							bloodTransfusionHistory: convertHasOrNotToString(
+								data.bloodTransfusionHistory,
+								language
+							),
+							sleepStatus: convertSleepStatusToString(
+								data.sleepStatus,
+								language
+							),
+
+							independentlyEats: convertDependenceTostring(
+								data.independentlyEats,
+								language
+							),
+							independentlyDresses: convertDependenceTostring(
+								data.independentlyDresses,
+								language
+							),
+							independentlyBathes: convertDependenceTostring(
+								data.independentlyBathes,
+								language
+							),
+							independentlyDefecates: convertDependenceTostring(
+								data.independentlyDefecates,
+								language
+							),
+							independentlyMoves: convertDependenceTostring(
+								data.independentlyMoves,
+								language
+							),
+						};
+						// Update form values with userInfoIE data
+						formik.setValues(formattedData);
+					} catch (jsonErr) {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonErr
+						);
+					}
 				});
 		}
 	}, [dataUpdateFlag, isLanguageReady]);
@@ -546,40 +572,28 @@ function UserIEInformation() {
 				setFormFields(newFormFields);
 				setValidationSchemaData(newValidationSchemaData);
 			})
-			.catch((error) => {
-				console.error(
-					"API request for user data form fields failed, trying local db.json",
-					error
-				);
+			.catch(async (error) => {
+				console.error("API request failed, trying local db.json", error);
+				try {
+					const response = await fetch("/UserInitialEvaluationFormFields.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
 
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(
-								"Failed to fetch user data form fields from db.json"
-							);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						const {
-							formFieldsProps: newFormFields,
-							validationSchemaData: newValidationSchemaData,
-						} = processData(data);
+					const {
+						formFieldsProps: newFormFields,
+						validationSchemaData: newValidationSchemaData,
+					} = processData(data);
 
-						setFormFields(newFormFields);
-						setValidationSchemaData(newValidationSchemaData);
-
-						console.log(newFormFields);
-						console.log(newValidationSchemaData);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data form fields from both API and db.json",
-							jsonError
-						);
-					});
+					setFormFields(newFormFields);
+					setValidationSchemaData(newValidationSchemaData);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, []);
 

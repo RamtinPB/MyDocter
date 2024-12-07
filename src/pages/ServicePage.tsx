@@ -83,32 +83,23 @@ function ServicePage() {
 				setUserInfo(data);
 				setLoading(false);
 			})
-			.catch((error) => {
-				console.error(
-					"API request for user data failed, trying local db.json",
-					error
-				);
+			.catch(async (error) => {
+				console.error("API request failed, trying local db.json", error);
+				try {
+					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
 
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
-						}
-						return response.json();
-					})
-					.then((data) => {
-						const userInfo = data.userInfo;
-						setUserInfo(userInfo);
-						setLoading(false);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data from both API and db.json",
-							jsonError
-						);
-						setLoading(false);
-					});
+					setUserInfo(data);
+					setLoading(false);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, [id]);
 
@@ -166,7 +157,7 @@ function ServicePage() {
 				);
 
 				// Fetch from local db.json if API fails
-				fetch("/db.json")
+				fetch("/Insurances.json")
 					.then((response) => {
 						if (!response.ok) {
 							throw new Error("Failed to fetch user data from db.json");
@@ -209,7 +200,6 @@ function ServicePage() {
 				const data = response.data.service;
 
 				setService(data);
-				console.log(data);
 				setLoading(false);
 			})
 			.catch((error) => {
@@ -219,7 +209,7 @@ function ServicePage() {
 				);
 
 				// Fetch from local db.json if API fails
-				fetch("/db.json")
+				fetch("/ServiceData.json")
 					.then((response) => {
 						if (!response.ok) {
 							throw new Error("Failed to fetch user data from db.json");
@@ -227,11 +217,12 @@ function ServicePage() {
 						return response.json();
 					})
 					.then((data) => {
-						const selectedService = data.services.find(
+						const selectedService = data.find(
 							(s: { id: any }) => `${s.id}` === id
 						);
 						if (selectedService) {
 							setService(selectedService);
+							setServicePageBanner(selectedService.pageBannerUrl);
 						} else {
 							setError("Service not found");
 						}

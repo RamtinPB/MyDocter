@@ -99,14 +99,19 @@ function AdminDashboardServicesPageContent() {
 				setNewServiceUpdateFlag((prev) => !prev);
 			} catch (err) {
 				try {
-					const response = await fetch("/db.json"); // Adjust path if necessary
+					const response = await fetch("/AvailableServices.json"); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Network response was not ok");
 					}
 					const data = await response.json();
+					setServices(data);
 
-					// Assuming services is an array available in the root of db.json
-					setServices(data.services || []); // Default to empty array if data.services is undefined
+					// Create banners object directly from servicesData
+					const banners: { [id: string]: string } = {};
+					data.forEach((service: { id: number; imageUrl: string }) => {
+						banners[service.id] = service.imageUrl; // Map service.id to imageUrl
+					});
+					setServiceDisplayBanners(banners);
 				} catch (err) {
 					console.error("Failed to fetch services", err);
 				}

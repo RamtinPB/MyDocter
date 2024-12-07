@@ -38,9 +38,6 @@ function AdminDashboardMainPageContent() {
 		null
 	);
 
-	//const [initialHomePageData, setInitialHomePageData] =
-	// 	useState<homePageDataProps | null>(null);
-
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	useEffect(() => {
@@ -53,19 +50,18 @@ function AdminDashboardMainPageContent() {
 				}
 
 				setHomePageData(response.data);
-				//setInitialHomePageData(response.data);
 			} catch (err) {
 				console.error("API request failed, trying local db.json", err);
 
 				// Fallback to fetching from db.json if API request fails
 				try {
-					const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+					const response = await fetch("/HomePageData.json"); // Adjust the path to your static JSON file
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
 
 					const data = await response.json();
-					setHomePageData(data.homeTextData[0]);
+					setHomePageData(data);
 					//setInitialHomePageData(data.homeTextData[0]);
 				} catch (jsonErr) {
 					console.error(

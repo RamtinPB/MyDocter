@@ -40,7 +40,7 @@ function UserHistory() {
 				);
 
 				// Fetch from local db.json if API fails
-				fetch("/db.json")
+				fetch("/AllPurchasedServices.json")
 					.then((response) => {
 						if (!response.ok) {
 							throw new Error(
@@ -50,7 +50,7 @@ function UserHistory() {
 						return response.json();
 					})
 					.then((data) => {
-						const services = data.userPurchasedServices;
+						const services = data;
 						setPurchasedServicesData(services);
 						setError(null); // Clear any previous errors on success
 					})

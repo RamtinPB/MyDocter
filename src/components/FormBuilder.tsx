@@ -36,9 +36,6 @@ function FormBuilder() {
 		serviceFormFieldProps[]
 	>([]);
 
-	const [initialServiceFormFieldData, setInitialServiceFormFieldData] =
-		useState<serviceFormFieldProps[]>([]);
-
 	const [fieldLabel, setFieldLabel] = useState("");
 	const [fieldLabelEN, setFieldLabelEN] = useState("");
 
@@ -78,15 +75,36 @@ function FormBuilder() {
 					  }))
 					: [];
 				setServiceFormFieldData(newData);
-				setInitialServiceFormFieldData(newData);
 			})
-			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
+			.catch(async (error) => {
 				alert(
 					language === "fa"
 						? "دریافت اطلاعات ذخیره شده فرم سرویس ناموفق بود "
 						: "Failed to capture the previouslly saved service form data."
 				);
+				console.error("API request failed, trying local db.json", error);
+
+				try {
+					const response = await fetch("/ServiceFormFields.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Network response was not ok");
+					}
+					const data = await response.json();
+					const selectedService = data.find(
+						(s: { serviceId: any }) => `${s.serviceId}` === id
+					);
+					if (selectedService) {
+						const newData = Array.isArray(selectedService)
+							? data.map((item: { type: number }) => ({
+									...item,
+									type: mapApiTypeToType(item.type),
+							  }))
+							: [];
+						setServiceFormFieldData(newData);
+					}
+				} catch (err) {
+					console.error("Failed to fetch services", err);
+				}
 			});
 	}, [dataUpdateFlag]);
 

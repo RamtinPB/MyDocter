@@ -341,7 +341,7 @@ function UserInformation() {
 			.catch((error) => {
 				console.error("API request failed, trying local db.json", error);
 
-				fetch("/db.json")
+				fetch("/Insurances.json")
 					.then((response) => response.json())
 					.then((data) => {
 						setInsuranceData(data);
@@ -399,30 +399,55 @@ function UserInformation() {
 					// Populate form fields with the formatted response
 					formik.setValues(formattedData);
 				})
-				.catch((error) => {
+				.catch(async (error) => {
 					console.error(
 						"API request for user data failed, trying local db.json",
 						error
 					);
+					try {
+						const response = await fetch("/UserInformation.json"); // Adjust path if necessary
+						if (!response.ok) {
+							throw new Error("Failed to fetch data from db.json");
+						}
+						const data = await response.json();
 
-					// Fetch from local db.json if API fails
-					fetch("/db.json")
-						.then((response) => {
-							if (!response.ok) {
-								throw new Error("Failed to fetch user data from db.json");
-							}
-							return response.json();
-						})
-						.then((data) => {
-							// Update form values with user info from db.json
-							formik.setValues(data.userInfo);
-						})
-						.catch((jsonError) => {
-							console.error(
-								"Failed to fetch user data from both API and db.json",
-								jsonError
-							);
-						});
+						// Use getInsuranceNameById to map insuranceId and supplementalInsuranceId to names
+						const insuranceName = getInsuranceNameById(
+							data.insuranceId,
+							insuranceData,
+							language
+						);
+						const supplementaryInsuranceName = getInsuranceNameById(
+							data.supplementalInsuranceId,
+							insuranceData,
+							language
+						);
+
+						const formattedData = {
+							...data,
+							...handleConditionalEmptyFieldsForFront(data),
+							isIranian: convertIsIranianToString(data.isIranian, language),
+							isMarried: convertIsMarriedToString(data.isMarried, language),
+							profilePicture: data.profileImageUrl,
+							birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
+							gender: convertGenderToFrontData(data.gender, language),
+							educationLevel: convertEducationLevelToFrontData(
+								data.educationLevel,
+								language
+							),
+							insuranceType: (insuranceName as string) || "",
+							supplementaryInsuranceType:
+								(supplementaryInsuranceName as string) || "",
+						};
+
+						// Populate form fields with the formatted response
+						formik.setValues(formattedData);
+					} catch (jsonErr) {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonErr
+						);
+					}
 				});
 		}
 	}, [dataUpdateFlag, isLanguageReady]);
@@ -449,32 +474,34 @@ function UserInformation() {
 					setFormFields(updatedFormFields);
 					setValidationSchemaData(newValidationSchemaData);
 				})
-				.catch((error) => {
+				.catch(async (error) => {
 					console.error("API request failed, trying local db.json", error);
+					try {
+						const response = await fetch("/UserInformationFormFields.json"); // Adjust path if necessary
+						if (!response.ok) {
+							throw new Error("Failed to fetch data from db.json");
+						}
+						const data = await response.json();
 
-					fetch("/db.json")
-						.then((response) => response.json())
-						.then((data) => {
-							const {
-								formFieldsProps: newFormFields,
-								validationSchemaData: newValidationSchemaData,
-							} = processData(data);
+						const {
+							formFieldsProps: newFormFields,
+							validationSchemaData: newValidationSchemaData,
+						} = processData(data);
 
-							// Update form fields with insurance data
-							const updatedFormFields = updateFormFieldsWithInsuranceData(
-								newFormFields,
-								insuranceData
-							);
+						// Update form fields with insurance data
+						const updatedFormFields = updateFormFieldsWithInsuranceData(
+							newFormFields,
+							insuranceData
+						);
 
-							setFormFields(updatedFormFields);
-							setValidationSchemaData(newValidationSchemaData);
-						})
-						.catch((jsonError) => {
-							console.error(
-								"Failed to fetch data from both API and db.json",
-								jsonError
-							);
-						});
+						setFormFields(updatedFormFields);
+						setValidationSchemaData(newValidationSchemaData);
+					} catch (jsonErr) {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonErr
+						);
+					}
 				});
 		}
 	}, [dataUpdateFlag]);
@@ -615,20 +642,22 @@ function UserInformation() {
 				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
 				setProfilePicture(imageUrl); // Set the profile picture state
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						console.log(data); // Handle local fallback logic here, if needed
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
+				try {
+					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+					setProfilePicture(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+					setProfilePicture(null);
+				}
 			});
 	}, [profileImageUpdateFlag]);
 

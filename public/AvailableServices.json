@@ -1,0 +1,46 @@
+[
+	{
+		"id": 1,
+		"name": "general_doctor",
+		"title": "پزشک عمومی (هوش مصنوعی)",
+		"titleEN": "NULL",
+		"description": "سرویسی که به عنوان یک پزشک عمومی با استفاده از هوش مصنوعی عمل می‌کند و به کاربران این امکان را می‌دهد تا به توصیه‌های پزشکی دقیق و شخصی‌سازی‌شده دسترسی پیدا کنند.",
+		"descriptionEN": "NULL",
+		"imageUrl": "/images/SoulOCinder.jpg",
+		"type": "General",
+		"usedByUser": true
+	},
+	{
+		"id": 3,
+		"name": "General_3",
+		"title": "New Service",
+		"titleEN": "",
+		"description": "",
+		"descriptionEN": "",
+		"imageUrl": "/images/GettyImages.jpg",
+		"type": "General",
+		"usedByUser": true
+	},
+	{
+		"id": 2,
+		"name": "Specialist_2",
+		"title": "New Service",
+		"titleEN": "",
+		"description": "",
+		"descriptionEN": "",
+		"imageUrl": "/images/GettyImages.jpg",
+		"type": "Specialist",
+		"usedByUser": false
+	},
+	{
+		"id": 4,
+		"name": "Specialist_4",
+		"title": "New Service",
+		"titleEN": "",
+		"description": "",
+		"descriptionEN": "",
+		"imageUrl": "/images/GettyImages.jpg",
+		"type": "Specialist",
+		"usedByUser": false
+	}
+]

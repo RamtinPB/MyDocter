@@ -83,7 +83,7 @@ function UserHistoryExtended() {
 				);
 
 				// Fetch from local db.json if API fails
-				fetch("/db.json")
+				fetch("/PurchasedService.json")
 					.then((response) => {
 						if (!response.ok) {
 							throw new Error(
@@ -94,7 +94,7 @@ function UserHistoryExtended() {
 					})
 					.then((data) => {
 						// Find the specific service using the purchaseId
-						const selectedService = data.userPurchasedServices.find(
+						const selectedService = data.find(
 							(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
 						);
 

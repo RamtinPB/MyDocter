@@ -76,25 +76,40 @@ function SpecialistDoctorPrescription() {
 
 				setLoading(false);
 			} catch (err) {
-				console.error("API request failed, trying local db.json", err);
-
-				// Fallback to fetching from db.json if API request fails
+				console.error("API request failed, trying local db.json", error);
 				try {
-					const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+					const response = await fetch("/AvailableServicesGeneral.json"); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
-
 					const data = await response.json();
-					setServices(data.services); // Assuming 'homeTextData' is the key in your JSON structure
-					setLoading(false);
+
+					// Filter the data to get items with type "General"
+					const servicesData = data.filter(
+						(service: { type: string }) => service.type === "Specialist"
+					);
+
+					if (servicesData.length > 0) {
+						setServices(servicesData); // Update the services state with filtered data
+
+						// Create banners object directly from servicesData
+						const banners: { [id: string]: string } = {};
+						servicesData.forEach(
+							(service: { id: number; imageUrl: string }) => {
+								banners[service.id] = service.imageUrl; // Map service.id to imageUrl
+							}
+						);
+
+						setServiceDisplayBanners(banners); // Update state with fetched banners
+					} else {
+						setError("No services of type 'General' found");
+					}
 				} catch (jsonErr) {
 					console.error(
 						"Failed to fetch data from both API and db.json",
 						jsonErr
 					);
-					setError("Failed to fetch data from both API and local fallback.");
-					setLoading(false);
+					setError("Failed to capture services data");
 				}
 			}
 		};

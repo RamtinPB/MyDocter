@@ -78,14 +78,19 @@ function ServicePageEdit() {
 				setService(serviceData);
 			} catch (err) {
 				try {
-					const response = await fetch("/db.json"); // Adjust path if necessary
+					const response = await fetch("/ServiceData.json"); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Network response was not ok");
 					}
 					const data = await response.json();
-
-					// Assuming services is an array available in the root of db.json
-					setService(data.services || []); // Default to empty array if data.services is undefined
+					const selectedService = data.find(
+						(s: { id: any }) => `${s.id}` === id
+					);
+					if (selectedService) {
+						setService(selectedService);
+						setPageBannerUrlData(selectedService.pageBannerUrl);
+						setDisplayImageUrlData(selectedService.displayImageUrl);
+					}
 				} catch (err) {
 					console.error("Failed to fetch services", err);
 				}
@@ -110,19 +115,7 @@ function ServicePageEdit() {
 				setPageBannerUrlData(imageUrl); // Set the profile picture state
 			})
 			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						console.log(data); // Handle local fallback logic here, if needed
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
+				console.log("failed to capture ServicePageBanner from api", error);
 			});
 	}, []);
 
@@ -141,19 +134,7 @@ function ServicePageEdit() {
 				setDisplayImageUrlData(imageUrl); // Set the profile picture state
 			})
 			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
-
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						console.log(data); // Handle local fallback logic here, if needed
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
+				console.log("failed to capture ServiceDisplayBanner from api", error);
 			});
 	}, []);
 

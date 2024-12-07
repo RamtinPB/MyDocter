@@ -1,0 +1,23 @@
+[
+	{
+		"id": 3,
+		"companyName": "سلامت",
+		"companyNameEN": "salamat",
+		"type": 0,
+		"discountPercentage": 20
+	},
+	{
+		"id": 6,
+		"companyName": "سلامت +",
+		"companyNameEN": "salamat +",
+		"type": 1,
+		"discountPercentage": 70
+	},
+	{
+		"id": 7,
+		"companyName": "کارگر",
+		"companyNameEN": "kargar",
+		"type": 0,
+		"discountPercentage": 50
+	}
+]

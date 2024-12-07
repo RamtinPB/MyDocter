@@ -1,0 +1,25 @@
+{
+	"id": 2,
+	"serviceId": 1,
+	"serviceName": "general_doctor",
+	"date": "2024-12-02T00:00:00",
+	"status": "Waiting",
+	"lastUpdateTime": "2024-12-02T00:00:00",
+	"finalPrice": 95000,
+	"result": "",
+	"approvedByDoctor": false,
+	"inputs": [
+		{
+			"type": "Date",
+			"label": "تاریخ",
+			"labelEN": "",
+			"value": "12/02/2024 00:00:00"
+		},
+		{
+			"type": "Text",
+			"label": "متن",
+			"labelEN": "",
+			"value": "test"
+		}
+	]
+}

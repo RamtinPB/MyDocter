@@ -1,0 +1,44 @@
+[
+	{
+		"id": 1,
+		"serviceId": 1,
+		"type": 0,
+		"tag": "text1",
+		"label": "متن",
+		"labelEN": "",
+		"description": "متن",
+		"descriptionEN": "",
+		"required": true,
+		"maxLength": 256,
+		"allowedFormats": null,
+		"enabled": true
+	},
+	{
+		"id": 2,
+		"serviceId": 1,
+		"type": 3,
+		"tag": "date1",
+		"label": "تاریخ",
+		"labelEN": "",
+		"description": "تاریخ",
+		"descriptionEN": "",
+		"required": true,
+		"maxLength": 0,
+		"allowedFormats": null,
+		"enabled": true
+	},
+	{
+		"id": 21,
+		"serviceId": 1,
+		"type": 4,
+		"tag": "test",
+		"label": "تست",
+		"labelEN": "test",
+		"description": "تست",
+		"descriptionEN": "test44444",
+		"required": false,
+		"maxLength": 0,
+		"allowedFormats": "jpeg,jpg,png,pdf",
+		"enabled": false
+	}
+]

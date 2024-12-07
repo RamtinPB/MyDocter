@@ -30,7 +30,19 @@ function AdminDashboardInsurancePageContent() {
 
 				setInsuranceData(response.data);
 			} catch (err) {
-				console.error("Failed to fetch services", err);
+				console.error("API request failed, trying local db.json", err);
+
+				fetch("/Insurances.json")
+					.then((response) => response.json())
+					.then((data) => {
+						setInsuranceData(data);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch data from both API and db.json",
+							jsonError
+						);
+					});
 			}
 		};
 

@@ -1,0 +1,16 @@
+[
+	{
+		"id": 2,
+		"serviceId": 1,
+		"serviceName": "general_doctor",
+		"lastUpdateTime": "2024-12-02T00:00:00",
+		"status": "Waiting"
+	},
+	{
+		"id": 3,
+		"serviceId": 3,
+		"serviceName": "General_3",
+		"lastUpdateTime": "2024-12-02T00:00:00",
+		"status": "Waiting"
+	}
+]

@@ -31,14 +31,14 @@ function AdminDashboardFAQPageContent() {
 
 				// Fallback to fetching from db.json if API request fails
 				try {
-					const response = await fetch("/db.json"); // Adjust path if necessary
+					const response = await fetch("/FAQ.json"); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
 					const data = await response.json();
 
 					// Assuming faq is directly available in the root of db.json
-					const faq = data.faqs;
+					const faq = data;
 
 					setFAQsData(faq);
 				} catch (jsonErr) {

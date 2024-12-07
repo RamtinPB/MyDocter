@@ -42,32 +42,24 @@ function AdminDashboardFormPageContent() {
 				const data = response.data;
 				setFormFieldsIEData(data);
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				console.error(
 					"API request for user data form fields failed, trying local db.json",
 					error
 				);
-
-				// Fetch from local db.json if API fails
-				fetch("/db.json")
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(
-								"Failed to fetch user data form fields from db.json"
-							);
-						}
-						return response.json();
-					})
-					.then((data) => {
-						// Update state for form fields
-						setFormFieldsIEData(data.formFields);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch user data form fields from both API and db.json",
-							jsonError
-						);
-					});
+				try {
+					const response = await fetch("/UserInitialEvaluationFormFields.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+					setFormFieldsIEData(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, [dataUpdateFlag]);
 
@@ -80,20 +72,19 @@ function AdminDashboardFormPageContent() {
 
 				setFormFieldsData(data);
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				console.error("API request failed, trying local db.json", error);
 
-				fetch("/db.json")
-					.then((response) => response.json())
-					.then((data) => {
-						setFormFieldsData(data);
-					})
-					.catch((jsonError) => {
-						console.error(
-							"Failed to fetch data from both API and db.json",
-							jsonError
-						);
-					});
+				try {
+					const response = await fetch("/UserInformationFormFields.json"); // Adjust path if necessary
+					const data = await response.json();
+					setFormFieldsData(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, [dataUpdateFlag]);
 
