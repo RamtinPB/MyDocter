@@ -24,10 +24,6 @@ interface UserData {
 	phoneNumber: string;
 }
 
-interface UserBalance {
-	balance: number;
-}
-
 interface UserOffCanvasProps {
 	userData: UserData | null;
 	isLoggedInAdmin: boolean;
@@ -53,8 +49,22 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				const userbal = response.data.balance;
 				setUserBalance(userbal);
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				console.error("API request failed, trying local db.json", error);
+				try {
+					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+
+					setUserBalance(data.balance);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
 			});
 	}, [userBalance]);
 
@@ -70,9 +80,22 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				const imageUrl = URL.createObjectURL(imageBlob); // Create a URL for the image
 				setProfilePicture(imageUrl); // Set the profile picture state
 			})
-			.catch((error) => {
+			.catch(async (error) => {
 				console.error("API request failed, trying local db.json", error);
-				setProfilePicture(null);
+				try {
+					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+					setProfilePicture(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+					setProfilePicture(null);
+				}
 			});
 	}, [profileImageVersion]);
 

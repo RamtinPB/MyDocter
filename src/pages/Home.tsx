@@ -63,13 +63,13 @@ function Home() {
 
 				// Fallback to fetching from db.json if API request fails
 				try {
-					const response = await fetch("/db.json"); // Adjust the path to your static JSON file
+					const response = await fetch("/HomePageData.json"); // Adjust the path to your static JSON file
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
 
 					const data = await response.json();
-					setHomeTextData(data.homeTextData[0]); // Assuming 'homeTextData' is the key in your JSON structure
+					setHomeTextData(data); // Assuming 'homeTextData' is the key in your JSON structure
 					setLoading(false);
 				} catch (jsonErr) {
 					console.error(

@@ -75,16 +75,13 @@ function MyHeader() {
 				alert(errorMessage);
 
 				try {
-					const response = await fetch("/db.json"); // Adjust path if necessary
+					const response = await fetch("/UserProfileData.json"); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
 					const data = await response.json();
 
-					// Assuming the userInfo is directly available in the root of db.json
-					const userInfo = data.userInfo;
-
-					setUserData(userInfo);
+					setUserData(data);
 					setLoading(false);
 				} catch (jsonErr) {
 					console.error(
@@ -111,8 +108,21 @@ function MyHeader() {
 				const imageBlob = response.data;
 				setProfilePicture(URL.createObjectURL(imageBlob));
 			} catch {
-				console.error("Failed to load profile image.");
-				setProfilePicture(null);
+				console.error("API request failed, trying local db.json", error);
+				try {
+					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+					setProfilePicture(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+					setProfilePicture(null);
+				}
 			}
 		};
 		fetchProfileImage();

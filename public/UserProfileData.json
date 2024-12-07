@@ -1,0 +1,21 @@
+{
+	"name": "باران",
+	"lastName": "عظیمی",
+	"phoneNumber": "09168125753",
+	"email": "ram@gmail.com",
+	"isAdmin": true,
+	"purchasedServices": [
+		{
+			"serviceId": 1,
+			"serviceName": "general_doctor",
+			"serviceStatus": "Waiting",
+			"lastUpdate": "2024-12-02T00:00:00"
+		},
+		{
+			"serviceId": 3,
+			"serviceName": "General_3",
+			"serviceStatus": "Waiting",
+			"lastUpdate": "2024-12-02T00:00:00"
+		}
+	]
+}

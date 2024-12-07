@@ -1,0 +1,16 @@
+[
+	{
+		"id": 1,
+		"question": "سوال اول",
+		"answer": "جواب سوال اول",
+		"questionEn": "Question 1",
+		"answerEn": "Answer 1"
+	},
+	{
+		"id": 2,
+		"question": "سوال دوم",
+		"answer": "جواب سوال دوم",
+		"questionEn": "Question 2",
+		"answerEn": "Answer 2"
+	}
+]
