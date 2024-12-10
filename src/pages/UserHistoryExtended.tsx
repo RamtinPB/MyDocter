@@ -32,6 +32,20 @@ interface purchasedServiceProps {
 	}[];
 }
 
+function formatDate(input: string | undefined): string {
+	if (!input) {
+		return "Invalid Date"; // Return a default or error message if input is undefined
+	}
+	// Split the input string into date and time parts
+	const [date, time] = input.split("T");
+
+	// Replace the dashes in the date with slashes
+	const formattedDate = date.replace(/-/g, "/");
+
+	// Return the final formatted string
+	return `${time} - ${formattedDate}`;
+}
+
 // const icons = {
 // 	pdf: pdfIcon,
 // 	zip: zipIcon,
@@ -70,7 +84,13 @@ function UserHistoryExtended() {
 				purchasedServiceId: purchaseId,
 			})
 			.then((response) => {
-				setPurchasedServiceData(response.data);
+				const data = response.data;
+				const formattedService = {
+					...data,
+					date: formatDate(data.date),
+					lastUpdateTime: formatDate(data.lastUpdateTime),
+				};
+				setPurchasedServiceData(formattedService);
 				setError(null); // Clear any previous errors on success
 			})
 			.catch((apiError) => {
@@ -100,7 +120,12 @@ function UserHistoryExtended() {
 
 						// Set the service state if found, otherwise set error state
 						if (selectedService) {
-							setPurchasedServiceData(selectedService);
+							const formattedService = {
+								...selectedService,
+								purchaseDate: formatDate(selectedService.purchaseDate), // Example for a `purchaseDate` field
+								serviceDate: formatDate(selectedService.serviceDate), // Example for a `serviceDate` field
+							};
+							setPurchasedServiceData(formattedService);
 						} else {
 							setError("Service not found");
 						}

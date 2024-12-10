@@ -14,36 +14,38 @@ import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 
 interface purchasedServiceProps {
-	id: string;
-	serviceId: string;
-	userId: string;
-	service: {
-		basePrice: string;
-		discount: string;
-		pageTitle: string;
-		pageTitleEN: string;
-		reviewByDoctor: string;
-		type: string;
+	purchasedService: {
+		id: string;
+		serviceId: string;
+		userId: string;
+		service: {
+			basePrice: string;
+			discount: string;
+			pageTitle: string;
+			pageTitleEN: string;
+			reviewByDoctor: string;
+			type: string;
+		};
+		user: {
+			fixedPhoneNumber: string;
+			emailAddress: string;
+			insuranceId: string;
+			supplementalInsuranceId: string;
+			lastName: string;
+			name: string;
+			phoneNumber: string;
+			residenceAddress: string;
+			residenceCity: string;
+			residencePostalCode: string;
+			residenceProvince: string;
+		};
+		date: string;
+		status: string;
+		lastUpdateTime: string;
+		finalPrice: string;
+		result: string;
+		approvedByDoctor: boolean;
 	};
-	user: {
-		fixedPhoneNumber: string;
-		emailAddress: string;
-		insuranceId: string;
-		supplementalInsuranceId: string;
-		lastName: string;
-		name: string;
-		phoneNumber: string;
-		residenceAddress: string;
-		residenceCity: string;
-		residencePostalCode: string;
-		residenceProvince: string;
-	};
-	date: string;
-	status: string;
-	lastUpdateTime: string;
-	finalPrice: string;
-	result: string;
-	approvedByDoctor: boolean;
 	inputs?: {
 		type: string;
 		value: string;
@@ -103,6 +105,20 @@ const getTypeString = (type: number, language: string) => {
 	}
 };
 
+function formatDate(input: string | undefined): string {
+	if (!input) {
+		return "Invalid Date"; // Return a default or error message if input is undefined
+	}
+	// Split the input string into date and time parts
+	const [date, time] = input.split("T");
+
+	// Replace the dashes in the date with slashes
+	const formattedDate = date.replace(/-/g, "/");
+
+	// Return the final formatted string
+	return `${time} - ${formattedDate}`;
+}
+
 function ManageUserInterfaceUserPurchasedServicesExtended() {
 	const { purchaseId } = useParams<{ purchaseId: string }>();
 
@@ -128,10 +144,17 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 			})
 			.then((response) => {
 				// Process the response to update the status field
+				const data = response.data;
 				const updatedData = {
-					...response.data,
-					status: getStatusString(response.data.status, language),
+					...data,
+					purchasedService: {
+						...data.purchasedService,
+						status: getStatusString(data.purchasedService.status, language),
+						date: formatDate(data.purchasedService.date),
+						lastUpdateTime: formatDate(data.purchasedService.lastUpdateTime),
+					},
 				};
+				console.log(updatedData);
 				setPurchasedServiceData(updatedData);
 				setError(null); // Clear any previous errors on success
 			})
@@ -199,13 +222,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 				const data = response.data;
 
 				const matchedInsurance = data.find(
-					(ins: { id: any }) => ins.id === purchasedServiceData.user.insuranceId
+					(ins: { id: any }) =>
+						ins.id === purchasedServiceData.purchasedService.user.insuranceId
 				);
 				setInsurance(matchedInsurance || null);
 
 				const matchedSupplementaryInsurance = data.find(
 					(suppIns: { id: any }) =>
-						suppIns.id === purchasedServiceData.user.supplementalInsuranceId
+						suppIns.id ===
+						purchasedServiceData.purchasedService.user.supplementalInsuranceId
 				);
 				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
 
@@ -228,7 +253,8 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					.then((data) => {
 						const matchedInsurance = data.insurance.find(
 							(ins: { insuranceType: any }) =>
-								ins.insuranceType === purchasedServiceData.user.insuranceId
+								ins.insuranceType ===
+								purchasedServiceData.purchasedService.user.insuranceId
 						);
 						setInsurance(matchedInsurance || null);
 
@@ -236,7 +262,8 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							data.supplementaryInsurance.find(
 								(suppIns: { supplementaryInsuranceType: any }) =>
 									suppIns.supplementaryInsuranceType ===
-									purchasedServiceData.user.supplementalInsuranceId
+									purchasedServiceData.purchasedService.user
+										.supplementalInsuranceId
 							);
 						setSupplementaryInsurance(matchedSupplementaryInsurance || null);
 
@@ -270,7 +297,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 	}
 
 	const handleBackClick = () => {
-		navigate(`/edit-user/${purchasedServiceData.userId}`, {
+		navigate(`/edit-user/${purchasedServiceData.purchasedService.userId}`, {
 			state: { activeSection: "userPurchased" },
 		});
 	};
@@ -306,8 +333,8 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{language === "fa"
-									? purchasedServiceData.service.pageTitle
-									: purchasedServiceData.service.pageTitleEN}
+									? purchasedServiceData.purchasedService.service.pageTitle
+									: purchasedServiceData.purchasedService.service.pageTitleEN}
 							</div>
 						</div>
 
@@ -320,7 +347,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شناسه سرویس" : "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.serviceId}
+								{purchasedServiceData.purchasedService.serviceId}
 							</div>
 						</div>
 						<div
@@ -332,7 +359,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "قیمت پایه" : "Base price"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.service.basePrice}
+								{purchasedServiceData.purchasedService.service.basePrice}
 							</div>
 						</div>
 
@@ -345,7 +372,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "تخفیف" : "Discount"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.service.discount}
+								{purchasedServiceData.purchasedService.service.discount}
 							</div>
 						</div>
 
@@ -359,7 +386,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{getTypeString(
-									Number(purchasedServiceData.service.type),
+									Number(purchasedServiceData.purchasedService.service.type),
 									language
 								)}
 							</div>
@@ -383,7 +410,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						>
 							<h6 className=" mx-1">{language === "fa" ? "نام" : "Name"}</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.name}
+								{purchasedServiceData.purchasedService.user.name}
 							</div>
 						</div>
 
@@ -396,7 +423,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "نام خانوادگی" : "Last name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.lastName}
+								{purchasedServiceData.purchasedService.user.lastName}
 							</div>
 						</div>
 						<div
@@ -408,7 +435,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شماره همراه" : "Phone number"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.phoneNumber}
+								{purchasedServiceData.purchasedService.user.phoneNumber}
 							</div>
 						</div>
 
@@ -421,7 +448,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شماره ثابت" : "Fixed phone number"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.fixedPhoneNumber}
+								{purchasedServiceData.purchasedService.user.fixedPhoneNumber}
 							</div>
 						</div>
 						<div
@@ -433,7 +460,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شناسه کاربر" : "User ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.userId}
+								{purchasedServiceData.purchasedService.userId}
 							</div>
 						</div>
 						<div
@@ -445,7 +472,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "آدرس ایمیل" : "Email address"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.emailAddress}
+								{purchasedServiceData.purchasedService.user.emailAddress}
 							</div>
 						</div>
 						<div
@@ -485,7 +512,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `استان` : `Province`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.residenceProvince}
+								{purchasedServiceData.purchasedService.user.residenceProvince}
 							</div>
 						</div>
 						<div
@@ -495,7 +522,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						>
 							<h6 className=" mx-1">{language === "fa" ? `شهر` : `City`}</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.residenceCity}
+								{purchasedServiceData.purchasedService.user.residenceCity}
 							</div>
 						</div>
 						<div
@@ -507,7 +534,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `آدرس منزل` : `Address`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.residenceAddress}
+								{purchasedServiceData.purchasedService.user.residenceAddress}
 							</div>
 						</div>
 						<div
@@ -519,7 +546,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `کد پستی` : `Postal code`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.user.residencePostalCode}
+								{purchasedServiceData.purchasedService.user.residencePostalCode}
 							</div>
 						</div>
 					</div>
@@ -543,7 +570,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.serviceId}
+								{purchasedServiceData.purchasedService.serviceId}
 							</div>
 						</div>
 
@@ -556,7 +583,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.id}
+								{purchasedServiceData.purchasedService.id}
 							</div>
 						</div>
 						<div
@@ -568,7 +595,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "وضعیت پیگیری" : "Status"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.status}
+								{purchasedServiceData.purchasedService.status}
 							</div>
 						</div>
 						<div
@@ -580,7 +607,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.date}
+								{purchasedServiceData.purchasedService.date}
 							</div>
 						</div>
 						<div
@@ -592,7 +619,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.lastUpdateTime}
+								{purchasedServiceData.purchasedService.lastUpdateTime}
 							</div>
 						</div>
 						<div
@@ -606,7 +633,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 									: `Final Purchase Amount`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.finalPrice}
+								{purchasedServiceData.purchasedService.finalPrice}
 							</div>
 						</div>
 					</div>
@@ -620,10 +647,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					<h5 className="px-4 mx-1">
 						{language === "fa" ? "فایل های ارسال شده" : "Sent Files"}
 					</h5>
-					{purchasedServiceData.files &&
-					purchasedServiceData.files.length > 0 ? (
+					{purchasedServiceData.purchasedService.files &&
+					purchasedServiceData.purchasedService.files.length > 0 ? (
 						<div className="d-flex flex-wrap justify-content-start align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
-							{purchasedServiceData.files.map((file, index) => (
+							{purchasedServiceData.purchasedService.files.map((file, index) => (
 								<div
 									key={index}
 									className="d-flex flex-column file-item p-1 mx-1"
@@ -677,8 +704,8 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						{language === "fa" ? "نتایج" : "Results"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{purchasedServiceData.result ? (
-							<p>{purchasedServiceData.result}</p>
+						{purchasedServiceData.purchasedService.result ? (
+							<p>{purchasedServiceData.purchasedService.result}</p>
 						) : (
 							<div className="text-center px-3 mx-4 py-3">
 								<p className="m-0">
