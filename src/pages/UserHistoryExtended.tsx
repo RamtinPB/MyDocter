@@ -46,6 +46,23 @@ function formatDate(input: string | undefined): string {
 	return `${time} - ${formattedDate}`;
 }
 
+const getStatusString = (status: string, language: string) => {
+	switch (status) {
+		case "Initializing":
+			return language === "fa" ? "مقداردهی" : "Initializing";
+		case "Completed":
+			return language === "fa" ? "تکمیل شده" : "Completed";
+		case "Failed":
+			return language === "fa" ? "ناموفق" : "Failed";
+		case "Waiting":
+			return language === "fa" ? "در انتظار" : "Waiting";
+		case "Processing":
+			return language === "fa" ? "پردازش" : "Processing";
+		case "Cancelled":
+			return language === "fa" ? "لغو شد" : "Cancelled";
+	}
+};
+
 // const icons = {
 // 	pdf: pdfIcon,
 // 	zip: zipIcon,
@@ -88,6 +105,7 @@ function UserHistoryExtended() {
 				const formattedService = {
 					...data,
 					date: formatDate(data.date),
+					status: getStatusString(data.status,language),
 					lastUpdateTime: formatDate(data.lastUpdateTime),
 				};
 				setPurchasedServiceData(formattedService);

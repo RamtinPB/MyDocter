@@ -11,6 +11,37 @@ interface PurchasedServicesProp {
 	lastUpdateTime: string;
 }
 
+function formatDate(input: string | undefined): string {
+	if (!input) {
+		return "Invalid Date"; // Return a default or error message if input is undefined
+	}
+	// Split the input string into date and time parts
+	const [date, time] = input.split("T");
+
+	// Replace the dashes in the date with slashes
+	const formattedDate = date.replace(/-/g, "/");
+
+	// Return the final formatted string
+	return `${time} - ${formattedDate}`;
+}
+
+const getStatusString = (status: string, language: string) => {
+	switch (status) {
+		case "Initializing":
+			return language === "fa" ? "مقداردهی" : "Initializing";
+		case "Completed":
+			return language === "fa" ? "تکمیل شده" : "Completed";
+		case "Failed":
+			return language === "fa" ? "ناموفق" : "Failed";
+		case "Waiting":
+			return language === "fa" ? "در انتظار" : "Waiting";
+		case "Processing":
+			return language === "fa" ? "پردازش" : "Processing";
+		case "Cancelled":
+			return language === "fa" ? "لغو شد" : "Cancelled";
+	}
+};
+
 function UserHistory() {
 	const [purchasedServicesData, setPurchasedServicesData] = useState<
 		PurchasedServicesProp[]
@@ -26,7 +57,11 @@ function UserHistory() {
 		axiosInstance
 			.post("/api/Service/GetUserPurchasedServices")
 			.then((response) => {
-				const purchasedServices = response.data;
+				const purchasedServices = response.data.map((item:PurchasedServicesProp) => ({
+					...item,
+					status: getStatusString((item.status), language),
+					lastUpdateTime: formatDate(item.lastUpdateTime),
+				}))
 				setPurchasedServicesData(purchasedServices);
 				setError(null); // Clear any previous errors on success
 			})

@@ -53,6 +53,20 @@ const getStatusClass = (status: string) => {
 	}
 };
 
+function formatDate(input: string | undefined): string {
+	if (!input) {
+		return "Invalid Date"; // Return a default or error message if input is undefined
+	}
+	// Split the input string into date and time parts
+	const [date, time] = input.split("T");
+
+	// Replace the dashes in the date with slashes
+	const formattedDate = date.replace(/-/g, "/");
+
+	// Return the final formatted string
+	return `${time} - ${formattedDate}`;
+}
+
 function ManageUserInterfaceUserPurchasedServices() {
 	const { userId } = useParams<{ userId: string }>(); // Retrieve userId from the URL
 	const [purchasedserviceInfo, setPurchasedServiceInfo] = useState<
@@ -77,6 +91,7 @@ function ManageUserInterfaceUserPurchasedServices() {
 				const updatedData = response.data.map((item: purchasedServiceInfo) => ({
 					...item,
 					status: getStatusString(Number(item.status), language),
+					lastUpdateTime: formatDate(item.lastUpdateTime),
 				}));
 
 				setPurchasedServiceInfo(updatedData);
