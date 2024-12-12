@@ -50,7 +50,9 @@ const getValidationSchema = (language: string) => {
 					: "Only special characters ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , are allowed"
 			)
 			.required(
-				language === "fa" ? "رمز عبور الزامی است" : "Password is required"
+				language === "fa"
+					? "رمز عبور الزامی است"
+					: "Password is required"
 			),
 	});
 };
@@ -235,22 +237,38 @@ function Login() {
 									color="black"
 									onClick={handleBackClick}
 								/>
-								<h3 className={`col-${language === "fa" ? "10" : "8"} mb-0`}>
-									{language === "fa" ? "ورود به پزشک من" : "Log into My Docter"}
+								<h3
+									className={`col-${language === "fa" ? "10" : "8"} mb-0`}
+								>
+									{language === "fa"
+										? "ورود به پزشک من"
+										: "Log into My Docter"}
 								</h3>
 							</div>
 							<Formik
-								initialValues={{ emailAddress: "", password: "", captcha: "" }}
+								initialValues={{
+									emailAddress: "",
+									password: "",
+									captcha: "",
+								}}
 								validationSchema={getValidationSchema(language)}
 								onSubmit={handleFormSubmit}
 							>
 								{({ isSubmitting }) => (
 									<Form
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
 									>
 										<div className="d-flex justify-content-between mb-2 p-1">
 											<div className="">
-												<label htmlFor="emailAddress" className="form-label">
+												<label
+													htmlFor="emailAddress"
+													className="form-label"
+												>
 													{language === "fa"
 														? "ثبت نام نکرده اید؟"
 														: "Not Registered?"}
@@ -266,8 +284,13 @@ function Login() {
 										</div>
 
 										<div className="mb-3 p-1">
-											<label id="emailAddress" className="form-label">
-												{language === "fa" ? "آدرس ایمیل" : "Email Address"}
+											<label
+												id="emailAddress"
+												className="form-label"
+											>
+												{language === "fa"
+													? "آدرس ایمیل"
+													: "Email Address"}
 											</label>
 											<Field
 												type="text"
@@ -285,8 +308,13 @@ function Login() {
 										<div className="mb-3 p-1 ">
 											<div className="d-flex justify-content-between">
 												<div className="">
-													<label htmlFor="password" className="form-label">
-														{language === "fa" ? "رمز عبور" : "Password"}
+													<label
+														htmlFor="password"
+														className="form-label"
+													>
+														{language === "fa"
+															? "رمز عبور"
+															: "Password"}
 													</label>
 												</div>
 												<div className="">
@@ -302,17 +330,31 @@ function Login() {
 												style={{ direction: "ltr" }}
 											>
 												<span
-													onClick={togglePasswordVisibility}
+													onClick={
+														togglePasswordVisibility
+													}
 													className="input-group-text eye-icon"
-													style={{ cursor: "pointer" }}
+													style={{
+														cursor: "pointer",
+													}}
 												>
-													{showPassword ? <FaEyeSlash /> : <FaEye />}
+													{showPassword ? (
+														<FaEyeSlash />
+													) : (
+														<FaEye />
+													)}
 												</span>
 												<Field
-													type={showPassword ? "text" : "password"}
+													type={
+														showPassword
+															? "text"
+															: "password"
+													}
 													name="password"
 													className={`form-control text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													}`}
 													placeholder="********"
 												/>
@@ -327,7 +369,12 @@ function Login() {
 										<div className="mb-3 p-1">
 											<div
 												className="d-flex flex-column align-items-center justify-content-evenly mb-3"
-												style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+												style={{
+													direction:
+														language === "fa"
+															? "rtl"
+															: "ltr",
+												}}
 											>
 												{captchaImage ? (
 													<img
@@ -373,12 +420,20 @@ function Login() {
 
 										<div
 											className={`form-check d-flex justify-content-start p-1 mb-3`}
-											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+											style={{
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
+											}}
 										>
-											<label className="form-check-label mx-1" id="rememberMe">
+											<label
+												className="form-check-label mx-1"
+												id="rememberMe"
+											>
 												{language === "fa"
 													? "مرا به خاطر بسپارید"
-													: "Remmember Me"}
+													: "Remember Me"}
 											</label>
 											<Field
 												type="checkbox"
@@ -393,7 +448,9 @@ function Login() {
 												className="btn btn-primary rounded-pill"
 												disabled={isSubmitting}
 											>
-												{language === "fa" ? "ورود" : "Login"}
+												{language === "fa"
+													? "ورود"
+													: "Login"}
 											</button>
 										</div>
 									</Form>

@@ -33,12 +33,15 @@ function AdminDashboardManageUsers() {
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const response = await axiosInstance.post("/api/Admin/GetUsersList", {
-					sortBy: Number(sortBy),
-					descending,
-					page,
-					pageSize,
-				});
+				const response = await axiosInstance.post(
+					"/api/Admin/GetUsersList",
+					{
+						sortBy: Number(sortBy),
+						descending,
+						page,
+						pageSize,
+					}
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
@@ -52,7 +55,9 @@ function AdminDashboardManageUsers() {
 				try {
 					const response = await fetch("/UserList.json");
 					if (!response.ok) {
-						throw new Error("Failed to fetch user data from db.json");
+						throw new Error(
+							"Failed to fetch user data from db.json"
+						);
 					}
 					const data = await response.json();
 					const users = data;
@@ -118,25 +123,33 @@ function AdminDashboardManageUsers() {
 					>
 						<div className="d-flex align-items-center">
 							<label className="px-2">
-								{language === "fa" ? "ترتیب بر اساس" : "Sort By"}
+								{language === "fa"
+									? "ترتیب بر اساس"
+									: "Sort By"}
 							</label>
 							<select
 								className="text-center rounded-3"
 								value={sortBy}
 								onChange={(e) => setSortBy(e.target.value)}
 							>
-								<option value="0">{language === "fa" ? "شناسه" : "ID"}</option>
+								<option value="0">
+									{language === "fa" ? "شناسه" : "ID"}
+								</option>
 								<option value="1">
 									{language === "fa" ? "نام" : "First Name"}
 								</option>
 								<option value="2">
-									{language === "fa" ? "نام خانوادگی" : "Last Name"}
+									{language === "fa"
+										? "نام خانوادگی"
+										: "Last Name"}
 								</option>
 							</select>
 						</div>
 						<div className="d-flex align-items-center">
 							<label className="px-2">
-								{language === "fa" ? "تعداد آیتم در صفحه" : "Items per page"}
+								{language === "fa"
+									? "تعداد آیتم در صفحه"
+									: "Items per page"}
 							</label>
 							<input
 								className=" rounded-3"
@@ -144,7 +157,9 @@ function AdminDashboardManageUsers() {
 								value={pageSize}
 								min="1"
 								max="100"
-								onChange={(e) => setPageSize(parseInt(e.target.value) || 10)}
+								onChange={(e) =>
+									setPageSize(parseInt(e.target.value) || 10)
+								}
 							/>
 						</div>
 						<div className="d-flex align-items-center">
@@ -154,7 +169,9 @@ function AdminDashboardManageUsers() {
 							<input
 								type="checkbox"
 								checked={descending}
-								onChange={(e) => setDescending(e.target.checked)}
+								onChange={(e) =>
+									setDescending(e.target.checked)
+								}
 							/>
 						</div>
 					</div>
@@ -162,43 +179,71 @@ function AdminDashboardManageUsers() {
 					<div className="table-responsive-container">
 						<table
 							className="table table-hover text-center mb-5"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<thead>
 								<tr>
 									<th scope="col">
-										{language === "fa" ? "شناسه کاربر" : "User ID"}
+										{language === "fa"
+											? "شناسه کاربر"
+											: "User ID"}
 									</th>
 									<th scope="col">
-										{language === "fa" ? "نام" : "First Name"}
+										{language === "fa"
+											? "نام"
+											: "First Name"}
 									</th>
 									<th scope="col">
-										{language === "fa" ? "نام خانوادگی" : "Last Name"}
+										{language === "fa"
+											? "نام خانوادگی"
+											: "Last Name"}
 									</th>
-									<th scope="col">{language === "fa" ? "ایمیل" : "Email"}</th>
+									<th scope="col">
+										{language === "fa" ? "ایمیل" : "Email"}
+									</th>
 									{/* <th scope="col">
 										{language === "fa" ? "شماره همراه" : "Phone Number"}
 									</th> */}
-									<th scope="col">{language === "fa" ? "ویرایش" : "Edit"}</th>
-									<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
+									<th scope="col">
+										{language === "fa" ? "ویرایش" : "Edit"}
+									</th>
+									<th scope="col">
+										{language === "fa" ? "حذف" : "Delete"}
+									</th>
 								</tr>
 							</thead>
 							<tbody>
 								{usersList.map((user, index) => (
 									<tr key={index}>
-										<td className="align-middle">{user.id}</td>
-										<td className="align-middle">{user.name}</td>
-										<td className="align-middle">{user.lastName}</td>
-										<td className="align-middle">{user.emailAddress}</td>
+										<td className="align-middle">
+											{user.id}
+										</td>
+										<td className="align-middle">
+											{user.name}
+										</td>
+										<td className="align-middle">
+											{user.lastName}
+										</td>
+										<td className="align-middle">
+											{user.emailAddress}
+										</td>
 										{/* <td className="align-middle">{user.phoneNumber}</td> */}
 										<td className="align-middle">
 											<a
 												href={`/edit-user/${user.id}`} // Change this
 												onClick={(e) => {
 													e.preventDefault();
-													navigate(`/edit-user/${user.id}`, {
-														state: { section: "manageUsers" },
-													});
+													navigate(
+														`/edit-user/${user.id}`,
+														{
+															state: {
+																section:
+																	"manageUsers",
+															},
+														}
+													);
 												}}
 												id="btn-edit"
 												className="rounded-circle btn shadow p-0 my-3"
@@ -215,7 +260,9 @@ function AdminDashboardManageUsers() {
 												id="btn-delete"
 												className="rounded-circle btn shadow p-0 m-1 m-md-3"
 												type="button"
-												onClick={() => removeUser(index)}
+												onClick={() =>
+													removeUser(index)
+												}
 												data-bs-toggle="modal"
 												data-bs-target="#staticBackdrop"
 											>
@@ -232,7 +279,9 @@ function AdminDashboardManageUsers() {
 						<div className="pagination d-flex justify-content-center mb-4">
 							<button
 								className="btn btn-primary rounded-4"
-								onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+								onClick={() =>
+									setPage((prev) => Math.max(prev - 1, 1))
+								}
 								disabled={page === 1}
 							>
 								{language === "fa" ? "قبلی" : "Previous"}

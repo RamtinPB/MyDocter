@@ -681,11 +681,7 @@ function FormBuilder() {
 										}}
 									>
 										<div
-											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa"
-													? "start"
-													: "end"
-											} my-2`}
+											className={`d-flex flex-column justify-content-center align-items-start my-2`}
 											style={{
 												direction:
 													language === "fa"
@@ -693,7 +689,7 @@ function FormBuilder() {
 														: "ltr",
 											}}
 										>
-											<div className="d-flex flex-row justify-content-between align-items-center">
+											<div className="d-flex flex-row justify-content-between align-items-center gap-3">
 												<label
 													htmlFor={field.tag}
 													className="form-label mx-2 "
@@ -702,7 +698,15 @@ function FormBuilder() {
 														? field.label
 														: field.labelEN}
 												</label>
-												<div className="px-5">
+												<div
+													className="px-auto"
+													style={{
+														direction:
+															language === "fa"
+																? "rtl"
+																: "ltr",
+													}}
+												>
 													<label
 														htmlFor={field.tag}
 														className="form-check-label mx-2 mb-2"
@@ -731,7 +735,7 @@ function FormBuilder() {
 														required={true}
 													/>
 												</div>
-												<div className="px-3">
+												<div className="px-auto">
 													<label
 														htmlFor={field.tag}
 														className="form-check-label mx-2 mb-2"
@@ -893,8 +897,8 @@ function FormBuilder() {
 								)}
 								<div
 									className={`d-flex justify-content-${
-										language === "fa" ? "between" : "start"
-									}  align-items-center my-2`}
+										language === "fa" ? "start" : "end"
+									}  align-items-center my-2 gap-2`}
 									style={{ direction: "rtl" }}
 								>
 									<button

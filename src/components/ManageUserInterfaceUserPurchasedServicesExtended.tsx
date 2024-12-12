@@ -138,6 +138,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 
 	// Fetch specific purchased service
 	useEffect(() => {
+		if (!language) {
+			return;
+		}
 		axiosInstance
 			.post("/api/Admin/GetPurchasedService", {
 				purchasedServiceId: purchaseId,
@@ -149,9 +152,14 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					...data,
 					purchasedService: {
 						...data.purchasedService,
-						status: getStatusString(data.purchasedService.status, language),
+						status: getStatusString(
+							data.purchasedService.status,
+							language
+						),
 						date: formatDate(data.purchasedService.date),
-						lastUpdateTime: formatDate(data.purchasedService.lastUpdateTime),
+						lastUpdateTime: formatDate(
+							data.purchasedService.lastUpdateTime
+						),
 					},
 				};
 				console.log(updatedData);
@@ -180,7 +188,8 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					.then((data) => {
 						// Find the specific service using the purchaseId
 						const selectedService = data.userPurchasedServices.find(
-							(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
+							(s: { purchaseId: any }) =>
+								`${s.purchaseId}` === purchaseId
 						);
 
 						// Set the service state if found, otherwise set error state
@@ -207,7 +216,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 			.finally(() => {
 				setLoading(false); // Ensure loading is false if API request succeeds
 			});
-	}, []);
+	}, [language]);
 
 	// Fetch insurance & supplementary insurance data
 	useEffect(() => {
@@ -223,16 +232,20 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 
 				const matchedInsurance = data.find(
 					(ins: { id: any }) =>
-						ins.id === purchasedServiceData.purchasedService.user.insuranceId
+						ins.id ===
+						purchasedServiceData.purchasedService.user.insuranceId
 				);
 				setInsurance(matchedInsurance || null);
 
 				const matchedSupplementaryInsurance = data.find(
 					(suppIns: { id: any }) =>
 						suppIns.id ===
-						purchasedServiceData.purchasedService.user.supplementalInsuranceId
+						purchasedServiceData.purchasedService.user
+							.supplementalInsuranceId
 				);
-				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+				setSupplementaryInsurance(
+					matchedSupplementaryInsurance || null
+				);
 
 				setLoading(false);
 			})
@@ -246,7 +259,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 				fetch("/db.json")
 					.then((response) => {
 						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
+							throw new Error(
+								"Failed to fetch user data from db.json"
+							);
 						}
 						return response.json();
 					})
@@ -254,18 +269,23 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						const matchedInsurance = data.insurance.find(
 							(ins: { insuranceType: any }) =>
 								ins.insuranceType ===
-								purchasedServiceData.purchasedService.user.insuranceId
+								purchasedServiceData.purchasedService.user
+									.insuranceId
 						);
 						setInsurance(matchedInsurance || null);
 
 						const matchedSupplementaryInsurance =
 							data.supplementaryInsurance.find(
-								(suppIns: { supplementaryInsuranceType: any }) =>
+								(suppIns: {
+									supplementaryInsuranceType: any;
+								}) =>
 									suppIns.supplementaryInsuranceType ===
 									purchasedServiceData.purchasedService.user
 										.supplementalInsuranceId
 							);
-						setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+						setSupplementaryInsurance(
+							matchedSupplementaryInsurance || null
+						);
 
 						setLoading(false);
 					})
@@ -317,7 +337,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					</div>
 
 					<h4 className="text-center px-4 mx-1 py-4">
-						{language === "fa" ? "اطلاعات سرویس" : "Service Information"}
+						{language === "fa"
+							? "اطلاعات سرویس"
+							: "Service Information"}
 					</h4>
 					<div
 						className="row row-cols-2 mx-2 mx-md-auto"
@@ -329,12 +351,16 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "نام سرویس" : "Service Name"}
+								{language === "fa"
+									? "نام سرویس"
+									: "Service Name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{language === "fa"
-									? purchasedServiceData.purchasedService.service.pageTitle
-									: purchasedServiceData.purchasedService.service.pageTitleEN}
+									? purchasedServiceData.purchasedService
+											.service.pageTitle
+									: purchasedServiceData.purchasedService
+											.service.pageTitleEN}
 							</div>
 						</div>
 
@@ -344,10 +370,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شناسه سرویس" : "Service ID"}
+								{language === "fa"
+									? "شناسه سرویس"
+									: "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.serviceId}
+								{
+									purchasedServiceData.purchasedService
+										.serviceId
+								}
 							</div>
 						</div>
 						<div
@@ -359,7 +390,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "قیمت پایه" : "Base price"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.service.basePrice}
+								{
+									purchasedServiceData.purchasedService
+										.service.basePrice
+								}
 							</div>
 						</div>
 
@@ -372,7 +406,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "تخفیف" : "Discount"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.service.discount}
+								{
+									purchasedServiceData.purchasedService
+										.service.discount
+								}
 							</div>
 						</div>
 
@@ -382,11 +419,16 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "نوع سرویس" : "Service type"}
+								{language === "fa"
+									? "نوع سرویس"
+									: "Service type"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{getTypeString(
-									Number(purchasedServiceData.purchasedService.service.type),
+									Number(
+										purchasedServiceData.purchasedService
+											.service.type
+									),
 									language
 								)}
 							</div>
@@ -397,7 +439,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 				{/* User Information */}
 				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
 					<h4 className="text-center px-4 mx-1 pb-4 pt-5">
-						{language === "fa" ? "اطلاعات کاربر" : "User Information"}
+						{language === "fa"
+							? "اطلاعات کاربر"
+							: "User Information"}
 					</h4>
 					<div
 						className="row row-cols-2 mx-2 mx-md-auto"
@@ -408,9 +452,12 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								language === "fa" ? "end" : "start"
 							} mb-5 px-3 px-md-5`}
 						>
-							<h6 className=" mx-1">{language === "fa" ? "نام" : "Name"}</h6>
+							<h6 className=" mx-1">
+								{language === "fa" ? "نام" : "Name"}
+							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.name}
+								{purchasedServiceData?.purchasedService?.user
+									?.name || " "}
 							</div>
 						</div>
 
@@ -420,10 +467,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "نام خانوادگی" : "Last name"}
+								{language === "fa"
+									? "نام خانوادگی"
+									: "Last name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.lastName}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.lastName
+								}
 							</div>
 						</div>
 						<div
@@ -432,10 +484,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره همراه" : "Phone number"}
+								{language === "fa"
+									? "شماره همراه"
+									: "Phone number"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.phoneNumber}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.phoneNumber
+								}
 							</div>
 						</div>
 
@@ -445,10 +502,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره ثابت" : "Fixed phone number"}
+								{language === "fa"
+									? "شماره ثابت"
+									: "Fixed phone number"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.fixedPhoneNumber}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.fixedPhoneNumber
+								}
 							</div>
 						</div>
 						<div
@@ -460,7 +522,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? "شناسه کاربر" : "User ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.userId}
+								{purchasedServiceData?.purchasedService?.userId}
 							</div>
 						</div>
 						<div
@@ -469,10 +531,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "آدرس ایمیل" : "Email address"}
+								{language === "fa"
+									? "آدرس ایمیل"
+									: "Email address"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.emailAddress}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.emailAddress
+								}
 							</div>
 						</div>
 						<div
@@ -481,7 +548,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "بیمه پایه" : "Basic insurance"}
+								{language === "fa"
+									? "بیمه پایه"
+									: "Basic insurance"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{language === "fa"
@@ -495,7 +564,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? `بیمه تکمیلی` : `Supplementary insurance`}
+								{language === "fa"
+									? `بیمه تکمیلی`
+									: `Supplementary insurance`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{language === "fa"
@@ -512,7 +583,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `استان` : `Province`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.residenceProvince}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.residenceProvince
+								}
 							</div>
 						</div>
 						<div
@@ -520,9 +594,14 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								language === "fa" ? "end" : "start"
 							} mb-5 px-3 px-md-5`}
 						>
-							<h6 className=" mx-1">{language === "fa" ? `شهر` : `City`}</h6>
+							<h6 className=" mx-1">
+								{language === "fa" ? `شهر` : `City`}
+							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.residenceCity}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.residenceCity
+								}
 							</div>
 						</div>
 						<div
@@ -534,7 +613,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `آدرس منزل` : `Address`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.residenceAddress}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.residenceAddress
+								}
 							</div>
 						</div>
 						<div
@@ -546,7 +628,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 								{language === "fa" ? `کد پستی` : `Postal code`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.user.residencePostalCode}
+								{
+									purchasedServiceData?.purchasedService?.user
+										?.residencePostalCode
+								}
 							</div>
 						</div>
 					</div>
@@ -555,7 +640,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 				{/* Purchase Information */}
 				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
 					<h4 className="text-center px-4 mx-1 pb-4 pt-5">
-						{language === "fa" ? "اطلاعات خرید" : "User Information"}
+						{language === "fa"
+							? "اطلاعات خرید"
+							: "Purchase Information"}
 					</h4>
 					<div
 						className="row row-cols-2 mx-2 mx-md-auto"
@@ -567,10 +654,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
+								{language === "fa"
+									? "شماره سریال محصول"
+									: "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.serviceId}
+								{
+									purchasedServiceData.purchasedService
+										.serviceId
+								}
 							</div>
 						</div>
 
@@ -580,7 +672,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+								{language === "fa"
+									? "شماره سریال تراکنش"
+									: "Purchase ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.purchasedService.id}
@@ -604,7 +698,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+								{language === "fa"
+									? "تاریخ خریداری"
+									: "Purchase Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.purchasedService.date}
@@ -616,10 +712,15 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+								{language === "fa"
+									? "تاریخ آخرین تغییر"
+									: "Last Update Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.lastUpdateTime}
+								{
+									purchasedServiceData.purchasedService
+										.lastUpdateTime
+								}
 							</div>
 						</div>
 						<div
@@ -633,7 +734,10 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 									: `Final Purchase Amount`}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
-								{purchasedServiceData.purchasedService.finalPrice}
+								{
+									purchasedServiceData.purchasedService
+										.finalPrice
+								}
 							</div>
 						</div>
 					</div>
@@ -691,7 +795,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						{language === "fa" ? "فرم تکمیل شده" : "Completed Form"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						<FormRenderFilled purchasedServiceData={purchasedServiceData} />
+						<FormRenderFilled
+							purchasedServiceData={purchasedServiceData}
+						/>
 					</div>
 				</div>
 
@@ -705,7 +811,9 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{purchasedServiceData.purchasedService.result ? (
-							<p>{purchasedServiceData.purchasedService.result}</p>
+							<p>
+								{purchasedServiceData.purchasedService.result}
+							</p>
 						) : (
 							<div className="text-center px-3 mx-4 py-3">
 								<p className="m-0">

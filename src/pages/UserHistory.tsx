@@ -7,6 +7,8 @@ interface PurchasedServicesProp {
 	id: string;
 	serviceId: string;
 	serviceName: string;
+	serviceTitle: string;
+	serviceTitleEN: string;
 	status: string;
 	lastUpdateTime: string;
 }
@@ -57,11 +59,13 @@ function UserHistory() {
 		axiosInstance
 			.post("/api/Service/GetUserPurchasedServices")
 			.then((response) => {
-				const purchasedServices = response.data.map((item:PurchasedServicesProp) => ({
-					...item,
-					status: getStatusString((item.status), language),
-					lastUpdateTime: formatDate(item.lastUpdateTime),
-				}))
+				const purchasedServices = response.data.map(
+					(item: PurchasedServicesProp) => ({
+						...item,
+						status: getStatusString(item.status, language),
+						lastUpdateTime: formatDate(item.lastUpdateTime),
+					})
+				);
 				setPurchasedServicesData(purchasedServices);
 				setError(null); // Clear any previous errors on success
 			})
@@ -140,48 +144,65 @@ function UserHistory() {
 							<tr>
 								<th scope="col">#</th>
 								<th scope="col">
-									{language === "fa" ? "نام سرویس" : "Service Name"}
+									{language === "fa"
+										? "نام سرویس"
+										: "Service Name"}
 								</th>
 								<th scope="col">
-									{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+									{language === "fa"
+										? "شماره سریال تراکنش"
+										: "Purchase ID"}
 								</th>
 								<th scope="col">
-									{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+									{language === "fa"
+										? "تاریخ خریداری"
+										: "Purchase Date"}
 								</th>
 								<th scope="col">
-									{language === "fa" ? "وضعیت پیگیری" : "Status"}
+									{language === "fa"
+										? "وضعیت پیگیری"
+										: "Status"}
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-							{purchasedServicesData.map((purchasedSurvice, index) => (
-								<tr
-									key={purchasedSurvice.id}
-									onClick={() =>
-										(window.location.href = `/purchased-services/${purchasedSurvice.id}`)
-									}
-								>
-									<th scope="row" className="align-middle">
-										{index + 1}
-									</th>
-									<td className="align-middle">
-										{purchasedSurvice.serviceName}
-									</td>
-									<td className="align-middle">{purchasedSurvice.id}</td>
-									<td className="align-middle">
-										{purchasedSurvice.lastUpdateTime}
-									</td>
-									<td className="align-middle">
-										<span
-											className={`align-middle badge ${getStatusClass(
-												purchasedSurvice.status
-											)} rounded-pill`}
+							{purchasedServicesData.map(
+								(purchasedSurvice, index) => (
+									<tr
+										key={purchasedSurvice.id}
+										onClick={() =>
+											(window.location.href = `/purchased-services/${purchasedSurvice.id}`)
+										}
+									>
+										<th
+											scope="row"
+											className="align-middle"
 										>
-											{purchasedSurvice.status}
-										</span>
-									</td>
-								</tr>
-							))}
+											{index + 1}
+										</th>
+										<td className="align-middle">
+											{language === "fa"
+												? purchasedSurvice.serviceTitle
+												: purchasedSurvice.serviceTitleEN}
+										</td>
+										<td className="align-middle">
+											{purchasedSurvice.id}
+										</td>
+										<td className="align-middle">
+											{purchasedSurvice.lastUpdateTime}
+										</td>
+										<td className="align-middle">
+											<span
+												className={`align-middle badge ${getStatusClass(
+													purchasedSurvice.status
+												)} rounded-pill`}
+											>
+												{purchasedSurvice.status}
+											</span>
+										</td>
+									</tr>
+								)
+							)}
 						</tbody>
 					</table>
 				</div>

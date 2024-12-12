@@ -120,7 +120,7 @@ const NotificationDropdown = () => {
 				)}
 			</button>
 
-			{notifications && notifications.length > 0 && (
+			{notifications.length > 0 && (
 				<div className="dropdown-menu dropdown-menu-center position-absolute top-100 start-50 translate-middle-x mt-3 shadow-sm">
 					{notifications.map((notification) => (
 						<Link

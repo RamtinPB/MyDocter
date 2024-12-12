@@ -107,7 +107,9 @@ function ManageUserInterface() {
 					} rounded-pill mx-2`}
 					onClick={() => handleNavigation("userPurchased")}
 				>
-					{language === "fa" ? `تاریخچه خدمات خریداری شده` : `Purchase History`}
+					{language === "fa"
+						? `تاریخچه خدمات خریداری شده`
+						: `Purchase History`}
 				</button>
 			</div>
 

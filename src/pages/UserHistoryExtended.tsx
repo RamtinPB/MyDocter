@@ -17,7 +17,8 @@ interface purchasedServiceProps {
 	id: string;
 	serviceId: string;
 	serviceName: string;
-	serviceNameEN: string;
+	serviceTitle: string;
+	serviceTitleEN: string;
 	date: string;
 	status: string;
 	lastUpdateTime: string;
@@ -105,7 +106,7 @@ function UserHistoryExtended() {
 				const formattedService = {
 					...data,
 					date: formatDate(data.date),
-					status: getStatusString(data.status,language),
+					status: getStatusString(data.status, language),
 					lastUpdateTime: formatDate(data.lastUpdateTime),
 				};
 				setPurchasedServiceData(formattedService);
@@ -133,15 +134,20 @@ function UserHistoryExtended() {
 					.then((data) => {
 						// Find the specific service using the purchaseId
 						const selectedService = data.find(
-							(s: { purchaseId: any }) => `${s.purchaseId}` === purchaseId
+							(s: { purchaseId: any }) =>
+								`${s.purchaseId}` === purchaseId
 						);
 
 						// Set the service state if found, otherwise set error state
 						if (selectedService) {
 							const formattedService = {
 								...selectedService,
-								purchaseDate: formatDate(selectedService.purchaseDate), // Example for a `purchaseDate` field
-								serviceDate: formatDate(selectedService.serviceDate), // Example for a `serviceDate` field
+								purchaseDate: formatDate(
+									selectedService.purchaseDate
+								), // Example for a `purchaseDate` field
+								serviceDate: formatDate(
+									selectedService.serviceDate
+								), // Example for a `serviceDate` field
 							};
 							setPurchasedServiceData(formattedService);
 						} else {
@@ -211,12 +217,14 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "نام سرویس" : "Service Name"}
+								{language === "fa"
+									? "نام سرویس"
+									: "Service Name"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{language === "fa"
-									? purchasedServiceData.serviceName
-									: purchasedServiceData.serviceNameEN}
+									? purchasedServiceData.serviceTitle
+									: purchasedServiceData.serviceTitleEN}
 							</div>
 						</div>
 
@@ -238,7 +246,9 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال محصول" : "Service ID"}
+								{language === "fa"
+									? "شماره سریال محصول"
+									: "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.serviceId}
@@ -251,7 +261,9 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+								{language === "fa"
+									? "شماره سریال تراکنش"
+									: "Purchase ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.id}
@@ -263,7 +275,9 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "تاریخ خریداری" : "Purchase Date"}
+								{language === "fa"
+									? "تاریخ خریداری"
+									: "Purchase Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.date}
@@ -275,7 +289,9 @@ function UserHistoryExtended() {
 							} mb-5 px-3 px-md-5`}
 						>
 							<h6 className=" mx-1">
-								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+								{language === "fa"
+									? "تاریخ آخرین تغییر"
+									: "Last Update Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
 								{purchasedServiceData.lastUpdateTime}
@@ -350,7 +366,9 @@ function UserHistoryExtended() {
 						{language === "fa" ? "فرم تکمیل شده" : "Completed Form"}
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						<FormRenderFilled purchasedServiceData={purchasedServiceData} />
+						<FormRenderFilled
+							purchasedServiceData={purchasedServiceData}
+						/>
 					</div>
 				</div>
 

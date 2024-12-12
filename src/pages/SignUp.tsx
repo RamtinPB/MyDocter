@@ -51,7 +51,9 @@ const getValidationSchema = (language: string) => {
 					: "Only special characters ! @ # $ % ^ & * ( ) + = _ - { } [ ] : ; \" ' ? < > , are allowed"
 			)
 			.required(
-				language === "fa" ? "رمز عبور الزامی است" : "Password is required"
+				language === "fa"
+					? "رمز عبور الزامی است"
+					: "Password is required"
 			),
 	});
 };
@@ -240,7 +242,9 @@ function SignUp() {
 									color="black"
 									onClick={handleBackClick}
 								/>
-								<h3 className={`col-${language === "fa" ? "10" : "8"} mb-0`}>
+								<h3
+									className={`col-${language === "fa" ? "10" : "8"} mb-0`}
+								>
 									{language === "fa"
 										? "ثبت نام در پزشک من"
 										: "Signup in My Docter"}
@@ -248,17 +252,31 @@ function SignUp() {
 							</div>
 
 							<Formik
-								initialValues={{ emailAddress: "", password: "", captcha: "" }}
+								initialValues={{
+									emailAddress: "",
+									password: "",
+									captcha: "",
+								}}
 								validationSchema={getValidationSchema(language)}
 								onSubmit={handleFormSubmit}
 							>
 								{({ isSubmitting }) => (
 									<Form
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
 									>
 										<div className="mb-3 p-1">
-											<label id="emailAddress" className="form-label">
-												{language === "fa" ? "آدرس ایمیل" : "Email Address"}
+											<label
+												id="emailAddress"
+												className="form-label"
+											>
+												{language === "fa"
+													? "آدرس ایمیل"
+													: "Email Address"}
 											</label>
 											<Field
 												type="text"
@@ -274,25 +292,44 @@ function SignUp() {
 										</div>
 
 										<div className="mb-3 p-1">
-											<label id="password" className="form-label">
-												{language === "fa" ? "رمز عبور" : "Password"}
+											<label
+												id="password"
+												className="form-label"
+											>
+												{language === "fa"
+													? "رمز عبور"
+													: "Password"}
 											</label>
 											<div
 												className="input-group "
 												style={{ direction: "ltr" }}
 											>
 												<span
-													onClick={togglePasswordVisibility}
+													onClick={
+														togglePasswordVisibility
+													}
 													className="input-group-text eye-icon"
-													style={{ cursor: "pointer" }}
+													style={{
+														cursor: "pointer",
+													}}
 												>
-													{showPassword ? <FaEyeSlash /> : <FaEye />}
+													{showPassword ? (
+														<FaEyeSlash />
+													) : (
+														<FaEye />
+													)}
 												</span>
 												<Field
-													type={showPassword ? "text" : "password"}
+													type={
+														showPassword
+															? "text"
+															: "password"
+													}
 													name="password"
 													className={`form-control text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													}`}
 													placeholder="********"
 												/>
@@ -307,7 +344,12 @@ function SignUp() {
 										<div className="mb-3 p-1">
 											<div
 												className="d-flex flex-column align-items-center justify-content-evenly mb-3"
-												style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+												style={{
+													direction:
+														language === "fa"
+															? "rtl"
+															: "ltr",
+												}}
 											>
 												{captchaImage ? (
 													<img
@@ -353,12 +395,20 @@ function SignUp() {
 
 										<div
 											className={`form-check d-flex justify-content-start p-1 mb-3`}
-											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+											style={{
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
+											}}
 										>
-											<label className="form-check-label mx-1" id="rememberMe">
+											<label
+												className="form-check-label mx-1"
+												id="rememberMe"
+											>
 												{language === "fa"
 													? "مرا به خاطر بسپارید"
-													: "Remmember Me"}
+													: "Remember Me"}
 											</label>
 											<Field
 												type="checkbox"
@@ -373,7 +423,9 @@ function SignUp() {
 												className="btn btn-primary rounded-pill"
 												disabled={isSubmitting}
 											>
-												{language === "fa" ? "ثبت نام" : "Signup"}
+												{language === "fa"
+													? "ثبت نام"
+													: "Signup"}
 											</button>
 										</div>
 									</Form>
