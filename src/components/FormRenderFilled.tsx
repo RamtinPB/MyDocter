@@ -1,9 +1,13 @@
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "./LanguageContext";
+import axiosInstance from "../myAPI/axiosInstance";
+import "../cssFiles/textOverflow.css";
 
-// import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
-// import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
-// import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
-// import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
+import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
+import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
+import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import { fileTypeFromBlob } from "file-type";
 
 // Utility function to format date
 const formatDateToISO = (dateValue: string): string => {
@@ -19,83 +23,179 @@ const formatDateToISO = (dateValue: string): string => {
 	}
 };
 
-// interface FileData {
-// 	fileName: string;
-// 	fileType: string;
-// 	fileUrl: string;
-// 	file: File;
-// 	tag: string;
-// }
+interface FileData {
+	fileName: string;
+	fileType: string;
+	fileUrl: string;
+	file: File;
+	tag: string;
+}
 
-// const icons = {
-// 	pdf: pdfIcon,
-// 	zip: zipIcon,
-// 	rar: zipIcon,
-// 	jpg: imgIcon,
-// 	jpeg: imgIcon,
-// 	png: imgIcon,
-// 	default: fileIcon,
-// };
+const icons = {
+	pdf: pdfIcon,
+	zip: zipIcon,
+	rar: zipIcon,
+	jpg: imgIcon,
+	jpeg: imgIcon,
+	png: imgIcon,
+	default: fileIcon,
+};
 
-// // Function to get the appropriate icon based on file extension
-// const getIconForFileType = (fileName: string) => {
-// 	const extension = fileName
-// 		.split(".")
-// 		.pop()
-// 		?.toLowerCase() as keyof typeof icons;
-// 	return icons[extension] || icons["default"];
-// };
+// Function to get the appropriate icon based on file extension
+const getIconForFileType = (fileName: string) => {
+	const extension = fileName
+		.split(".")
+		.pop()
+		?.toLowerCase() as keyof typeof icons;
+	return icons[extension] || icons["default"];
+};
 
-interface purchasedServiceProps {
-	inputs?: {
-		type: string;
-		value: string;
-		label: string;
-		labelEN: string;
-	}[];
+interface Input {
+	type: string;
+	value: string;
+	label: string;
+	labelEN: string;
+}
+
+interface PurchasedServiceProps {
+	inputs?: Input[];
 }
 
 interface FormRenderFilledProps {
-	purchasedServiceData?: purchasedServiceProps; // Accepts the entire object
+	purchasedServiceData?: PurchasedServiceProps; // Accepts the entire object
 }
 
 function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 	const { language } = useLanguage();
+	const [transformedInputs, setTransformedInputs] = useState<Input[]>([]);
+	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
+	const processedFileIdsRef = useRef(new Set());
 
-	// const [serviceFormFieldData, setServiceFormFieldData] = useState<
-	// 	serviceFormFieldProps[]
-	// >([]);
+	useEffect(() => {
+		if (purchasedServiceData?.inputs) {
+			const inputs = purchasedServiceData.inputs;
 
-	// useEffect(() => {
-	// 	axiosInstance
-	// 		.post(
-	// 			"/api/Service/GetServiceFormFields",
-	// 			{
-	// 				serviceId: purchasedServiceData.serviceId,
-	// 			},
-	// 			{
-	// 				withCredentials: true,
-	// 			}
-	// 		)
-	// 		.then((response) => {
-	// 			const data = response.data;
-	// 			const newData = Array.isArray(data)
-	// 				? data.map((item) => ({
-	// 						...item,
-	// 						type: mapApiTypeToType(item.type),
-	// 				  }))
-	// 				: [];
-	// 			setServiceFormFieldData(newData);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("API request failed, trying local db.json", error);
-	// 			alert(
-	// 				language === "fa"
-	// 					? "دریافت اطلاعات ذخیره شده فرم سرویس ناموفق بود "
-	// 					: "Failed to capture the previouslly saved service form data."
-	// 			);
-	// 		});
-	// }, []);
+			// Group file-type items by label
+			const groupedFiles: Record<string, string[]> = {};
+			const nonFileItems: Input[] = [];
+
+			inputs.forEach((item) => {
+				if (item.type === "File") {
+					if (!groupedFiles[item.label]) {
+						groupedFiles[item.label] = [];
+					}
+					groupedFiles[item.label].push(item.value);
+				} else {
+					// Collect non-file items without changes
+					nonFileItems.push(item);
+				}
+			});
+
+			// Transform grouped file items into a single item per label
+			const transformedFileItems = Object.entries(groupedFiles).map(
+				([label, values]) => ({
+					type: "File",
+					value: values.join("-"), // Concatenate values with a "-"
+					label,
+					labelEN: inputs.find(
+						(item) => item.type === "File" && item.label === label
+					)?.labelEN, // No labelEN used, or keep it null if required
+				})
+			);
+
+			// Combine non-file items with transformed file items
+			setTransformedInputs([
+				...nonFileItems,
+				...transformedFileItems,
+			] as Input[]);
+		}
+	}, [purchasedServiceData]);
+
+	useEffect(() => {
+		if (!transformedInputs) return;
+
+		const fileTypeInputs = transformedInputs.filter(
+			(item) => item.type === "File"
+		); // Filter for file-type items
+
+		fileTypeInputs.forEach((fileInput) => {
+			const fileIds = fileInput.value.split("-"); // Extract file IDs from the value string
+
+			fileIds.forEach((fileId) => {
+				if (processedFileIdsRef.current.has(fileId)) {
+					// Skip API call if the fileId has already been processed
+					return;
+				}
+
+				// Add the fileId to the Set to mark it as processed
+				processedFileIdsRef.current.add(fileId);
+
+				axiosInstance
+					.post(
+						"/api/File/GetFile",
+						{ fileId: fileId },
+						{
+							responseType: "blob", // Binary data handling
+						}
+					)
+					.then(async (response) => {
+						const blob = new Blob([response.data], {
+							type:
+								response.headers["content-type"] ||
+								"application/octet-stream",
+						});
+
+						const headerFileName =
+							response.headers["content-disposition"]?.match(
+								/filename="(.+)"/
+							)?.[1] || Date.now();
+
+						const fileType = await fileTypeFromBlob(blob); // Infer file type
+
+						const fileExtension = fileType?.ext
+							? `.${fileType.ext}`
+							: ""; // Get the file extension (e.g., ".pdf")
+						const mimeType = fileType?.mime || blob.type;
+
+						// Append the file extension if it's not already in the file name
+						const fileName = String(headerFileName).endsWith(
+							fileExtension
+						)
+							? headerFileName
+							: `${headerFileName}${fileExtension}`;
+
+						const file = new File([blob], fileName, {
+							type: mimeType,
+						});
+						const fileUrl = URL.createObjectURL(blob);
+
+						// Construct the file data object
+						const fileData = {
+							fileName,
+							fileType: fileExtension,
+							fileUrl,
+							file,
+							tag: fileInput.label, // Use the input's label as the tag
+						};
+
+						// Update the state immediately
+						setUploadedFiles((prevFiles) => [
+							...prevFiles,
+							fileData,
+						]);
+					})
+					.catch((error) => {
+						console.error(
+							`Failed to fetch file for ID: ${fileId}`,
+							error
+						);
+					});
+			});
+		});
+	}, [transformedInputs]);
+
+	console.log(uploadedFiles);
+	console.log(transformedInputs);
 
 	// const mapApiTypeToType = (type: number): string | null => {
 	// 	switch (type) {
@@ -130,10 +230,12 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 					className="row row-cols-2 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					{purchasedServiceData?.inputs?.map((field) => {
-						const isCheckbox = field.type.toLowerCase() === "checkbox";
+					{transformedInputs.map((field, index) => {
+						const isCheckbox =
+							field.type.toLowerCase() === "checkbox";
 						const isText = field.type.toLowerCase() === "text";
-						const isTextLong = field.type.toLowerCase() === "longString";
+						const isTextLong =
+							field.type.toLowerCase() === "longString";
 						const isDate = field.type.toLowerCase() === "date";
 						const isFile = field.type.toLowerCase() === "file";
 						const isNumber =
@@ -141,18 +243,31 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 							field.type.toLowerCase() === "float";
 
 						return (
-							<div className="my-2" key={field.label}>
+							<div
+								className="my-2"
+								key={`${field.label}-${index}`}
+							>
 								{(isText || isNumber) && (
 									<div
 										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
 									>
 										<div
 											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa" ? "start" : "end"
+												language === "fa"
+													? "start"
+													: "end"
 											} my-2`}
 											style={{
-												direction: language === "fa" ? "rtl" : "ltr",
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
 											}}
 										>
 											<div className="d-flex flex-row justify-content-between align-items-center">
@@ -160,16 +275,24 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													htmlFor={field.label}
 													className="form-label mx-2 "
 												>
-													{language === "fa" ? field.label : field.labelEN}
+													{language === "fa"
+														? field.label
+														: field.labelEN}
 												</label>
 											</div>
 											<input
-												type={isNumber ? "number" : field.type.toLowerCase()}
+												type={
+													isNumber
+														? "number"
+														: field.type.toLowerCase()
+												}
 												id={field.label}
 												name={field.label}
 												value={field.value} // Bind Formik's values
 												className={`form-control text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} shadow-sm`}
 												readOnly
 											/>
@@ -179,14 +302,25 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 								{isDate && (
 									<div
 										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
+										key={`${field.label}-${index}`}
 									>
 										<div
 											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa" ? "start" : "end"
+												language === "fa"
+													? "start"
+													: "end"
 											} my-2`}
 											style={{
-												direction: language === "fa" ? "rtl" : "ltr",
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
 											}}
 										>
 											<div className="d-flex flex-row justify-content-between align-items-center">
@@ -194,16 +328,26 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													htmlFor={field.label}
 													className="form-label mx-2 "
 												>
-													{language === "fa" ? field.label : field.labelEN}
+													{language === "fa"
+														? field.label
+														: field.labelEN}
 												</label>
 											</div>
 											<input
 												type={field.type.toLowerCase()}
 												id={field.label}
 												name={field.label}
-												value={field.value ? formatDateToISO(field.value) : ""} // Bind Formik's values
+												value={
+													field.value
+														? formatDateToISO(
+																field.value
+															)
+														: ""
+												} // Bind Formik's values
 												className={`form-control text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} shadow-sm`}
 												readOnly
 											/>
@@ -213,14 +357,25 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 								{isFile && (
 									<div
 										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
+										key={`${field.label}-${index}`}
 									>
 										<div
 											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa" ? "start" : "end"
+												language === "fa"
+													? "start"
+													: "end"
 											} my-2`}
 											style={{
-												direction: language === "fa" ? "rtl" : "ltr",
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
 											}}
 										>
 											<div className="d-flex flex-row justify-content-between align-items-center">
@@ -228,7 +383,9 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													htmlFor={field.label}
 													className="form-label mx-2 "
 												>
-													{language === "fa" ? field.label : field.labelEN}
+													{language === "fa"
+														? field.label
+														: field.labelEN}
 												</label>
 											</div>
 											<div
@@ -239,27 +396,37 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													className={`d-flex flex-wrap justify-content-start align-items-center`}
 												>
 													{/* Display uploaded files with icons */}
-													{/* {uploadedFiles.map((file, index) => (
-																<div className="d-flex flex-column p-1 mx-1">
-																	<a
-																		href={file.fileUrl}
-																		key={index}
-																		className="d-flex flex-column justify-content-center align-items-center d-block "
-																		download
+													{uploadedFiles.map(
+														(file, index) => (
+															<div className="d-flex flex-column p-1 mx-1">
+																<a
+																	href={
+																		file.fileUrl
+																	}
+																	key={index}
+																	className="d-flex flex-column justify-content-center align-items-center d-block "
+																	download={
+																		file.fileName
+																	}
+																>
+																	<img
+																		src={getIconForFileType(
+																			file.fileType
+																		)}
+																		alt={`${file.fileName} Icon`}
+																		className="custom-file-icon"
+																	/>
+																	<span
+																		className={`scrollable-text text-center mt-1`}
 																	>
-																		<img
-																			src={getIconForFileType(file.fileName)}
-																			alt={`${file.fileName} Icon`}
-																			className="custom-file-icon"
-																		/>
-																		<span
-																			className={`scrollable-text text-center mt-1`}
-																		>
-																			{file.fileName}
-																		</span>
-																	</a>
-																</div>
-															))} */}
+																		{
+																			file.fileName
+																		}
+																	</span>
+																</a>
+															</div>
+														)
+													)}
 												</div>
 											</div>
 										</div>
@@ -270,12 +437,15 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 										className={`text-${
 											language === "fa" ? "end" : "start"
 										} mt-2`}
+										key={`${field.label}-${index}`}
 									>
 										<label
 											htmlFor={field.label}
 											className="form-check-label mx-2"
 										>
-											{language === "fa" ? field.label : field.labelEN}
+											{language === "fa"
+												? field.label
+												: field.labelEN}
 										</label>
 										<input
 											type="checkbox"
@@ -287,13 +457,23 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 									</div>
 								)}
 								{isTextLong && (
-									<div className="d-flex flex-column my-2">
-										<label htmlFor={field.label} className="py-2">
-											{language === "fa" ? field.label : field.labelEN}
+									<div
+										className="d-flex flex-column my-2"
+										key={`${field.label}-${index}`}
+									>
+										<label
+											htmlFor={field.label}
+											className="py-2"
+										>
+											{language === "fa"
+												? field.label
+												: field.labelEN}
 										</label>
 										<textarea
 											className={`form-control text-${
-												language === "fa" ? "end" : "start"
+												language === "fa"
+													? "end"
+													: "start"
 											} h-100 shadow-sm `}
 											name={field.label}
 											id={field.label}

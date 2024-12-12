@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useParams } from "react-router-dom";
-import { AxiosError } from "axios";
+import "../cssFiles/textOverflow.css";
 
 interface serviceFormFieldProps {
 	id: number;
@@ -20,11 +20,6 @@ interface serviceFormFieldProps {
 
 	maxLength: number;
 	allowedFormats: string;
-}
-
-interface ErrorResponseData {
-	errorCode: number;
-	message?: string;
 }
 
 function FormBuilder() {
@@ -72,7 +67,7 @@ function FormBuilder() {
 					? data.map((item) => ({
 							...item,
 							type: mapApiTypeToType(item.type),
-					  }))
+						}))
 					: [];
 				setServiceFormFieldData(newData);
 			})
@@ -82,7 +77,10 @@ function FormBuilder() {
 						? "دریافت اطلاعات ذخیره شده فرم سرویس ناموفق بود "
 						: "Failed to capture the previouslly saved service form data."
 				);
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 
 				try {
 					const response = await fetch("/ServiceFormFields.json"); // Adjust path if necessary
@@ -98,7 +96,7 @@ function FormBuilder() {
 							? data.map((item: { type: number }) => ({
 									...item,
 									type: mapApiTypeToType(item.type),
-							  }))
+								}))
 							: [];
 						setServiceFormFieldData(newData);
 					}
@@ -127,9 +125,13 @@ function FormBuilder() {
 			return;
 		}
 
-		if (serviceFormFieldData.some((field) => field.tag === fieldTag.trim())) {
+		if (
+			serviceFormFieldData.some((field) => field.tag === fieldTag.trim())
+		) {
 			alert(
-				language === "fa" ? "شناسه ورودی تکراری است." : "Duplicate input tag."
+				language === "fa"
+					? "شناسه ورودی تکراری است."
+					: "Duplicate input tag."
 			);
 			return;
 		}
@@ -210,7 +212,9 @@ function FormBuilder() {
 			);
 
 			if (response.status === 200) {
-				console.log(`Field ${formFieldToDelete.tag} saved successfully!`);
+				console.log(
+					`Field ${formFieldToDelete.tag} saved successfully!`
+				);
 			} else {
 				throw new Error(`Unexpected response: ${response.status}`);
 			}
@@ -289,7 +293,9 @@ function FormBuilder() {
 			);
 
 			if (response.status === 200) {
-				console.log(`Field ${formFieldToEdit.tag} edited successfully!`);
+				console.log(
+					`Field ${formFieldToEdit.tag} edited successfully!`
+				);
 			} else {
 				throw new Error(`Unexpected response: ${response.status}`);
 			}
@@ -362,7 +368,9 @@ function FormBuilder() {
 	const handleRequiredChange = (fieldTag: string, isRequired: boolean) => {
 		setServiceFormFieldData((prevFields) =>
 			prevFields.map((field) =>
-				field.tag === fieldTag ? { ...field, required: isRequired } : field
+				field.tag === fieldTag
+					? { ...field, required: isRequired }
+					: field
 			)
 		);
 	};
@@ -370,7 +378,9 @@ function FormBuilder() {
 	const handleEnabledChange = (fieldTag: string, isEnabled: boolean) => {
 		setServiceFormFieldData((prevFields) =>
 			prevFields.map((field) =>
-				field.tag === fieldTag ? { ...field, enabled: isEnabled } : field
+				field.tag === fieldTag
+					? { ...field, enabled: isEnabled }
+					: field
 			)
 		);
 	};
@@ -427,7 +437,9 @@ function FormBuilder() {
 						{language === "fa" ? "ورودی متن" : "Text Input"}
 					</option>
 					<option value="longString">
-						{language === "fa" ? "ورودی متن (طولانی)" : "Text Input (long)"}
+						{language === "fa"
+							? "ورودی متن (طولانی)"
+							: "Text Input (long)"}
 					</option>
 					<option value="integer">
 						{language === "fa" ? "ورودی عددی" : "Number Input"}
@@ -453,7 +465,9 @@ function FormBuilder() {
 			>
 				<div className="my-4">
 					<label htmlFor="FieldLabel" className="form-label">
-						{language === "fa" ? "تیتر ورودی" : "Input label (Farsi)"}
+						{language === "fa"
+							? "تیتر ورودی"
+							: "Input label (Farsi)"}
 					</label>
 					<input
 						type="text"
@@ -462,7 +476,9 @@ function FormBuilder() {
 						value={fieldLabel || ""}
 						onChange={(e) => setFieldLabel(e.target.value)}
 						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+							language === "fa"
+								? "متن خود را وارد کنید"
+								: "Write your input"
 						}
 					/>
 				</div>
@@ -505,7 +521,9 @@ function FormBuilder() {
 
 				<div className="my-4">
 					<label htmlFor="FieldDescription" className="form-label">
-						{language === "fa" ? "توضیحات ورودی" : "Input description (Farsi)"}
+						{language === "fa"
+							? "توضیحات ورودی"
+							: "Input description (Farsi)"}
 					</label>
 					<input
 						type="text"
@@ -514,7 +532,9 @@ function FormBuilder() {
 						value={fieldDescription || ""}
 						onChange={(e) => setFieldDescription(e.target.value)}
 						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
+							language === "fa"
+								? "متن خود را وارد کنید"
+								: "Write your input"
 						}
 					/>
 				</div>
@@ -538,7 +558,10 @@ function FormBuilder() {
 
 				{fieldType === "file" && (
 					<div className="my-4">
-						<label htmlFor="FieldAllowedFormats" className="form-label">
+						<label
+							htmlFor="FieldAllowedFormats"
+							className="form-label"
+						>
 							{language === "fa"
 								? "فرمت های مجاز ورودی"
 								: "Input allowed file formats"}
@@ -548,7 +571,9 @@ function FormBuilder() {
 							id="FieldAllowedFormats"
 							className="form-control"
 							value={fieldAllowedFormats || ""}
-							onChange={(e) => setfieldAllowedFormats(e.target.value)}
+							onChange={(e) =>
+								setfieldAllowedFormats(e.target.value)
+							}
 							placeholder="jpeg,jpg,rar,zip,txt,pdf,etc."
 							style={{ direction: "ltr" }}
 							required={fieldType === "file"}
@@ -578,7 +603,8 @@ function FormBuilder() {
 								required: fieldRequired,
 								enabled: fieldEnabled,
 								maxLength:
-									fieldType === "string" || fieldType === "longString"
+									fieldType === "string" ||
+									fieldType === "longString"
 										? 256
 										: 0,
 								allowedFormats: fieldAllowedFormats,
@@ -604,7 +630,8 @@ function FormBuilder() {
 								required: fieldRequired,
 								enabled: fieldEnabled,
 								maxLength:
-									fieldType === "string" || fieldType === "longString"
+									fieldType === "string" ||
+									fieldType === "longString"
 										? 256
 										: 0,
 								allowedFormats: fieldAllowedFormats,
@@ -632,30 +659,48 @@ function FormBuilder() {
 						const isTextLong = field.type === "longString";
 						const isDate = field.type === "date";
 						const isFile = field.type === "file";
-						const isNumber = field.type === "integer" || field.type === "float";
+						const isNumber =
+							field.type === "integer" || field.type === "float";
 
 						const step =
 							field.type === "integer"
 								? "1"
 								: field.type === "float"
-								? "any"
-								: undefined;
+									? "any"
+									: undefined;
 						return (
 							<div className="my-2" key={field.tag}>
 								{(isText || isNumber || isDate || isFile) && (
 									<div
 										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
 									>
 										<div
 											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa" ? "start" : "end"
+												language === "fa"
+													? "start"
+													: "end"
 											} my-2`}
-											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+											style={{
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
+											}}
 										>
 											<div className="d-flex flex-row justify-content-between align-items-center">
-												<label htmlFor={field.tag} className="form-label mx-2 ">
-													{language === "fa" ? field.label : field.labelEN}
+												<label
+													htmlFor={field.tag}
+													className="form-label mx-2 "
+												>
+													{language === "fa"
+														? field.label
+														: field.labelEN}
 												</label>
 												<div className="px-5">
 													<label
@@ -671,12 +716,16 @@ function FormBuilder() {
 														id="FieldRequired"
 														checked={field.required}
 														onChange={(e) =>
-															handleRequiredChange(field.tag, e.target.checked)
+															handleRequiredChange(
+																field.tag,
+																e.target.checked
+															)
 														}
 														placeholder={
 															(language === "fa"
 																? field.description
-																: field.descriptionEN) || ""
+																: field.descriptionEN) ||
+															""
 														}
 														className="form-check-input shadow-sm"
 														required={true}
@@ -696,7 +745,10 @@ function FormBuilder() {
 														id="FieldEnabled"
 														checked={field.enabled}
 														onChange={(e) =>
-															handleEnabledChange(field.tag, e.target.checked)
+															handleEnabledChange(
+																field.tag,
+																e.target.checked
+															)
 														}
 														className="form-check-input shadow-sm"
 														required={true}
@@ -704,55 +756,78 @@ function FormBuilder() {
 												</div>
 											</div>
 											<input
-												type={isNumber ? "number" : field.type}
+												type={
+													isNumber
+														? "number"
+														: field.type
+												}
 												step={step as string}
 												min={0}
 												id={field.tag}
 												name={field.tag}
 												onInput={(e) => {
-													const target = e.target as HTMLInputElement; // Type assertion
-													const inputValue = target.value; // Get the input value
+													const target =
+														e.target as HTMLInputElement; // Type assertion
+													const inputValue =
+														target.value; // Get the input value
 
 													if (step === "1") {
 														// For integers: Remove non-numeric characters and round to integer
-														const sanitizedValue = inputValue.replace(
-															/[^0-9]/g,
-															""
-														); // Keep only digits
-														target.value = sanitizedValue
-															? Math.round(Number(sanitizedValue)).toString()
-															: "";
+														const sanitizedValue =
+															inputValue.replace(
+																/[^0-9]/g,
+																""
+															); // Keep only digits
+														target.value =
+															sanitizedValue
+																? Math.round(
+																		Number(
+																			sanitizedValue
+																		)
+																	).toString()
+																: "";
 													} else if (step === "any") {
 														// For floats: Allow numbers with decimals
-														const sanitizedValue = inputValue.replace(
-															/[^0-9.]/g,
-															""
-														); // Keep only digits and decimal point
+														const sanitizedValue =
+															inputValue.replace(
+																/[^0-9.]/g,
+																""
+															); // Keep only digits and decimal point
 														const decimalCount = (
-															sanitizedValue.match(/\./g) || []
+															sanitizedValue.match(
+																/\./g
+															) || []
 														).length; // Count decimals
 
 														if (decimalCount > 1) {
 															// Prevent multiple decimal points
-															target.value = sanitizedValue.substring(
-																0,
-																sanitizedValue.lastIndexOf(".")
-															);
+															target.value =
+																sanitizedValue.substring(
+																	0,
+																	sanitizedValue.lastIndexOf(
+																		"."
+																	)
+																);
 														} else {
-															target.value = sanitizedValue; // Allow valid float
+															target.value =
+																sanitizedValue; // Allow valid float
 														}
 													} else {
 														// Default behavior for other input types
-														target.defaultValue = inputValue;
+														target.defaultValue =
+															inputValue;
 													}
 												}}
 												className={`form-control text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} shadow-sm `}
 												placeholder={
 													(language === "fa"
 														? field.description
-														: field.descriptionEN) || ""
+														: field.descriptionEN) ||
+													""
 												}
 											/>
 										</div>
@@ -768,14 +843,17 @@ function FormBuilder() {
 											htmlFor={field.tag}
 											className="form-check-label mx-2"
 										>
-											{language === "fa" ? field.label : field.labelEN}
+											{language === "fa"
+												? field.label
+												: field.labelEN}
 										</label>
 										<input
 											type="checkbox"
 											id={field.tag}
 											name={field.tag}
 											onInput={(e) =>
-												(e.currentTarget.defaultValue = e.currentTarget.value)
+												(e.currentTarget.defaultValue =
+													e.currentTarget.value)
 											}
 											className="form-check-input shadow-sm"
 										/>
@@ -783,15 +861,23 @@ function FormBuilder() {
 								)}
 								{isTextLong && (
 									<div className="d-flex flex-column my-2">
-										<label htmlFor={field.tag} className="py-2">
-											{language === "fa" ? field.label : field.labelEN}
+										<label
+											htmlFor={field.tag}
+											className="py-2"
+										>
+											{language === "fa"
+												? field.label
+												: field.labelEN}
 										</label>
 										<textarea
 											className={`form-control text-${
-												language === "fa" ? "end" : "start"
+												language === "fa"
+													? "end"
+													: "start"
 											} h-100`}
 											onInput={(e) =>
-												(e.currentTarget.defaultValue = e.currentTarget.value)
+												(e.currentTarget.defaultValue =
+													e.currentTarget.value)
 											}
 											rows={3}
 											placeholder={
@@ -821,7 +907,9 @@ function FormBuilder() {
 									</button>
 									<button
 										className="btn btn-secondary btn-sm rounded-3"
-										onClick={() => handleEditFieldState(field)}
+										onClick={() =>
+											handleEditFieldState(field)
+										}
 									>
 										{language === "fa"
 											? "ویرایش ".concat(field.label)

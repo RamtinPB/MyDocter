@@ -55,7 +55,9 @@ const NotificationDropdown = () => {
 						const existingNotif = storedNotifications.find(
 							(notif: any) => notif.id === newNotif.id
 						);
-						return existingNotif ? { ...existingNotif, ...newNotif } : newNotif;
+						return existingNotif
+							? { ...existingNotif, ...newNotif }
+							: newNotif;
 					}
 				);
 
@@ -74,7 +76,9 @@ const NotificationDropdown = () => {
 
 				// Check for unseen notifications
 				setHasNewNotification(
-					sortedNotifications.some((notif: { seen: boolean }) => !notif.seen)
+					sortedNotifications.some(
+						(notif: { seen: boolean }) => !notif.seen
+					)
 				);
 			} catch (error) {
 				console.error("Error fetching notifications:", error);
@@ -82,15 +86,20 @@ const NotificationDropdown = () => {
 		};
 
 		fetchNotifications();
-	}, [language]); // Ensure it refetches when the language changes
+	}, [language]);
 
 	const handleNotificationClick = (notificationId: number) => {
 		const updatedNotifications = notifications.map((notif) =>
 			notif.id === notificationId ? { ...notif, seen: true } : notif
 		);
 		setNotifications(updatedNotifications);
-		localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-		setHasNewNotification(updatedNotifications.some((notif) => !notif.seen));
+		localStorage.setItem(
+			"notifications",
+			JSON.stringify(updatedNotifications)
+		);
+		setHasNewNotification(
+			updatedNotifications.some((notif) => !notif.seen)
+		);
 	};
 
 	return (
@@ -104,7 +113,10 @@ const NotificationDropdown = () => {
 				{hasNewNotification ? (
 					<FaBell className="custom-notification-btn" color="white" />
 				) : (
-					<FaRegBell className="custom-notification-btn" color="white" />
+					<FaRegBell
+						className="custom-notification-btn"
+						color="white"
+					/>
 				)}
 			</button>
 
@@ -117,9 +129,13 @@ const NotificationDropdown = () => {
 							className={`dropdown-item text-${
 								language === "fa" ? "end" : "start"
 							} ${notification.seen ? "text-muted" : "font-weight-bold"}`}
-							onClick={() => handleNotificationClick(notification.id)}
+							onClick={() =>
+								handleNotificationClick(notification.id)
+							}
 						>
-							{notification.message}
+							{notification.message.concat(
+								` - ${notification.dateTime}`
+							)}
 						</Link>
 					))}
 				</div>
