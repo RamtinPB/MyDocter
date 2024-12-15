@@ -96,11 +96,11 @@ interface UserFormData {
 	fixedPhoneNumber: string;
 	email: string;
 	gender: string;
-	insuranceType: string;
+	insuranceType: string | null;
 	insuranceId: number | null;
-	supplementaryInsuranceType: string;
+	supplementaryInsuranceType: string | null;
 	supplementalInsuranceId: number | null;
-	nationalCode: string;
+	nationalCode: string | null;
 	isIranian: string | boolean;
 	isMarried: string | boolean;
 	noInsurance: boolean;
@@ -175,9 +175,10 @@ function convertIsMarriedToString(
 }
 
 function handleConditionalEmptyFields(values: UserFormData): UserFormData {
-	if (values.noInsurance) values.insuranceType = "";
-	if (values.noNationalCode) values.nationalCode = "";
-	if (values.noSupplementaryInsurance) values.supplementaryInsuranceType = "";
+	if (values.noInsurance) values.insuranceType = null;
+	if (values.noNationalCode) values.nationalCode = null;
+	if (values.noSupplementaryInsurance)
+		values.supplementaryInsuranceType = null;
 	return values;
 }
 
@@ -219,7 +220,8 @@ function convertGenderToEnum(gender: string): string {
 }
 
 function convertEducationLevelToEnum(educationLevel: string): string {
-	if (educationLevel === "بی سواد" || educationLevel === "None") return "None";
+	if (educationLevel === "بی سواد" || educationLevel === "None")
+		return "None";
 	if (educationLevel === "ابتدایی" || educationLevel === "Primary")
 		return "Primary";
 	if (educationLevel === "دیپلم" || educationLevel === "Diploma")
@@ -240,7 +242,8 @@ function convertEducationLevelToFrontData(
 	educationLevel: string,
 	language: string
 ): string {
-	if (educationLevel === "None") return language === "fa" ? "بی سواد" : "None";
+	if (educationLevel === "None")
+		return language === "fa" ? "بی سواد" : "None";
 	if (educationLevel === "Primary")
 		return language === "fa" ? "ابتدایی" : "Primary";
 	if (educationLevel === "Diploma")
@@ -271,14 +274,18 @@ const updateFormFieldsWithInsuranceData = (
 			return {
 				...field,
 				options: type0Data.map((item) => item.companyName).join(","),
-				optionsEN: type0Data.map((item) => item.companyNameEN).join(","),
+				optionsEN: type0Data
+					.map((item) => item.companyNameEN)
+					.join(","),
 			};
 		}
 		if (field.name === "supplementaryInsuranceType") {
 			return {
 				...field,
 				options: type1Data.map((item) => item.companyName).join(","),
-				optionsEN: type1Data.map((item) => item.companyNameEN).join(","),
+				optionsEN: type1Data
+					.map((item) => item.companyNameEN)
+					.join(","),
 			};
 		}
 		return field;
@@ -293,7 +300,8 @@ const getInsuranceIdByName = (
 
 	const match = insuranceData.find(
 		(data) =>
-			data.companyName === insuranceType || data.companyNameEN === insuranceType
+			data.companyName === insuranceType ||
+			data.companyNameEN === insuranceType
 	);
 
 	return match ? match.id : null;
@@ -318,7 +326,9 @@ function UserInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
-	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
+	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>(
+		[]
+	);
 
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 	const { triggerImageUpdate } = useProfile();
@@ -339,7 +349,10 @@ function UserInformation() {
 				setDataUpdateFlag((prev) => !prev);
 			})
 			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 
 				fetch("/Insurances.json")
 					.then((response) => response.json())
@@ -382,8 +395,14 @@ function UserInformation() {
 					const formattedData = {
 						...data,
 						...handleConditionalEmptyFieldsForFront(data),
-						isIranian: convertIsIranianToString(data.isIranian, language),
-						isMarried: convertIsMarriedToString(data.isMarried, language),
+						isIranian: convertIsIranianToString(
+							data.isIranian,
+							language
+						),
+						isMarried: convertIsMarriedToString(
+							data.isMarried,
+							language
+						),
 						profilePicture: data.profileImageUrl,
 						birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
 						gender: convertGenderToFrontData(data.gender, language),
@@ -407,7 +426,9 @@ function UserInformation() {
 					try {
 						const response = await fetch("/UserInformation.json"); // Adjust path if necessary
 						if (!response.ok) {
-							throw new Error("Failed to fetch data from db.json");
+							throw new Error(
+								"Failed to fetch data from db.json"
+							);
 						}
 						const data = await response.json();
 
@@ -426,11 +447,22 @@ function UserInformation() {
 						const formattedData = {
 							...data,
 							...handleConditionalEmptyFieldsForFront(data),
-							isIranian: convertIsIranianToString(data.isIranian, language),
-							isMarried: convertIsMarriedToString(data.isMarried, language),
+							isIranian: convertIsIranianToString(
+								data.isIranian,
+								language
+							),
+							isMarried: convertIsMarriedToString(
+								data.isMarried,
+								language
+							),
 							profilePicture: data.profileImageUrl,
-							birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
-							gender: convertGenderToFrontData(data.gender, language),
+							birthdate: formatBirthdateToYYYYMMDD(
+								data.birthdate
+							),
+							gender: convertGenderToFrontData(
+								data.gender,
+								language
+							),
 							educationLevel: convertEducationLevelToFrontData(
 								data.educationLevel,
 								language
@@ -475,11 +507,18 @@ function UserInformation() {
 					setValidationSchemaData(newValidationSchemaData);
 				})
 				.catch(async (error) => {
-					console.error("API request failed, trying local db.json", error);
+					console.error(
+						"API request failed, trying local db.json",
+						error
+					);
 					try {
-						const response = await fetch("/UserInformationFormFields.json"); // Adjust path if necessary
+						const response = await fetch(
+							"/UserInformationFormFields.json"
+						); // Adjust path if necessary
 						if (!response.ok) {
-							throw new Error("Failed to fetch data from db.json");
+							throw new Error(
+								"Failed to fetch data from db.json"
+							);
 						}
 						const data = await response.json();
 
@@ -489,10 +528,11 @@ function UserInformation() {
 						} = processData(data);
 
 						// Update form fields with insurance data
-						const updatedFormFields = updateFormFieldsWithInsuranceData(
-							newFormFields,
-							insuranceData
-						);
+						const updatedFormFields =
+							updateFormFieldsWithInsuranceData(
+								newFormFields,
+								insuranceData
+							);
 
 						setFormFields(updatedFormFields);
 						setValidationSchemaData(newValidationSchemaData);
@@ -532,13 +572,19 @@ function UserInformation() {
 			// Apply common rules
 			if (rule.matches && rule.type === "text") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+					new RegExp(
+						language === "fa" ? rule.matches : rule.matchesEN
+					),
+					language === "fa"
+						? rule.matchesMessage
+						: rule.matchesMessageEN
 				);
 			}
 			if (rule.name === "email") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).email(
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+					language === "fa"
+						? rule.matchesMessage
+						: rule.matchesMessageEN
 				);
 			}
 
@@ -555,9 +601,17 @@ function UserInformation() {
 					otherwise: (schema) => {
 						let otherwiseSchema = schema;
 						if (rule.matches) {
-							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-								language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+							otherwiseSchema = (
+								otherwiseSchema as Yup.StringSchema
+							).matches(
+								new RegExp(
+									language === "fa"
+										? rule.matches
+										: rule.matchesEN
+								),
+								language === "fa"
+									? rule.matchesMessage
+									: rule.matchesMessageEN
 							);
 						}
 						if (rule.required) {
@@ -574,7 +628,9 @@ function UserInformation() {
 				// Apply default required rule if no 'when' condition is specified
 				if (rule.required) {
 					fieldSchema = fieldSchema.required(
-						language === "fa" ? rule.requiredMessage : rule.requiredMessageEN
+						language === "fa"
+							? rule.requiredMessage
+							: rule.requiredMessageEN
 					);
 				} else {
 					fieldSchema = fieldSchema.notRequired();
@@ -606,7 +662,9 @@ function UserInformation() {
 				isIranian: convertIsIranianToBoolean(values.isIranian),
 				isMarried: convertIsMarriedToBoolean(values.isMarried),
 				gender: convertGenderToEnum(values.gender),
-				educationLevel: convertEducationLevelToEnum(values.educationLevel),
+				educationLevel: convertEducationLevelToEnum(
+					values.educationLevel
+				),
 				insuranceId,
 				supplementalInsuranceId,
 			};
@@ -614,7 +672,10 @@ function UserInformation() {
 
 			try {
 				// Send the transformed data to the update API
-				await axiosInstance.post("/api/User/UpdateUserData", updatedData);
+				await axiosInstance.post(
+					"/api/User/UpdateUserData",
+					updatedData
+				);
 				alert(
 					language === "fa"
 						? "اطلاعات کاربر بروزرسانی شد"
@@ -643,7 +704,10 @@ function UserInformation() {
 				setProfilePicture(imageUrl); // Set the profile picture state
 			})
 			.catch(async (error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
 					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
 					if (!response.ok) {
@@ -681,7 +745,9 @@ function UserInformation() {
 				return;
 			}
 			if (
-				!["image/png", "image/jpeg", "image/jpg"].includes(selectedFile.type)
+				!["image/png", "image/jpeg", "image/jpg"].includes(
+					selectedFile.type
+				)
 			) {
 				console.error(
 					"Invalid file type. Only PNG, JPEG, and JPG are allowed."
@@ -708,12 +774,16 @@ function UserInformation() {
 
 			try {
 				// Upload profile picture
-				await axiosInstance.post("/api/File/UploadProfileImage", formData, {
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-					withCredentials: true,
-				});
+				await axiosInstance.post(
+					"/api/File/UploadProfileImage",
+					formData,
+					{
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+						withCredentials: true,
+					}
+				);
 				triggerImageUpdate();
 				setProfileImageUpdateFlag((prev) => !prev);
 
@@ -753,7 +823,9 @@ function UserInformation() {
 		} catch (error) {
 			console.error("Error removing profile picture:", error);
 			alert(
-				language === "fa" ? "خطا در حذف عکس" : "Profile picture removal failed."
+				language === "fa"
+					? "خطا در حذف عکس"
+					: "Profile picture removal failed."
 			);
 		}
 	};
@@ -774,7 +846,11 @@ function UserInformation() {
 							className="btn btn-light shadow rounded-pill  my-auto"
 							onClick={handleDeleteProfilePicture}
 						>
-							<span>{language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
+							<span>
+								{language === "fa"
+									? "حذف عکس"
+									: "Delete Picture"}
+							</span>
 						</button>
 						{profilePicture ? (
 							<img
@@ -794,7 +870,11 @@ function UserInformation() {
 							style={{ cursor: "pointer" }}
 							onClick={handleButtonClick}
 						>
-							<span>{language === "fa" ? "انتخاب عکس" : "Upload Picture"}</span>
+							<span>
+								{language === "fa"
+									? "انتخاب عکس"
+									: "Upload Picture"}
+							</span>
 							<input
 								type="file"
 								accept="image/*"
@@ -815,10 +895,16 @@ function UserInformation() {
 							language === "fa" ? "end" : "start"
 						} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
 					>
-						<h2>{language === "fa" ? "اطلاعات کاربر" : "User Information"}</h2>
+						<h2>
+							{language === "fa"
+								? "اطلاعات کاربر"
+								: "User Information"}
+						</h2>
 						<div
 							className="row row-cols-2 g-4 g-md-5 my-1"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							{formFields.map((field, index) => {
 								const isSelect = field.type === "select";
@@ -831,26 +917,45 @@ function UserInformation() {
 										<div
 											key={index}
 											className="col mb-2"
-											style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+											style={{
+												direction:
+													language === "fa"
+														? "rtl"
+														: "ltr",
+											}}
 										>
-											<label htmlFor={field.name} className="form-label">
-												{language === "fa" ? field.label : field.labelEN}
+											<label
+												htmlFor={field.name}
+												className="form-label"
+											>
+												{language === "fa"
+													? field.label
+													: field.labelEN}
 											</label>
 											{isSelect ? (
 												<select
 													id={field.name}
 													name={field.name}
 													value={String(
-														formik.values[field.name as keyof UserFormData] ||
-															""
+														formik.values[
+															field.name as keyof UserFormData
+														] || ""
 													)}
-													onChange={formik.handleChange}
+													onChange={
+														formik.handleChange
+													}
 													onBlur={formik.handleBlur}
 													className={`form-select select-resize text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													} shadow-sm ${
-														formik.touched[field.name as keyof UserFormData] &&
-														formik.errors[field.name as keyof UserFormData]
+														formik.touched[
+															field.name as keyof UserFormData
+														] &&
+														formik.errors[
+															field.name as keyof UserFormData
+														]
 															? "is-invalid"
 															: ""
 													}`}
@@ -861,14 +966,29 @@ function UserInformation() {
 														]
 													}
 												>
-													<option value="">...</option>
-													{(language === "fa" ? field.options : field.optionsEN)
+													<option value="">
+														...
+													</option>
+													{(language === "fa"
+														? field.options
+														: field.optionsEN
+													)
 														.split(",")
-														.map((option: string, i: number) => (
-															<option key={i} value={option}>
-																{option}
-															</option>
-														))}
+														.map(
+															(
+																option: string,
+																i: number
+															) => (
+																<option
+																	key={i}
+																	value={
+																		option
+																	}
+																>
+																	{option}
+																</option>
+															)
+														)}
 												</select>
 											) : (
 												<input
@@ -876,16 +996,25 @@ function UserInformation() {
 													id={field.name}
 													name={field.name}
 													value={String(
-														formik.values[field.name as keyof UserFormData] ||
-															""
+														formik.values[
+															field.name as keyof UserFormData
+														] || ""
 													)}
-													onChange={formik.handleChange}
+													onChange={
+														formik.handleChange
+													}
 													onBlur={formik.handleBlur}
 													className={`form-control text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													} shadow-sm ${
-														formik.touched[field.name as keyof UserFormData] &&
-														formik.errors[field.name as keyof UserFormData]
+														formik.touched[
+															field.name as keyof UserFormData
+														] &&
+														formik.errors[
+															field.name as keyof UserFormData
+														]
 															? "is-invalid"
 															: ""
 													}`}
@@ -898,18 +1027,23 @@ function UserInformation() {
 													placeholder={
 														(language === "fa"
 															? field.placeholder
-															: field.placeholderEN) || ""
+															: field.placeholderEN) ||
+														""
 													}
 												/>
 											)}
 											{isCheckbox && (
 												<div
 													className={`text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													} mt-2`}
 												>
 													<label
-														htmlFor={field.checkboxName}
+														htmlFor={
+															field.checkboxName
+														}
 														className="form-check-label mx-2"
 													>
 														{language === "fa"
@@ -919,7 +1053,9 @@ function UserInformation() {
 													<input
 														type="checkbox"
 														id={field.checkboxName}
-														name={field.checkboxName}
+														name={
+															field.checkboxName
+														}
 														checked={Boolean(
 															formik.values[
 																field.checkboxName as keyof UserFormData
@@ -935,8 +1071,12 @@ function UserInformation() {
 													/>
 												</div>
 											)}
-											{formik.touched[field.name as keyof UserFormData] &&
-												formik.errors[field.name as keyof UserFormData] && (
+											{formik.touched[
+												field.name as keyof UserFormData
+											] &&
+												formik.errors[
+													field.name as keyof UserFormData
+												] && (
 													<div className="invalid-feedback">
 														{
 															formik.errors[
