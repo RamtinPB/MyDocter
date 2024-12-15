@@ -74,7 +74,7 @@ export interface FormRenderHandle {
 	getFormValues: () => any; // Adjust the return type if you know the structure of form values
 }
 
-const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
+const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 	const { id } = useParams<{ id: string }>();
 	const { language } = useLanguage();
 
@@ -82,10 +82,9 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 		serviceFormFieldProps[]
 	>([]);
 
-	const [serviceSubmitData, setServiceSubmitData] =
-		useState<serviceSubmitDataProps>({
-			formInputs: [],
-		});
+	const [serviceSubmitData] = useState<serviceSubmitDataProps>({
+		formInputs: [],
+	});
 
 	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -138,6 +137,10 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 	// Create the Yup validation schema based on validationSchemaData
 	const validationSchema = Yup.object().shape(
 		serviceFormFieldData.reduce((acc, field) => {
+			if (field.type === "file") {
+				return acc;
+			}
+
 			let fieldSchema: Yup.AnySchema; // Start with a generic AnySchema
 
 			// Determine the type of the field and assign the correct schema type
@@ -159,9 +162,6 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 					break;
 				case "checkbox":
 					fieldSchema = Yup.boolean(); // Use boolean schema for boolean fields
-					break;
-				case "file":
-					fieldSchema = Yup.mixed(); // Use boolean schema for boolean fields
 					break;
 				default:
 					fieldSchema = Yup.mixed(); // Use mixed for all other types
@@ -381,11 +381,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 												}}
 											>
 												<div
-													className={`d-flex flex-column justify-content-center align-items-${
-														language === "fa"
-															? "start"
-															: "end"
-													} my-2`}
+													className={`d-flex flex-column justify-content-center align-items-start my-2`}
 													style={{
 														direction:
 															language === "fa"
@@ -416,7 +412,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 														value={
 															formik.values[
 																field.tag
-															]
+															] || ""
 														} // Bind Formik's values
 														onChange={
 															formik.handleChange
@@ -474,6 +470,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 										)}
 										{isFile && (
 											<div
+												key={field.tag}
 												className="col mb-2"
 												style={{
 													direction:
@@ -483,11 +480,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 												}}
 											>
 												<div
-													className={`d-flex flex-column justify-content-center align-items-${
-														language === "fa"
-															? "start"
-															: "end"
-													} my-2`}
+													className={`d-flex flex-column justify-content-center align-items-start my-2`}
 													style={{
 														direction:
 															language === "fa"
@@ -520,7 +513,12 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 																	file,
 																	index
 																) => (
-																	<div className="d-flex flex-column p-1 mx-1">
+																	<div
+																		key={
+																			index
+																		}
+																		className="d-flex flex-column p-1 mx-1"
+																	>
 																		<a
 																			href={
 																				file.fileUrl
@@ -608,6 +606,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 										)}
 										{isCheckbox && (
 											<div
+												key={field.tag}
 												className={`text-${
 													language === "fa"
 														? "end"
@@ -635,7 +634,10 @@ const FormRender = forwardRef<FormRenderHandle, any>((props, ref) => {
 											</div>
 										)}
 										{isTextLong && (
-											<div className="d-flex flex-column my-2">
+											<div
+												className="d-flex flex-column my-2"
+												key={field.tag}
+											>
 												<label
 													htmlFor={field.tag}
 													className="py-2"

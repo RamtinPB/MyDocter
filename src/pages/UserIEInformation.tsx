@@ -634,11 +634,13 @@ function UserIEInformation() {
 
 	const validationSchema = Yup.object().shape(
 		validationSchemaData.reduce((acc, rule) => {
-			if (rule.name === "isPregnant") {
-				return;
-			}
-			if (rule.name === "isLactating") {
-				return;
+			if (userInfo?.gender === "Male") {
+				if (rule.name === "isPregnant") {
+					return acc;
+				}
+				if (rule.name === "isLactating") {
+					return acc;
+				}
 			}
 			let fieldSchema: Yup.AnySchema = Yup.mixed();
 

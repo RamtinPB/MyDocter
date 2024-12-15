@@ -390,6 +390,7 @@ function FormBuilder() {
 		const transformedPayload = serviceFormFieldData.map((field) => ({
 			...field,
 			type: mapTypeToApiType(field.type), // Map the type to its numeric value
+			formFieldId: field.id,
 		}));
 		try {
 			// Send each field to the API
@@ -582,7 +583,10 @@ function FormBuilder() {
 				)}
 			</div>
 			{dataEditFlag ? (
-				<div className="d-flex flex-row justify-content-center align-items-center gap-3 my-4">
+				<div
+					className="d-flex flex-row justify-content-center align-items-center gap-3 my-4"
+					style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+				>
 					<button
 						type="button"
 						className="btn-close"

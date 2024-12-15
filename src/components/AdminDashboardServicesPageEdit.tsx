@@ -46,14 +46,14 @@ function ServicePageEdit() {
 
 	const [service, setService] = useState<serviceProps | null>(null);
 
-	const [displayImageUrlData, setDisplayImageUrlData] = useState<string | null>(
-		null
-	);
+	const [displayImageUrlData, setDisplayImageUrlData] = useState<
+		string | null
+	>(null);
 	const [pageBannerUrlData, setPageBannerUrlData] = useState<string | null>(
 		null
 	);
 
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	//const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
@@ -115,7 +115,10 @@ function ServicePageEdit() {
 				setPageBannerUrlData(imageUrl); // Set the profile picture state
 			})
 			.catch((error) => {
-				console.log("failed to capture ServicePageBanner from api", error);
+				console.log(
+					"failed to capture ServicePageBanner from api",
+					error
+				);
 			});
 	}, []);
 
@@ -134,7 +137,10 @@ function ServicePageEdit() {
 				setDisplayImageUrlData(imageUrl); // Set the profile picture state
 			})
 			.catch((error) => {
-				console.log("failed to capture ServiceDisplayBanner from api", error);
+				console.log(
+					"failed to capture ServiceDisplayBanner from api",
+					error
+				);
 			});
 	}, []);
 
@@ -168,7 +174,9 @@ function ServicePageEdit() {
 
 			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
 			setService((prevService) =>
-				prevService ? { ...prevService, displayImageUrl: previewUrl } : null
+				prevService
+					? { ...prevService, displayImageUrl: previewUrl }
+					: null
 			);
 
 			const formData = new FormData();
@@ -182,7 +190,10 @@ function ServicePageEdit() {
 					},
 				})
 				.then((response) => {
-					console.log("service picture uploaded successfully:", response.data);
+					console.log(
+						"service picture uploaded successfully:",
+						response.data
+					);
 				})
 				.catch((error) => {
 					console.error("Error uploading service picture:", error);
@@ -199,7 +210,9 @@ function ServicePageEdit() {
 
 			const previewUrl = URL.createObjectURL(file); // Create a preview URL for display
 			setService((prevService) =>
-				prevService ? { ...prevService, pageBannerUrl: previewUrl } : null
+				prevService
+					? { ...prevService, pageBannerUrl: previewUrl }
+					: null
 			);
 
 			const formData = new FormData();
@@ -213,7 +226,10 @@ function ServicePageEdit() {
 					},
 				})
 				.then((response) => {
-					console.log("service picture uploaded successfully:", response.data);
+					console.log(
+						"service picture uploaded successfully:",
+						response.data
+					);
 				})
 				.catch((error) => {
 					console.error("Error uploading service picture:", error);
@@ -298,12 +314,16 @@ function ServicePageEdit() {
 				>
 					<div className="col-6">
 						<h5 className="text-center">
-							{language === "fa" ? "اطلاعات کارت سرویس" : "Service Card Data"}
+							{language === "fa"
+								? "اطلاعات کارت سرویس"
+								: "Service Card Data"}
 						</h5>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="displayTitle" className="py-2">
 								{language === "fa"
@@ -312,20 +332,28 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-${
-									language === "fa" ? "end" : "start"
-								}`}
+								className={`form-control  text-end`}
 								onChange={(e) =>
-									handleChange("displayTitle", preprocessNotes(e.target.value))
+									handleChange(
+										"displayTitle",
+										preprocessNotes(e.target.value)
+									)
 								}
 								placeholder={"متن خود را وارد کنید"}
-								value={service?.displayTitle?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.displayTitle?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 							/>
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -334,9 +362,7 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control text-${
-									language === "fa" ? "start" : "end"
-								}`}
+								className={`form-control text-start`}
 								onChange={(e) =>
 									handleChange(
 										"displayTitleEN",
@@ -344,13 +370,20 @@ function ServicePageEdit() {
 									)
 								}
 								placeholder={"Write your input"}
-								value={service?.displayTitleEN?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.displayTitleEN?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 							/>
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -358,9 +391,7 @@ function ServicePageEdit() {
 									: "Service Card Desctiption (Farsi)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "end" : "start"
-								} h-100`}
+								className={`form-control text-end h-100`}
 								onChange={(e) =>
 									handleChange(
 										"displayDescription",
@@ -368,7 +399,10 @@ function ServicePageEdit() {
 									)
 								}
 								value={
-									service?.displayDescription?.replace(/<br>/g, "\n") || ""
+									service?.displayDescription?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
 								}
 								rows={3}
 								placeholder={"متن خود را وارد کنید"}
@@ -377,8 +411,10 @@ function ServicePageEdit() {
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -386,9 +422,7 @@ function ServicePageEdit() {
 									: "Service Card Desctiption (English)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "start" : "end"
-								} h-100`}
+								className={`form-control text-start h-100`}
 								onChange={(e) =>
 									handleChange(
 										"displayDescriptionEN",
@@ -396,7 +430,10 @@ function ServicePageEdit() {
 									)
 								}
 								value={
-									service?.displayDescriptionEN?.replace(/<br>/g, "\n") || ""
+									service?.displayDescriptionEN?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
 								}
 								rows={3}
 								placeholder={"Write your input"}
@@ -423,19 +460,28 @@ function ServicePageEdit() {
 								className="btn btn-sm btn-warning shadow-sm rounded-pill"
 								onClick={() => setDisplayImageUrlData(null)}
 							>
-								<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
+								<span>
+									{" "}
+									{language === "fa"
+										? "حذف عکس"
+										: "Delete Picture"}
+								</span>
 							</button>
 						</div>
 					</div>
 
 					<div className="col-6">
 						<h5 className="text-center">
-							{language === "fa" ? "اطلاعات صفحه سرویس" : "Service Page Data"}
+							{language === "fa"
+								? "اطلاعات صفحه سرویس"
+								: "Service Page Data"}
 						</h5>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -444,20 +490,28 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control  text-${
-									language === "fa" ? "end" : "start"
-								}`}
+								className={`form-control  text-end`}
 								onChange={(e) =>
-									handleChange("pageTitle", preprocessNotes(e.target.value))
+									handleChange(
+										"pageTitle",
+										preprocessNotes(e.target.value)
+									)
 								}
 								placeholder={"متن خود را وارد کنید"}
-								value={service?.pageTitle?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.pageTitle?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 							/>
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -466,20 +520,28 @@ function ServicePageEdit() {
 							</label>
 							<input
 								type="text"
-								className={`form-control text-${
-									language === "fa" ? "start" : "end"
-								}`}
+								className={`form-control text-start`}
 								onChange={(e) =>
-									handleChange("pageTitleEN", preprocessNotes(e.target.value))
+									handleChange(
+										"pageTitleEN",
+										preprocessNotes(e.target.value)
+									)
 								}
 								placeholder={"Write your input"}
-								value={service?.pageTitleEN?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.pageTitleEN?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 							/>
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -487,16 +549,19 @@ function ServicePageEdit() {
 									: "Service Card Desctiption (Farsi)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "end" : "start"
-								} h-100`}
+								className={`form-control text-end h-100`}
 								onChange={(e) =>
 									handleChange(
 										"pageDescription",
 										preprocessNotes(e.target.value)
 									)
 								}
-								value={service?.pageDescription?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.pageDescription?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 								rows={3}
 								placeholder={"متن خود را وارد کنید"}
 								style={{ resize: "none" }}
@@ -504,8 +569,10 @@ function ServicePageEdit() {
 						</div>
 
 						<div
-							className="py-3"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							className={`py-3 text-${language === "fa" ? "end" : "start"}`}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<label htmlFor="" className="py-2">
 								{language === "fa"
@@ -513,16 +580,19 @@ function ServicePageEdit() {
 									: "Service Card Desctiption (English)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "start" : "end"
-								} h-100`}
+								className={`form-control text-start h-100`}
 								onChange={(e) =>
 									handleChange(
 										"pageDescriptionEN",
 										preprocessNotes(e.target.value)
 									)
 								}
-								value={service?.pageDescriptionEN?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.pageDescriptionEN?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 								rows={3}
 								placeholder={"Write your input"}
 								style={{ resize: "none", direction: "ltr" }}
@@ -548,7 +618,12 @@ function ServicePageEdit() {
 								className="btn btn-sm btn-warning shadow-sm rounded-pill"
 								onClick={() => setPageBannerUrlData(null)}
 							>
-								<span> {language === "fa" ? "حذف عکس" : "Delete Picture"}</span>
+								<span>
+									{" "}
+									{language === "fa"
+										? "حذف عکس"
+										: "Delete Picture"}
+								</span>
 							</button>
 						</div>
 					</div>
@@ -559,28 +634,35 @@ function ServicePageEdit() {
 					className="d-flex flex-row justify-content-between bg-white border border-2 shadow text-end rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<div className="d-flex flex-column flex-grow-1 px-1 mx-1">
-						<h5 className={`px-1 mx-1`}>
-							{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
+					<div
+						className={`d-flex flex-column flex-grow-1 px-1 mx-1 text-${language === "fa" ? "end" : "start"}`}
+					>
+						<h5 className={``}>
+							{language === "fa"
+								? "نکات مهم سرویس"
+								: "Service Important Notes"}
 						</h5>
 
 						<div className="d-flex flex-column my-2">
-							<label htmlFor="" className="py-2">
+							<label htmlFor="" className="px-1 py-2">
 								{language === "fa"
 									? "نکات مهم سرویس"
-									: "Service Important Notes (Farsi"}
+									: "Service Important Notes (Farsi)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "end" : "start"
-								} h-100`}
+								className={`form-control text-end h-100`}
 								onChange={(e) =>
 									handleChange(
 										"importantNotes",
 										preprocessNotes(e.target.value)
 									)
 								}
-								value={service?.importantNotes?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.importantNotes?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 								rows={3}
 								placeholder={"متن خود را وارد کنید"}
 								style={{ resize: "none" }}
@@ -588,22 +670,25 @@ function ServicePageEdit() {
 						</div>
 
 						<div className="d-flex flex-column my-2">
-							<label htmlFor="" className="py-2">
+							<label htmlFor="" className="px-1 py-2">
 								{language === "fa"
 									? "نکات مهم سرویس (انگلیسی)"
 									: "Service Important Notes (English)"}
 							</label>
 							<textarea
-								className={`form-control text-${
-									language === "fa" ? "start" : "end"
-								} h-100`}
+								className={`form-control text-start h-100`}
 								onChange={(e) =>
 									handleChange(
 										"importantNotesEN",
 										preprocessNotes(e.target.value)
 									)
 								}
-								value={service?.importantNotesEN?.replace(/<br>/g, "\n") || ""}
+								value={
+									service?.importantNotesEN?.replace(
+										/<br>/g,
+										"\n"
+									) || ""
+								}
 								rows={3}
 								placeholder={"Write your input"}
 								style={{ resize: "none", direction: "ltr" }}
@@ -614,27 +699,32 @@ function ServicePageEdit() {
 
 				{/* Service Pricing Section */}
 				<div
-					className="bg-white border border-2 shadow text-end rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4"
+					className="bg-white border border-2 shadow rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<h5 className={`px-1 mx-1`}>
-						{language === "fa" ? "قیمت گذاری سرویس" : "Service Pricing Section"}
+						{language === "fa"
+							? "قیمت گذاری سرویس"
+							: "Service Pricing Section"}
 					</h5>
 
 					<div
-						className="d-flex flex-row justify-content-between align-items-center"
-						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+						className={`d-flex flex-row justify-content-between align-items-center text-${language === "fa" ? "end" : "start"}`}
 					>
 						<div className="col-6 px-2 py-3">
 							<label htmlFor="" className="py-2">
-								{language === "fa" ? "قیمت پایه سرویس" : "Service Base Price"}
+								{language === "fa"
+									? "قیمت پایه سرویس"
+									: "Service Base Price"}
 							</label>
 							<input
 								type="text"
 								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								}`}
-								onChange={(e) => handleChange("basePrice", e.target.value)}
+								onChange={(e) =>
+									handleChange("basePrice", e.target.value)
+								}
 								value={
 									service?.basePrice !== undefined &&
 									service?.basePrice !== null
@@ -644,18 +734,23 @@ function ServicePageEdit() {
 							/>
 						</div>
 
-						<div className="col-6 px-2 py-3">
+						<div className="col-6 px-2 py-3 ">
 							<label htmlFor="" className="py-2">
-								{language === "fa" ? "تخفیف سرویس" : "Service discount"}
+								{language === "fa"
+									? "تخفیف سرویس"
+									: "Service discount"}
 							</label>
 							<input
 								type="text"
 								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								}`}
-								onChange={(e) => handleChange("discount", e.target.value)}
+								onChange={(e) =>
+									handleChange("discount", e.target.value)
+								}
 								value={
-									service?.discount !== undefined && service?.discount !== null
+									service?.discount !== undefined &&
+									service?.discount !== null
 										? service.discount
 										: ""
 								}

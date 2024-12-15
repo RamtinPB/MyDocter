@@ -258,11 +258,7 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 										}}
 									>
 										<div
-											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa"
-													? "start"
-													: "end"
-											} my-2`}
+											className={`d-flex flex-column justify-content-center align-items-start my-2`}
 											style={{
 												direction:
 													language === "fa"
@@ -311,11 +307,7 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 										key={`${field.label}-${index}`}
 									>
 										<div
-											className={`d-flex flex-column justify-content-center align-items-${
-												language === "fa"
-													? "start"
-													: "end"
-											} my-2`}
+											className={`d-flex flex-column justify-content-center align-items-start my-2`}
 											style={{
 												direction:
 													language === "fa"
