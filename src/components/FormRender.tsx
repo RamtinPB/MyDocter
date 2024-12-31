@@ -86,8 +86,10 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 		formInputs: [],
 	});
 
-	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [uploadedFiles, setUploadedFiles] = useState<
+		Record<string, FileData[]>
+	>({});
+	const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
 	const initialValues = serviceFormFieldData.reduce(
 		(values, field: serviceFormFieldProps) => {
@@ -205,35 +207,37 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 
 			try {
 				// Upload each file in uploadedFiles and update formInputs with the fileId
-				for (const file of uploadedFiles) {
-					const formData = new FormData(); // Create a new FormData instance
+				for (const [tag, files] of Object.entries(uploadedFiles)) {
+					for (const file of files) {
+						const formData = new FormData(); // Create a new FormData instance
 
-					// Append data to FormData (including the binary file)
-					formData.append("serviceId", String(id)); // Example of adding other data
-					formData.append("FileTag", file.tag); // Add the tag for the file
-					formData.append(
-						"FileFormat",
-						file.fileType.split("/").pop() || "unknown"
-					); // Extract file format
-					formData.append("File", file.file); // This is the actual file (with binary data)
+						// Append data to FormData (including the binary file)
+						formData.append("serviceId", String(id)); // Example of adding other data
+						formData.append("FileTag", file.tag); // Add the tag for the file
+						formData.append(
+							"FileFormat",
+							file.fileType.split("/").pop() || "unknown"
+						); // Extract file format
+						formData.append("File", file.file); // This is the actual file (with binary data)
 
-					// Send the file to the API
-					const response = await axiosInstance.post(
-						"/api/File/UploadFile",
-						formData,
-						{
-							headers: {
-								"Content-Type": "multipart/form-data", // Ensure correct content type for file upload
-							},
+						// Send the file to the API
+						const response = await axiosInstance.post(
+							"/api/File/UploadFile",
+							formData,
+							{
+								headers: {
+									"Content-Type": "multipart/form-data", // Ensure correct content type for file upload
+								},
+							}
+						);
+
+						if (response.status === 200) {
+							// Add the fileId to formInputs
+							formInputs.push({
+								tag: file.tag, // Tag associated with the file input
+								value: response.data.fileId.toString(),
+							});
 						}
-					);
-
-					if (response.status === 200) {
-						// Add the fileId to formInputs
-						formInputs.push({
-							tag: file.tag, // Tag associated with the file input
-							value: response.data.fileId.toString(),
-						});
 					}
 				}
 
@@ -310,21 +314,23 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 		const filesWithTags = files.map((file) => ({
 			fileName: file.name,
 			fileType: file.type,
-			fileUrl: URL.createObjectURL(file), // Just for preview
-			file, // This contains the actual file with binary data
-			tag, // Associate the file with the input's tag
+			fileUrl: URL.createObjectURL(file), // For preview
+			file,
+			tag,
 		}));
-		setUploadedFiles((prev) => [...prev, ...filesWithTags]); // Add files to uploadedFiles state
-	};
 
-	const handleFileDelete = (fileIndex: number) => {
-		setUploadedFiles((prevFiles) =>
-			prevFiles.filter((_, index) => index !== fileIndex)
-		);
+		setUploadedFiles((prev) => ({
+			...prev,
+			[tag]: [...(prev[tag] || []), ...filesWithTags], // Add files for the specific tag
+		}));
 	};
+	console.log(uploadedFiles);
 
-	const handleFileUploadClick = () => {
-		fileInputRef.current?.click(); // Trigger file input click
+	const handleFileDelete = (fileIndex: number, tag: string) => {
+		setUploadedFiles((prevFiles) => ({
+			...prevFiles,
+			[tag]: prevFiles[tag].filter((_, index) => index !== fileIndex),
+		}));
 	};
 
 	return (
@@ -508,7 +514,9 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 															className={`d-flex flex-wrap justify-content-start align-items-center`}
 														>
 															{/* Display uploaded files with icons */}
-															{uploadedFiles.map(
+															{uploadedFiles[
+																field.tag
+															]?.map(
 																(
 																	file,
 																	index
@@ -523,11 +531,8 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																			href={
 																				file.fileUrl
 																			}
-																			key={
-																				index
-																			}
-																			className="d-flex flex-column justify-content-center align-items-center d-block "
 																			download
+																			className="d-flex flex-column justify-content-center align-items-center d-block"
 																		>
 																			<img
 																				src={getIconForFileType(
@@ -536,20 +541,18 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																				alt={`${file.fileName} Icon`}
 																				className="custom-file-icon"
 																			/>
-																			<span
-																				className={`scrollable-text text-center mt-1`}
-																			>
+																			<span className="scrollable-text text-center mt-1">
 																				{
 																					file.fileName
 																				}
 																			</span>
 																		</a>
-																		{/* Delete Button */}
 																		<button
 																			className="btn btn-sm btn-danger rounded-pill mt-1"
 																			onClick={() =>
 																				handleFileDelete(
-																					index
+																					index,
+																					field.tag
 																				)
 																			}
 																		>
@@ -562,13 +565,17 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																)
 															)}
 														</div>
+
+														{/* Upload button for this section */}
 														<div className="d-flex flex-wrap justify-content-end align-items-center">
-															{/* Upload button */}
 															<button
 																type="button"
 																className="btn btn-outline-secondary ms-2"
-																onClick={
-																	handleFileUploadClick
+																onClick={() =>
+																	fileInputRefs.current?.[
+																		field
+																			.tag
+																	]?.click()
 																}
 															>
 																<i className="fas fa-file-upload"></i>
@@ -577,11 +584,12 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																	? "ارسال فایل"
 																	: "Upload"}
 															</button>
-															{/* Hidden file input */}
 															<input
 																type="file"
-																ref={
-																	fileInputRef
+																ref={(el) =>
+																	(fileInputRefs.current[
+																		field.tag
+																	] = el)
 																}
 																style={{
 																	display:
@@ -593,7 +601,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																		field.tag
 																	)
 																}
-																multiple // Allow multiple file selection
+																multiple
 																accept={
 																	allowedFormats ||
 																	""

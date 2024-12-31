@@ -32,8 +32,6 @@ function MyHeader() {
 	const [userData, setUserData] = useState<UserData | null>(null);
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
-
-	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
@@ -41,13 +39,14 @@ function MyHeader() {
 	useEffect(() => {
 		const fetchUserData = async () => {
 			try {
-				const response = await axiosInstance.post("/api/User/GetUserProfile");
+				const response = await axiosInstance.post(
+					"/api/User/GetUserProfile"
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
 
 				setUserData(response.data);
-				setLoading(false);
 			} catch (err) {
 				let errorMessage = "خطای ناشناخته‌ای رخ داده است";
 
@@ -72,7 +71,7 @@ function MyHeader() {
 						}
 					}
 				}
-				alert(errorMessage);
+				//alert(errorMessage);
 
 				try {
 					const response = await fetch("/UserProfileData.json"); // Adjust path if necessary
@@ -82,14 +81,14 @@ function MyHeader() {
 					const data = await response.json();
 
 					setUserData(data);
-					setLoading(false);
 				} catch (jsonErr) {
 					console.error(
 						"Failed to fetch data from both API and db.json",
 						jsonErr
 					);
-					setError("Failed to fetch data from both API and local fallback.");
-					setLoading(false);
+					setError(
+						"Failed to fetch data from both API and local fallback."
+					);
 				}
 			}
 		};
@@ -108,7 +107,10 @@ function MyHeader() {
 				const imageBlob = response.data;
 				setProfilePicture(URL.createObjectURL(imageBlob));
 			} catch {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
 					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
 					if (!response.ok) {
@@ -141,14 +143,6 @@ function MyHeader() {
 		userData && userData.name && userData.lastName
 			? `${userData.name} ${userData.lastName}`
 			: userData?.email || ""; // Fallback to email if name and lastName are missing
-
-	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
-	}
-
-	if (error) {
-		return <div className="text-center my-5 text-danger">{error}</div>;
-	}
 
 	return (
 		<>
@@ -218,7 +212,10 @@ function MyHeader() {
 					</Link>
 				</div>
 			</nav>
-			<UserOffCanvas userData={userData} isLoggedInAdmin={isAdministrator} />
+			<UserOffCanvas
+				userData={userData}
+				isLoggedInAdmin={isAdministrator}
+			/>
 		</>
 	);
 }
