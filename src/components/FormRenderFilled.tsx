@@ -68,7 +68,9 @@ interface FormRenderFilledProps {
 function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 	const { language } = useLanguage();
 	const [transformedInputs, setTransformedInputs] = useState<Input[]>([]);
-	const [uploadedFiles, setUploadedFiles] = useState<FileData[]>([]); // State to store uploaded files
+	const [uploadedFiles, setUploadedFiles] = useState<
+		Record<string, FileData[]>
+	>({});
 	const processedFileIdsRef = useRef(new Set());
 
 	useEffect(() => {
@@ -179,10 +181,13 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 						};
 
 						// Update the state immediately
-						setUploadedFiles((prevFiles) => [
+						setUploadedFiles((prevFiles) => ({
 							...prevFiles,
-							fileData,
-						]);
+							[fileInput.label]: [
+								...(prevFiles[fileInput.label] || []),
+								fileData,
+							],
+						}));
 					})
 					.catch((error) => {
 						console.error(
@@ -388,37 +393,37 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													className={`d-flex flex-wrap justify-content-start align-items-center`}
 												>
 													{/* Display uploaded files with icons */}
-													{uploadedFiles.map(
-														(file, index) => (
-															<div className="d-flex flex-column p-1 mx-1">
-																<a
-																	href={
-																		file.fileUrl
-																	}
-																	key={index}
-																	className="d-flex flex-column justify-content-center align-items-center d-block "
-																	download={
+													{uploadedFiles[
+														field.label
+													]?.map((file, index) => (
+														<div className="d-flex flex-column p-1 mx-1">
+															<a
+																href={
+																	file.fileUrl
+																}
+																key={index}
+																className="d-flex flex-column justify-content-center align-items-center d-block "
+																download={
+																	file.fileName
+																}
+															>
+																<img
+																	src={getIconForFileType(
+																		file.fileType
+																	)}
+																	alt={`${file.fileName} Icon`}
+																	className="custom-file-icon"
+																/>
+																<span
+																	className={`scrollable-text text-center mt-1`}
+																>
+																	{
 																		file.fileName
 																	}
-																>
-																	<img
-																		src={getIconForFileType(
-																			file.fileType
-																		)}
-																		alt={`${file.fileName} Icon`}
-																		className="custom-file-icon"
-																	/>
-																	<span
-																		className={`scrollable-text text-center mt-1`}
-																	>
-																		{
-																			file.fileName
-																		}
-																	</span>
-																</a>
-															</div>
-														)
-													)}
+																</span>
+															</a>
+														</div>
+													))}
 												</div>
 											</div>
 										</div>
