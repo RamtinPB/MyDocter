@@ -372,6 +372,7 @@ function UserHistoryExtended() {
 					</div>
 				</div>
 
+				{/* Results Section */}
 				<div
 					className={`bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
@@ -382,7 +383,11 @@ function UserHistoryExtended() {
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{purchasedServiceData.result ? (
-							<p>{purchasedServiceData.result}</p>
+							<p
+								dangerouslySetInnerHTML={{
+									__html: purchasedServiceData.result,
+								}}
+							/>
 						) : (
 							<div className="text-center px-3 mx-4 py-3">
 								<p className="m-0">

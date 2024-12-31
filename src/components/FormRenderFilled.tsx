@@ -396,7 +396,10 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 													{uploadedFiles[
 														field.label
 													]?.map((file, index) => (
-														<div className="d-flex flex-column p-1 mx-1">
+														<div
+															className="d-flex flex-column p-1 mx-1"
+															key={index}
+														>
 															<a
 																href={
 																	file.fileUrl
