@@ -1,8 +1,40 @@
 .scrollable-text {
-    width: 90px; /* Fixed width */
-    height: 45px;
-    white-space: nowrap; /* Keep text in a single line */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on touch devices */
-  }
-  
+	width: 90px; /* Fixed width */
+	height: 45px;
+	white-space: nowrap; /* Keep text in a single line */
+	overflow-x: auto; /* Enable horizontal scrolling */
+	-webkit-overflow-scrolling: touch; /* Enable momentum scrolling on touch devices */
+}
+
+/* Define the scrolling animation with delays */
+@keyframes scroll {
+	0% {
+		transform: translateX(
+			100%
+		); /* Start with the text off the screen on the right */
+	}
+	30% {
+		transform: translateX(0); /* Pause at the start */
+	}
+	100% {
+		transform: translateX(
+			-110%
+		); /* Stay at the edge of the text for a moment */
+	}
+}
+
+.auto-scroll-container {
+	overflow: hidden; /* Hide the scrollbar */
+	width: 118px; /* The visible area width */
+}
+
+.auto-scroll-text {
+	display: inline-block; /* Keep content in a single line */
+	white-space: nowrap; /* Prevent wrapping */
+	animation: scroll 8s ease-in-out infinite; /* Continuous scroll animation with pauses */
+	animation-delay: 1s; /* Add a slight delay at the start */
+}
+
+.auto-scroll-text:hover {
+	animation-play-state: paused;
+}

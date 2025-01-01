@@ -173,7 +173,7 @@ function MyHeader() {
 									/>
 								)}
 								<span
-									className={`text-white text-${
+									className={`text-white auto-scroll-containe text-${
 										language === "fa"
 											? "end pe-4 ps-3 ms-1"
 											: "start pe-3 ps-4 ms-1"

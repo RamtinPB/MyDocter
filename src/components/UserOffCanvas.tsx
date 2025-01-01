@@ -10,6 +10,7 @@ import {
 import { FaClockRotateLeft, FaHouse, FaUserDoctor } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import "/src/cssFiles/myoffcanvas.css";
+import "/src/cssFiles/textOverflow.css";
 import { useLanguage } from "./LanguageContext";
 import { LuLogOut } from "react-icons/lu";
 import { useAuth } from "./AuthContext";
@@ -50,7 +51,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				setUserBalance(userbal);
 			})
 			.catch(async (error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
 					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
 					if (!response.ok) {
@@ -81,7 +85,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 				setProfilePicture(imageUrl); // Set the profile picture state
 			})
 			.catch(async (error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
 					const response = await fetch("/ProfileImage.json"); // Adjust path if necessary
 					if (!response.ok) {
@@ -164,7 +171,10 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 						className="rounded-circle custom-x-btn"
 					/>
 				</button>
-				<h4 className="offcanvas-title text-white" id="myOffcanvasLabel">
+				<h4
+					className="offcanvas-title text-white"
+					id="myOffcanvasLabel"
+				>
 					{language === "fa" ? "داشبورد کاربر" : "Dashboard"}
 				</h4>
 			</div>
@@ -182,19 +192,33 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 							/>
 						) : (
 							<FaUser
-								className="custom-user-icon-pic rounded-circle border border-2 border-light mt-3 mb-1 mx-4 p-1"
+								className="custom-user-icon-pic rounded-circle border border-2 border-light my-3 mx-4 p-1"
 								color="white"
 							/>
 						)}
 					</div>
 					<div className="d-flex flex-column justify-content-center align-items-end mb-2 py-1 px-4">
-						<span className="text-white mb-2 py-1 px-2">{username}</span>
+						<div
+							className="mb-2 py-1 px-2 auto-scroll-containe"
+							style={{
+								maxWidth: "118px",
+								overflowX: "hidden",
+							}}
+						>
+							<span className="text-white auto-scroll-tex ">
+								{username}
+							</span>
+						</div>
 						<div
 							className="d-flex flex-row justify-content-between align-items-center mb-2 py-1 "
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<span className="text-white d-inline px-2">
-								{language === "fa" ? "کیف پول" : "Wallet Balance"}
+								{language === "fa"
+									? "کیف پول"
+									: "Wallet Balance"}
 							</span>
 							<span className="text-white px-2">
 								{String(userBalance).concat("T")}
@@ -205,7 +229,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 							onClick={toggleModal}
 							className="btn btn-light rounded-pill"
 						>
-							{language === "fa" ? "افزایش موجودی" : "Increase Balance"}
+							{language === "fa"
+								? "افزایش موجودی"
+								: "Increase Balance"}
 						</button>
 					</div>
 				</div>
@@ -317,7 +343,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
 							<span className="px-2">
-								{language === "fa" ? "تاریخچه خدمات" : "Service History"}
+								{language === "fa"
+									? "تاریخچه خدمات"
+									: "Service History"}
 							</span>
 							<FaClockRotateLeft />
 						</Link>
@@ -335,7 +363,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 									className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 								>
 									<span className="px-2">
-										{language === "fa" ? "داشبورد مدیر" : "Admin Dashboard"}
+										{language === "fa"
+											? "داشبورد مدیر"
+											: "Admin Dashboard"}
 									</span>
 									<FaUserTie />
 								</Link>
@@ -353,7 +383,9 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 							className="d-flex align-items-center justify-content-end dropdown-item rounded-3 px-2"
 						>
 							<span className="px-2">
-								{language === "fa" ? "خروج از سامانه" : "Log out"}
+								{language === "fa"
+									? "خروج از سامانه"
+									: "Log out"}
 							</span>
 							<LuLogOut />
 						</button>
