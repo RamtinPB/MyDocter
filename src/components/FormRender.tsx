@@ -17,6 +17,12 @@ import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 
+function getFileExtension(fileName: string): string {
+	// Split the file name by dots and return the last part as the extension
+	const parts = fileName.split(".");
+	return parts.length > 1 ? parts.pop() || "" : ""; // Exclude the dot (e.g., "png")
+}
+
 interface FileData {
 	fileName: string;
 	fileType: string;
@@ -313,7 +319,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 		const files = Array.from(event.target.files || []);
 		const filesWithTags = files.map((file) => ({
 			fileName: file.name,
-			fileType: file.type,
+			fileType: getFileExtension(file.name),
 			fileUrl: URL.createObjectURL(file), // For preview
 			file,
 			tag,
