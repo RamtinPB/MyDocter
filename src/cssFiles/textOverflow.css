@@ -1,8 +1,9 @@
 .scrollable-text {
 	width: 90px; /* Fixed width */
-	height: 45px;
+	height: fit-content;
 	white-space: nowrap; /* Keep text in a single line */
 	overflow-x: auto; /* Enable horizontal scrolling */
+	overflow-y: hidden;
 	-webkit-overflow-scrolling: touch; /* Enable momentum scrolling on touch devices */
 }
 

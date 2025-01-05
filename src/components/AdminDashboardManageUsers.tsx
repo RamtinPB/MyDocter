@@ -118,7 +118,7 @@ function AdminDashboardManageUsers() {
 
 				<div className="container">
 					<div
-						className="d-flex justify-content-evenly align-items-center mt-2 mb-4"
+						className="d-flex flex-lg-row flex-column justify-content-evenly align-items-center gap-3 gap-lg-0 mt-2 mb-4"
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 					>
 						<div className="d-flex align-items-center">
@@ -176,7 +176,7 @@ function AdminDashboardManageUsers() {
 						</div>
 					</div>
 
-					<div className="table-responsive-container">
+					<div className="table-responsive-container ">
 						<table
 							className="table table-hover text-center mb-5"
 							style={{

@@ -654,7 +654,7 @@ function FormBuilder() {
 					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
 				</h3>
 				<div
-					className="row row-cols-2 g-4 g-md-5 my-1"
+					className="row row-cols-lg-2 row-cols-1 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					{serviceFormFieldData.map((field) => {
@@ -703,7 +703,7 @@ function FormBuilder() {
 														: field.labelEN}
 												</label>
 												<div
-													className="px-auto"
+													className="px-auto d-flex "
 													style={{
 														direction:
 															language === "fa"
@@ -739,7 +739,7 @@ function FormBuilder() {
 														required={true}
 													/>
 												</div>
-												<div className="px-auto">
+												<div className="px-auto d-flex ">
 													<label
 														htmlFor={field.tag}
 														className="form-check-label mx-2 mb-2"

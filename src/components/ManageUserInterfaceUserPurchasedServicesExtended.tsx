@@ -336,7 +336,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 						/>
 					</div>
 
-					<h4 className="text-center px-4 mx-1 py-4">
+					<h4 className="text-center px-4 mx-1 py-2 py-lg-4">
 						{language === "fa"
 							? "اطلاعات سرویس"
 							: "Service Information"}
@@ -438,7 +438,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 
 				{/* User Information */}
 				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h4 className="text-center px-4 mx-1 pb-4 pt-5">
+					<h4 className="text-center px-4 mx-1 pb-4 pt-4 pt-lg-5">
 						{language === "fa"
 							? "اطلاعات کاربر"
 							: "User Information"}
@@ -639,7 +639,7 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 
 				{/* Purchase Information */}
 				<div className="d-flex flex-column bg-white border border-2 shadow text-end rounded-5 p-0 pt-2 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4">
-					<h4 className="text-center px-4 mx-1 pb-4 pt-5">
+					<h4 className="text-center px-4 mx-1 pb-4 pt-4 pt-lg-5">
 						{language === "fa"
 							? "اطلاعات خرید"
 							: "Purchase Information"}
@@ -811,9 +811,12 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					</h5>
 					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
 						{purchasedServiceData.purchasedService.result ? (
-							<p>
-								{purchasedServiceData.purchasedService.result}
-							</p>
+							<p
+								dangerouslySetInnerHTML={{
+									__html: purchasedServiceData
+										.purchasedService.result,
+								}}
+							/>
 						) : (
 							<div className="text-center px-3 mx-4 py-3">
 								<p className="m-0">

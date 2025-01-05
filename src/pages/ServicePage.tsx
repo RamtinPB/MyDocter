@@ -84,7 +84,10 @@ function ServicePage() {
 				setLoading(false);
 			})
 			.catch(async (error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
 					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
 					if (!response.ok) {
@@ -146,7 +149,9 @@ function ServicePage() {
 					(suppIns: { id: any }) =>
 						suppIns.id === userInfo.supplementalInsuranceId
 				);
-				setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+				setSupplementaryInsurance(
+					matchedSupplementaryInsurance || null
+				);
 
 				setLoading(false);
 			})
@@ -160,7 +165,9 @@ function ServicePage() {
 				fetch("/Insurances.json")
 					.then((response) => {
 						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
+							throw new Error(
+								"Failed to fetch user data from db.json"
+							);
 						}
 						return response.json();
 					})
@@ -173,11 +180,15 @@ function ServicePage() {
 
 						const matchedSupplementaryInsurance =
 							data.supplementaryInsurance.find(
-								(suppIns: { supplementaryInsuranceType: any }) =>
+								(suppIns: {
+									supplementaryInsuranceType: any;
+								}) =>
 									suppIns.supplementaryInsuranceType ===
 									userInfo.supplementalInsuranceId
 							);
-						setSupplementaryInsurance(matchedSupplementaryInsurance || null);
+						setSupplementaryInsurance(
+							matchedSupplementaryInsurance || null
+						);
 
 						setLoading(false);
 					})
@@ -212,7 +223,9 @@ function ServicePage() {
 				fetch("/ServiceData.json")
 					.then((response) => {
 						if (!response.ok) {
-							throw new Error("Failed to fetch user data from db.json");
+							throw new Error(
+								"Failed to fetch user data from db.json"
+							);
 						}
 						return response.json();
 					})
@@ -248,7 +261,9 @@ function ServicePage() {
 
 	if (!service) {
 		return (
-			<div className="text-center my-5 text-danger">Service not found</div>
+			<div className="text-center my-5 text-danger">
+				Service not found
+			</div>
 		);
 	}
 
@@ -284,7 +299,8 @@ function ServicePage() {
 
 		// Step 2: Apply supplementary insurance contribution
 		let amountAfterSupplementary =
-			amountAfterInsurance - servicePrice * (supplementaryContribution / 100);
+			amountAfterInsurance -
+			servicePrice * (supplementaryContribution / 100);
 
 		// Step 3: Subtract the service discount
 		let finalAmount = amountAfterSupplementary - serviceDiscount;
@@ -311,8 +327,8 @@ function ServicePage() {
 		<div className="container">
 			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
 				{/* Header Section with Back Button and Service Name */}
-				<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
-					<div className="col-2">
+				<div className="row custom-bg-1 align-items-center shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
+					<div className="col-2 ">
 						<FaCaretLeft
 							type="button"
 							onClick={handleBackClick}
@@ -322,14 +338,16 @@ function ServicePage() {
 					</div>
 					<div className="col-8 d-flex flex-column justify-content-center text-center text-white">
 						<h4 className="mb-0">
-							{language === "fa" ? service.pageTitle : service.pageTitleEN}
+							{language === "fa"
+								? service.pageTitle
+								: service.pageTitleEN}
 						</h4>
 					</div>
 				</div>
 
 				{/* Image and Description Section */}
 				<div
-					className={`d-flex justify-content-between bg-white border border-2 shadow text-${
+					className={`d-flex flex-column-reverse flex-lg-row justify-content-between align-items-center align-items-lg-start bg-white border border-2 shadow text-${
 						language === "fa" ? "end" : "start"
 					} rounded-5 p-3 p-md-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -343,8 +361,14 @@ function ServicePage() {
 						dangerouslySetInnerHTML={{
 							__html:
 								language === "fa"
-									? service.pageDescription?.replace(/\n/g, "<br>")
-									: service.pageDescriptionEN?.replace(/\n/g, "<br>"),
+									? service.pageDescription?.replace(
+											/\n/g,
+											"<br>"
+										)
+									: service.pageDescriptionEN?.replace(
+											/\n/g,
+											"<br>"
+										),
 						}}
 						style={{
 							direction: language === "fa" ? "rtl" : "ltr",
@@ -354,7 +378,7 @@ function ServicePage() {
 					<img
 						src={servicePageBanner || ""}
 						alt="Service"
-						className="custom-service-img img-fluid shadow-sm rounded-5"
+						className="custom-service-img img-fluid shadow-sm mb-3 mb-lg-0 rounded-5"
 					/>
 				</div>
 
@@ -411,15 +435,23 @@ function ServicePage() {
 					} rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
 					<h5 className="px-1 mx-1">
-						{language === "fa" ? "نکات مهم سرویس" : "Service Important Notes"}
+						{language === "fa"
+							? "نکات مهم سرویس"
+							: "Service Important Notes"}
 					</h5>
 					<p
 						className="px-3 mx-1"
 						dangerouslySetInnerHTML={{
 							__html:
 								language === "fa"
-									? service.importantNotes?.replace(/\n/g, "<br>")
-									: service.importantNotesEN?.replace(/\n/g, "<br>"),
+									? service.importantNotes?.replace(
+											/\n/g,
+											"<br>"
+										)
+									: service.importantNotesEN?.replace(
+											/\n/g,
+											"<br>"
+										),
 						}}
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 					></p>
@@ -438,9 +470,15 @@ function ServicePage() {
 						<table className="table text-center">
 							<thead>
 								<tr>
-									<th>{language === "fa" ? "نوع بیمه" : "Insurance Type"}</th>
 									<th>
-										{language === "fa" ? "سهم بیمه" : "Insurance Contribution"}
+										{language === "fa"
+											? "نوع بیمه"
+											: "Insurance Type"}
+									</th>
+									<th>
+										{language === "fa"
+											? "سهم بیمه"
+											: "Insurance Contribution"}
 									</th>
 									<th>
 										{language === "fa"
@@ -452,9 +490,15 @@ function ServicePage() {
 											? "سهم بیمه تکمیلی"
 											: "Supplementary Insurance Contribution"}
 									</th>
-									<th>{language === "fa" ? "قیمت سرویس" : "Service Cost"}</th>
 									<th>
-										{language === "fa" ? "مبالغ یارانه" : "Discount Amount"}
+										{language === "fa"
+											? "قیمت سرویس"
+											: "Service Cost"}
+									</th>
+									<th>
+										{language === "fa"
+											? "مبالغ یارانه"
+											: "Discount Amount"}
 									</th>
 								</tr>
 							</thead>
@@ -471,7 +515,11 @@ function ServicePage() {
 											? supplementaryInsurance?.companyName
 											: supplementaryInsurance?.companyNameEN}
 									</td>
-									<td>{supplementaryInsurance?.discountPercentage}</td>
+									<td>
+										{
+											supplementaryInsurance?.discountPercentage
+										}
+									</td>
 									<td>{service.basePrice}</td>
 									<td>{service.discount}</td>
 								</tr>
@@ -498,7 +546,9 @@ function ServicePage() {
 							type="button"
 							onClick={handleSubmit}
 						>
-							{language === "fa" ? "خریداری سرویس" : "Purchase Service"}
+							{language === "fa"
+								? "خریداری سرویس"
+								: "Purchase Service"}
 						</button>
 					</div>
 				</div>

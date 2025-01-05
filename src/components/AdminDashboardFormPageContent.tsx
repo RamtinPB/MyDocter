@@ -48,7 +48,9 @@ function AdminDashboardFormPageContent() {
 					error
 				);
 				try {
-					const response = await fetch("/UserInitialEvaluationFormFields.json"); // Adjust path if necessary
+					const response = await fetch(
+						"/UserInitialEvaluationFormFields.json"
+					); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
@@ -73,10 +75,15 @@ function AdminDashboardFormPageContent() {
 				setFormFieldsData(data);
 			})
 			.catch(async (error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 
 				try {
-					const response = await fetch("/UserInformationFormFields.json"); // Adjust path if necessary
+					const response = await fetch(
+						"/UserInformationFormFields.json"
+					); // Adjust path if necessary
 					const data = await response.json();
 					setFormFieldsData(data);
 				} catch (jsonErr) {
@@ -101,7 +108,9 @@ function AdminDashboardFormPageContent() {
 	) => {
 		const updateData = (data: formFieldsProps[]) =>
 			data.map((field) =>
-				field.id === formFieldId ? { ...field, required: newValue } : field
+				field.id === formFieldId
+					? { ...field, required: newValue }
+					: field
 			);
 
 		if (isIEData) {
@@ -114,15 +123,17 @@ function AdminDashboardFormPageContent() {
 					formFieldId,
 					required: newValue,
 					enabled:
-						formFieldsIEData.find((f) => f.id === formFieldId)?.enabled ??
-						false,
+						formFieldsIEData.find((f) => f.id === formFieldId)
+							?.enabled ?? false,
 				};
 
-				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				const exists = prevChanged.find(
+					(f) => f.formFieldId === formFieldId
+				);
 				return exists
 					? prevChanged.map((f) =>
 							f.formFieldId === formFieldId ? updatedField : f
-					  )
+						)
 					: [...prevChanged, updatedField];
 			});
 		} else {
@@ -135,14 +146,17 @@ function AdminDashboardFormPageContent() {
 					formFieldId,
 					required: newValue,
 					enabled:
-						formFieldsData.find((f) => f.id === formFieldId)?.enabled ?? false,
+						formFieldsData.find((f) => f.id === formFieldId)
+							?.enabled ?? false,
 				};
 
-				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				const exists = prevChanged.find(
+					(f) => f.formFieldId === formFieldId
+				);
 				return exists
 					? prevChanged.map((f) =>
 							f.formFieldId === formFieldId ? updatedField : f
-					  )
+						)
 					: [...prevChanged, updatedField];
 			});
 		}
@@ -156,7 +170,9 @@ function AdminDashboardFormPageContent() {
 	) => {
 		const updateData = (data: formFieldsProps[]) =>
 			data.map((field) =>
-				field.id === formFieldId ? { ...field, enabled: newValue } : field
+				field.id === formFieldId
+					? { ...field, enabled: newValue }
+					: field
 			);
 
 		if (isIEData) {
@@ -168,16 +184,18 @@ function AdminDashboardFormPageContent() {
 				const updatedField: payloadProps = {
 					formFieldId,
 					required:
-						formFieldsIEData.find((f) => f.id === formFieldId)?.required ??
-						false,
+						formFieldsIEData.find((f) => f.id === formFieldId)
+							?.required ?? false,
 					enabled: newValue,
 				};
 
-				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				const exists = prevChanged.find(
+					(f) => f.formFieldId === formFieldId
+				);
 				return exists
 					? prevChanged.map((f) =>
 							f.formFieldId === formFieldId ? updatedField : f
-					  )
+						)
 					: [...prevChanged, updatedField];
 			});
 		} else {
@@ -189,15 +207,18 @@ function AdminDashboardFormPageContent() {
 				const updatedField: payloadProps = {
 					formFieldId,
 					required:
-						formFieldsData.find((f) => f.id === formFieldId)?.required ?? false,
+						formFieldsData.find((f) => f.id === formFieldId)
+							?.required ?? false,
 					enabled: newValue,
 				};
 
-				const exists = prevChanged.find((f) => f.formFieldId === formFieldId);
+				const exists = prevChanged.find(
+					(f) => f.formFieldId === formFieldId
+				);
 				return exists
 					? prevChanged.map((f) =>
 							f.formFieldId === formFieldId ? updatedField : f
-					  )
+						)
 					: [...prevChanged, updatedField];
 			});
 		}
@@ -211,14 +232,19 @@ function AdminDashboardFormPageContent() {
 					"/api/Admin/UpdateUserDataFormFields",
 					changedData
 				);
-				console.log("user data form fields data submitted successfully");
+				console.log(
+					"user data form fields data submitted successfully"
+				);
 				alert(
 					language === "fa"
 						? "بروزرسانی تنظیمات صفحه اطلاعات کاربر موفق بود"
 						: "user information form fields data updated"
 				);
 			} catch (error) {
-				console.error("Error submitting user data form fields data:", error);
+				console.error(
+					"Error submitting user data form fields data:",
+					error
+				);
 				alert(
 					language === "fa"
 						? "بروزرسانی تنظیمات صفحه اطلاعات کاربر ناموفق بود"
@@ -233,7 +259,9 @@ function AdminDashboardFormPageContent() {
 					"/api/Admin/UpdateUserInformationFormFields",
 					changedDataIE
 				);
-				console.log("user information form fields data submitted successfully");
+				console.log(
+					"user information form fields data submitted successfully"
+				);
 				alert(
 					language === "fa"
 						? "بروزرسانی تنظیمات صفحه اطلاعات ارزیابی اولیه کاربر موفق بود"
@@ -268,34 +296,49 @@ function AdminDashboardFormPageContent() {
 			>
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "فرم اطلاعات کاربر" : "User Information Form"}
+						{language === "fa"
+							? "فرم اطلاعات کاربر"
+							: "User Information Form"}
 					</h3>
 				</div>
 				<div
-					className={`row row-cols-2 mt-1 mb-5`}
+					className={`row row-cols-2 mt-1 mx-1 mb-5`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					{formFieldsData.map((field, index) => {
 						return (
-							<div key={index} className="col-6 d-flex flex-column py-3 px-5">
+							<div
+								key={index}
+								className="col-6 d-flex flex-column py-3 px-2 px-lg-5"
+							>
 								<h6
 									className="px-2 "
 									style={{
-										direction: language === "fa" ? "ltr" : "rtl",
+										direction:
+											language === "fa" ? "ltr" : "rtl",
 									}}
 								>
-									{language === "fa" ? field.label : field.labelEN}
+									{language === "fa"
+										? field.label
+										: field.labelEN}
 								</h6>
 								<div className="d-flex ">
 									<input
 										type="checkbox"
 										checked={field.required}
 										onChange={(e) =>
-											handleRequiredChange(field.id, false, e.target.checked)
+											handleRequiredChange(
+												field.id,
+												false,
+												e.target.checked
+											)
 										}
 										className="form-check-input shadow-sm mx-2"
 									/>
-									<label htmlFor={field.name} className="form-label">
+									<label
+										htmlFor={field.name}
+										className="form-label"
+									>
 										{language === "fa"
 											? "(الزامی / غیر الزامی)"
 											: "Required / Not Required"}
@@ -306,11 +349,18 @@ function AdminDashboardFormPageContent() {
 										type="checkbox"
 										checked={field.enabled}
 										onChange={(e) =>
-											handleEnabledChange(field.id, false, e.target.checked)
+											handleEnabledChange(
+												field.id,
+												false,
+												e.target.checked
+											)
 										}
 										className="form-check-input shadow-sm mx-2"
 									/>
-									<label htmlFor={field.name} className="form-label">
+									<label
+										htmlFor={field.name}
+										className="form-label"
+									>
 										{language === "fa"
 											? "(فعال / غیر فعال)"
 											: "Enabled / Not Enabled"}
@@ -335,55 +385,86 @@ function AdminDashboardFormPageContent() {
 							: "Initial Evaluation Form"}
 					</h3>
 				</div>
-				{Array.from(new Set(formFieldsIEData.map((field) => field.group))).map(
-					(group, index) => {
-						const sampleField = formFieldsIEData.find(
-							(field) => field.group === group
-						);
-						return (
-							sampleField &&
-							sampleField.group && (
-								<div key={index}>
-									<h4 className="text-center pt-4">
-										{language === "fa"
-											? sampleField.group
-											: sampleField.groupEN}
-									</h4>
-									<hr className=" rounded-pill mx-4 my-2" />
-									<div
-										className={`row row-cols-2 mt-4 mb-5`}
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-									>
-										{formFieldsIEData
-											.filter((field) => field.group === group)
-											.map((field: formFieldsProps, index: number) => {
-												if (field.type === "placeholder") return null;
-												if (field.type === "checkmenu") return null;
-												if (field.name === "age") return null;
-												if (field.name === "") return null;
+				{Array.from(
+					new Set(formFieldsIEData.map((field) => field.group))
+				).map((group, index) => {
+					const sampleField = formFieldsIEData.find(
+						(field) => field.group === group
+					);
+					return (
+						sampleField &&
+						sampleField.group && (
+							<div key={index}>
+								<h4 className="text-center pt-4">
+									{language === "fa"
+										? sampleField.group
+										: sampleField.groupEN}
+								</h4>
+								<hr className=" rounded-pill mx-4 my-2" />
+								<div
+									className={`row row-cols-2 mt-4 mx-1 mb-5`}
+									style={{
+										direction:
+											language === "fa" ? "rtl" : "ltr",
+									}}
+								>
+									{formFieldsIEData
+										.filter(
+											(field) => field.group === group
+										)
+										.map(
+											(
+												field: formFieldsProps,
+												index: number
+											) => {
+												if (
+													field.type === "placeholder"
+												)
+													return null;
+												if (field.type === "checkmenu")
+													return null;
+												if (field.name === "age")
+													return null;
+												if (field.name === "")
+													return null;
 												return (
-													<div key={index} className="col-6 py-3 px-5">
+													<div
+														key={index}
+														className="col-6 py-3 px-2 px-lg-5"
+													>
 														<h6
 															className="px-2 "
 															style={{
-																direction: language === "fa" ? "ltr" : "rtl",
+																direction:
+																	language ===
+																	"fa"
+																		? "ltr"
+																		: "rtl",
 															}}
 														>
-															{language === "fa" ? field.label : field.labelEN}
+															{language === "fa"
+																? field.label
+																: field.labelEN}
 														</h6>
 														<input
 															type="checkbox"
-															checked={field.required}
+															checked={
+																field.required
+															}
 															onChange={(e) =>
 																handleRequiredChange(
 																	field.id,
 																	true,
-																	e.target.checked
+																	e.target
+																		.checked
 																)
 															}
 															className="form-check-input shadow-sm mx-2"
 														/>
-														<label htmlFor={field.name} className="form-label">
+														<label
+															htmlFor={field.name}
+															className="form-label"
+														>
 															{language === "fa"
 																? "(الزامی / غیر الزامی)"
 																: "Required / Not Required"}
@@ -391,34 +472,40 @@ function AdminDashboardFormPageContent() {
 														<div className="d-flex">
 															<input
 																type="checkbox"
-																checked={field.enabled}
+																checked={
+																	field.enabled
+																}
 																onChange={(e) =>
 																	handleEnabledChange(
 																		field.id,
 																		true,
-																		e.target.checked
+																		e.target
+																			.checked
 																	)
 																}
 																className="form-check-input shadow-sm mx-2"
 															/>
 															<label
-																htmlFor={field.name}
+																htmlFor={
+																	field.name
+																}
 																className="form-label"
 															>
-																{language === "fa"
+																{language ===
+																"fa"
 																	? "(فعال / غیر فعال)"
 																	: "Enabled / Not Enabled"}
 															</label>
 														</div>
 													</div>
 												);
-											})}
-									</div>
+											}
+										)}
 								</div>
-							)
-						);
-					}
-				)}
+							</div>
+						)
+					);
+				})}
 			</div>
 
 			{/* Submit and Cancel buttons */}

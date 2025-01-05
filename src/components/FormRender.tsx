@@ -343,7 +343,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
 				</h3> */}
 				<div
-					className="row row-cols-2 g-4 g-md-5 my-1"
+					className="row row-cols-lg-2 row-cols-1 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					{serviceFormFieldData.map(
@@ -511,7 +511,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 														}}
 													>
 														<div
-															className={`d-flex flex-wrap justify-content-start align-items-center`}
+															className={`d-flex flex-wrap justify-content-start align-items-center gap-3 `}
 														>
 															{/* Display uploaded files with icons */}
 															{uploadedFiles[
@@ -525,7 +525,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																		key={
 																			index
 																		}
-																		className="d-flex flex-column p-1 mx-1"
+																		className="d-flex flex-column  p-1 mx-1"
 																	>
 																		<a
 																			href={

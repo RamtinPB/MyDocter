@@ -293,7 +293,7 @@ function ServicePageEdit() {
 		<div className="container">
 			<div className="container custom-bg-4 shadow rounded-5 pb-3 mb-4">
 				{/* Header Section with Back Button and Service Name */}
-				<div className="row custom-bg-1 shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
+				<div className="row custom-bg-1 align-items-center shadow rounded-5 mb-4 mt-4 mt-lg-5 p-2 p-md-3">
 					<div className="col-2">
 						<FaCaretLeft
 							type="button"
@@ -309,10 +309,10 @@ function ServicePageEdit() {
 
 				{/* Service Information section */}
 				<div
-					className="d-flex flex-row justify-content-center bg-white border border-2 shadow text-end rounded-5 p-5 pt-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-3"
+					className="d-flex flex-lg-row flex-column justify-content-center bg-white border border-2 shadow text-end rounded-5 p-5 pt-4 mx-3 mx-md-4 mx-lg-5 mb-4 gap-5 gap-lg-3"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					<div className="col-6">
+					<div className="col-12 col-lg-6">
 						<h5 className="text-center">
 							{language === "fa"
 								? "اطلاعات کارت سرویس"
@@ -446,13 +446,13 @@ function ServicePageEdit() {
 								<img
 									src={displayImageUrlData}
 									alt="service"
-									className="custom-service-img shadow-sm rounded-5"
+									className=" img-fluid shadow-sm rounded-5"
 								/>
 							) : (
 								<input
 									type="file"
 									accept="image/*"
-									className="custom-service-img text-center btn btn-light shadow rounded-pill"
+									className=" text-center btn btn-light shadow rounded-pill"
 									onChange={handleDisplayImageUrlDataChange}
 								/>
 							)}
@@ -470,7 +470,7 @@ function ServicePageEdit() {
 						</div>
 					</div>
 
-					<div className="col-6">
+					<div className="col-12 col-lg-6">
 						<h5 className="text-center">
 							{language === "fa"
 								? "اطلاعات صفحه سرویس"
@@ -604,13 +604,13 @@ function ServicePageEdit() {
 								<img
 									src={pageBannerUrlData}
 									alt="service"
-									className="custom-service-img shadow-sm rounded-5"
+									className=" img-fluid shadow-sm rounded-5"
 								/>
 							) : (
 								<input
 									type="file"
 									accept="image/*"
-									className="custom-service-img text-center btn btn-light shadow rounded-pill"
+									className=" text-center btn btn-light shadow rounded-pill"
 									onChange={handlePageBannerUrlDataChange}
 								/>
 							)}

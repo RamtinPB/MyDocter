@@ -13,7 +13,7 @@ function Toast({ message, show, onClose, isSuccess, countdown }: ToastProps) {
 
 	return (
 		<div
-			className={`toast-container position-fixed top-0 p-3 ${
+			className={`toast-container position-fixed shadow-lg top-0 p-3 ${
 				show ? "d-block" : "d-none"
 			}`}
 		>

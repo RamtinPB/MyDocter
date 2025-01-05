@@ -232,7 +232,7 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
 				</h3> */}
 				<div
-					className="row row-cols-2 g-4 g-md-5 my-1"
+					className="row row-cols-1 row-cols-lg-2 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					{transformedInputs.map((field, index) => {
@@ -390,7 +390,7 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 												style={{ direction: "ltr" }}
 											>
 												<div
-													className={`d-flex flex-wrap justify-content-start align-items-center`}
+													className={`d-flex flex-wrap justify-content-center justify-content-md-start align-items-center`}
 												>
 													{/* Display uploaded files with icons */}
 													{uploadedFiles[
