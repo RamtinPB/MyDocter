@@ -745,17 +745,17 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 						)
 					) : (
 						<p
-							className="text-center m-auto"
+							className="text-center p-0 p-md-auto m-auto"
 							style={{
 								direction: "ltr",
 							}}
 						>
 							{language === "fa"
-								? ".جهت دسترسی به این امکانات، لطفاً وارد حساب کاربری خود شوید"
+								? "جهت دسترسی به این امکانات، لطفاً وارد حساب کاربری خود شوید"
 								: "To access the following features, please log in to your account."}
 							<br />
 							{language === "fa"
-								? ".در صورت عدم وجود حساب کاربری، لطفاً ثبت‌ نام کنید"
+								? "در صورت عدم وجود حساب کاربری، لطفاً ثبت‌ نام کنید"
 								: "If you don’t have an account, kindly sign up to get started."}
 						</p>
 					)}
