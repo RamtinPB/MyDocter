@@ -37,6 +37,7 @@ function MyHeader() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	useEffect(() => {
+		if (!loginState) return;
 		const fetchUserData = async () => {
 			try {
 				const response = await axiosInstance.post(
@@ -97,6 +98,7 @@ function MyHeader() {
 	}, []);
 
 	useEffect(() => {
+		if (!loginState) return;
 		const fetchProfileImage = async () => {
 			try {
 				const response = await axiosInstance.post(

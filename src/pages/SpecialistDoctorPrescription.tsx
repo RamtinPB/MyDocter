@@ -76,9 +76,14 @@ function SpecialistDoctorPrescription() {
 
 				setLoading(false);
 			} catch (err) {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 				try {
-					const response = await fetch("/AvailableServicesGeneral.json"); // Adjust path if necessary
+					const response = await fetch(
+						"/AvailableServicesGeneral.json"
+					); // Adjust path if necessary
 					if (!response.ok) {
 						throw new Error("Failed to fetch data from db.json");
 					}
@@ -86,7 +91,8 @@ function SpecialistDoctorPrescription() {
 
 					// Filter the data to get items with type "General"
 					const servicesData = data.filter(
-						(service: { type: string }) => service.type === "Specialist"
+						(service: { type: string }) =>
+							service.type === "Specialist"
 					);
 
 					if (servicesData.length > 0) {
@@ -101,6 +107,8 @@ function SpecialistDoctorPrescription() {
 						);
 
 						setServiceDisplayBanners(banners); // Update state with fetched banners
+
+						setLoading(false);
 					} else {
 						setError("No services of type 'General' found");
 					}
@@ -158,29 +166,49 @@ function SpecialistDoctorPrescription() {
 						{services.map(
 							(service, index) =>
 								service.type === "Specialist" && (
-									<div className="col-12 col-md-6" key={index}>
+									<div
+										className="col-12 col-md-6"
+										key={index}
+									>
 										<div className="card shadow-sm rounded-4 p-0">
 											<div className="text-center">
 												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-													{language === "fa" ? service.title : service.titleEN}
+													{language === "fa"
+														? service.title
+														: service.titleEN}
 												</h5>
 												<img
-													src={serviceDisplayBanners[service.id] || ""}
+													src={
+														serviceDisplayBanners[
+															service.id
+														] || ""
+													}
 													className="img-fluid m-0"
 													alt={service.title}
 												/>
 												<p
 													className={`text-justify card-text my-3 mx-3 text-${
-														language === "fa" ? "end" : "start"
+														language === "fa"
+															? "end"
+															: "start"
 													} `}
 													dangerouslySetInnerHTML={{
 														__html:
 															language === "fa"
-																? service.description?.replace(/\n/g, "<br>")
-																: service.descriptionEN?.replace(/\n/g, "<br>"),
+																? service.description?.replace(
+																		/\n/g,
+																		"<br>"
+																	)
+																: service.descriptionEN?.replace(
+																		/\n/g,
+																		"<br>"
+																	),
 													}}
 													style={{
-														direction: language === "fa" ? "rtl" : "ltr",
+														direction:
+															language === "fa"
+																? "rtl"
+																: "ltr",
 														textAlign: "justify",
 													}}
 												></p>
@@ -190,7 +218,9 @@ function SpecialistDoctorPrescription() {
 														(window.location.href = `/services/${service.id}`)
 													}
 												>
-													{language === "fa" ? "مشاهده" : "Enter"}
+													{language === "fa"
+														? "مشاهده"
+														: "Enter"}
 												</button>
 											</div>
 										</div>

@@ -16,6 +16,7 @@ import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
 import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
 import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
 import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
+import { useAuth } from "./AuthContext";
 
 function getFileExtension(fileName: string): string {
 	// Split the file name by dots and return the last part as the extension
@@ -83,6 +84,7 @@ export interface FormRenderHandle {
 const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 	const { id } = useParams<{ id: string }>();
 	const { language } = useLanguage();
+	//const { loginState } = useAuth();
 
 	const [serviceFormFieldData, setServiceFormFieldData] = useState<
 		serviceFormFieldProps[]
@@ -109,6 +111,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 	);
 
 	useEffect(() => {
+		//if (!loginState) return;
 		axiosInstance
 			.post(
 				"/api/Service/GetServiceFormFields",

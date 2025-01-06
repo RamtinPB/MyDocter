@@ -40,10 +40,11 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
-	const { setAuthData } = useAuth();
+	const { setAuthData, loginState } = useAuth();
 	const { profileImageVersion } = useProfile();
 
 	useEffect(() => {
+		if (!loginState) return;
 		axiosInstance
 			.post(`/api/User/GetUserData`)
 			.then((response) => {
@@ -73,6 +74,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 	}, [userBalance]);
 
 	useEffect(() => {
+		if (!loginState) return;
 		axiosInstance
 			.post(
 				`/api/User/GetProfileImage?version=${profileImageVersion}`,

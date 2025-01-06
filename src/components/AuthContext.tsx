@@ -29,7 +29,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	useEffect(() => {
 		const storedToken = localStorage.getItem("jwToken");
-		const storedIsAdmin = localStorage.getItem("isAdministrator") === "true";
+		const storedIsAdmin =
+			localStorage.getItem("isAdministrator") === "true";
 		if (storedToken && !isTokenExpired(storedToken)) {
 			setJwToken(storedToken);
 			setIsAdministrator(storedIsAdmin);

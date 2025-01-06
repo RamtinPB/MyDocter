@@ -7,6 +7,7 @@ import "/src/cssFiles/servicePage.css";
 import "/src/cssFiles/textOverflow.css";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "../components/AuthContext";
 
 interface serviceProps {
 	id: number;
@@ -67,12 +68,15 @@ function ServicePage() {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 
+	const { loginState } = useAuth();
+
 	const navigate = useNavigate();
 
 	const formRef = useRef<FormRenderHandle>(null);
 
 	// fetch user data
 	useEffect(() => {
+		if (!loginState) return;
 		setLoading(true);
 
 		axiosInstance
