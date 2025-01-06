@@ -84,7 +84,7 @@ export interface FormRenderHandle {
 const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 	const { id } = useParams<{ id: string }>();
 	const { language } = useLanguage();
-	//const { loginState } = useAuth();
+	const { loginState } = useAuth();
 
 	const [serviceFormFieldData, setServiceFormFieldData] = useState<
 		serviceFormFieldProps[]
@@ -111,7 +111,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 	);
 
 	useEffect(() => {
-		//if (!loginState) return;
+		if (!loginState) return;
 		axiosInstance
 			.post(
 				"/api/Service/GetServiceFormFields",
@@ -355,48 +355,42 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 					className="row row-cols-lg-2 row-cols-1 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
-					{serviceFormFieldData.map(
-						(field: serviceFormFieldProps) => {
-							const isCheckbox = field.type === "checkbox";
-							const isText = field.type === "string";
-							const isTextLong = field.type === "longString";
-							const isDate = field.type === "date";
-							const isFile = field.type === "file";
-							const isNumber =
-								field.type === "integer" ||
-								field.type === "float";
+					{loginState ? (
+						serviceFormFieldData.map(
+							(field: serviceFormFieldProps) => {
+								const isCheckbox = field.type === "checkbox";
+								const isText = field.type === "string";
+								const isTextLong = field.type === "longString";
+								const isDate = field.type === "date";
+								const isFile = field.type === "file";
+								const isNumber =
+									field.type === "integer" ||
+									field.type === "float";
 
-							const step =
-								field.type === "integer"
-									? "1"
-									: field.type === "float"
-										? "any"
-										: undefined;
+								const step =
+									field.type === "integer"
+										? "1"
+										: field.type === "float"
+											? "any"
+											: undefined;
 
-							// Parse allowed formats
-							const allowedFormats = field.allowedFormats
-								? field.allowedFormats
-										.split(",") // Split by commas
-										.map((format) => `.${format.trim()}`) // Add a leading dot for file extensions
-										.filter((format) => format !== ".") // Remove empty or invalid formats
-										.join(",") // Rejoin as a comma-separated list
-								: ""; // Default to accepting no formats if empty
+								// Parse allowed formats
+								const allowedFormats = field.allowedFormats
+									? field.allowedFormats
+											.split(",") // Split by commas
+											.map(
+												(format) => `.${format.trim()}`
+											) // Add a leading dot for file extensions
+											.filter((format) => format !== ".") // Remove empty or invalid formats
+											.join(",") // Rejoin as a comma-separated list
+									: ""; // Default to accepting no formats if empty
 
-							return (
-								field.enabled && (
-									<div className="my-2" key={field.tag}>
-										{(isText || isNumber || isDate) && (
-											<div
-												className="col mb-2"
-												style={{
-													direction:
-														language === "fa"
-															? "rtl"
-															: "ltr",
-												}}
-											>
+								return (
+									field.enabled && (
+										<div className="my-2" key={field.tag}>
+											{(isText || isNumber || isDate) && (
 												<div
-													className={`d-flex flex-column justify-content-center align-items-start my-2`}
+													className="col mb-2"
 													style={{
 														direction:
 															language === "fa"
@@ -404,42 +398,295 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 																: "ltr",
 													}}
 												>
-													<div className="d-flex flex-row justify-content-between align-items-center">
-														<label
-															htmlFor={field.tag}
-															className="form-label mx-2 "
-														>
-															{language === "fa"
-																? field.label
-																: field.labelEN}
-														</label>
+													<div
+														className={`d-flex flex-column justify-content-center align-items-start my-2`}
+														style={{
+															direction:
+																language ===
+																"fa"
+																	? "rtl"
+																	: "ltr",
+														}}
+													>
+														<div className="d-flex flex-row justify-content-between align-items-center">
+															<label
+																htmlFor={
+																	field.tag
+																}
+																className="form-label mx-2 "
+															>
+																{language ===
+																"fa"
+																	? field.label
+																	: field.labelEN}
+															</label>
+														</div>
+														<input
+															type={
+																isNumber
+																	? "number"
+																	: field.type
+															}
+															step={
+																step as string
+															}
+															min={0}
+															id={field.tag}
+															name={field.tag}
+															value={
+																formik.values[
+																	field.tag
+																] || ""
+															} // Bind Formik's values
+															onChange={
+																formik.handleChange
+															} // Bind Formik's onChange
+															onBlur={
+																formik.handleBlur
+															} // Trigger validation on blur
+															className={`form-control text-${
+																language ===
+																"fa"
+																	? "end"
+																	: "start"
+															} shadow-sm ${
+																formik.touched[
+																	field.tag
+																] &&
+																formik.errors[
+																	field.tag
+																]
+																	? "is-invalid"
+																	: ""
+															}`} // Highlight errors
+															placeholder={
+																(language ===
+																"fa"
+																	? field.description
+																	: field.descriptionEN) ||
+																""
+															}
+														/>
+
+														{formik.touched[
+															field.tag
+														] &&
+															formik.errors[
+																field.tag
+															] && (
+																<div
+																	className={`invalid-feedback text-${
+																		language ===
+																		"fa"
+																			? "end"
+																			: "start"
+																	}`}
+																>
+																	{
+																		formik
+																			.errors[
+																			field
+																				.tag
+																		] as keyof serviceSubmitDataProps
+																	}
+																</div>
+															)}
 													</div>
+												</div>
+											)}
+											{isFile && (
+												<div
+													key={field.tag}
+													className="col mb-2"
+													style={{
+														direction:
+															language === "fa"
+																? "rtl"
+																: "ltr",
+													}}
+												>
+													<div
+														className={`d-flex flex-column justify-content-center align-items-start my-2`}
+														style={{
+															direction:
+																language ===
+																"fa"
+																	? "rtl"
+																	: "ltr",
+														}}
+													>
+														<div className="d-flex flex-row justify-content-between align-items-center">
+															<label
+																htmlFor={
+																	field.tag
+																}
+																className="form-label mx-2 "
+															>
+																{language ===
+																"fa"
+																	? field.label
+																	: field.labelEN}
+															</label>
+														</div>
+														<div
+															className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 w-100"
+															style={{
+																direction:
+																	"ltr",
+															}}
+														>
+															<div
+																className={`d-flex flex-wrap justify-content-start align-items-center gap-3 `}
+															>
+																{/* Display uploaded files with icons */}
+																{uploadedFiles[
+																	field.tag
+																]?.map(
+																	(
+																		file,
+																		index
+																	) => (
+																		<div
+																			key={
+																				index
+																			}
+																			className="d-flex flex-column  p-1 mx-1"
+																		>
+																			<a
+																				href={
+																					file.fileUrl
+																				}
+																				download
+																				className="d-flex flex-column justify-content-center align-items-center d-block"
+																			>
+																				<img
+																					src={getIconForFileType(
+																						file.fileName
+																					)}
+																					alt={`${file.fileName} Icon`}
+																					className="custom-file-icon"
+																				/>
+																				<span className="scrollable-text text-center mt-1">
+																					{
+																						file.fileName
+																					}
+																				</span>
+																			</a>
+																			<button
+																				className="btn btn-sm btn-danger rounded-pill mt-1"
+																				onClick={() =>
+																					handleFileDelete(
+																						index,
+																						field.tag
+																					)
+																				}
+																			>
+																				{language ===
+																				"fa"
+																					? "حذف"
+																					: "Delete"}
+																			</button>
+																		</div>
+																	)
+																)}
+															</div>
+
+															{/* Upload button for this section */}
+															<div className="d-flex flex-wrap justify-content-end align-items-center">
+																<button
+																	type="button"
+																	className="btn btn-outline-secondary ms-2"
+																	onClick={() =>
+																		fileInputRefs.current?.[
+																			field
+																				.tag
+																		]?.click()
+																	}
+																>
+																	<i className="fas fa-file-upload"></i>
+																	{language ===
+																	"fa"
+																		? "ارسال فایل"
+																		: "Upload"}
+																</button>
+																<input
+																	type="file"
+																	ref={(el) =>
+																		(fileInputRefs.current[
+																			field.tag
+																		] = el)
+																	}
+																	style={{
+																		display:
+																			"none",
+																	}}
+																	onChange={(
+																		e
+																	) =>
+																		handleFileChange(
+																			e,
+																			field.tag
+																		)
+																	}
+																	multiple
+																	accept={
+																		allowedFormats ||
+																		""
+																	}
+																/>
+															</div>
+														</div>
+													</div>
+												</div>
+											)}
+											{isCheckbox && (
+												<div
+													key={field.tag}
+													className={`text-${
+														language === "fa"
+															? "end"
+															: "start"
+													} mt-2`}
+												>
+													<label
+														htmlFor={field.tag}
+														className="form-check-label mx-2"
+													>
+														{language === "fa"
+															? field.label
+															: field.labelEN}
+													</label>
 													<input
-														type={
-															isNumber
-																? "number"
-																: field.type
-														}
-														step={step as string}
-														min={0}
+														type="checkbox"
 														id={field.tag}
 														name={field.tag}
-														value={
-															formik.values[
-																field.tag
-															] || ""
-														} // Bind Formik's values
-														onChange={
-															formik.handleChange
-														} // Bind Formik's onChange
-														onBlur={
-															formik.handleBlur
-														} // Trigger validation on blur
+														onInput={(e) =>
+															(e.currentTarget.defaultValue =
+																e.currentTarget.value)
+														}
+														className="form-check-input shadow-sm"
+													/>
+												</div>
+											)}
+											{isTextLong && (
+												<div
+													className="d-flex flex-column my-2"
+													key={field.tag}
+												>
+													<label
+														htmlFor={field.tag}
+														className="py-2"
+													>
+														{language === "fa"
+															? field.label
+															: field.labelEN}
+													</label>
+													<textarea
 														className={`form-control text-${
 															language === "fa"
 																? "end"
 																: "start"
-														} shadow-sm ${
+														} h-100 shadow-sm ${
 															formik.touched[
 																field.tag
 															] &&
@@ -448,14 +695,30 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 															]
 																? "is-invalid"
 																: ""
-														}`} // Highlight errors
+														}`}
+														name={field.tag}
+														id={field.tag}
+														rows={3}
+														value={
+															formik.values[
+																field.tag
+															]
+														} // Bind Formik's values
+														onChange={
+															formik.handleChange
+														} // Bind Formik's onChange
+														onBlur={
+															formik.handleBlur
+														} // Trigger validation on blur
 														placeholder={
-															(language === "fa"
-																? field.description
-																: field.descriptionEN) ||
-															""
+															language === "fa"
+																? "متن خود را وارد کنید"
+																: "Write your input"
 														}
-													/>
+														style={{
+															resize: "none",
+														}}
+													></textarea>
 
 													{formik.touched[
 														field.tag
@@ -463,14 +726,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 														formik.errors[
 															field.tag
 														] && (
-															<div
-																className={`invalid-feedback text-${
-																	language ===
-																	"fa"
-																		? "end"
-																		: "start"
-																}`}
-															>
+															<div className="invalid-feedback text-start">
 																{
 																	formik
 																		.errors[
@@ -481,239 +737,27 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 															</div>
 														)}
 												</div>
-											</div>
-										)}
-										{isFile && (
-											<div
-												key={field.tag}
-												className="col mb-2"
-												style={{
-													direction:
-														language === "fa"
-															? "rtl"
-															: "ltr",
-												}}
-											>
-												<div
-													className={`d-flex flex-column justify-content-center align-items-start my-2`}
-													style={{
-														direction:
-															language === "fa"
-																? "rtl"
-																: "ltr",
-													}}
-												>
-													<div className="d-flex flex-row justify-content-between align-items-center">
-														<label
-															htmlFor={field.tag}
-															className="form-label mx-2 "
-														>
-															{language === "fa"
-																? field.label
-																: field.labelEN}
-														</label>
-													</div>
-													<div
-														className="d-flex justify-content-between border border-2 shadow-sm rounded-4 p-2 w-100"
-														style={{
-															direction: "ltr",
-														}}
-													>
-														<div
-															className={`d-flex flex-wrap justify-content-start align-items-center gap-3 `}
-														>
-															{/* Display uploaded files with icons */}
-															{uploadedFiles[
-																field.tag
-															]?.map(
-																(
-																	file,
-																	index
-																) => (
-																	<div
-																		key={
-																			index
-																		}
-																		className="d-flex flex-column  p-1 mx-1"
-																	>
-																		<a
-																			href={
-																				file.fileUrl
-																			}
-																			download
-																			className="d-flex flex-column justify-content-center align-items-center d-block"
-																		>
-																			<img
-																				src={getIconForFileType(
-																					file.fileName
-																				)}
-																				alt={`${file.fileName} Icon`}
-																				className="custom-file-icon"
-																			/>
-																			<span className="scrollable-text text-center mt-1">
-																				{
-																					file.fileName
-																				}
-																			</span>
-																		</a>
-																		<button
-																			className="btn btn-sm btn-danger rounded-pill mt-1"
-																			onClick={() =>
-																				handleFileDelete(
-																					index,
-																					field.tag
-																				)
-																			}
-																		>
-																			{language ===
-																			"fa"
-																				? "حذف"
-																				: "Delete"}
-																		</button>
-																	</div>
-																)
-															)}
-														</div>
-
-														{/* Upload button for this section */}
-														<div className="d-flex flex-wrap justify-content-end align-items-center">
-															<button
-																type="button"
-																className="btn btn-outline-secondary ms-2"
-																onClick={() =>
-																	fileInputRefs.current?.[
-																		field
-																			.tag
-																	]?.click()
-																}
-															>
-																<i className="fas fa-file-upload"></i>
-																{language ===
-																"fa"
-																	? "ارسال فایل"
-																	: "Upload"}
-															</button>
-															<input
-																type="file"
-																ref={(el) =>
-																	(fileInputRefs.current[
-																		field.tag
-																	] = el)
-																}
-																style={{
-																	display:
-																		"none",
-																}}
-																onChange={(e) =>
-																	handleFileChange(
-																		e,
-																		field.tag
-																	)
-																}
-																multiple
-																accept={
-																	allowedFormats ||
-																	""
-																}
-															/>
-														</div>
-													</div>
-												</div>
-											</div>
-										)}
-										{isCheckbox && (
-											<div
-												key={field.tag}
-												className={`text-${
-													language === "fa"
-														? "end"
-														: "start"
-												} mt-2`}
-											>
-												<label
-													htmlFor={field.tag}
-													className="form-check-label mx-2"
-												>
-													{language === "fa"
-														? field.label
-														: field.labelEN}
-												</label>
-												<input
-													type="checkbox"
-													id={field.tag}
-													name={field.tag}
-													onInput={(e) =>
-														(e.currentTarget.defaultValue =
-															e.currentTarget.value)
-													}
-													className="form-check-input shadow-sm"
-												/>
-											</div>
-										)}
-										{isTextLong && (
-											<div
-												className="d-flex flex-column my-2"
-												key={field.tag}
-											>
-												<label
-													htmlFor={field.tag}
-													className="py-2"
-												>
-													{language === "fa"
-														? field.label
-														: field.labelEN}
-												</label>
-												<textarea
-													className={`form-control text-${
-														language === "fa"
-															? "end"
-															: "start"
-													} h-100 shadow-sm ${
-														formik.touched[
-															field.tag
-														] &&
-														formik.errors[field.tag]
-															? "is-invalid"
-															: ""
-													}`}
-													name={field.tag}
-													id={field.tag}
-													rows={3}
-													value={
-														formik.values[field.tag]
-													} // Bind Formik's values
-													onChange={
-														formik.handleChange
-													} // Bind Formik's onChange
-													onBlur={formik.handleBlur} // Trigger validation on blur
-													placeholder={
-														language === "fa"
-															? "متن خود را وارد کنید"
-															: "Write your input"
-													}
-													style={{
-														resize: "none",
-													}}
-												></textarea>
-
-												{formik.touched[field.tag] &&
-													formik.errors[
-														field.tag
-													] && (
-														<div className="invalid-feedback text-start">
-															{
-																formik.errors[
-																	field.tag
-																] as keyof serviceSubmitDataProps
-															}
-														</div>
-													)}
-											</div>
-										)}
-									</div>
-								)
-							);
-						}
+											)}
+										</div>
+									)
+								);
+							}
+						)
+					) : (
+						<p
+							className="text-center m-auto"
+							style={{
+								direction: "ltr",
+							}}
+						>
+							{language === "fa"
+								? ".جهت دسترسی به این امکانات، لطفاً وارد حساب کاربری خود شوید"
+								: "To access the following features, please log in to your account."}
+							<br />
+							{language === "fa"
+								? ".در صورت عدم وجود حساب کاربری، لطفاً ثبت‌ نام کنید"
+								: "If you don’t have an account, kindly sign up to get started."}
+						</p>
 					)}
 				</div>
 			</div>
