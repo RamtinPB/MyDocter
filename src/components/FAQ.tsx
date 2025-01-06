@@ -54,7 +54,9 @@ function FAQ() {
 						"Failed to fetch data from both API and db.json",
 						jsonErr
 					);
-					setError("Failed to fetch data from both API and local fallback.");
+					setError(
+						"Failed to fetch data from both API and local fallback."
+					);
 					setLoading(false);
 				}
 			}
@@ -83,14 +85,21 @@ function FAQ() {
 		<section id="faq" className="container">
 			<div className="accordion" id="accordionExample">
 				{faq.map((question, index) => (
-					<div className="accordion-item shadow-sm rounded-5 my-5" key={index}>
+					<div
+						className="accordion-item shadow-sm rounded-5 my-5"
+						key={index}
+					>
 						<div
-							className="accordion-header border border-1 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
+							className={`accordion-header border border-1 border-primary rounded-5 d-flex justify-content-between ${language === "fa" ? "text-end" : "text-start"} align-items-center p-2`}
 							id={`heading${index}`}
-							style={{ direction: language === "fa" ? "ltr" : "rtl" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
-							<h3 className=" mb-0 mx-3">
-								{language === "fa" ? question.question : question.questionEn}
+							<h3 className=" mb-0 mx-3 py-2 py-md-0">
+								{language === "fa"
+									? question.question
+									: question.questionEn}
 							</h3>
 							<img
 								src="\images\plus-border.png"
@@ -117,7 +126,9 @@ function FAQ() {
 								}`}
 							>
 								<p className=" mb-0">
-									{language === "fa" ? question.answer : question.answerEn}
+									{language === "fa"
+										? question.answer
+										: question.answerEn}
 								</p>
 							</div>
 						</div>

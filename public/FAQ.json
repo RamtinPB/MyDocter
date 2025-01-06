@@ -1,16 +1,16 @@
 [
 	{
 		"id": 1,
-		"question": "سوال اول",
-		"answer": "جواب سوال اول",
-		"questionEn": "Question 1",
-		"answerEn": "Answer 1"
+		"question": "چرا باید به خدمات های هوش مصنوعی در زمینه پزشکی اعتماد کرد؟",
+		"answer": "مجموعه پزشک من مجموعه ای از سرویس های هوش مصنوعی مختلف را گردهم آورده و با ایجاد تغییرات روی آن ها، بهترین و دقیق ترین نتیجه در زمینه خدمات پزشکی را از آنها تضمین میکند. همچنین نتایج برخی از خدمات توسط دکتر های واقعی بررسی و تایید میشوند.",
+		"questionEn": "Why should you trust artificial intelligence services in the medical field?",
+		"answerEn": "My Doctor brings together a collection of different AI services and, by making changes to them, ensures the best and most accurate results in the field of medical services. Also, the results of some services are reviewed and verified by real doctors."
 	},
 	{
 		"id": 2,
-		"question": "سوال دوم",
-		"answer": "جواب سوال دوم",
-		"questionEn": "Question 2",
-		"answerEn": "Answer 2"
+		"question": "آیا امکان استفاده از بیمه پزشکی برای پرداخت هزینه های خدمات ممکن است؟",
+		"answer": "بله، شما میتوانید لیستی از شرکت های بیمه طرف قرارداد با مجموعه پزشک من را در صفحه شخصی خود و هنگام اضافه کردن بیمه مشاهده نمایید.",
+		"questionEn": "Is it possible to use medical insurance to pay for services?",
+		"answerEn": "Yes, you can view a list of insurance companies contracted with My Doctor Group on your personal page when adding insurance."
 	}
 ]
