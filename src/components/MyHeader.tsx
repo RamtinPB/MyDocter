@@ -95,7 +95,7 @@ function MyHeader() {
 		};
 
 		fetchUserData();
-	}, []);
+	}, [loginState]);
 
 	useEffect(() => {
 		if (!loginState) return;
@@ -130,7 +130,7 @@ function MyHeader() {
 			}
 		};
 		fetchProfileImage();
-	}, [profileImageVersion]);
+	}, [profileImageVersion, loginState]);
 
 	// Clean up the object URL when the component unmounts
 	useEffect(() => {

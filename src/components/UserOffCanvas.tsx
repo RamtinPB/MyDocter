@@ -71,7 +71,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 					);
 				}
 			});
-	}, [userBalance]);
+	}, [userBalance, loginState]);
 
 	useEffect(() => {
 		if (!loginState) return;
@@ -106,7 +106,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 					setProfilePicture(null);
 				}
 			});
-	}, [profileImageVersion]);
+	}, [profileImageVersion, loginState]);
 
 	// Clean up the object URL when the component unmounts
 	useEffect(() => {
