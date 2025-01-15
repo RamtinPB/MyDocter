@@ -108,7 +108,7 @@ function ServicePage() {
 					);
 				}
 			});
-	}, [id]);
+	}, [loginState, id]);
 
 	useEffect(() => {
 		axiosInstance
@@ -135,7 +135,6 @@ function ServicePage() {
 	// Fetch insurance & supplementary insurance data
 	useEffect(() => {
 		setLoading(true);
-
 		// Only proceed if userInfo is defined
 		if (!userInfo) return;
 
@@ -204,7 +203,7 @@ function ServicePage() {
 						setLoading(false);
 					});
 			});
-	}, [userInfo, id]);
+	}, [userInfo, loginState, id]);
 
 	// fetch service data
 	useEffect(() => {
