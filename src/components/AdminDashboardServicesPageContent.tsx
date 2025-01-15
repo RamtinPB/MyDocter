@@ -108,9 +108,11 @@ function AdminDashboardServicesPageContent() {
 
 					// Create banners object directly from servicesData
 					const banners: { [id: string]: string } = {};
-					data.forEach((service: { id: number; imageUrl: string }) => {
-						banners[service.id] = service.imageUrl; // Map service.id to imageUrl
-					});
+					data.forEach(
+						(service: { id: number; imageUrl: string }) => {
+							banners[service.id] = service.imageUrl; // Map service.id to imageUrl
+						}
+					);
 					setServiceDisplayBanners(banners);
 				} catch (err) {
 					console.error("Failed to fetch services", err);
@@ -139,7 +141,10 @@ function AdminDashboardServicesPageContent() {
 
 						setDataUpdateFlag((prev) => !prev);
 					} catch (error) {
-						console.error(`Failed to update service ${service.id}`, error);
+						console.error(
+							`Failed to update service ${service.id}`,
+							error
+						);
 					}
 				}
 			}
@@ -190,11 +195,16 @@ function AdminDashboardServicesPageContent() {
 	// Remove a card by its unique id
 	const removeCard = async (id: string) => {
 		try {
-			const response = await axiosInstance.post("/api/Admin/RemoveService", {
-				serviceId: id,
-			});
+			const response = await axiosInstance.post(
+				"/api/Admin/RemoveService",
+				{
+					serviceId: id,
+				}
+			);
 			if (response.status === 200) {
-				const updatedServices = services.filter((service) => service.id !== id);
+				const updatedServices = services.filter(
+					(service) => service.id !== id
+				);
 				setServices(updatedServices);
 			}
 		} catch (error) {
@@ -216,10 +226,16 @@ function AdminDashboardServicesPageContent() {
 							<div className="card shadow rounded-4 p-0">
 								<div className="text-center">
 									<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-										{language === "fa" ? service.title : service.titleEN}
+										{language === "fa"
+											? service.title
+											: service.titleEN}
 									</h5>
 									<img
-										src={serviceDisplayBanners[service.id as number] || ""}
+										src={
+											serviceDisplayBanners[
+												service.id as number
+											] || ""
+										}
 										className="img-fluid m-0"
 										style={{ width: "546.22px" }}
 										alt={service.title}
@@ -230,7 +246,9 @@ function AdminDashboardServicesPageContent() {
 											id="btn-delete"
 											className="rounded-circle btn shadow p-0 my-3"
 											type="button"
-											onClick={() => removeCard(service.id as string)} // Use unique id for deletion
+											onClick={() =>
+												removeCard(service.id as string)
+											} // Use unique id for deletion
 										>
 											<img
 												src="/images/red-delete.png"
@@ -243,9 +261,15 @@ function AdminDashboardServicesPageContent() {
 											href={`/edit-service/${service.id}`} // Change this
 											onClick={(e) => {
 												e.preventDefault();
-												navigate(`/edit-service/${service.id}`, {
-													state: { section: "servicesPage" }, // Pass the section as state
-												});
+												navigate(
+													`/edit-service/${service.id}`,
+													{
+														state: {
+															section:
+																"servicesPage",
+														}, // Pass the section as state
+													}
+												);
 											}}
 											id="btn-edit"
 											className="rounded-circle btn shadow p-0 my-3"

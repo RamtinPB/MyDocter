@@ -15,6 +15,20 @@ interface notificationProps {
 	seen: boolean;
 }
 
+function formatDate(input: string | undefined): string {
+	if (!input) {
+		return "Invalid Date"; // Return a default or error message if input is undefined
+	}
+	// Split the input string into date and time parts
+	const [date, time] = input.split("T");
+
+	// Replace the dashes in the date with slashes
+	const formattedDate = date.replace(/-/g, "/");
+
+	// Return the final formatted string
+	return `${time} - ${formattedDate}`;
+}
+
 const NotificationDropdown = () => {
 	const [notifications, setNotifications] = useState<notificationProps[]>([]);
 	const [hasNewNotification, setHasNewNotification] = useState(false);
@@ -42,7 +56,7 @@ const NotificationDropdown = () => {
 					link: notif.targetUrl,
 					status: notif.Type, // Optional if you need to handle types
 					seen: notif.seen,
-					timestamp: new Date(notif.dateTime).getTime(), // Convert to a timestamp
+					dateTime: notif.dateTime,
 				}));
 
 				// Merge with local storage (preserving seen state if already stored)
@@ -87,6 +101,8 @@ const NotificationDropdown = () => {
 
 		fetchNotifications();
 	}, [language]);
+
+	console.log(notifications);
 
 	const handleNotificationClick = (notificationId: number) => {
 		const updatedNotifications = notifications.map((notif) =>
@@ -134,7 +150,7 @@ const NotificationDropdown = () => {
 							}
 						>
 							{notification.message.concat(
-								` - ${notification.dateTime}`
+								` - ${formatDate(notification.dateTime)}`
 							)}
 						</Link>
 					))}

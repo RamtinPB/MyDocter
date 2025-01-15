@@ -410,28 +410,6 @@ function ServicePage() {
 					</div>
 				</div>
 
-				{/* 
-				<div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
-				>
-					<h5 className="px-1 mx-1">
-						{language === "fa" ? "شرح حال کاربر" : "User's Input"}
-					</h5>
-					<textarea
-						id="userInput"
-						className={`form-control text-${
-							language === "fa" ? "end" : "start"
-						}`}
-						rows={3}
-						placeholder={
-							language === "fa" ? "متن خود را وارد کنید" : "Write your input"
-						}
-					></textarea>
-				</div> 
-				*/}
-
 				{/* Important Notes Section */}
 				<div
 					className={`bg-white border border-2 shadow text-${

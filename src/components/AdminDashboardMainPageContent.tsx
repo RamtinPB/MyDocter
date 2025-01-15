@@ -44,7 +44,9 @@ function AdminDashboardMainPageContent() {
 		const fetchHomeTextData = async () => {
 			try {
 				// Attempt to fetch from the API
-				const response = await axiosInstance.post("/api/Pages/GetHomePageData");
+				const response = await axiosInstance.post(
+					"/api/Pages/GetHomePageData"
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
@@ -132,7 +134,9 @@ function AdminDashboardMainPageContent() {
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
-						{language === "fa" ? "شعار سایت" : "Opening quote title (Farsi)"}
+						{language === "fa"
+							? "شعار سایت"
+							: "Opening quote title (Farsi)"}
 					</h4>
 					<textarea
 						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
@@ -212,7 +216,7 @@ function AdminDashboardMainPageContent() {
 					></textarea>
 				</div>
 			</div>
-			{/* [services section] */}
+			{/* services section */}
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5  m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
@@ -280,7 +284,9 @@ function AdminDashboardMainPageContent() {
 						rows={3}
 						placeholder={"Write your input"}
 						name="servicesLeftCardDescriptionEN"
-						value={homePageData?.servicesLeftCardDescriptionEN || ""}
+						value={
+							homePageData?.servicesLeftCardDescriptionEN || ""
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -301,7 +307,9 @@ function AdminDashboardMainPageContent() {
 						rows={3}
 						placeholder={"Write your input"}
 						name="servicesRightCardDescriptionEN"
-						value={homePageData?.servicesRightCardDescriptionEN || ""}
+						value={
+							homePageData?.servicesRightCardDescriptionEN || ""
+						}
 						onChange={handleChange}
 					></textarea>
 				</div>
@@ -337,7 +345,9 @@ function AdminDashboardMainPageContent() {
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
-						{language === "fa" ? "متن اصلی" : "Main Description (Farsi)"}
+						{language === "fa"
+							? "متن اصلی"
+							: "Main Description (Farsi)"}
 					</h4>
 					<textarea
 						className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
@@ -357,7 +367,9 @@ function AdminDashboardMainPageContent() {
 					<h4
 						className={`text-${language === "fa" ? "end" : "start"} px-1 mx-1`}
 					>
-						{language === "fa" ? "(انگلیسی) سر تیتر" : "Main title (Egnlish)"}
+						{language === "fa"
+							? "(انگلیسی) سر تیتر"
+							: "Main title (Egnlish)"}
 					</h4>
 					<textarea
 						className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}

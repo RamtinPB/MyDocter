@@ -2,8 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import FormBuilder from "./components/FormBuilder";
-import FormRender from "./components/FormRender";
 import MainLayout from "./components/MainLayout";
 import SignUp from "./pages/SignUp";
 import UserInformation from "./pages/UserInformation";
@@ -13,11 +11,10 @@ import UserHistory from "./pages/UserHistory";
 import UserHistoryExtended from "./pages/UserHistoryExtended";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import ServicePage from "./pages/ServicePage";
-import FormRenderFilled from "./components/FormRenderFilled";
 import UserIEInformation from "./pages/UserIEInformation";
 import AdminDashboard from "./pages/AdminDashboard";
 import ServicePageEdit from "./components/AdminDashboardServicesPageEdit";
-import AdminDashboardManageUsersExtended from "./components/ManageUserInterface";
+import AdminDashboardManageUsersInterface from "./components/ManageUserInterface";
 import ManageUserInterfaceUserPurchasedServicesExtended from "./components/ManageUserInterfaceUserPurchasedServicesExtended";
 
 function App() {
@@ -27,14 +24,26 @@ function App() {
 				{/* Routes with the header */}
 				<Route path="/" element={<MainLayout />}>
 					<Route index element={<Home />} />
-					<Route path="/UserInformation" element={<UserInformation />} />
+					<Route
+						path="/UserInformation"
+						element={<UserInformation />}
+					/>
 					<Route path="/UserHistory" element={<UserHistory />} />
-					<Route path="/UserIEInformation" element={<UserIEInformation />} />
-					<Route path="/AdminDashboard" element={<AdminDashboard />} />
-					<Route path="/edit-service/:id" element={<ServicePageEdit />} />
+					<Route
+						path="/UserIEInformation"
+						element={<UserIEInformation />}
+					/>
+					<Route
+						path="/AdminDashboard"
+						element={<AdminDashboard />}
+					/>
+					<Route
+						path="/edit-service/:id"
+						element={<ServicePageEdit />}
+					/>
 					<Route
 						path="/edit-user/:userId"
-						element={<AdminDashboardManageUsersExtended />}
+						element={<AdminDashboardManageUsersInterface />}
 					/>
 					<Route
 						path="/purchased-services/:purchaseId"
@@ -42,7 +51,9 @@ function App() {
 					/>
 					<Route
 						path="/purchased-services/:purchaseId/:userId"
-						element={<ManageUserInterfaceUserPurchasedServicesExtended />}
+						element={
+							<ManageUserInterfaceUserPurchasedServicesExtended />
+						}
 					/>
 					<Route path="/services/:id" element={<ServicePage />} />
 					<Route
@@ -53,18 +64,15 @@ function App() {
 						path="/SpecialistDoctorPrescription"
 						element={<SpecialistDoctorPrescription />}
 					/>
-					<Route path="/formBuilder/:serviceId" element={<FormBuilder />} />
-					<Route path="/formRender" element={<FormRender />} />
-					<Route
-						path="/form-filled/:id/:purchaseId"
-						element={<FormRenderFilled purchasedServiceData={undefined} />}
-					/>
 				</Route>
 
 				{/* Route without the header */}
 				<Route path="/login" element={<Login />} />
 				<Route path="/signUp" element={<SignUp />} />
-				<Route path="/PasswordRecovery" element={<PasswordRecovery />} />
+				<Route
+					path="/PasswordRecovery"
+					element={<PasswordRecovery />}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);
