@@ -949,6 +949,9 @@ function UserInformation() {
 													{language === "fa"
 														? field.label
 														: field.labelEN}
+													<span className="text-danger">
+														{field.required && "*"}
+													</span>
 												</label>
 												{isSelect ? (
 													<select

@@ -967,6 +967,10 @@ function UserIEInformation() {
 																				}
 																				className="form-label"
 																			>
+																				<span className="text-danger">
+																					{field.required &&
+																						"*"}
+																				</span>
 																				{language ===
 																				"fa"
 																					? field.label
