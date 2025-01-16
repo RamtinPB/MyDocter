@@ -8,6 +8,7 @@ import "/src/cssFiles/textOverflow.css";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useAuth } from "../components/AuthContext";
+import { FaCircleExclamation, FaTableList } from "react-icons/fa6";
 
 interface serviceProps {
 	id: number;
@@ -391,9 +392,15 @@ function ServicePage() {
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
-					<h5 className="px-4 mx-1 pb-2">
-						{language === "fa" ? "فرم سرویس" : "Service Form"}
-					</h5>
+					<div
+						className="d-flex align-items-center mb-2 justify-content-start px-4"
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
+						<FaTableList size={20} className="mb-1" />
+						<h5 className=" mx-2 mb-0">
+							{language === "fa" ? "فرم سرویس" : "Service Form"}
+						</h5>
+					</div>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
 						{true ? (
 							<FormRender ref={formRef} />
@@ -411,31 +418,53 @@ function ServicePage() {
 
 				{/* Important Notes Section */}
 				<div
-					className={`bg-white border border-2 shadow text-${
+					className={`bg-white border border-2 border-inherit shadow text-${
 						language === "fa" ? "end" : "start"
 					} rounded-5 py-4 px-4 mx-3 mx-md-4 mx-lg-5 mb-4`}
 				>
-					<h5 className="px-1 mx-1">
-						{language === "fa"
-							? "نکات مهم سرویس"
-							: "Service Important Notes"}
-					</h5>
+					<div
+						className={`d-flex align-items-center justify-content-start mb-2`}
+						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+					>
+						<FaCircleExclamation
+							size={22}
+							className="text-warning mb-1"
+						/>
+						<h5 className=" mx-2  my-auto">
+							{language === "fa"
+								? "نکات مهم سرویس"
+								: "Important Notes"}
+						</h5>
+					</div>
+
 					<p
-						className="px-3 mx-1"
+						className=" mx-1"
 						dangerouslySetInnerHTML={{
 							__html:
-								language === "fa"
-									? service.importantNotes?.replace(
-											/\n/g,
-											"<br>"
-										)
-									: service.importantNotesEN?.replace(
-											/\n/g,
-											"<br>"
-										),
+								(language === "fa"
+									? `قبل از استفاده از این سرویس حتما <a href="/UserIEInformation" style="color: blue; text-decoration: inherit;">ارزیابی اولیه</a> و <a href="/UserInformation" style="color: blue; text-decoration: inherit;">اطلاعات کاربر</a> را از منوی کاربری تکمیل کنید.`
+									: `Before using this service, be sure to complete the <a href="/UserIEInformation" style="color: blue; text-decoration: inherit;">Initial Evaluation</a> and <a href="/UserIEInformation" style="color: blue; text-decoration: inherit;">User Information</a> sections from the user dashboard.`) +
+								"<br>" +
+								(language === "fa"
+									? service.importantNotes
+										? service.importantNotes
+												.replace(/\n/g, "<br>")
+												.replace(
+													"ارزیابی اولیه",
+													'<a href="#initial-evaluation" style="color: blue; text-decoration: inherit;">ارزیابی اولیه</a>'
+												)
+										: ""
+									: service.importantNotesEN
+										? service.importantNotesEN
+												.replace(/\n/g, "<br>")
+												.replace(
+													/initial evaluation/i,
+													'<a href="#initial-evaluation" style="color: blue; text-decoration: inherit;">Initial Evaluation</a>'
+												)
+										: " "),
 						}}
 						style={{ direction: language === "fa" ? "rtl" : "ltr" }}
-					></p>
+					/>
 				</div>
 
 				{/* Pricing Table Section */}
@@ -486,20 +515,28 @@ function ServicePage() {
 							<tbody>
 								<tr>
 									<td>
-										{language === "fa"
-											? insurance?.companyName
-											: insurance?.companyNameEN}
-									</td>
-									<td>{insurance?.discountPercentage}</td>
-									<td>
-										{language === "fa"
-											? supplementaryInsurance?.companyName
-											: supplementaryInsurance?.companyNameEN}
+										{insurance
+											? language === "fa"
+												? insurance?.companyName
+												: insurance?.companyNameEN
+											: "N/A"}
 									</td>
 									<td>
-										{
-											supplementaryInsurance?.discountPercentage
-										}
+										{insurance
+											? insurance?.discountPercentage
+											: "N/A"}
+									</td>
+									<td>
+										{supplementaryInsurance
+											? language === "fa"
+												? supplementaryInsurance?.companyName
+												: supplementaryInsurance?.companyNameEN
+											: "N/A"}
+									</td>
+									<td>
+										{supplementaryInsurance
+											? supplementaryInsurance?.discountPercentage
+											: "N/A"}
 									</td>
 									<td>{service.basePrice}</td>
 									<td>{service.discount}</td>

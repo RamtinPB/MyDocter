@@ -67,7 +67,7 @@ function Login() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [toastMessage, setToastMessage] = useState("");
 	const [showToast, setShowToast] = useState(false);
-	const [countdown, setCountdown] = useState(5); // Countdown for navigation
+	const [countdown, setCountdown] = useState(2); // Countdown for navigation
 	const [isSuccess, setIsSuccess] = useState(false); // Track successful signup
 
 	const navigate = useNavigate();
@@ -105,13 +105,26 @@ function Login() {
 
 	useEffect(() => {
 		// Countdown logic for 5 seconds
-		if (showToast && isSuccess && countdown > 0) {
-			const timer = setTimeout(() => {
-				setCountdown(countdown - 1);
-			}, 1000);
-			return () => clearTimeout(timer);
-		} else if (isSuccess && countdown === 0) {
-			navigate("/"); // Navigate after countdown ends
+		// if (showToast && isSuccess && countdown > 0) {
+		// 	const timer = setTimeout(() => {
+		// 		setCountdown(countdown - 1);
+		// 	}, 500);
+		// 	return () => clearTimeout(timer);
+		// } else if (isSuccess && countdown === 0) {
+		// 	navigate("/UserInformation"); // Navigate after countdown ends
+		// }
+		if (isSuccess) {
+			alert(
+				language === "fa"
+					? "فرآیند ورود با موفقیت انجام شد"
+					: "The Login Process was successful"
+			);
+			alert(
+				language === "fa"
+					? "لطفا فرم اطلاعات کاربر را تکمیل کنید"
+					: "Please fill the User Information Form"
+			);
+			navigate("/UserInformation"); // Navigate after countdown ends
 		}
 	}, [showToast, isSuccess, countdown, navigate]);
 

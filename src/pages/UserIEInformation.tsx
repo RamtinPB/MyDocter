@@ -5,6 +5,8 @@ import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/userIEInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 interface validationSchemaIEDataProps {
 	name: string;
@@ -416,6 +418,10 @@ function UserIEInformation() {
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
+	const { loginState } = useAuth();
+
+	const navigate = useNavigate();
+	const handleBackClick = () => navigate("/");
 
 	// fetch user data
 	useEffect(() => {
@@ -802,181 +808,197 @@ function UserIEInformation() {
 	};
 
 	return (
-		<div className="custom-bg-4 min-vh-100">
-			<div className="container d-flex flex-column">
-				<form
-					onSubmit={handleTestSubmit}
-					className="needs-validation my-5"
-					noValidate
-				>
-					<div className="accordion" id="accordionExample">
-						{Array.from(
-							new Set(formFields.map((field) => field.group))
-						).map((group, index) => {
-							const sampleField = formFields.find(
-								(field) => field.group === group
-							);
-							return (
-								(sampleField.enabled === true ||
-									sampleField.enabled === null ||
-									sampleField.enabled === undefined) &&
-								!(
-									sampleField.group === undefined ||
-									sampleField.group === null
-								) &&
-								!(
-									userInfo?.gender === "Male" &&
-									sampleField.group === "بیماران خانم"
-								) && (
-									<div
-										className="accordion-item shadow-sm rounded-5 mb-5"
-										key={index}
-									>
+		loginState && (
+			<div className="custom-bg-4 min-vh-100">
+				<div className="container d-flex flex-column">
+					<div className="d-flex flex-column justify-content-center gap-2 align-items-center mt-5 p-2">
+						<h3 className="text-center text-black m-0">
+							{language === "fa"
+								? "فرم ارزیابی اولیه کاربر"
+								: "User Initial Evaluation Form"}
+						</h3>
+						<p>
+							{language === "fa"
+								? "لطفاً اطلاعات دقیق و کامل ارائه دهید تا به ما در ارزیابی وضعیت پزشکی شما و برنامه‌ریزی بهترین روند درمان کمک کند"
+								: "Please provide accurate and detailed information to help us assess your medical condition and plan the best course of action"}
+						</p>
+					</div>
+					<form
+						onSubmit={handleTestSubmit}
+						className="needs-validation mb-5 mt-4"
+						noValidate
+					>
+						<div className="accordion" id="accordionExample">
+							{Array.from(
+								new Set(formFields.map((field) => field.group))
+							).map((group, index) => {
+								const sampleField = formFields.find(
+									(field) => field.group === group
+								);
+								return (
+									(sampleField.enabled === true ||
+										sampleField.enabled === null ||
+										sampleField.enabled === undefined) &&
+									!(
+										sampleField.group === undefined ||
+										sampleField.group === null
+									) &&
+									!(
+										userInfo?.gender === "Male" &&
+										sampleField.group === "بیماران خانم"
+									) && (
 										<div
-											className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
-											id={`heading${index}`}
-											style={{
-												direction:
-													language === "fa"
-														? "ltr"
-														: "rtl",
-											}}
-										>
-											<h4 className="mb-0  mx-2 mx-md-3 mx-lg-4">
-												{language === "fa"
-													? sampleField.group
-													: sampleField.groupEN}
-											</h4>
-											<img
-												src="/images/plus-border.png"
-												alt="+"
-												className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
-													openIndexes.includes(index)
-														? "rotate"
-														: ""
-												}`}
-												onClick={() =>
-													toggleForm(index)
-												}
-												data-bs-toggle="collapse"
-												data-bs-target={`#collapse${index}`}
-												itemType="button"
-												aria-expanded={false}
-												aria-controls={`collapse${index}`}
-											/>
-										</div>
-										<div
-											id={`collapse${index}`}
-											className={`accordion-collapse collapse `}
+											className="accordion-item shadow-sm rounded-5 mb-5"
+											key={index}
 										>
 											<div
-												className={`accordion-body text-${
-													language === "fa"
-														? "end"
-														: "start"
-												} pt-0 mb-1`}
+												className="accordion-header border border-2 border-primary rounded-5 d-flex justify-content-end align-items-center p-2"
+												id={`heading${index}`}
+												style={{
+													direction:
+														language === "fa"
+															? "ltr"
+															: "rtl",
+												}}
+											>
+												<h4 className="mb-0  mx-2 mx-md-3 mx-lg-4">
+													{language === "fa"
+														? sampleField.group
+														: sampleField.groupEN}
+												</h4>
+												<img
+													src="/images/plus-border.png"
+													alt="+"
+													className={`custom-btn img-fluid m-0 p-0 btn-toggle collapsed ${
+														openIndexes.includes(
+															index
+														)
+															? "rotate"
+															: ""
+													}`}
+													onClick={() =>
+														toggleForm(index)
+													}
+													data-bs-toggle="collapse"
+													data-bs-target={`#collapse${index}`}
+													itemType="button"
+													aria-expanded={false}
+													aria-controls={`collapse${index}`}
+												/>
+											</div>
+											<div
+												id={`collapse${index}`}
+												className={`accordion-collapse collapse `}
 											>
 												<div
-													className="row d-flex align-items-start g-5 my-1"
-													style={{
-														direction:
-															language === "fa"
-																? "rtl"
-																: "ltr",
-													}}
+													className={`accordion-body text-${
+														language === "fa"
+															? "end"
+															: "start"
+													} pt-0 mb-1`}
 												>
-													{formFields
-														.filter(
-															(field) =>
-																field.group ===
-																group
-														)
-														.map(
-															(
-																field: formFieldsIEProps,
-																idx: number
-															) => {
-																if (
-																	field.type ===
-																	"placeholder"
-																) {
+													<div
+														className="row d-flex align-items-start g-5 my-1"
+														style={{
+															direction:
+																language ===
+																"fa"
+																	? "rtl"
+																	: "ltr",
+														}}
+													>
+														{formFields
+															.filter(
+																(field) =>
+																	field.group ===
+																	group
+															)
+															.map(
+																(
+																	field: formFieldsIEProps,
+																	idx: number
+																) => {
+																	if (
+																		field.type ===
+																		"placeholder"
+																	) {
+																		return (
+																			<h6
+																				key={
+																					idx
+																				}
+																				className="col-6 mb-2"
+																			>
+																				{
+																					field.name
+																				}
+																				{field.name && (
+																					<hr />
+																				)}
+																			</h6>
+																		); // Empty column for placeholder
+																	}
+																	const isSelect =
+																		field.type ===
+																		"select";
+																	const isCheckbox =
+																		field.checkboxName;
+																	const isCheckMenu =
+																		field.type ===
+																		"checkmenu";
+
 																	return (
-																		<h6
+																		<div
 																			key={
 																				idx
 																			}
-																			className="col-6 mb-2"
-																		>
-																			{
-																				field.name
-																			}
-																			{field.name && (
-																				<hr />
-																			)}
-																		</h6>
-																	); // Empty column for placeholder
-																}
-																const isSelect =
-																	field.type ===
-																	"select";
-																const isCheckbox =
-																	field.checkboxName;
-																const isCheckMenu =
-																	field.type ===
-																	"checkmenu";
-
-																return (
-																	<div
-																		key={
-																			idx
-																		}
-																		className="col-6 d-flex flex-column mb-2"
-																		style={{
-																			direction:
-																				language ===
-																				"fa"
-																					? "ltr"
-																					: "rtl",
-																		}}
-																	>
-																		<label
-																			htmlFor={
-																				field.name
-																			}
-																			className="form-label"
-																		>
-																			{language ===
-																			"fa"
-																				? field.label
-																				: field.labelEN}
-																		</label>
-																		{isSelect ? (
-																			<select
-																				id={
-																					field.name
-																				}
-																				name={
-																					field.name
-																				}
-																				value={String(
-																					formik
-																						.values[
-																						field.name as keyof UserIEFormData
-																					] ||
-																						""
-																				)}
-																				onChange={
-																					formik.handleChange
-																				}
-																				onBlur={
-																					formik.handleBlur
-																				}
-																				className={`form-select text-${
+																			className="col-6 d-flex flex-column mb-2"
+																			style={{
+																				direction:
 																					language ===
 																					"fa"
-																						? "end"
-																						: "start"
+																						? "ltr"
+																						: "rtl",
+																			}}
+																		>
+																			<label
+																				htmlFor={
+																					field.name
 																				}
+																				className="form-label"
+																			>
+																				{language ===
+																				"fa"
+																					? field.label
+																					: field.labelEN}
+																			</label>
+																			{isSelect ? (
+																				<select
+																					id={
+																						field.name
+																					}
+																					name={
+																						field.name
+																					}
+																					value={String(
+																						formik
+																							.values[
+																							field.name as keyof UserIEFormData
+																						] ||
+																							""
+																					)}
+																					onChange={
+																						formik.handleChange
+																					}
+																					onBlur={
+																						formik.handleBlur
+																					}
+																					className={`form-select text-${
+																						language ===
+																						"fa"
+																							? "end"
+																							: "start"
+																					}
 																				 shadow-sm select-resize ${
 																						formik
 																							.touched[
@@ -989,307 +1011,319 @@ function UserIEInformation() {
 																							? "is-invalid"
 																							: ""
 																					}`}
-																				required={
-																					field.required
-																				}
-																				disabled={
-																					!!formik
-																						.values[
-																						field.checkboxName as keyof UserIEFormData
-																					]
-																				}
-																			>
-																				<option
-																					value=""
-																					disabled
+																					required={
+																						field.required
+																					}
+																					disabled={
+																						!!formik
+																							.values[
+																							field.checkboxName as keyof UserIEFormData
+																						]
+																					}
 																				>
-																					{field.placeholder ||
-																						"..."}
-																				</option>
-																				{(language ===
-																				"fa"
-																					? field.options
-																					: field.optionsEN
-																				)
-																					.split(
-																						","
+																					<option
+																						value=""
+																						disabled
+																					>
+																						{field.placeholder ||
+																							"..."}
+																					</option>
+																					{(language ===
+																					"fa"
+																						? field.options
+																						: field.optionsEN
 																					)
-																					.map(
-																						(
-																							option: string,
-																							i: number
-																						) => (
-																							<option
-																								key={
-																									i
-																								}
-																								value={
-																									option
-																								}
-																							>
-																								{
-																									option
-																								}
-																							</option>
+																						.split(
+																							","
 																						)
-																					)}
-																			</select>
-																		) : isCheckMenu ? (
-																			<div
-																				className="d-flex flex-column checkmenu"
-																				style={{
-																					direction:
-																						language ===
-																						"fa"
-																							? "rtl"
-																							: "ltr",
-																				}}
-																			>
-																				{formFields
-																					.filter(
-																						(
-																							item
-																						) =>
-																							item.parent ===
-																							field.name
-																					)
-																					.map(
-																						(
-																							option,
-																							i
-																						) => (
-																							<div
-																								key={
-																									i
-																								}
-																								className={`d-flex justify-content-start mt-2`}
-																							>
-																								<input
-																									type="checkbox"
-																									id={
-																										option.name
+																						.map(
+																							(
+																								option: string,
+																								i: number
+																							) => (
+																								<option
+																									key={
+																										i
 																									}
-																									name={
-																										option.name
+																									value={
+																										option
 																									}
-																									checked={
-																										!!formik
-																											.values[
-																											option.name as keyof UserIEFormData
-																										] ||
-																										false
-																									}
-																									onChange={() => {
-																										formik.setFieldValue(
-																											option.name,
-																											!formik
-																												.values[
-																												option.name as keyof UserIEFormData
-																											] // Toggle the value
-																										);
-																									}}
-																									onBlur={
-																										formik.handleBlur
-																									}
-																									className={`form-check-input ${
-																										formik
-																											.touched[
-																											option.name as keyof UserIEFormData
-																										] &&
-																										formik
-																											.errors[
-																											option.name as keyof UserIEFormData
-																										]
-																											? "is-invalid"
-																											: ""
-																									}`}
-																								/>
-																								<label
-																									htmlFor={
-																										option.name
-																									}
-																									className={`form-check-label ${
-																										language ===
-																										"fa"
-																											? "me-3"
-																											: "ms-3"
-																									} `}
 																								>
-																									{language ===
-																									"fa"
-																										? option.label
-																										: option.labelEN}
-																								</label>
-																							</div>
-																						)
-																					)}
-																			</div>
-																		) : (
-																			<input
-																				type={
-																					field.type
-																				}
-																				id={
-																					field.name
-																				}
-																				name={
-																					field.name
-																				}
-																				value={String(
-																					formik
-																						.values[
-																						field.name as keyof UserIEFormData
-																					] ||
-																						""
-																				)}
-																				onChange={
-																					formik.handleChange
-																				}
-																				onBlur={
-																					formik.handleBlur
-																				}
-																				className={`form-control text-${
-																					language ===
-																					"fa"
-																						? "end"
-																						: "start"
-																				} shadow-sm ${
-																					formik
-																						.touched[
-																						field.name as keyof UserIEFormData
-																					] &&
-																					formik
-																						.errors[
-																						field.name as keyof UserIEFormData
-																					]
-																						? "is-invalid"
-																						: ""
-																				}`}
-																				required={
-																					field.name ===
-																					"age"
-																						? false
-																						: field.required
-																				}
-																				disabled={
-																					field.name ===
-																					"age"
-																						? true
-																						: !!formik
-																								.values[
-																								field.checkboxName as keyof UserIEFormData
-																							]
-																				}
-																				placeholder={
-																					(language ===
-																					"fa"
-																						? field.placeholder
-																						: field.placeholderEN) ||
-																					""
-																				}
-																			/>
-																		)}
-																		{isCheckbox &&
-																			field.checkboxLabel && (
+																									{
+																										option
+																									}
+																								</option>
+																							)
+																						)}
+																				</select>
+																			) : isCheckMenu ? (
 																				<div
-																					className={`d-flex justify-content-end mt-2`}
-																				>
-																					<input
-																						type="checkbox"
-																						id={
-																							field.checkboxName
-																						}
-																						name={
-																							field.checkboxName
-																						}
-																						checked={
-																							!!formik
-																								.values[
-																								field.checkboxName as keyof UserIEFormData
-																							] ||
-																							false
-																						}
-																						onChange={(
-																							e
-																						) => {
-																							formik.setFieldValue(
-																								field.checkboxName,
-																								e
-																									.target
-																									.checked
-																							);
-
-																							if (
-																								e
-																									.target
-																									.checked
-																							) {
-																								formik.setFieldValue(
-																									field.name,
-																									""
-																								);
-																							}
-																						}}
-																						className="form-check-input shadow-sm"
-																					/>
-																					<label
-																						htmlFor={
-																							field.checkboxName
-																						}
-																						className={`form-check-label ${
+																					className="d-flex flex-column checkmenu"
+																					style={{
+																						direction:
 																							language ===
 																							"fa"
-																								? "ms-3"
-																								: "me-3"
-																						}`}
-																					>
-																						{language ===
-																						"fa"
-																							? field.checkboxLabel
-																							: field.checkboxLabelEN}
-																					</label>
+																								? "rtl"
+																								: "ltr",
+																					}}
+																				>
+																					{formFields
+																						.filter(
+																							(
+																								item
+																							) =>
+																								item.parent ===
+																								field.name
+																						)
+																						.map(
+																							(
+																								option,
+																								i
+																							) => (
+																								<div
+																									key={
+																										i
+																									}
+																									className={`d-flex justify-content-start mt-2`}
+																								>
+																									<input
+																										type="checkbox"
+																										id={
+																											option.name
+																										}
+																										name={
+																											option.name
+																										}
+																										checked={
+																											!!formik
+																												.values[
+																												option.name as keyof UserIEFormData
+																											] ||
+																											false
+																										}
+																										onChange={() => {
+																											formik.setFieldValue(
+																												option.name,
+																												!formik
+																													.values[
+																													option.name as keyof UserIEFormData
+																												] // Toggle the value
+																											);
+																										}}
+																										onBlur={
+																											formik.handleBlur
+																										}
+																										className={`form-check-input ${
+																											formik
+																												.touched[
+																												option.name as keyof UserIEFormData
+																											] &&
+																											formik
+																												.errors[
+																												option.name as keyof UserIEFormData
+																											]
+																												? "is-invalid"
+																												: ""
+																										}`}
+																									/>
+																									<label
+																										htmlFor={
+																											option.name
+																										}
+																										className={`form-check-label ${
+																											language ===
+																											"fa"
+																												? "me-3"
+																												: "ms-3"
+																										} `}
+																									>
+																										{language ===
+																										"fa"
+																											? option.label
+																											: option.labelEN}
+																									</label>
+																								</div>
+																							)
+																						)}
 																				</div>
-																			)}
-																		{formik
-																			.touched[
-																			field.name as keyof UserIEFormData
-																		] &&
-																			formik
-																				.errors[
-																				field.name as keyof UserIEFormData
-																			] && (
-																				<div className="invalid-feedback">
-																					{String(
+																			) : (
+																				<input
+																					type={
+																						field.type
+																					}
+																					id={
+																						field.name
+																					}
+																					name={
+																						field.name
+																					}
+																					value={String(
+																						formik
+																							.values[
+																							field.name as keyof UserIEFormData
+																						] ||
+																							""
+																					)}
+																					onChange={
+																						formik.handleChange
+																					}
+																					onBlur={
+																						formik.handleBlur
+																					}
+																					className={`form-control text-${
+																						language ===
+																						"fa"
+																							? "end"
+																							: "start"
+																					} shadow-sm ${
+																						formik
+																							.touched[
+																							field.name as keyof UserIEFormData
+																						] &&
 																						formik
 																							.errors[
 																							field.name as keyof UserIEFormData
 																						]
-																					)}
-																				</div>
+																							? "is-invalid"
+																							: ""
+																					}`}
+																					required={
+																						field.name ===
+																						"age"
+																							? false
+																							: field.required
+																					}
+																					disabled={
+																						field.name ===
+																						"age"
+																							? true
+																							: !!formik
+																									.values[
+																									field.checkboxName as keyof UserIEFormData
+																								]
+																					}
+																					placeholder={
+																						(language ===
+																						"fa"
+																							? field.placeholder
+																							: field.placeholderEN) ||
+																						""
+																					}
+																				/>
 																			)}
-																	</div>
-																);
-															}
-														)}
+																			{isCheckbox &&
+																				field.checkboxLabel && (
+																					<div
+																						className={`d-flex justify-content-end mt-2`}
+																					>
+																						<input
+																							type="checkbox"
+																							id={
+																								field.checkboxName
+																							}
+																							name={
+																								field.checkboxName
+																							}
+																							checked={
+																								!!formik
+																									.values[
+																									field.checkboxName as keyof UserIEFormData
+																								] ||
+																								false
+																							}
+																							onChange={(
+																								e
+																							) => {
+																								formik.setFieldValue(
+																									field.checkboxName,
+																									e
+																										.target
+																										.checked
+																								);
+
+																								if (
+																									e
+																										.target
+																										.checked
+																								) {
+																									formik.setFieldValue(
+																										field.name,
+																										""
+																									);
+																								}
+																							}}
+																							className="form-check-input shadow-sm"
+																						/>
+																						<label
+																							htmlFor={
+																								field.checkboxName
+																							}
+																							className={`form-check-label ${
+																								language ===
+																								"fa"
+																									? "ms-3"
+																									: "me-3"
+																							}`}
+																						>
+																							{language ===
+																							"fa"
+																								? field.checkboxLabel
+																								: field.checkboxLabelEN}
+																						</label>
+																					</div>
+																				)}
+																			{formik
+																				.touched[
+																				field.name as keyof UserIEFormData
+																			] &&
+																				formik
+																					.errors[
+																					field.name as keyof UserIEFormData
+																				] && (
+																					<div className="invalid-feedback">
+																						{String(
+																							formik
+																								.errors[
+																								field.name as keyof UserIEFormData
+																							]
+																						)}
+																					</div>
+																				)}
+																		</div>
+																	);
+																}
+															)}
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-								)
-							);
-						})}
-					</div>
-					<div className="d-flex justify-content-center mt-4 mt-md-5">
-						<button
-							type="submit"
-							className="btn btn-primary rounded-pill fs-6 px-4 py-2"
-						>
-							{language === "fa" ? "ذخیره" : "Save"}
-						</button>
-					</div>
-				</form>
+									)
+								);
+							})}
+						</div>
+						<div className="d-flex flex-column justify-content-center align-items-center gap-4 mt-4 mt-md-5">
+							<button
+								type="submit"
+								className="btn btn-primary rounded-pill fs-6 px-4 py-2"
+								style={{ width: "fit-content" }}
+							>
+								{language === "fa" ? "ذخیره" : "Save"}
+							</button>
+							<button
+								type="button"
+								className="btn btn-warning rounded-pill px-3 py-2"
+								onClick={() => handleBackClick()}
+								style={{ width: "fit-content" }}
+							>
+								{language === "fa"
+									? "بازگشت به صفحه اصلی"
+									: "Go Back to Home Page"}
+							</button>
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
+		)
 	);
 }
 

@@ -110,13 +110,26 @@ function SignUp() {
 
 	useEffect(() => {
 		// Countdown logic for 5 seconds
-		if (showToast && isSuccess && countdown > 0) {
-			const timer = setTimeout(() => {
-				setCountdown(countdown - 1);
-			}, 1000);
-			return () => clearTimeout(timer);
-		} else if (isSuccess && countdown === 0) {
-			navigate("/"); // Navigate after countdown ends
+		// if (showToast && isSuccess && countdown > 0) {
+		// 	const timer = setTimeout(() => {
+		// 		setCountdown(countdown - 1);
+		// 	}, 1000);
+		// 	return () => clearTimeout(timer);
+		// } else if (isSuccess && countdown === 0) {
+		// 	navigate("/"); // Navigate after countdown ends
+		// }
+		if (isSuccess) {
+			alert(
+				language === "fa"
+					? "فرآیند ثبت نام با موفقیت انجام شد"
+					: "The Sign Up Process was successful"
+			);
+			alert(
+				language === "fa"
+					? "لطفا فرم اطلاعات کاربر را تکمیل کنید"
+					: "Please fill the User Information Form"
+			);
+			navigate("/UserInformation"); // Navigate after countdown ends
 		}
 	}, [showToast, isSuccess, countdown, navigate]);
 

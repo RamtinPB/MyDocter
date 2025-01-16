@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useLanguage } from "../components/LanguageContext";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
@@ -39,7 +40,7 @@ export const configureAxios = (
 				setAuthData(null); // Clear token data
 				setLoginState(false); // Immediately set login state to false
 				if (window.location.pathname !== "/") {
-					window.location.assign("/"); // Redirect to login page
+					window.location.assign("/login"); // Redirect to login page
 				}
 
 				// Optional: reset the flag after a delay to prevent issues with subsequent errors

@@ -749,14 +749,19 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 							style={{
 								direction: "ltr",
 							}}
+							dangerouslySetInnerHTML={{
+								__html:
+									(language === "fa"
+										? `جهت دسترسی به این امکانات، لطفاً <a href="/login" style="color: blue; text-decoration: inherit;">وارد</a> حساب کاربری خود شوید`
+										: `To access the following features, please <a href="/login" style="color: blue; text-decoration: inherit;">Log in</a> to your account.`) +
+									"<br>" +
+									(language === "fa"
+										? `در صورت عدم وجود حساب کاربری، لطفاً <a href="/signUp" style="color: blue; text-decoration: inherit;">ثبت نام</a> کنید`
+										: `If you don’t have an account, kindly <a href="/signUp" style="color: blue; text-decoration: inherit;">Sign up</a> to get started.`),
+							}}
 						>
-							{language === "fa"
-								? "جهت دسترسی به این امکانات، لطفاً وارد حساب کاربری خود شوید"
-								: "To access the following features, please log in to your account."}
-							<br />
-							{language === "fa"
-								? "در صورت عدم وجود حساب کاربری، لطفاً ثبت‌ نام کنید"
-								: "If you don’t have an account, kindly sign up to get started."}
+							{}
+							{}
 						</p>
 					)}
 				</div>

@@ -7,6 +7,8 @@ import "/src/cssFiles/userInformation.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import { useLanguage } from "../components/LanguageContext";
 import { useProfile } from "../components/ProfileContext";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 interface insuranceDataProps {
 	id: number;
@@ -330,6 +332,8 @@ function UserInformation() {
 		[]
 	);
 
+	const { loginState } = useAuth();
+
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 	const { triggerImageUpdate } = useProfile();
 
@@ -338,6 +342,9 @@ function UserInformation() {
 
 	const [profilePicture, setProfilePicture] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	const navigate = useNavigate();
+	const handleBackClick = () => navigate("/");
 
 	useEffect(() => {
 		axiosInstance
@@ -681,6 +688,12 @@ function UserInformation() {
 						? "اطلاعات کاربر بروزرسانی شد"
 						: "User information updated successfully"
 				);
+				alert(
+					language === "fa"
+						? "لطفا فرم ارزیابی اولیه را تکمیل کنید"
+						: "Please fill the Initial Evaluation Form"
+				);
+				navigate("/UserIEInformation");
 			} catch (error) {
 				console.error("Error updating user data:", error);
 				alert(
@@ -837,271 +850,299 @@ function UserInformation() {
 	};
 
 	return (
-		<div className="custom-bg-4 min-vh-100">
-			<div className="container d-flex flex-column">
-				<form onSubmit={formik.handleSubmit} className="mt-4 mt-md-5">
-					<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">
-						<button
-							type="button"
-							className="btn btn-light shadow rounded-pill  my-auto"
-							onClick={handleDeleteProfilePicture}
-						>
-							<span>
-								{language === "fa"
-									? "حذف عکس"
-									: "Delete Picture"}
-							</span>
-						</button>
-						{profilePicture ? (
-							<img
-								src={profilePicture}
-								alt="Profile"
-								className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
-							/>
-						) : (
-							<FaUser
-								className="custom-user-icon-pic rounded-circle border border-3 border-light p-2 p-md-3 my-auto"
-								color="white"
-							/>
-						)}
-						<button
-							className="btn btn-light shadow rounded-pill my-auto"
-							type="button"
-							style={{ cursor: "pointer" }}
-							onClick={handleButtonClick}
-						>
-							<span>
-								{language === "fa"
-									? "انتخاب عکس"
-									: "Upload Picture"}
-							</span>
-							<input
-								type="file"
-								accept="image/*"
-								ref={fileInputRef}
-								onChange={handleProfilePictureChange}
-								style={{ display: "none" }}
-							/>
-						</button>
-					</div>
-				</form>
-				<form
-					onSubmit={formik.handleSubmit}
-					className="needs-validation"
-					noValidate
-				>
-					<div
-						className={`bg-white text-${
-							language === "fa" ? "end" : "start"
-						} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
+		loginState && (
+			<div className="custom-bg-4 min-vh-100">
+				<div className="container d-flex flex-column">
+					<form
+						onSubmit={formik.handleSubmit}
+						className="mt-4 mt-md-5"
 					>
-						<h2>
-							{language === "fa"
-								? "اطلاعات کاربر"
-								: "User Information"}
-						</h2>
-						<div
-							className="row row-cols-2 g-4 g-md-5 my-1"
-							style={{
-								direction: language === "fa" ? "rtl" : "ltr",
-							}}
-						>
-							{formFields.map((field, index) => {
-								const isSelect = field.type === "select";
-								const isCheckbox = field.checkboxName;
-
-								return (
-									(field.enabled === true ||
-										field.enabled === null ||
-										field.enabled === undefined) && (
-										<div
-											key={index}
-											className="col mb-2"
-											style={{
-												direction:
-													language === "fa"
-														? "rtl"
-														: "ltr",
-											}}
-										>
-											<label
-												htmlFor={field.name}
-												className="form-label"
-											>
-												{language === "fa"
-													? field.label
-													: field.labelEN}
-											</label>
-											{isSelect ? (
-												<select
-													id={field.name}
-													name={field.name}
-													value={String(
-														formik.values[
-															field.name as keyof UserFormData
-														] || ""
-													)}
-													onChange={
-														formik.handleChange
-													}
-													onBlur={formik.handleBlur}
-													className={`form-select select-resize text-${
-														language === "fa"
-															? "end"
-															: "start"
-													} shadow-sm ${
-														formik.touched[
-															field.name as keyof UserFormData
-														] &&
-														formik.errors[
-															field.name as keyof UserFormData
-														]
-															? "is-invalid"
-															: ""
-													}`}
-													required={field.required}
-													disabled={
-														!!formik.values[
-															field.checkboxName as keyof UserFormData
-														]
-													}
-												>
-													<option value="">
-														...
-													</option>
-													{(language === "fa"
-														? field.options
-														: field.optionsEN
-													)
-														.split(",")
-														.map(
-															(
-																option: string,
-																i: number
-															) => (
-																<option
-																	key={i}
-																	value={
-																		option
-																	}
-																>
-																	{option}
-																</option>
-															)
-														)}
-												</select>
-											) : (
-												<input
-													type={field.type}
-													id={field.name}
-													name={field.name}
-													value={String(
-														formik.values[
-															field.name as keyof UserFormData
-														] || ""
-													)}
-													onChange={
-														formik.handleChange
-													}
-													onBlur={formik.handleBlur}
-													className={`form-control text-${
-														language === "fa"
-															? "end"
-															: "start"
-													} shadow-sm ${
-														formik.touched[
-															field.name as keyof UserFormData
-														] &&
-														formik.errors[
-															field.name as keyof UserFormData
-														]
-															? "is-invalid"
-															: ""
-													}`}
-													required={field.required}
-													disabled={
-														!!formik.values[
-															field.checkboxName as keyof UserFormData
-														]
-													}
-													placeholder={
-														(language === "fa"
-															? field.placeholder
-															: field.placeholderEN) ||
-														""
-													}
-												/>
-											)}
-											{isCheckbox && (
-												<div
-													className={`text-${
-														language === "fa"
-															? "end"
-															: "start"
-													} mt-2`}
-												>
-													<label
-														htmlFor={
-															field.checkboxName
-														}
-														className="form-check-label mx-2"
-													>
-														{language === "fa"
-															? field.checkboxLabel
-															: field.checkboxLabelEN}
-													</label>
-													<input
-														type="checkbox"
-														id={field.checkboxName}
-														name={
-															field.checkboxName
-														}
-														checked={Boolean(
-															formik.values[
-																field.checkboxName as keyof UserFormData
-															]
-														)}
-														onChange={(e) => {
-															formik.setFieldValue(
-																field.checkboxName,
-																e.target.checked
-															);
-														}}
-														className="form-check-input shadow-sm"
-													/>
-												</div>
-											)}
-											{formik.touched[
-												field.name as keyof UserFormData
-											] &&
-												formik.errors[
-													field.name as keyof UserFormData
-												] && (
-													<div className="invalid-feedback">
-														{
-															formik.errors[
-																field.name as keyof UserFormData
-															] as string
-														}
-													</div>
-												)}
-										</div>
-									)
-								);
-							})}
-						</div>
-						<div className="d-flex justify-content-center mt-4 mt-md-5">
+						<div className="custom-bg-1 d-flex justify-content-around rounded-5 shadow p-3 mb-4">
 							<button
-								type="submit"
-								className="btn btn-primary rounded-pill px-3 py-2"
+								type="button"
+								className="btn btn-light shadow rounded-pill  my-auto"
+								onClick={handleDeleteProfilePicture}
 							>
-								{language === "fa" ? "ذخیره" : "Save"}
+								<span>
+									{language === "fa"
+										? "حذف عکس"
+										: "Delete Picture"}
+								</span>
+							</button>
+							{profilePicture ? (
+								<img
+									src={profilePicture}
+									alt="Profile"
+									className="custom-user-icon-pic rounded-circle border border-3 border-light my-auto"
+								/>
+							) : (
+								<FaUser
+									className="custom-user-icon-pic rounded-circle border border-3 border-light p-2 p-md-3 my-auto"
+									color="white"
+								/>
+							)}
+							<button
+								className="btn btn-light shadow rounded-pill my-auto"
+								type="button"
+								style={{ cursor: "pointer" }}
+								onClick={handleButtonClick}
+							>
+								<span>
+									{language === "fa"
+										? "انتخاب عکس"
+										: "Upload Picture"}
+								</span>
+								<input
+									type="file"
+									accept="image/*"
+									ref={fileInputRef}
+									onChange={handleProfilePictureChange}
+									style={{ display: "none" }}
+								/>
 							</button>
 						</div>
-					</div>
-				</form>
+					</form>
+					<form
+						onSubmit={formik.handleSubmit}
+						className="needs-validation"
+						noValidate
+					>
+						<div
+							className={`bg-white text-${
+								language === "fa" ? "end" : "start"
+							} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
+						>
+							<h2>
+								{language === "fa"
+									? "اطلاعات کاربر"
+									: "User Information"}
+							</h2>
+							<div
+								className="row row-cols-2 g-4 g-md-5 my-1"
+								style={{
+									direction:
+										language === "fa" ? "rtl" : "ltr",
+								}}
+							>
+								{formFields.map((field, index) => {
+									const isSelect = field.type === "select";
+									const isCheckbox = field.checkboxName;
+
+									return (
+										(field.enabled === true ||
+											field.enabled === null ||
+											field.enabled === undefined) && (
+											<div
+												key={index}
+												className="col mb-2"
+												style={{
+													direction:
+														language === "fa"
+															? "rtl"
+															: "ltr",
+												}}
+											>
+												<label
+													htmlFor={field.name}
+													className="form-label"
+												>
+													{language === "fa"
+														? field.label
+														: field.labelEN}
+												</label>
+												{isSelect ? (
+													<select
+														id={field.name}
+														name={field.name}
+														value={String(
+															formik.values[
+																field.name as keyof UserFormData
+															] || ""
+														)}
+														onChange={
+															formik.handleChange
+														}
+														onBlur={
+															formik.handleBlur
+														}
+														className={`form-select select-resize text-${
+															language === "fa"
+																? "end"
+																: "start"
+														} shadow-sm ${
+															formik.touched[
+																field.name as keyof UserFormData
+															] &&
+															formik.errors[
+																field.name as keyof UserFormData
+															]
+																? "is-invalid"
+																: ""
+														}`}
+														required={
+															field.required
+														}
+														disabled={
+															!!formik.values[
+																field.checkboxName as keyof UserFormData
+															]
+														}
+													>
+														<option value="">
+															...
+														</option>
+														{(language === "fa"
+															? field.options
+															: field.optionsEN
+														)
+															.split(",")
+															.map(
+																(
+																	option: string,
+																	i: number
+																) => (
+																	<option
+																		key={i}
+																		value={
+																			option
+																		}
+																	>
+																		{option}
+																	</option>
+																)
+															)}
+													</select>
+												) : (
+													<input
+														type={field.type}
+														id={field.name}
+														name={field.name}
+														value={String(
+															formik.values[
+																field.name as keyof UserFormData
+															] || ""
+														)}
+														onChange={
+															formik.handleChange
+														}
+														onBlur={
+															formik.handleBlur
+														}
+														className={`form-control text-${
+															language === "fa"
+																? "end"
+																: "start"
+														} shadow-sm ${
+															formik.touched[
+																field.name as keyof UserFormData
+															] &&
+															formik.errors[
+																field.name as keyof UserFormData
+															]
+																? "is-invalid"
+																: ""
+														}`}
+														required={
+															field.required
+														}
+														disabled={
+															!!formik.values[
+																field.checkboxName as keyof UserFormData
+															]
+														}
+														placeholder={
+															(language === "fa"
+																? field.placeholder
+																: field.placeholderEN) ||
+															""
+														}
+													/>
+												)}
+												{isCheckbox && (
+													<div
+														className={`text-${
+															language === "fa"
+																? "end"
+																: "start"
+														} mt-2`}
+													>
+														<label
+															htmlFor={
+																field.checkboxName
+															}
+															className="form-check-label mx-2"
+														>
+															{language === "fa"
+																? field.checkboxLabel
+																: field.checkboxLabelEN}
+														</label>
+														<input
+															type="checkbox"
+															id={
+																field.checkboxName
+															}
+															name={
+																field.checkboxName
+															}
+															checked={Boolean(
+																formik.values[
+																	field.checkboxName as keyof UserFormData
+																]
+															)}
+															onChange={(e) => {
+																formik.setFieldValue(
+																	field.checkboxName,
+																	e.target
+																		.checked
+																);
+															}}
+															className="form-check-input shadow-sm"
+														/>
+													</div>
+												)}
+												{formik.touched[
+													field.name as keyof UserFormData
+												] &&
+													formik.errors[
+														field.name as keyof UserFormData
+													] && (
+														<div className="invalid-feedback">
+															{
+																formik.errors[
+																	field.name as keyof UserFormData
+																] as string
+															}
+														</div>
+													)}
+											</div>
+										)
+									);
+								})}
+							</div>
+							<div className="d-flex flex-column justify-content-center align-items-center gap-4 mt-4 mt-md-5">
+								<button
+									type="submit"
+									className="btn btn-primary rounded-pill px-3 py-2"
+									style={{ width: "fit-content" }}
+								>
+									{language === "fa" ? "ذخیره" : "Save"}
+								</button>
+								<button
+									type="button"
+									className="btn btn-warning rounded-pill px-3 py-2"
+									onClick={() => handleBackClick()}
+									style={{ width: "fit-content" }}
+								>
+									{language === "fa"
+										? "بازگشت به صفحه اصلی"
+										: "Go Back to Home Page"}
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
-		</div>
+		)
 	);
 }
 
