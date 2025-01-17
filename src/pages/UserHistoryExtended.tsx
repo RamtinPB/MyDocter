@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-// import pdfIcon from "../assets/icons/fileIcons/file-pdf-duotone-solid.svg";
-// import zipIcon from "../assets/icons/fileIcons/file-zipper-duotone-solid.svg";
-// import fileIcon from "../assets/icons/fileIcons/file-duotone-solid.svg";
-// import imgIcon from "../assets/icons/fileIcons/file-image-duotone-solid.svg";
 import "/src/cssFiles/textOverflow.css";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
@@ -12,6 +8,7 @@ import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/FormRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import ResultsSection from "./ResultsSection";
 
 interface purchasedServiceProps {
 	id: string;
@@ -63,24 +60,6 @@ const getStatusString = (status: string, language: string) => {
 			return language === "fa" ? "لغو شد" : "Cancelled";
 	}
 };
-
-// const icons = {
-// 	pdf: pdfIcon,
-// 	zip: zipIcon,
-// 	rar: zipIcon,
-// 	jpg: imgIcon,
-// 	jpeg: imgIcon,
-// 	png: imgIcon,
-// 	default: fileIcon,
-// };
-
-// const getIconForFileType = (fileName: string) => {
-// 	const extension = fileName
-// 		.split(".")
-// 		.pop()
-// 		?.toLowerCase() as keyof typeof icons;
-// 	return icons[extension] || icons["default"];
-// };
 
 function UserHistoryExtended() {
 	const { purchaseId } = useParams<{ purchaseId: string }>();
@@ -331,32 +310,7 @@ function UserHistoryExtended() {
 				</div>
 
 				{/* Results Section */}
-				<div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
-				>
-					<h5 className="px-4 mx-1">
-						{language === "fa" ? "نتایج" : "Results"}
-					</h5>
-					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{purchasedServiceData.result ? (
-							<p
-								dangerouslySetInnerHTML={{
-									__html: purchasedServiceData.result,
-								}}
-							/>
-						) : (
-							<div className="text-center px-3 mx-4 py-3">
-								<p className="m-0">
-									{language === "fa"
-										? "نتایج آماده نشده است"
-										: "Results are not ready yet"}
-								</p>
-							</div>
-						)}
-					</div>
-				</div>
+				<ResultsSection purchasedServiceData={purchasedServiceData} />
 			</div>
 		</div>
 	);

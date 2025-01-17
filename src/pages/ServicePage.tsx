@@ -402,7 +402,7 @@ function ServicePage() {
 						</h5>
 					</div>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
-						{true ? (
+						{formRef ? (
 							<FormRender ref={formRef} />
 						) : (
 							<div className="text-center py-3">
