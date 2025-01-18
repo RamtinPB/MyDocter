@@ -12,6 +12,7 @@ import { FaCaretLeft } from "react-icons/fa";
 import FormRenderFilled from "../components/FormRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import ResultsSection from "../pages/ResultsSection";
 
 interface purchasedServiceProps {
 	purchasedService: {
@@ -743,48 +744,6 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					</div>
 				</div>
 
-				{/* <div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-0 px-md-2 mx-3 mx-md-4 mx-lg-5 mb-4`}
-				>
-					<h5 className="px-4 mx-1">
-						{language === "fa" ? "فایل های ارسال شده" : "Sent Files"}
-					</h5>
-					{purchasedServiceData.purchasedService.files &&
-					purchasedServiceData.purchasedService.files.length > 0 ? (
-						<div className="d-flex flex-wrap justify-content-start align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
-							{purchasedServiceData.purchasedService.files.map((file, index) => (
-								<div
-									key={index}
-									className="d-flex flex-column file-item p-1 mx-1"
-								>
-									<a
-										href={file.fileUrl}
-										download
-										className="d-flex flex-column justify-content-center align-items-center d-block "
-									>
-										<img
-											src={getIconForFileType(file.fileType)}
-											alt={`${file.fileName} Icon`}
-											className="custom-file-icon"
-										/>
-										<span className={`scrollable-text text-center mt-1`}>
-											{file.fileName}
-										</span>
-									</a>
-								</div>
-							))}
-						</div>
-					) : (
-						<div className="d-flex flex-wrap justify-content-center align-items-center border border-1 border-primary shadow-sm rounded-4 px-2 mx-4 py-2">
-							<p className="px-3 mx-4 py-2">
-								{language === "fa" ? "هیچ فایلی یافت نشد" : "No files found"}
-							</p>
-						</div>
-					)}
-				</div> */}
-
 				{/* Form Render Filled Section */}
 				<div
 					className={`bg-white border border-2 shadow text-${
@@ -801,33 +760,21 @@ function ManageUserInterfaceUserPurchasedServicesExtended() {
 					</div>
 				</div>
 
-				<div
-					className={`bg-white border border-2 shadow text-${
-						language === "fa" ? "end" : "start"
-					} rounded-5 py-4 px-0 px-md-1 mx-3 mx-md-4 mx-lg-5 mb-4`}
-				>
-					<h5 className="px-4 mx-1">
-						{language === "fa" ? "نتایج" : "Results"}
-					</h5>
-					<div className="border border-1 border-primary shadow-sm rounded-4 px-3 mx-4 py-2">
-						{purchasedServiceData.purchasedService.result ? (
-							<p
-								dangerouslySetInnerHTML={{
-									__html: purchasedServiceData
-										.purchasedService.result,
-								}}
-							/>
-						) : (
-							<div className="text-center px-3 mx-4 py-3">
-								<p className="m-0">
-									{language === "fa"
-										? "نتایج آماده نشده است"
-										: "Results are not ready yet"}
-								</p>
-							</div>
-						)}
-					</div>
-				</div>
+				<ResultsSection
+					adminPurchasedServiceData={
+						purchasedServiceData.purchasedService
+					}
+					insuranceName={
+						(language === "fa"
+							? insurance?.companyName
+							: insurance?.companyNameEN) as string
+					}
+					supplementaryInsuranceName={
+						(language === "fa"
+							? supplementaryInsurance?.companyName
+							: supplementaryInsurance?.companyNameEN) as string
+					}
+				/>
 			</div>
 		</div>
 	);

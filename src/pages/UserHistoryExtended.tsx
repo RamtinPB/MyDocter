@@ -9,6 +9,38 @@ import FormRenderFilled from "../components/FormRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import ResultsSection from "./ResultsSection";
+import axios from "axios";
+
+interface insuranceDataProps {
+	id: number;
+	companyName: string;
+	companyNameEN: string;
+	type: number;
+	discountPercentage: number;
+}
+
+interface UserData {
+	lastName: string;
+	name: string;
+	age: string;
+	balance: number;
+	birthdate: string;
+	educationLevel: string;
+	email: string;
+	fatherName: string;
+	fixedPhoneNumber: string;
+	gender: string;
+	insuranceId: number;
+	isIranian: boolean;
+	isMarried: boolean;
+	nationalCode: string;
+	phoneNumber: string;
+	residenceAddress: string;
+	residenceCity: string;
+	residencePostalCode: string;
+	residenceProvince: string;
+	supplementalInsuranceId: number;
+}
 
 interface purchasedServiceProps {
 	id: string;
@@ -67,12 +99,122 @@ function UserHistoryExtended() {
 	const [purchasedServiceData, setPurchasedServiceData] =
 		useState<purchasedServiceProps | null>(null);
 
+	const [userData, setUserData] = useState<UserData | null>(null);
+
+	const [insurance, setInsurance] = useState<insuranceDataProps | null>(null);
+	const [supplementaryInsurance, setSupplementaryInsurance] =
+		useState<insuranceDataProps | null>(null);
+
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
 	const navigate = useNavigate();
 
 	const { language } = useLanguage(); // Get language and toggle function from context
+
+	// Fetch insurance & supplementary insurance data
+	useEffect(() => {
+		setLoading(true);
+
+		// Only proceed if purchasedServiceData is defined
+		if (!purchasedServiceData) return;
+
+		axiosInstance
+			.post("/api/Service/GetInsurances") // Call the API to get user data
+			.then((response) => {
+				const data = response.data;
+
+				const matchedInsurance = data.find(
+					(ins: { id: any }) => ins.id === userData?.insuranceId
+				);
+				setInsurance(matchedInsurance || null);
+
+				const matchedSupplementaryInsurance = data.find(
+					(suppIns: { id: any }) =>
+						suppIns.id === userData?.supplementalInsuranceId
+				);
+				setSupplementaryInsurance(
+					matchedSupplementaryInsurance || null
+				);
+
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error(
+					"API request for user data failed, trying local db.json",
+					error
+				);
+
+				// Fetch from local db.json if API fails
+				fetch("/db.json")
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(
+								"Failed to fetch user data from db.json"
+							);
+						}
+						return response.json();
+					})
+					.then((data) => {
+						const matchedInsurance = data.insurance.find(
+							(ins: { insuranceType: any }) =>
+								ins.insuranceType === userData?.insuranceId
+						);
+						setInsurance(matchedInsurance || null);
+
+						const matchedSupplementaryInsurance =
+							data.supplementaryInsurance.find(
+								(suppIns: {
+									supplementaryInsuranceType: any;
+								}) =>
+									suppIns.supplementaryInsuranceType ===
+									userData?.supplementalInsuranceId
+							);
+						setSupplementaryInsurance(
+							matchedSupplementaryInsurance || null
+						);
+
+						setLoading(false);
+					})
+					.catch((jsonError) => {
+						console.error(
+							"Failed to fetch user data from both API and db.json",
+							jsonError
+						);
+						setLoading(false);
+					});
+			});
+	}, [purchasedServiceData, purchaseId]);
+
+	// fetch user data
+	useEffect(() => {
+		axiosInstance
+			.post(`/api/User/GetUserData`)
+			.then((response) => {
+				const data = response.data;
+				setUserData(data);
+			})
+			.catch(async (error) => {
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
+				try {
+					const response = await fetch("/UserInformation.json"); // Adjust path if necessary
+					if (!response.ok) {
+						throw new Error("Failed to fetch data from db.json");
+					}
+					const data = await response.json();
+
+					setUserData(data);
+				} catch (jsonErr) {
+					console.error(
+						"Failed to fetch data from both API and db.json",
+						jsonErr
+					);
+				}
+			});
+	}, []);
 
 	// Fetch specific purchased service
 	useEffect(() => {
@@ -310,7 +452,20 @@ function UserHistoryExtended() {
 				</div>
 
 				{/* Results Section */}
-				<ResultsSection purchasedServiceData={purchasedServiceData} />
+				<ResultsSection
+					userPurchasedServiceData={purchasedServiceData}
+					userInfo={userData || undefined}
+					insuranceName={
+						(language === "fa"
+							? insurance?.companyName
+							: insurance?.companyNameEN) as string
+					}
+					supplementaryInsuranceName={
+						(language === "fa"
+							? supplementaryInsurance?.companyName
+							: supplementaryInsurance?.companyNameEN) as string
+					}
+				/>
 			</div>
 		</div>
 	);
