@@ -569,11 +569,7 @@ export default function ResultsSection({
 
 	const handlePrint = () => {
 		if (printableRef.current) {
-			const printWindow = window.open(
-				"",
-				"_blank",
-				"width=600,height=400"
-			);
+			const printWindow = window.open("", "_blank", "a4");
 			printWindow?.document.write(
 				"<html><head><title>Title</title></head><body>"
 			);
