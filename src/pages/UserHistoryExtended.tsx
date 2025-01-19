@@ -368,7 +368,7 @@ function UserHistoryExtended() {
 						>
 							<h6 className=" mx-1">
 								{language === "fa"
-									? "شماره سریال محصول"
+									? "شماره سریال سرویس"
 									: "Service ID"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">
@@ -411,7 +411,7 @@ function UserHistoryExtended() {
 						>
 							<h6 className=" mx-1">
 								{language === "fa"
-									? "تاریخ آخرین تغییر"
+									? "تاریخ آخرین بروزرسانی"
 									: "Last Update Date"}
 							</h6>
 							<div className="border border-1 border-primary shadow-sm rounded-4 px-3 py-2">

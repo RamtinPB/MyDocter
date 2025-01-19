@@ -117,34 +117,32 @@ function UserContent({
 									: "Service Name"}
 							</th>
 							<th>
-								{language === "fa"
-									? "وضعیت پیگیری"
-									: "User Name"}
+								{language === "fa" ? "وضعیت پیگیری" : "Status"}
 							</th>
 							<th>
 								{language === "fa"
-									? "شماره سریال محصول"
-									: "User Name"}
+									? "شماره سریال سرویس"
+									: "Service ID"}
 							</th>
 							<th>
 								{language === "fa"
 									? "شماره سریال تراکنش"
-									: "User Name"}
+									: "Purchase ID"}
 							</th>
 							<th>
 								{language === "fa"
 									? "تاریخ خریداری"
-									: "User Name"}
+									: "Purchase Date"}
 							</th>
 							<th>
 								{language === "fa"
 									? "تاریخ آخرین بروزرسانی"
-									: "User Name"}
+									: "Last Update Date"}
 							</th>
 							<th>
 								{language === "fa"
 									? "قیمت نهایی خرید"
-									: "User Name"}
+									: "Final Purchase Amount"}
 							</th>
 						</tr>
 					</thead>
@@ -183,35 +181,39 @@ function UserContent({
 				<table className="table">
 					<thead>
 						<tr>
-							<th>{language === "fa" ? "نام" : "User Name"}</th>
+							<th>{language === "fa" ? "نام" : "Name"}</th>
 							<th>
 								{language === "fa"
 									? "نام خانوادگی"
-									: "User Name"}
+									: "Last name"}
 							</th>
 							<th>
 								{language === "fa"
 									? "شماره همراه"
-									: "User Name"}
+									: "Phone number"}
 							</th>
 							<th>
-								{language === "fa" ? "آدرس ایمیل" : "User Name"}
+								{language === "fa"
+									? "آدرس ایمیل"
+									: "Email address"}
 							</th>
 							<th>
-								{language === "fa" ? "بیمه پایه" : "User Name"}
+								{language === "fa"
+									? "بیمه پایه"
+									: "Basic insurance"}
 							</th>
 							<th>
 								{language === "fa"
 									? "بیمه تکمیلی"
-									: "User Name"}
+									: "Supplementary insurance"}
 							</th>
-							<th>{language === "fa" ? "استان" : "User Name"}</th>
-							<th>{language === "fa" ? "شهر" : "User Name"}</th>
+							<th>{language === "fa" ? "استان" : "Province"}</th>
+							<th>{language === "fa" ? "شهر" : "City"}</th>
 							<th>
-								{language === "fa" ? "آدرس منزل" : "User Name"}
+								{language === "fa" ? "آدرس منزل" : "Address"}
 							</th>
 							<th>
-								{language === "fa" ? "کد پستی" : "User Name"}
+								{language === "fa" ? "کد پستی" : "Postal code"}
 							</th>
 						</tr>
 					</thead>
@@ -273,8 +275,12 @@ function AdminContent({
 									? "قیمت پایه سرویس"
 									: "Base Price"}
 							</th>
-							<th>{language === "fa" ? "تخفیف" : ""}</th>
-							<th>{language === "fa" ? "نوع سرویس" : ""}</th>
+							<th>{language === "fa" ? "تخفیف" : "Discount"}</th>
+							<th>
+								{language === "fa"
+									? "نوع سرویس"
+									: "Service type"}
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -318,35 +324,39 @@ function AdminContent({
 				<table className="table ">
 					<thead className="text-right">
 						<tr>
-							<th>{language === "fa" ? "نام" : "User Name"}</th>
+							<th>{language === "fa" ? "نام" : "Name"}</th>
 							<th>
 								{language === "fa"
 									? "نام خانوادگی"
-									: "User Name"}
+									: "Last name"}
 							</th>
 							<th>
 								{language === "fa"
 									? "شماره همراه"
-									: "User Name"}
-							</th>
-							<th>
-								{language === "fa" ? "شماره ثابت" : "User Name"}
+									: "Phone number"}
 							</th>
 							<th>
 								{language === "fa"
-									? "شناسه کاربر"
-									: "User Name"}
+									? "شماره ثابت"
+									: "Fixed phone number"}
 							</th>
 							<th>
-								{language === "fa" ? "آدرس ایمیل" : "User Name"}
+								{language === "fa" ? "شناسه کاربر" : "User ID"}
 							</th>
 							<th>
-								{language === "fa" ? "بیمه پایه" : "User Name"}
+								{language === "fa"
+									? "آدرس ایمیل"
+									: "Email address"}
+							</th>
+							<th>
+								{language === "fa"
+									? "بیمه پایه"
+									: "Basic insurance"}
 							</th>
 							<th>
 								{language === "fa"
 									? "بیمه تکمیلی"
-									: "User Name"}
+									: "Supplementary insurance"}
 							</th>
 						</tr>
 					</thead>
@@ -391,13 +401,13 @@ function AdminContent({
 				<table className="table ">
 					<thead className="text-right">
 						<tr>
-							<th>{language === "fa" ? "استان" : "User Name"}</th>
-							<th>{language === "fa" ? "شهر" : "User Name"}</th>
+							<th>{language === "fa" ? "استان" : "Province"}</th>
+							<th>{language === "fa" ? "شهر" : "City"}</th>
 							<th>
-								{language === "fa" ? "آدرس منزل" : "User Name"}
+								{language === "fa" ? "آدرس منزل" : "Address"}
 							</th>
 							<th>
-								{language === "fa" ? "کد پستی" : "User Name"}
+								{language === "fa" ? "کد پستی" : "Postal code"}
 							</th>
 						</tr>
 					</thead>
@@ -436,33 +446,31 @@ function AdminContent({
 						<tr>
 							<th>
 								{language === "fa"
-									? "شماره سریال محصول"
-									: "User Name"}
+									? "شماره سریال سرویس"
+									: "Service ID"}
 							</th>
 							<th>
 								{language === "fa"
 									? "شماره سریال تراکنش"
-									: "User Name"}
+									: "Purchase ID"}
 							</th>
 							<th>
-								{language === "fa"
-									? "وضعیت پیگیری"
-									: "User Name"}
+								{language === "fa" ? "وضعیت پیگیری" : "Status"}
 							</th>
 							<th>
 								{language === "fa"
 									? "تاریخ خریداری"
-									: "User Name"}
+									: "Purchase Date"}
 							</th>
 							<th>
 								{language === "fa"
 									? "تاریخ آخرین بروزرسانی"
-									: "User Name"}
+									: "Last Update Date"}
 							</th>
 							<th>
 								{language === "fa"
 									? "قیمت نهایی خرید"
-									: "User Name"}
+									: "Final Purchase Amount"}
 							</th>
 						</tr>
 					</thead>
