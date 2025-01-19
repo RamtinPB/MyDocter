@@ -9,7 +9,6 @@ import FormRenderFilled from "../components/FormRenderFilled";
 import { useLanguage } from "../components/LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
 import ResultsSection from "./ResultsSection";
-import axios from "axios";
 
 interface insuranceDataProps {
 	id: number;
