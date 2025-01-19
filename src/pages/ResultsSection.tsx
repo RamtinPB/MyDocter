@@ -315,8 +315,8 @@ function AdminContent({
 				<h5>
 					{language === "fa" ? "مشخصات کاربر" : "User Information"}
 				</h5>
-				<table className="table">
-					<thead>
+				<table className="table ">
+					<thead className="text-right">
 						<tr>
 							<th>{language === "fa" ? "نام" : "User Name"}</th>
 							<th>
@@ -348,14 +348,6 @@ function AdminContent({
 									? "بیمه تکمیلی"
 									: "User Name"}
 							</th>
-							<th>{language === "fa" ? "استان" : "User Name"}</th>
-							<th>{language === "fa" ? "شهر" : "User Name"}</th>
-							<th>
-								{language === "fa" ? "آدرس منزل" : "User Name"}
-							</th>
-							<th>
-								{language === "fa" ? "کد پستی" : "User Name"}
-							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -384,6 +376,33 @@ function AdminContent({
 							</td>
 							<td>{insuranceName || "N/A"}</td>
 							<td>{supplementaryInsuranceName || "N/A"}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			{/* User Residence Info */}
+			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+				<h5>
+					{language === "fa"
+						? "مشخصات محل سکونت کاربر"
+						: "User Residence Information"}
+				</h5>
+				<table className="table ">
+					<thead className="text-right">
+						<tr>
+							<th>{language === "fa" ? "استان" : "User Name"}</th>
+							<th>{language === "fa" ? "شهر" : "User Name"}</th>
+							<th>
+								{language === "fa" ? "آدرس منزل" : "User Name"}
+							</th>
+							<th>
+								{language === "fa" ? "کد پستی" : "User Name"}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
 							<td>
 								{adminPurchasedServiceData?.user
 									.residenceProvince || "N/A"}
@@ -589,6 +608,31 @@ export default function ResultsSection({
 			printWindow?.document.write(
 				`<html><link rel="stylesheet" href="./src/cssFiles/customFonts.css" /></head><body>`
 			);
+
+			// Add custom CSS for landscape printing
+			printWindow?.document.write(
+				`<style>
+		@page {
+			size: A4 portrait; 
+			margin: 10mm; 
+		}
+		body {
+			font-family: 'Vazirmatn', sans-serif; 
+			margin: 0;
+			padding: 10px;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		th, td {
+			border: 1px solid #ccc;
+			padding: 8px;
+			text-align: center;
+		}
+	</style>`
+			);
+
 			printWindow?.document.write(printableRef.current.innerHTML);
 			//printWindow?.document.write("</body></html>");
 			printWindow?.document.close();
