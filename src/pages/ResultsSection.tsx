@@ -102,7 +102,7 @@ function UserContent({
 	return (
 		<>
 			{/* Service Info */}
-			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+			<div className="avoid-page-break d-flex flex-column justify-content-center align-items-start my-5 w-100">
 				<h5>
 					{language === "fa"
 						? "مشخصات سرویس و خرید"
@@ -249,7 +249,7 @@ function AdminContent({
 	return (
 		<>
 			{/* Purchase Info */}
-			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+			<div className="avoid-page-break d-flex flex-column justify-content-center align-items-start my-5 w-100">
 				<h5>
 					{language === "fa"
 						? "مشخصات  سرویس"
@@ -311,7 +311,7 @@ function AdminContent({
 			</div>
 
 			{/* User Info */}
-			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+			<div className="avoid-page-break d-flex flex-column justify-content-center align-items-start my-5 w-100">
 				<h5>
 					{language === "fa" ? "مشخصات کاربر" : "User Information"}
 				</h5>
@@ -382,7 +382,7 @@ function AdminContent({
 			</div>
 
 			{/* User Residence Info */}
-			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+			<div className="avoid-page-break d-flex flex-column justify-content-center align-items-start my-5 w-100">
 				<h5>
 					{language === "fa"
 						? "مشخصات محل سکونت کاربر"
@@ -425,7 +425,7 @@ function AdminContent({
 			</div>
 
 			{/* Purchase Info */}
-			<div className="d-flex flex-column justify-content-center align-items-start my-5 w-100">
+			<div className="avoid-page-break d-flex flex-column justify-content-center align-items-start my-5 w-100">
 				<h5>
 					{language === "fa"
 						? "مشخصات  خرید"
@@ -515,20 +515,38 @@ const ResultsPrintableContent = React.forwardRef(
 		return (
 			<div ref={ref} className="container ">
 				<div
-					className="d-flex flex-column justify-content-between align-items-center my-4 px-4 w-100"
+					className="d-flex flex-column justify-content-between align-items-center w-100"
 					style={{
 						direction: language === "fa" ? "rtl" : "ltr",
 						textAlign: language === "fa" ? "right" : "left",
 					}}
 				>
 					{/* Logo */}
-					<div className="d-flex flex-column justify-content-between align-items-center my-4 w-100">
-						<img src={logoSrc} alt="Logo" />
-						<h3 className="mt-5">
+					<div className="avoid-page-break row align-items-center my-4 w-100">
+						<img
+							src={logoSrc}
+							alt="Logo"
+							className="col-2 img-fluid"
+						/>
+						<h3 className="text-center  col-8">
 							{language === "fa"
 								? "گزارش سرویس"
 								: "Service Report"}
 						</h3>
+						<div className="col-2  d-flex flex-column justify-content-betwen gap-2">
+							<small>
+								{language === "fa" ? "تاریخ: " : "Date: "}
+								{new Date().toLocaleDateString(
+									language === "fa" ? "fa-IR" : "en-US"
+								)}
+							</small>
+							<small>
+								{language === "fa" ? "ساعت: " : "Time: "}
+								{new Date().toLocaleTimeString(
+									language === "fa" ? "fa-IR" : "en-US"
+								)}
+							</small>
+						</div>
 					</div>
 
 					{/* Tables section */}
@@ -557,18 +575,21 @@ const ResultsPrintableContent = React.forwardRef(
 					)}
 
 					{/* Results Content */}
-					<div className="w-100 my-4">
+					<div className=" avoid-page-break w-100 my-4">
 						<h5>
 							{language === "fa"
 								? "نتایج سرویس"
 								: "Service Results"}
 						</h5>
-						<p className="">
-							{userPurchasedServiceData &&
-								userPurchasedServiceData.result}
-							{adminPurchasedServiceData &&
-								adminPurchasedServiceData.result}
-						</p>
+						<p
+							className="m-0"
+							dangerouslySetInnerHTML={{
+								__html: ((userPurchasedServiceData &&
+									userPurchasedServiceData.result) ||
+									(adminPurchasedServiceData &&
+										adminPurchasedServiceData.result)) as string,
+							}}
+						/>
 					</div>
 				</div>
 			</div>
@@ -588,9 +609,22 @@ export default function ResultsSection({
 
 	const handlePrint = () => {
 		if (printableRef.current) {
-			const printWindow = window.open("", "_blank", "a4");
+			const printWindow = window.open("", "", "a4"); // _پزشک من_نتایج سرویس_پزشک عمومی (هوش مصنوعی)_1_10_00_00_00 - 2024_12_31 (4)
+			let title;
+			if (userPurchasedServiceData) {
+				title =
+					language === "fa"
+						? `پزشک من_نتایج سرویس_${userPurchasedServiceData.serviceTitle}_${userPurchasedServiceData?.serviceId}_${userPurchasedServiceData?.id}`
+						: `MyDoctor_Service Report_${userPurchasedServiceData?.serviceTitleEN}_${userPurchasedServiceData?.serviceId}_${userPurchasedServiceData?.id}`;
+			} else if (adminPurchasedServiceData) {
+				title =
+					language === "fa"
+						? `پزشک من_نتایج سرویس_${adminPurchasedServiceData?.service.pageTitle}_${adminPurchasedServiceData?.serviceId}_${adminPurchasedServiceData?.id}_کاربر_${adminPurchasedServiceData.userId}`
+						: `MyDoctor_Service Report_${adminPurchasedServiceData?.service.pageTitleEN}_${adminPurchasedServiceData?.serviceId}_${adminPurchasedServiceData?.id}_User_${adminPurchasedServiceData?.userId}`;
+			}
+
 			printWindow?.document.write(
-				"<html><head><title>Title</title></head><body>"
+				`<html><head><title>${title}</title></head><body>`
 			);
 			// Add Bootstrap CSS to the print window
 			printWindow?.document.write(
@@ -613,8 +647,8 @@ export default function ResultsSection({
 			printWindow?.document.write(
 				`<style>
 		@page {
-			size: A4 portrait; 
-			margin: 10mm; 
+			size: A4 landscape; 
+			margin: 15mm; 
 		}
 		body {
 			font-family: 'Vazirmatn', sans-serif; 
@@ -629,6 +663,12 @@ export default function ResultsSection({
 			border: 1px solid #ccc;
 			padding: 8px;
 			text-align: center;
+		}
+		.page-break {
+    		page-break-before: always; /* Forces a page break before an element */
+		}
+		.avoid-page-break {
+  			  page-break-inside: avoid; /* Avoids splitting content inside an element */
 		}
 	</style>`
 			);
