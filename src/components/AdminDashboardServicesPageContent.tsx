@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "./AuthContext";
 
 interface addServiceProps {
 	name: string;
@@ -54,6 +55,7 @@ function AdminDashboardServicesPageContent() {
 	const [newServiceUpdateFlag, setNewServiceUpdateFlag] = useState(false);
 
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const { accessLevel } = useAuth();
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -214,6 +216,7 @@ function AdminDashboardServicesPageContent() {
 	};
 
 	const navigate = useNavigate();
+	console.log(accessLevel);
 
 	// Render service cards based on type
 	const renderServiceCards = (type: "General" | "Specialist") => {
@@ -240,47 +243,54 @@ function AdminDashboardServicesPageContent() {
 										style={{ width: "546.22px" }}
 										alt={service.title}
 									/>
-									<div className="d-flex justify-content-around align-items-center">
-										{/* Delete button */}
-										<button
-											id="btn-delete"
-											className="rounded-circle btn shadow p-0 my-3"
-											type="button"
-											onClick={() =>
-												removeCard(service.id as string)
-											} // Use unique id for deletion
-										>
-											<img
-												src="/images/red-delete.png"
-												className="custom-admin-btn rounded-circle"
-												alt="Delete"
-											/>
-										</button>
-										{/* Edit button */}
-										<a
-											href={`/edit-service/${service.id}`} // Change this
-											onClick={(e) => {
-												e.preventDefault();
-												navigate(
-													`/edit-service/${service.id}`,
-													{
-														state: {
-															section:
-																"servicesPage",
-														}, // Pass the section as state
-													}
-												);
-											}}
-											id="btn-edit"
-											className="rounded-circle btn shadow p-0 my-3"
-										>
-											<img
-												src="/images/edit-cog.png"
-												className="custom-admin-btn rounded-circle"
-												alt="Edit"
-											/>
-										</a>
-									</div>
+									{Number(accessLevel) > 1 ? (
+										<div className="d-flex justify-content-around align-items-center">
+											{/* Delete button */}
+											<button
+												id="btn-delete"
+												className="rounded-circle btn shadow p-0 my-3"
+												type="button"
+												onClick={() =>
+													removeCard(
+														service.id as string
+													)
+												} // Use unique id for deletion
+											>
+												<img
+													src="/images/red-delete.png"
+													className="custom-admin-btn rounded-circle"
+													alt="Delete"
+												/>
+											</button>
+											{/* Edit button */}
+
+											<a
+												href={`/edit-service/${service.id}`} // Change this
+												onClick={(e) => {
+													e.preventDefault();
+													navigate(
+														`/edit-service/${service.id}`,
+														{
+															state: {
+																section:
+																	"servicesPage",
+															}, // Pass the section as state
+														}
+													);
+												}}
+												id="btn-edit"
+												className="rounded-circle btn shadow p-0 my-3"
+											>
+												<img
+													src="/images/edit-cog.png"
+													className="custom-admin-btn rounded-circle"
+													alt="Edit"
+												/>
+											</a>
+										</div>
+									) : (
+										<div className="d-flex justify-content-around align-items-center"></div>
+									)}
 								</div>
 							</div>
 						</div>

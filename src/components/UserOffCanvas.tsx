@@ -27,10 +27,10 @@ interface UserData {
 
 interface UserOffCanvasProps {
 	userData: UserData | null;
-	isLoggedInAdmin: boolean;
+	userAccessLevel?: string | null;
 }
 
-function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
+function UserOffCanvas({ userData, userAccessLevel }: UserOffCanvasProps) {
 	const [offcanvasClass, setOffcanvasClass] = useState("offcanvas-top");
 	const [showModal, setShowModal] = useState(false);
 	const toggleModal = () => setShowModal(!showModal);
@@ -150,6 +150,8 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 		setAuthData(null); // Clear token and reset login state
 		window.location.assign("/"); // Optionally, redirect to the homepage or login page
 	};
+
+	console.log(userAccessLevel);
 
 	return (
 		<div
@@ -353,7 +355,7 @@ function UserOffCanvas({ userData, isLoggedInAdmin }: UserOffCanvasProps) {
 						</Link>
 					</li>
 
-					{isLoggedInAdmin && (
+					{Number(userAccessLevel) > 0 && (
 						<>
 							<li>
 								<hr className="dropdown-divider" />

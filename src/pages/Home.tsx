@@ -51,7 +51,9 @@ function Home() {
 		const fetchHomeTextData = async () => {
 			try {
 				// Attempt to fetch from the API
-				const response = await axiosInstance.post("/api/Pages/GetHomePageData");
+				const response = await axiosInstance.post(
+					"/api/Pages/GetHomePageData"
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
@@ -76,7 +78,9 @@ function Home() {
 						"Failed to fetch data from both API and db.json",
 						jsonErr
 					);
-					setError("Failed to fetch data from both API and local fallback.");
+					setError(
+						"Failed to fetch data from both API and local fallback."
+					);
 					setLoading(false);
 				}
 			}
@@ -86,7 +90,14 @@ function Home() {
 	}, []);
 
 	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
+		return (
+			<div
+				className="spinner-border text-primary text-center my-5"
+				role="status"
+			>
+				<span className="visually-hidden">Loading...</span>
+			</div>
+		);
 	}
 
 	if (error) {
@@ -157,7 +168,9 @@ function Home() {
 										href="/SpecialistDoctorPrescription"
 										className="btn btn-primary rounded-pill my-2"
 									>
-										{language === "fa" ? "شروع استفاده" : "Enter"}
+										{language === "fa"
+											? "شروع استفاده"
+											: "Enter"}
 									</a>
 								</div>
 							</div>
@@ -188,7 +201,9 @@ function Home() {
 										href="/GeneralDoctorPrescription"
 										className="btn btn-primary rounded-pill my-2"
 									>
-										{language === "fa" ? "شروع استفاده" : "Enter"}
+										{language === "fa"
+											? "شروع استفاده"
+											: "Enter"}
 									</a>
 								</div>
 							</div>
@@ -203,7 +218,11 @@ function Home() {
 				style={{ direction: language === "fa" ? "ltr" : "rtl" }}
 			>
 				<img
-					src={language === "fa" ? homeText?.docImage : homeText?.docImageEN}
+					src={
+						language === "fa"
+							? homeText?.docImage
+							: homeText?.docImageEN
+					}
 					alt="Mr Doc"
 					className="img-fluid col-md-5 col-lg-4 col-xl-3 d-sm-block d-none"
 				/>
@@ -213,7 +232,9 @@ function Home() {
 					} text-white p-1 p-md-3 p-lg-4 m-auto `}
 				>
 					<h4>
-						{language === "fa" ? homeText?.docTitle : homeText?.docTitleEN}
+						{language === "fa"
+							? homeText?.docTitle
+							: homeText?.docTitleEN}
 					</h4>
 					<p>
 						{language === "fa"

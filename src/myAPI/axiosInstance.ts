@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useLanguage } from "../components/LanguageContext";
 
 // Create an Axios instance
 const axiosInstance = axios.create({

@@ -26,7 +26,7 @@ interface UserData {
 }
 
 function MyHeader() {
-	const { isAdministrator, loginState } = useAuth();
+	const { accessLevel, loginState } = useAuth();
 	const { profileImageVersion } = useProfile();
 
 	const [userData, setUserData] = useState<UserData | null>(null);
@@ -214,10 +214,7 @@ function MyHeader() {
 					</Link>
 				</div>
 			</nav>
-			<UserOffCanvas
-				userData={userData}
-				isLoggedInAdmin={isAdministrator}
-			/>
+			<UserOffCanvas userData={userData} userAccessLevel={accessLevel} />
 		</>
 	);
 }

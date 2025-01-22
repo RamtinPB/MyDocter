@@ -256,7 +256,11 @@ function ServicePage() {
 	}, [id]);
 
 	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
+		return (
+			<div className="spinner-border text-center my-5" role="status">
+				<span className="visually-hidden">Loading...</span>
+			</div>
+		);
 	}
 
 	if (error) {
@@ -315,11 +319,6 @@ function ServicePage() {
 		// Return the final amount formatted as currency
 		return finalAmount.toFixed(0); // This will round the result to two decimal places
 	};
-
-	// function formatImportantNotes(text: string) {
-	// 	if (!text || typeof text !== "string") return text; // Ensure valid input
-	// 	return text.replace(/\. /g, ".\n");
-	// }
 
 	const handleSubmit = () => {
 		if (formRef.current) {

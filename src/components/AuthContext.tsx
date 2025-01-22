@@ -4,8 +4,8 @@ import { configureAxios } from "../myAPI/axiosInstance";
 
 interface AuthContextType {
 	jwToken: string | null;
-	isAdministrator: boolean;
-	setAuthData: (token: string | null, isAdmin?: boolean) => void;
+	accessLevel: string | undefined | null;
+	setAuthData: (token: string | null, accLvl?: string) => void;
 	loginState: boolean;
 	setLoginState: (state: boolean) => void;
 }
@@ -24,16 +24,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [jwToken, setJwToken] = useState<string | null>(null);
-	const [isAdministrator, setIsAdministrator] = useState(false);
+	const [accessLevel, setaccessLevel] = useState<string | undefined | null>(
+		undefined
+	);
 	const [loginState, setLoginState] = useState(false);
 
 	useEffect(() => {
 		const storedToken = localStorage.getItem("jwToken");
-		const storedIsAdmin =
-			localStorage.getItem("isAdministrator") === "true";
+		const storedaccLvl = localStorage.getItem("accessLevel");
 		if (storedToken && !isTokenExpired(storedToken)) {
 			setJwToken(storedToken);
-			setIsAdministrator(storedIsAdmin);
+			setaccessLevel(storedaccLvl);
 			setLoginState(true); // Set loginState to true if token exists
 		} else {
 			setLoginState(false);
@@ -42,18 +43,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		configureAxios(setAuthData, setLoginState);
 	}, []);
 
-	const setAuthData = (token: string | null, isAdmin: boolean = false) => {
+	const setAuthData = (
+		token: string | null,
+		accLvl?: string | undefined | null
+	) => {
 		if (token === null) {
 			setJwToken(null);
-			setIsAdministrator(false);
+			setaccessLevel(null);
 			localStorage.removeItem("jwToken");
-			localStorage.removeItem("isAdministrator");
+			localStorage.removeItem("accessLevel");
 			setLoginState(false); // Set login state to false on logout
 		} else {
 			setJwToken(token);
-			setIsAdministrator(isAdmin);
+			setaccessLevel(accLvl);
 			localStorage.setItem("jwToken", token);
-			localStorage.setItem("isAdministrator", String(isAdmin));
+			localStorage.setItem("accessLevel", String(accLvl));
 			setLoginState(true); // Set login state to true on login
 		}
 	};
@@ -62,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		<AuthContext.Provider
 			value={{
 				jwToken,
-				isAdministrator,
+				accessLevel,
 				setAuthData,
 				loginState,
 				setLoginState,
