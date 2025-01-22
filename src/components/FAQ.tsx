@@ -75,7 +75,10 @@ function FAQ() {
 
 	if (loading) {
 		return (
-			<div className="spinner-border text-center my-5" role="status">
+			<div
+				className="spinner-border text-primary text-center my-5"
+				role="status"
+			>
 				<span className="visually-hidden">Loading...</span>
 			</div>
 		);
