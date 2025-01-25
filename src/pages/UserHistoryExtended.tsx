@@ -295,7 +295,14 @@ function UserHistoryExtended() {
 
 	// Loading, Error and Service UI
 	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
+		return (
+			<div
+				className="spinner-border text-primary text-center my-5"
+				role="status"
+			>
+				<span className="visually-hidden">Loading...</span>
+			</div>
+		);
 	}
 
 	if (error) {

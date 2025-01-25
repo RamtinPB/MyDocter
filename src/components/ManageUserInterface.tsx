@@ -5,6 +5,7 @@ import ManageUserInterfaceUserPurchasedServices from "./ManageUserInterfaceUserP
 import { useLanguage } from "./LanguageContext";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaCaretLeft } from "react-icons/fa";
+import { useAuth } from "./AuthContext";
 
 function ManageUserInterface() {
 	// Retrieve userId from the URL
@@ -13,6 +14,7 @@ function ManageUserInterface() {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const { accessLevel } = useAuth();
 
 	// Check if there is a state passed with the section to open
 	useEffect(() => {
@@ -27,6 +29,15 @@ function ManageUserInterface() {
 			setActiveSection("userPersonalInfo");
 		}
 	}, [location.state]);
+
+	// Evict users without proper clearance
+	useEffect(() => {
+		if (accessLevel !== undefined) {
+			if (!(Number(accessLevel) > 2)) {
+				navigate("/");
+			}
+		}
+	}, [accessLevel]);
 
 	// Function to handle setting activeSection and updating location.state
 	const handleNavigation = (section: SetStateAction<string>) => {

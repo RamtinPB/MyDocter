@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "./AuthContext";
 
 interface payloadProps {
 	formFieldId: number;
@@ -24,6 +25,8 @@ interface formFieldsProps {
 
 function AdminDashboardFormPageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
+	const { accessLevel } = useAuth();
+
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
 	const [formFieldsData, setFormFieldsData] = useState<formFieldsProps[]>([]);
@@ -324,6 +327,7 @@ function AdminDashboardFormPageContent() {
 								</h6>
 								<div className="d-flex ">
 									<input
+										disabled={!(Number(accessLevel) > 1)}
 										type="checkbox"
 										checked={field.required}
 										onChange={(e) =>
@@ -346,6 +350,7 @@ function AdminDashboardFormPageContent() {
 								</div>
 								<div className="d-flex">
 									<input
+										disabled={!(Number(accessLevel) > 1)}
 										type="checkbox"
 										checked={field.enabled}
 										onChange={(e) =>
@@ -447,6 +452,13 @@ function AdminDashboardFormPageContent() {
 																: field.labelEN}
 														</h6>
 														<input
+															disabled={
+																!(
+																	Number(
+																		accessLevel
+																	) > 1
+																)
+															}
 															type="checkbox"
 															checked={
 																field.required
@@ -471,6 +483,13 @@ function AdminDashboardFormPageContent() {
 														</label>
 														<div className="d-flex">
 															<input
+																disabled={
+																	!(
+																		Number(
+																			accessLevel
+																		) > 1
+																	)
+																}
 																type="checkbox"
 																checked={
 																	field.enabled
@@ -509,20 +528,22 @@ function AdminDashboardFormPageContent() {
 			</div>
 
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
-				<button
-					className="btn btn-secondary rounded-pill px-3"
-					onClick={handleCancel}
-				>
-					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
-				</button>
-				<button
-					className="btn btn-success rounded-pill px-3"
-					onClick={handleSubmit}
-				>
-					{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
-				</button>
-			</div>
+			{Number(accessLevel) > 1 && (
+				<div className="d-flex justify-content-evenly px-3 my-2 mx-4 py-2">
+					<button
+						className="btn btn-secondary rounded-pill px-3"
+						onClick={handleCancel}
+					>
+						{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
+					</button>
+					<button
+						className="btn btn-success rounded-pill px-3"
+						onClick={handleSubmit}
+					>
+						{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }

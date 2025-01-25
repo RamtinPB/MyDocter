@@ -239,11 +239,11 @@ function AdminDashboardServicesPageContent() {
 												service.id as number
 											] || ""
 										}
-										className="img-fluid m-0"
+										className={`img-fluid m-0 `} //${Number(accessLevel) > 0 ? "rounded-bottom-4" : ""}
 										style={{ width: "546.22px" }}
 										alt={service.title}
 									/>
-									{Number(accessLevel) > 1 ? (
+									{Number(accessLevel) > 0 && (
 										<div className="d-flex justify-content-around align-items-center">
 											{/* Delete button */}
 											<button
@@ -288,27 +288,27 @@ function AdminDashboardServicesPageContent() {
 												/>
 											</a>
 										</div>
-									) : (
-										<div className="d-flex justify-content-around align-items-center"></div>
 									)}
 								</div>
 							</div>
 						</div>
 					))}
 				{/* Add Button for the type */}
-				<div className="col-md-4 d-flex justify-content-center align-items-center mb-4">
-					<button
-						className="rounded-circle btn p-0 m-3 shadow"
-						type="button"
-						onClick={() => addCard(type)}
-					>
-						<img
-							src="/images/green-add.png"
-							className="custom-admin-btn ounded-circle"
-							alt="Add"
-						/>
-					</button>
-				</div>
+				{Number(accessLevel) > 0 && (
+					<div className="col-md-4 d-flex justify-content-center align-items-center mb-4">
+						<button
+							className="rounded-circle btn p-0 m-3 shadow"
+							type="button"
+							onClick={() => addCard(type)}
+						>
+							<img
+								src="/images/green-add.png"
+								className="custom-admin-btn ounded-circle"
+								alt="Add"
+							/>
+						</button>
+					</div>
+				)}
 			</div>
 		);
 	};
@@ -339,21 +339,6 @@ function AdminDashboardServicesPageContent() {
 				</div>
 				{renderServiceCards("General")}
 			</div>
-			{/* Submit and Cancel buttons */}
-			{/* <div className="d-flex justify-content-evenly px-3 py-2 my-2">
-				<button
-					className="btn btn-secondary rounded-pill px-3"
-					onClick={handleCancel}
-				>
-					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
-				</button>
-				<button
-					className="btn btn-success rounded-pill px-3"
-					onClick={handleSubmit}
-				>
-					{language === "fa" ? "ذخیره تغیرات" : "Save Changes"}
-				</button>
-			</div> */}
 		</div>
 	);
 }

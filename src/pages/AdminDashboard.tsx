@@ -7,8 +7,10 @@ import AdminDashboardFormPageContent from "../components/AdminDashboardFormPageC
 import { useLanguage } from "../components/LanguageContext";
 import AdminDashboardManageUsers from "../components/AdminDashboardManageUsers";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext";
 
 function AdminDashboard() {
+	const { accessLevel } = useAuth();
 	const [activeSection, setActiveSection] = useState("mainPage");
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -20,6 +22,15 @@ function AdminDashboard() {
 			setActiveSection(location.state.activeSection);
 		}
 	}, [location]);
+
+	// Evict non-admin users
+	useEffect(() => {
+		if (accessLevel !== undefined) {
+			if (!(Number(accessLevel) > 0)) {
+				navigate("/");
+			}
+		}
+	}, [accessLevel]);
 
 	// Function to handle setting activeSection and updating location.state
 	const handleNavigation = (section: SetStateAction<string>) => {
@@ -54,11 +65,15 @@ function AdminDashboard() {
 			>
 				<button
 					className={`btn m-1 ${
-						activeSection === "mainPage" ? "btn-primary" : "btn-outline-primary"
+						activeSection === "mainPage"
+							? "btn-primary"
+							: "btn-outline-primary"
 					} rounded-pill mx-2`}
 					onClick={() => handleNavigation("mainPage")}
 				>
-					{language === "fa" ? "ویرایش صفحه اصلی" : "Edit Main Page Content"}
+					{language === "fa"
+						? "ویرایش صفحه اصلی"
+						: "Edit Main Page Content"}
 				</button>
 				<button
 					className={`btn m-1 ${
@@ -68,7 +83,9 @@ function AdminDashboard() {
 					} rounded-pill mx-2`}
 					onClick={() => handleNavigation("questionsPage")}
 				>
-					{language === "fa" ? "ویرایش سوالات متداول" : "Edit FAQ Content"}
+					{language === "fa"
+						? "ویرایش سوالات متداول"
+						: "Edit FAQ Content"}
 				</button>
 				<button
 					className={`btn m-1 ${
@@ -92,7 +109,9 @@ function AdminDashboard() {
 				</button>
 				<button
 					className={`btn m-1 ${
-						activeSection === "formPage" ? "btn-primary" : "btn-outline-primary"
+						activeSection === "formPage"
+							? "btn-primary"
+							: "btn-outline-primary"
 					} rounded-pill mx-2`}
 					onClick={() => handleNavigation("formPage")}
 				>

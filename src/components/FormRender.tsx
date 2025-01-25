@@ -333,7 +333,6 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 			[tag]: [...(prev[tag] || []), ...filesWithTags], // Add files for the specific tag
 		}));
 	};
-	console.log(uploadedFiles);
 
 	const handleFileDelete = (fileIndex: number, tag: string) => {
 		setUploadedFiles((prevFiles) => ({
@@ -348,9 +347,6 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 				// className=" pt-3 mt-5"
 				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 			>
-				{/* <h3 className="mb-4">
-					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
-				</h3> */}
 				<div
 					className="row row-cols-lg-2 row-cols-1 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
@@ -759,10 +755,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 										? `در صورت عدم وجود حساب کاربری، لطفاً <a href="/signUp" style="color: blue; text-decoration: inherit;">ثبت نام</a> کنید`
 										: `If you don’t have an account, kindly <a href="/signUp" style="color: blue; text-decoration: inherit;">Sign up</a> to get started.`),
 							}}
-						>
-							{}
-							{}
-						</p>
+						/>
 					)}
 				</div>
 			</div>

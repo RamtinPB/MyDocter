@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "/src/cssFiles/adminbuttons.css";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "./AuthContext";
 
 interface insuranceDataProps {
 	id: number;
@@ -16,14 +17,21 @@ function AdminDashboardInsurancePageContent() {
 	const { language } = useLanguage(); // Get language and toggle function from context
 
 	// Define the state for Basic Insurance Items
-	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
+	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>(
+		[]
+	);
+
+	const { accessLevel } = useAuth();
 
 	useEffect(() => {
 		const fetchInsurances = async () => {
 			try {
-				const response = await axiosInstance.post("/api/Admin/GetInsurances", {
-					serviceType: null,
-				});
+				const response = await axiosInstance.post(
+					"/api/Admin/GetInsurances",
+					{
+						serviceType: null,
+					}
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
@@ -93,7 +101,10 @@ function AdminDashboardInsurancePageContent() {
 	const handleSubmit = async () => {
 		try {
 			// Send the data to the API
-			await axiosInstance.post("/api/Admin/UpdateInsurances", insuranceData);
+			await axiosInstance.post(
+				"/api/Admin/UpdateInsurances",
+				insuranceData
+			);
 			console.log("Data submitted successfully");
 			alert(
 				language === "fa"
@@ -128,6 +139,7 @@ function AdminDashboardInsurancePageContent() {
 							</th>
 							<td className="align-middle">
 								<input
+									disabled={!(Number(accessLevel) > 1)}
 									type="text"
 									className="form-control"
 									value={item.companyName || ""}
@@ -139,13 +151,16 @@ function AdminDashboardInsurancePageContent() {
 										)
 									}
 									placeholder={
-										language === "fa" ? "نام بیمه" : "Insurance name Farsi"
+										language === "fa"
+											? "نام بیمه"
+											: "Insurance name Farsi"
 									}
 									style={{ direction: "rtl" }}
 								/>
 							</td>
 							<td className="align-middle">
 								<input
+									disabled={!(Number(accessLevel) > 1)}
 									type="text"
 									className="form-control"
 									value={item.companyNameEN || ""}
@@ -161,11 +176,15 @@ function AdminDashboardInsurancePageContent() {
 											? "نام بیمه (انگلیسی)"
 											: "Insurance name English"
 									}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									style={{
+										direction:
+											language === "fa" ? "rtl" : "ltr",
+									}}
 								/>
 							</td>
 							<td className="align-middle">
 								<input
+									disabled={!(Number(accessLevel) > 1)}
 									type="text"
 									className="form-control"
 									value={item.discountPercentage || ""}
@@ -181,44 +200,51 @@ function AdminDashboardInsurancePageContent() {
 											? "درصد سهم بیمه"
 											: "Contribution percentage"
 									}
-									style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+									style={{
+										direction:
+											language === "fa" ? "rtl" : "ltr",
+									}}
 								/>
 							</td>
-							<td className="align-middle">
+							{Number(accessLevel) > 1 && (
+								<td className="align-middle">
+									<button
+										id="btn-delete"
+										className="rounded-circle btn p-0 m-1 m-md-3"
+										type="button"
+										onClick={() => removeInsurance(item.id)}
+									>
+										<img
+											src="\images\red-delete.png"
+											className="custom-admin-btn rounded-circle"
+										/>
+									</button>
+								</td>
+							)}
+						</tr>
+					))}
+				{Number(accessLevel) > 1 && (
+					<tr>
+						<td colSpan={5} className="align-middle ">
+							{/* Add Button for new rows */}
+							<div
+								id="btn-add"
+								className="d-flex justify-content-center align-items-center "
+							>
 								<button
-									id="btn-delete"
-									className="rounded-circle btn p-0 m-1 m-md-3"
+									className="rounded-circle btn p-0 m-1"
 									type="button"
-									onClick={() => removeInsurance(item.id)}
+									onClick={() => addBasicInsurance(type)}
 								>
 									<img
-										src="\images\red-delete.png"
+										src="\images\green-add.png"
 										className="custom-admin-btn rounded-circle"
 									/>
 								</button>
-							</td>
-						</tr>
-					))}
-				<tr>
-					<td colSpan={5} className="align-middle ">
-						{/* Add Button for new rows */}
-						<div
-							id="btn-add"
-							className="d-flex justify-content-center align-items-center "
-						>
-							<button
-								className="rounded-circle btn p-0 m-1"
-								type="button"
-								onClick={() => addBasicInsurance(type)}
-							>
-								<img
-									src="\images\green-add.png"
-									className="custom-admin-btn rounded-circle"
-								/>
-							</button>
-						</div>
-					</td>
-				</tr>
+							</div>
+						</td>
+					</tr>
+				)}
 			</tbody>
 		);
 	};
@@ -232,7 +258,7 @@ function AdminDashboardInsurancePageContent() {
 					</h3>
 				</div>
 				<table
-					className="table table-hover text-center mb-5"
+					className={`table ${Number(accessLevel) > 1 ? "table-hover" : ""} text-center mb-5`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<thead>
@@ -241,7 +267,9 @@ function AdminDashboardInsurancePageContent() {
 								{language === "fa" ? "شناسه" : "Insurance id"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "نام بیمه" : "Insurance name Farsi"}
+								{language === "fa"
+									? "نام بیمه"
+									: "Insurance name Farsi"}
 							</th>
 							<th scope="col">
 								{language === "fa"
@@ -253,7 +281,11 @@ function AdminDashboardInsurancePageContent() {
 									? "درصد سهم بیمه"
 									: "Insurance Contribution percentage"}
 							</th>
-							<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
+							{Number(accessLevel) > 1 && (
+								<th scope="col">
+									{language === "fa" ? "حذف" : "Delete"}
+								</th>
+							)}
 						</tr>
 					</thead>
 					{renderInsuranceTables(0)}
@@ -263,11 +295,13 @@ function AdminDashboardInsurancePageContent() {
 			<div className="d-flex flex-column bg-white shadow text-end rounded-5 m-3 m-md-4 m-lg-5">
 				<div className="d-flex justify-content-center align-items-center custom-bg-1 shadow rounded-5 mb-4 p-3">
 					<h3 className="text-center text-white m-0">
-						{language === "fa" ? "بیمه تکمیلی" : "Supplementary  Insurances"}
+						{language === "fa"
+							? "بیمه تکمیلی"
+							: "Supplementary  Insurances"}
 					</h3>
 				</div>
 				<table
-					className="table table-hover text-center mb-5"
+					className={`table ${Number(accessLevel) > 1 ? "table-hover" : ""} text-center mb-5`}
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 				>
 					<thead>
@@ -276,7 +310,9 @@ function AdminDashboardInsurancePageContent() {
 								{language === "fa" ? "شناسه" : "Insurance id"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "نام بیمه" : "Insurance name Farsi"}
+								{language === "fa"
+									? "نام بیمه"
+									: "Insurance name Farsi"}
 							</th>
 							<th scope="col">
 								{language === "fa"
@@ -288,7 +324,11 @@ function AdminDashboardInsurancePageContent() {
 									? "درصد سهم بیمه"
 									: "Insurance Contribution percentage"}
 							</th>
-							<th scope="col">{language === "fa" ? "حذف" : "Delete"}</th>
+							{Number(accessLevel) > 1 && (
+								<th scope="col">
+									{language === "fa" ? "حذف" : "Delete"}
+								</th>
+							)}
 						</tr>
 					</thead>
 					{renderInsuranceTables(1)}
@@ -296,20 +336,22 @@ function AdminDashboardInsurancePageContent() {
 			</div>
 
 			{/* Submit and Cancel buttons */}
-			<div className="d-flex justify-content-evenly px-3 py-2 my-2 ">
-				<button
-					className="btn btn-secondary rounded-pill px-3"
-					onClick={handleCancel}
-				>
-					{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
-				</button>
-				<button
-					className="btn btn-success rounded-pill px-3"
-					onClick={handleSubmit}
-				>
-					{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
-				</button>
-			</div>
+			{Number(accessLevel) > 1 && (
+				<div className="d-flex justify-content-evenly px-3 py-2 my-2 ">
+					<button
+						className="btn btn-secondary rounded-pill px-3"
+						onClick={handleCancel}
+					>
+						{language === "fa" ? "حذف تغییرات" : "Cancel Changes"}
+					</button>
+					<button
+						className="btn btn-success rounded-pill px-3"
+						onClick={handleSubmit}
+					>
+						{language === "fa" ? "ذخیره تغییرات" : "Save Changes"}
+					</button>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -6,6 +6,7 @@ import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
 import { useLanguage } from "./LanguageContext";
 import axiosInstance from "../myAPI/axiosInstance";
+import { useAuth } from "./AuthContext";
 
 // function convertTypeToString(type: number | string): string {
 // 	if (type === 0 || type === "0") return "General";
@@ -53,7 +54,7 @@ function ServicePageEdit() {
 		null
 	);
 
-	//const fileInputRef = useRef<HTMLInputElement>(null);
+	const { accessLevel } = useAuth();
 
 	const [dataUpdateFlag, setDataUpdateFlag] = useState(false);
 
@@ -155,6 +156,15 @@ function ServicePageEdit() {
 			}
 		};
 	}, [displayImageUrlData, pageBannerUrlData]);
+
+	// Evict non-admin users
+	useEffect(() => {
+		if (accessLevel !== undefined) {
+			if (!(Number(accessLevel) > 0)) {
+				navigate("/");
+			}
+		}
+	}, [accessLevel]);
 
 	// Function to handle the back button
 	const handleBackClick = () => {

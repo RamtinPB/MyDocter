@@ -5,6 +5,7 @@ import "../cssFiles/tableOverflow.css";
 import "../cssFiles/adminbuttons.css";
 import axiosInstance from "../myAPI/axiosInstance";
 import AdminDashboardManageUsersModal from "./AdminDashboardManageUsersModal";
+import { useAuth } from "./AuthContext";
 
 interface usersListDataProps {
 	id: string | number;
@@ -29,6 +30,7 @@ function AdminDashboardManageUsers() {
 
 	const navigate = useNavigate();
 	const { language } = useLanguage();
+	const { accessLevel } = useAuth();
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -178,7 +180,7 @@ function AdminDashboardManageUsers() {
 
 					<div className="table-responsive-container ">
 						<table
-							className="table table-hover text-center mb-5"
+							className={`table ${Number(accessLevel) > 2 ? "table-hover" : ""} text-center mb-5`}
 							style={{
 								direction: language === "fa" ? "rtl" : "ltr",
 							}}
@@ -203,15 +205,20 @@ function AdminDashboardManageUsers() {
 									<th scope="col">
 										{language === "fa" ? "ایمیل" : "Email"}
 									</th>
-									{/* <th scope="col">
-										{language === "fa" ? "شماره همراه" : "Phone Number"}
-									</th> */}
-									<th scope="col">
-										{language === "fa" ? "ویرایش" : "Edit"}
-									</th>
-									<th scope="col">
-										{language === "fa" ? "حذف" : "Delete"}
-									</th>
+									{Number(accessLevel) > 2 && (
+										<>
+											<th scope="col">
+												{language === "fa"
+													? "ویرایش"
+													: "Edit"}
+											</th>
+											<th scope="col">
+												{language === "fa"
+													? "حذف"
+													: "Delete"}
+											</th>
+										</>
+									)}
 								</tr>
 							</thead>
 							<tbody>
@@ -230,72 +237,78 @@ function AdminDashboardManageUsers() {
 											{user.emailAddress}
 										</td>
 										{/* <td className="align-middle">{user.phoneNumber}</td> */}
-										<td className="align-middle">
-											<a
-												href={`/edit-user/${user.id}`} // Change this
-												onClick={(e) => {
-													e.preventDefault();
-													navigate(
-														`/edit-user/${user.id}`,
-														{
-															state: {
-																section:
-																	"manageUsers",
-															},
-														}
-													);
-												}}
-												id="btn-edit"
-												className="rounded-circle btn shadow p-0 my-3"
-											>
-												<img
-													src="/images/edit-cog.png"
-													className="custom-admin-btn rounded-circle"
-													alt="Edit"
-												/>
-											</a>
-										</td>
-										<td className="align-middle">
-											<button
-												id="btn-delete"
-												className="rounded-circle btn shadow p-0 m-1 m-md-3"
-												type="button"
-												onClick={() =>
-													removeUser(index)
-												}
-												data-bs-toggle="modal"
-												data-bs-target="#staticBackdrop"
-											>
-												<img
-													src="/images/red-delete.png"
-													className="custom-admin-btn rounded-circle"
-												/>
-											</button>
-										</td>
+										{Number(accessLevel) > 2 && (
+											<td className="align-middle">
+												<a
+													href={`/edit-user/${user.id}`} // Change this
+													onClick={(e) => {
+														e.preventDefault();
+														navigate(
+															`/edit-user/${user.id}`,
+															{
+																state: {
+																	section:
+																		"manageUsers",
+																},
+															}
+														);
+													}}
+													id="btn-edit"
+													className="rounded-circle btn shadow p-0 my-3"
+												>
+													<img
+														src="/images/edit-cog.png"
+														className="custom-admin-btn rounded-circle"
+														alt="Edit"
+													/>
+												</a>
+											</td>
+										)}
+										{Number(accessLevel) > 2 && (
+											<td className="align-middle">
+												<button
+													id="btn-delete"
+													className="rounded-circle btn shadow p-0 m-1 m-md-3"
+													type="button"
+													onClick={() =>
+														removeUser(index)
+													}
+													data-bs-toggle="modal"
+													data-bs-target="#staticBackdrop"
+												>
+													<img
+														src="/images/red-delete.png"
+														className="custom-admin-btn rounded-circle"
+													/>
+												</button>
+											</td>
+										)}
 									</tr>
 								))}
 							</tbody>
 						</table>
-						<div className="pagination d-flex justify-content-center mb-4">
-							<button
-								className="btn btn-primary rounded-4"
-								onClick={() =>
-									setPage((prev) => Math.max(prev - 1, 1))
-								}
-								disabled={page === 1}
-							>
-								{language === "fa" ? "قبلی" : "Previous"}
-							</button>
-							<span className="mx-3">{`${
-								language === "fa" ? "صفحه" : "Page"
-							}: ${page}`}</span>
-							<button
-								className="btn btn-primary rounded-4"
-								onClick={() => setPage((prev) => prev + 1)}
-							>
-								{language === "fa" ? "بعدی" : "Next"}
-							</button>
-						</div>
+						{Number(accessLevel) > 2 && (
+							<div className="pagination d-flex justify-content-center mb-4">
+								<button
+									className="btn btn-primary rounded-4"
+									onClick={() =>
+										setPage((prev) => Math.max(prev - 1, 1))
+									}
+									disabled={page === 1}
+								>
+									{language === "fa" ? "قبلی" : "Previous"}
+								</button>
+								<span className="mx-3">{`${
+									language === "fa" ? "صفحه" : "Page"
+								}: ${page}`}</span>
+								<button
+									className="btn btn-primary rounded-4"
+									onClick={() => setPage((prev) => prev + 1)}
+								>
+									{language === "fa" ? "بعدی" : "Next"}
+								</button>
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

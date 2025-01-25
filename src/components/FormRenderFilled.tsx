@@ -199,38 +199,12 @@ function FormRenderFilled({ purchasedServiceData }: FormRenderFilledProps) {
 		});
 	}, [transformedInputs]);
 
-	console.log(uploadedFiles);
-	console.log(transformedInputs);
-
-	// const mapApiTypeToType = (type: number): string | null => {
-	// 	switch (type) {
-	// 		case 0:
-	// 			return "string"; // Text Input
-	// 		case 1:
-	// 			return "integer";
-	// 		case 2:
-	// 			return "float";
-	// 		// case 10:
-	// 		// 	return "checkbox";
-	// 		case 3:
-	// 			return "date";
-	// 		case 4:
-	// 			return "file";
-	// 		default:
-	// 			return null; // Default or unknown type
-	// 	}
-	// };
-	// type: text=0, integer=1, float=2, date=3, file=4,
-
 	return (
 		<div className="container text-center mt-4">
 			<div
 				// className=" pt-3 mt-5"
 				style={{ direction: language === "fa" ? "rtl" : "ltr" }}
 			>
-				{/* <h3 className="mb-4">
-					{language === "fa" ? "پیش نمایش فرم:" : "Form Preview:"}
-				</h3> */}
 				<div
 					className="row row-cols-1 row-cols-lg-2 g-4 g-md-5 my-1"
 					style={{ direction: language === "fa" ? "rtl" : "ltr" }}
