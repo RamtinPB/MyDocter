@@ -20,7 +20,9 @@ function AdminDashboardFAQPageContent() {
 		const fetchFAQ = async () => {
 			try {
 				// Attempt to fetch from the API
-				const response = await axiosInstance.post("/api/Admin/GetAllFAQs");
+				const response = await axiosInstance.post(
+					"/api/Admin/GetAllFAQs"
+				);
 				if (response.status !== 200) {
 					throw new Error("Failed to fetch data from API");
 				}
@@ -146,29 +148,40 @@ function AdminDashboardFAQPageContent() {
 						<div className="d-flex flex-column w-100">
 							{/* farsi title */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<div className={` justify-content-end d-flex px-1 mx-1`}>
+								<div
+									className={` justify-content-end d-flex px-1 mx-1`}
+								>
 									<h5 className="mx-1">{index + 1}</h5>
 									<h5>
-										{language === "fa" ? " عنوان سوال" : "Question (Farsi)"}
+										{language === "fa"
+											? " عنوان سوال"
+											: "Question (Farsi)"}
 									</h5>
 								</div>
 								<textarea
 									className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
 									style={{
-										direction: language === "fa" ? "rtl" : "ltr",
+										direction:
+											language === "fa" ? "rtl" : "ltr",
 										resize: "none",
 									}}
 									rows={3}
 									placeholder={"متن خود را وارد کنید"}
 									value={faq.question}
 									onChange={(e) =>
-										handleChange(index, "question", e.target.value)
+										handleChange(
+											index,
+											"question",
+											e.target.value
+										)
 									}
 								></textarea>
 							</div>
 							{/* farsi desc */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<div className={` justify-content-end d-flex px-1 mx-1`}>
+								<div
+									className={` justify-content-end d-flex px-1 mx-1`}
+								>
 									<h5 className="mx-1">{index + 1}</h5>
 									<h5>
 										{language === "fa"
@@ -179,7 +192,8 @@ function AdminDashboardFAQPageContent() {
 								<textarea
 									className={`form-control text-end border border-1 shadow-sm rounded-4 py-2 my-1`}
 									style={{
-										direction: language === "fa" ? "rtl" : "ltr",
+										direction:
+											language === "fa" ? "rtl" : "ltr",
 										resize: "none",
 									}}
 									rows={3}
@@ -190,13 +204,19 @@ function AdminDashboardFAQPageContent() {
 									}
 									value={faq.answer}
 									onChange={(e) =>
-										handleChange(index, "answer", e.target.value)
+										handleChange(
+											index,
+											"answer",
+											e.target.value
+										)
 									}
 								></textarea>
 							</div>
 							{/* english title */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<div className={` justify-content-end d-flex px-1 mx-1`}>
+								<div
+									className={` justify-content-end d-flex px-1 mx-1`}
+								>
 									<h5 className="mx-1">{index + 1}</h5>
 									<h5>
 										{language === "fa"
@@ -207,20 +227,27 @@ function AdminDashboardFAQPageContent() {
 								<textarea
 									className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
 									style={{
-										direction: language === "fa" ? "rtl" : "ltr",
+										direction:
+											language === "fa" ? "rtl" : "ltr",
 										resize: "none",
 									}}
 									rows={3}
 									placeholder={"Write your input"}
 									value={faq.questionEn}
 									onChange={(e) =>
-										handleChange(index, "questionEn", e.target.value)
+										handleChange(
+											index,
+											"questionEn",
+											e.target.value
+										)
 									}
 								></textarea>
 							</div>
 							{/* english desc */}
 							<div className="d-flex flex-column px-3 m-2 m-md-4 py-2">
-								<div className={` justify-content-end d-flex px-1 mx-1`}>
+								<div
+									className={` justify-content-end d-flex px-1 mx-1`}
+								>
 									<h5 className="mx-1">{index + 1}</h5>
 									<h5>
 										{language === "fa"
@@ -231,14 +258,19 @@ function AdminDashboardFAQPageContent() {
 								<textarea
 									className={`form-control text-start border border-1 shadow-sm rounded-4 py-2 my-1`}
 									style={{
-										direction: language === "fa" ? "rtl" : "ltr",
+										direction:
+											language === "fa" ? "rtl" : "ltr",
 										resize: "none",
 									}}
 									rows={3}
 									placeholder={"Write your input"}
 									value={faq.answerEn}
 									onChange={(e) =>
-										handleChange(index, "answerEn", e.target.value)
+										handleChange(
+											index,
+											"answerEn",
+											e.target.value
+										)
 									}
 								></textarea>
 							</div>
