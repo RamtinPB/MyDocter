@@ -295,7 +295,7 @@ function AdminDashboardFAQPageContent() {
 					</button>
 				</div>
 			</div>
-			{/* Submit and Cancel buttons */}
+			{/* Submit  buttons */}
 			<div className="d-flex justify-content-evenly px-3 py-2 my-2">
 				<button
 					className="btn btn-success rounded-pill px-3"

@@ -56,6 +56,7 @@ function AdminDashboardServicesPageContent() {
 
 	const { language } = useLanguage(); // Get language and toggle function from context
 	const { accessLevel } = useAuth();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const fetchServices = async () => {
@@ -71,7 +72,7 @@ function AdminDashboardServicesPageContent() {
 				}
 
 				const servicesData: servicesProps[] = response.data;
-				setServices(servicesData); // Assuming 'data' is the correct structure
+				setServices(servicesData);
 
 				// Fetch banners for each service ID
 				const banners: { [id: string]: string } = {};
@@ -214,9 +215,6 @@ function AdminDashboardServicesPageContent() {
 		}
 		setDataUpdateFlag((prev) => !prev);
 	};
-
-	const navigate = useNavigate();
-	console.log(accessLevel);
 
 	// Render service cards based on type
 	const renderServiceCards = (type: "General" | "Specialist") => {

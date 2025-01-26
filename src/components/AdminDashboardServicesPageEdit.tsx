@@ -1,6 +1,6 @@
 import { FaCaretLeft } from "react-icons/fa";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "/src/cssFiles/customColors.css";
 import "/src/cssFiles/servicePage.css";
 import FormBuilder from "./FormBuilder";
@@ -292,12 +292,6 @@ function ServicePageEdit() {
 	const preprocessNotes = (value: string) => {
 		return value.replace(/\n/g, "<br>");
 	};
-
-	// const handleButtonClick = () => {
-	// 	if (fileInputRef.current) {
-	// 		fileInputRef.current.click();
-	// 	}
-	// };
 
 	return (
 		<div className="container">
@@ -766,29 +760,6 @@ function ServicePageEdit() {
 								}
 							/>
 						</div>
-
-						{/* <div className="col-4 px-2 py-3">
-							<label htmlFor="" className="py-2">
-								{language === "fa"
-									? "شناسه طرح بیمه تحت پوشش"
-									: "Supporting Insurance Id"}
-							</label>
-							<input
-								type="text"
-								className={`form-control  text-${
-									language === "fa" ? "end" : "start"
-								}`}
-								onChange={(e) =>
-									handleChange("insurancePlanId", e.target.value)
-								}
-								value={
-									service?.insurancePlanId !== undefined &&
-									service?.insurancePlanId !== null
-										? service.insurancePlanId
-										: ""
-								}
-							/>
-						</div> */}
 					</div>
 				</div>
 
@@ -801,17 +772,7 @@ function ServicePageEdit() {
 						{language === "fa" ? "فرم سرویس" : "Service Form"}
 					</h5>
 					<div className="border border-1 shadow-sm rounded-4 px-3 mx-4 py-2">
-						{true ? (
-							<FormBuilder />
-						) : (
-							<div className="text-center py-3">
-								<p>
-									{language === "fa"
-										? "اطلاعات فرم یافت نشد"
-										: "Form Data Not Found"}
-								</p>
-							</div>
-						)}
+						<FormBuilder />
 					</div>
 				</div>
 
