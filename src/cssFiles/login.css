@@ -1,41 +1,41 @@
 /* login.css */
 
 .login-container {
-  background-image: url("../images/Banner.png");
-  background-size: cover;
-  background-position: center;
-  padding: 30px;
+	background-image: url("../images/Banner.png");
+	background-size: cover;
+	background-position: center;
+	padding: 30px;
 }
 
 .custom-back-btn {
-  width: 30px;
-  height: 30px;
+	width: 30px;
+	height: 30px;
 }
 
 @media (max-width: 768px) {
-  .card {
-    margin: auto;
-    padding: 20px;
-    width: 100%;
-  }
-  
-  .custom-back-btn {
-    width: 28px;
-    height: 28px;
-}
-  
-  .row > .col-md-6:nth-child(1) {
-    text-align: left;
-  }
+	.card {
+		margin: auto;
+		padding: 20px;
+		width: 100%;
+	}
 
-  .d-flex.justify-content-between {
-    justify-content: right !important;
-  }
+	.custom-back-btn {
+		width: 28px;
+		height: 28px;
+	}
+
+	.row > .col-md-6:nth-child(1) {
+		text-align: left;
+	}
+
+	.d-flex.justify-content-between {
+		justify-content: right !important;
+	}
 }
 
 @media (max-width: 576px) {
-  .custom-back-btn {
-      width: 22px;
-      height: 22px;
-  }
+	.custom-back-btn {
+		width: 22px;
+		height: 22px;
+	}
 }

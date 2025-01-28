@@ -58,7 +58,7 @@ function AdminDashboardInsurancePageContent() {
 	}, [dataUpdateFlag]);
 
 	// Add a new item to the Basic Insurance table
-	const addBasicInsurance = async (type: 0 | 1) => {
+	const addInsurance = async (type: 0 | 1) => {
 		const newInsurance = {
 			companyName: "",
 			companyNameEN: "",
@@ -234,7 +234,7 @@ function AdminDashboardInsurancePageContent() {
 								<button
 									className="rounded-circle btn p-0 m-1"
 									type="button"
-									onClick={() => addBasicInsurance(type)}
+									onClick={() => addInsurance(type)}
 								>
 									<img
 										src="\images\green-add.png"
