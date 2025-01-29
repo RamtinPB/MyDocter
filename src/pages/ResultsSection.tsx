@@ -655,7 +655,7 @@ export default function ResultsSection({
 			printWindow?.document.write(
 				`<style>
 		@page {
-			size: A4 landscape; 
+			size: A4 portraite; 
 			margin: 15mm; 
 		}
 		body {
