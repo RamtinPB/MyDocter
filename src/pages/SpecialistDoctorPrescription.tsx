@@ -179,22 +179,28 @@ function SpecialistDoctorPrescription() {
 										className="col-12 col-md-6"
 										key={index}
 									>
-										<div className="card shadow-sm rounded-4 p-0">
-											<div className="text-center">
-												<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
-													{language === "fa"
-														? service.title
-														: service.titleEN}
-												</h5>
-												<img
-													src={
-														serviceDisplayBanners[
-															service.id
-														] || ""
-													}
-													className="img-fluid m-0"
-													alt={service.title}
-												/>
+										<div className="card shadow-sm rounded-4 h-100 p-0">
+											<div className="text-center d-flex flex-column justify-content-between h-100">
+												<div>
+													<h5 className="card-title text-white rounded-top-4 custom-bg-2 m-0 p-3">
+														{language === "fa"
+															? service.title
+															: service.titleEN}
+													</h5>
+													<img
+														src={
+															serviceDisplayBanners[
+																service.id
+															] || ""
+														}
+														className="img-fluid w-100 m-0"
+														style={{
+															height: "356px",
+															objectFit: "cover",
+														}}
+														alt={service.title}
+													/>
+												</div>
 												<p
 													className={`text-justify card-text my-3 mx-3 text-${
 														language === "fa"
@@ -221,16 +227,18 @@ function SpecialistDoctorPrescription() {
 														textAlign: "justify",
 													}}
 												></p>
-												<button
-													className="btn btn-primary rounded-pill my-3"
-													onClick={() =>
-														(window.location.href = `/services/${service.id}`)
-													}
-												>
-													{language === "fa"
-														? "مشاهده"
-														: "Enter"}
-												</button>
+												<div>
+													<button
+														className="btn btn-primary rounded-pill my-3"
+														onClick={() =>
+															(window.location.href = `/services/${service.id}`)
+														}
+													>
+														{language === "fa"
+															? "مشاهده"
+															: "Enter"}
+													</button>
+												</div>
 											</div>
 										</div>
 									</div>

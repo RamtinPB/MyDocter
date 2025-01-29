@@ -237,8 +237,11 @@ function AdminDashboardServicesPageContent() {
 												service.id as number
 											] || ""
 										}
-										className={`img-fluid m-0 `} //${Number(accessLevel) > 0 ? "rounded-bottom-4" : ""}
-										style={{ width: "546.22px" }}
+										className={`img-fluid w-100 m-0`} //${Number(accessLevel) > 0 ? "rounded-bottom-4" : ""}
+										style={{
+											height: "232px",
+											objectFit: "cover",
+										}}
 										alt={service.title}
 									/>
 									{Number(accessLevel) > 0 && (
