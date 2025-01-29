@@ -88,23 +88,36 @@ function ManageUserInterfaceUserPurchasedServices() {
 					throw new Error("Failed to fetch data from API");
 				}
 
-				const updatedData = response.data.map((item: purchasedServiceInfo) => ({
-					...item,
-					status: getStatusString(Number(item.status), language),
-					lastUpdateTime: formatDate(item.lastUpdateTime),
-				}));
+				const updatedData = response.data.map(
+					(item: purchasedServiceInfo) => ({
+						...item,
+						status: getStatusString(Number(item.status), language),
+						lastUpdateTime: formatDate(item.lastUpdateTime),
+					})
+				);
 
 				setPurchasedServiceInfo(updatedData);
 				setLoading(false);
 			})
 			.catch((error) => {
 				console.error(error); // Log the error for debugging
-				setError("Failed to load purchased services. Please try again later.");
+				setError(
+					"Failed to load purchased services. Please try again later."
+				);
 			});
 	}, []);
 
 	if (loading) {
-		return <div className="text-center my-5">Loading...</div>;
+		return (
+			<div className="d-flex justify-content-center align-items">
+				<div
+					className="spinner-border  text-primary text-center my-5"
+					role="status"
+				>
+					<span className="visually-hidden">Loading...</span>
+				</div>
+			</div>
+		);
 	}
 
 	if (error) {
@@ -122,13 +135,19 @@ function ManageUserInterfaceUserPurchasedServices() {
 						<tr>
 							<th scope="col">#</th>
 							<th scope="col">
-								{language === "fa" ? "نام سرویس" : "Service Name"}
+								{language === "fa"
+									? "نام سرویس"
+									: "Service Name"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "شماره سریال تراکنش" : "Purchase ID"}
+								{language === "fa"
+									? "شماره سریال تراکنش"
+									: "Purchase ID"}
 							</th>
 							<th scope="col">
-								{language === "fa" ? "تاریخ آخرین تغییر" : "Last Update Date"}
+								{language === "fa"
+									? "تاریخ آخرین تغییر"
+									: "Last Update Date"}
 							</th>
 							<th scope="col">
 								{language === "fa" ? "وضعیت پیگیری" : "Status"}
@@ -152,7 +171,9 @@ function ManageUserInterfaceUserPurchasedServices() {
 										: service.service.pageTitleEN}
 								</td>
 								<td className="align-middle">{service.id}</td>
-								<td className="align-middle">{service.lastUpdateTime}</td>
+								<td className="align-middle">
+									{service.lastUpdateTime}
+								</td>
 								<td className="align-middle">
 									<span
 										className={`align-middle badge ${getStatusClass(

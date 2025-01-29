@@ -235,12 +235,15 @@ function convertEducationLevelToEnum(educationLevel: string): number {
 	if (educationLevel === "بی سواد" || educationLevel === "None") return 0;
 	if (educationLevel === "ابتدایی" || educationLevel === "Primary") return 1;
 	if (educationLevel === "دیپلم" || educationLevel === "Diploma") return 2;
-	if (educationLevel === "کاردانی" || educationLevel === "Associate") return 3;
-	if (educationLevel === "کارشناسی" || educationLevel === "Bachelor") return 4;
+	if (educationLevel === "کاردانی" || educationLevel === "Associate")
+		return 3;
+	if (educationLevel === "کارشناسی" || educationLevel === "Bachelor")
+		return 4;
 	if (educationLevel === "کارشناسی ارشد" || educationLevel === "Master")
 		return 5;
 	if (educationLevel === "دکترا" || educationLevel === "PHD") return 6;
-	if (educationLevel === "فوق دکترا" || educationLevel === "PostDoc") return 7;
+	if (educationLevel === "فوق دکترا" || educationLevel === "PostDoc")
+		return 7;
 	return 0;
 }
 
@@ -251,12 +254,15 @@ function convertEducationLevelToFrontData(
 	if (educationLevel === 0) return language === "fa" ? "بی سواد" : "None";
 	if (educationLevel === 1) return language === "fa" ? "ابتدایی" : "Primary";
 	if (educationLevel === 2) return language === "fa" ? "دیپلم" : "Diploma";
-	if (educationLevel === 3) return language === "fa" ? "کاردانی" : "Associate";
-	if (educationLevel === 4) return language === "fa" ? "کارشناسی" : "Bachelor";
+	if (educationLevel === 3)
+		return language === "fa" ? "کاردانی" : "Associate";
+	if (educationLevel === 4)
+		return language === "fa" ? "کارشناسی" : "Bachelor";
 	if (educationLevel === 5)
 		return language === "fa" ? "کارشناسی ارشد" : "Master";
 	if (educationLevel === 6) return language === "fa" ? "دکترا" : "PHD";
-	if (educationLevel === 7) return language === "fa" ? "فوق دکترا" : "PostDoc";
+	if (educationLevel === 7)
+		return language === "fa" ? "فوق دکترا" : "PostDoc";
 	return "";
 }
 
@@ -274,14 +280,18 @@ const updateFormFieldsWithInsuranceData = (
 			return {
 				...field,
 				options: type0Data.map((item) => item.companyName).join(","),
-				optionsEN: type0Data.map((item) => item.companyNameEN).join(","),
+				optionsEN: type0Data
+					.map((item) => item.companyNameEN)
+					.join(","),
 			};
 		}
 		if (field.name === "supplementaryInsuranceType") {
 			return {
 				...field,
 				options: type1Data.map((item) => item.companyName).join(","),
-				optionsEN: type1Data.map((item) => item.companyNameEN).join(","),
+				optionsEN: type1Data
+					.map((item) => item.companyNameEN)
+					.join(","),
 			};
 		}
 		return field;
@@ -296,7 +306,8 @@ const getInsuranceIdByName = (
 
 	const match = insuranceData.find(
 		(data) =>
-			data.companyName === insuranceType || data.companyNameEN === insuranceType
+			data.companyName === insuranceType ||
+			data.companyNameEN === insuranceType
 	);
 
 	return match ? match.id : null;
@@ -332,7 +343,9 @@ function ManageUserInterfaceUserPersonalInformation() {
 	const [formFields, setFormFields] = useState<any[]>([]);
 	const [validationSchemaData, setValidationSchemaData] = useState<any[]>([]);
 
-	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>([]);
+	const [insuranceData, setInsuranceData] = useState<insuranceDataProps[]>(
+		[]
+	);
 
 	const { language, isLanguageReady } = useLanguage(); // Get language and toggle function from context
 
@@ -348,7 +361,10 @@ function ManageUserInterfaceUserPersonalInformation() {
 				setDataUpdateFlag((prev) => !prev);
 			})
 			.catch((error) => {
-				console.error("API request failed, trying local db.json", error);
+				console.error(
+					"API request failed, trying local db.json",
+					error
+				);
 
 				fetch("/db.json")
 					.then((response) => response.json())
@@ -391,8 +407,14 @@ function ManageUserInterfaceUserPersonalInformation() {
 					const formattedData = {
 						...data,
 						...handleConditionalEmptyFieldsForFront(data),
-						isIranian: convertIsIranianToString(data.isIranian, language),
-						isMarried: convertIsMarriedToString(data.isMarried, language),
+						isIranian: convertIsIranianToString(
+							data.isIranian,
+							language
+						),
+						isMarried: convertIsMarriedToString(
+							data.isMarried,
+							language
+						),
 						profilePicture: data.profileImageUrl,
 						birthdate: formatBirthdateToYYYYMMDD(data.birthdate),
 						gender: convertGenderToFrontData(data.gender, language),
@@ -418,7 +440,9 @@ function ManageUserInterfaceUserPersonalInformation() {
 					fetch("/db.json")
 						.then((response) => {
 							if (!response.ok) {
-								throw new Error("Failed to fetch user data from db.json");
+								throw new Error(
+									"Failed to fetch user data from db.json"
+								);
 							}
 							return response.json();
 						})
@@ -459,7 +483,10 @@ function ManageUserInterfaceUserPersonalInformation() {
 					setValidationSchemaData(newValidationSchemaData);
 				})
 				.catch((error) => {
-					console.error("API request failed, trying local db.json", error);
+					console.error(
+						"API request failed, trying local db.json",
+						error
+					);
 
 					fetch("/db.json")
 						.then((response) => response.json())
@@ -470,10 +497,11 @@ function ManageUserInterfaceUserPersonalInformation() {
 							} = processData(data);
 
 							// Update form fields with insurance data
-							const updatedFormFields = updateFormFieldsWithInsuranceData(
-								newFormFields,
-								insuranceData
-							);
+							const updatedFormFields =
+								updateFormFieldsWithInsuranceData(
+									newFormFields,
+									insuranceData
+								);
 
 							setFormFields(updatedFormFields);
 							setValidationSchemaData(newValidationSchemaData);
@@ -514,13 +542,19 @@ function ManageUserInterfaceUserPersonalInformation() {
 			// Apply common rules
 			if (rule.matches && rule.type === "text") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).matches(
-					new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+					new RegExp(
+						language === "fa" ? rule.matches : rule.matchesEN
+					),
+					language === "fa"
+						? rule.matchesMessage
+						: rule.matchesMessageEN
 				);
 			}
 			if (rule.name === "email") {
 				fieldSchema = (fieldSchema as Yup.StringSchema).email(
-					language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+					language === "fa"
+						? rule.matchesMessage
+						: rule.matchesMessageEN
 				);
 			}
 
@@ -537,9 +571,17 @@ function ManageUserInterfaceUserPersonalInformation() {
 					otherwise: (schema) => {
 						let otherwiseSchema = schema;
 						if (rule.matches) {
-							otherwiseSchema = (otherwiseSchema as Yup.StringSchema).matches(
-								new RegExp(language === "fa" ? rule.matches : rule.matchesEN),
-								language === "fa" ? rule.matchesMessage : rule.matchesMessageEN
+							otherwiseSchema = (
+								otherwiseSchema as Yup.StringSchema
+							).matches(
+								new RegExp(
+									language === "fa"
+										? rule.matches
+										: rule.matchesEN
+								),
+								language === "fa"
+									? rule.matchesMessage
+									: rule.matchesMessageEN
 							);
 						}
 						if (rule.required) {
@@ -556,7 +598,9 @@ function ManageUserInterfaceUserPersonalInformation() {
 				// Apply default required rule if no 'when' condition is specified
 				if (rule.required) {
 					fieldSchema = fieldSchema.required(
-						language === "fa" ? rule.requiredMessage : rule.requiredMessageEN
+						language === "fa"
+							? rule.requiredMessage
+							: rule.requiredMessageEN
 					);
 				} else {
 					fieldSchema = fieldSchema.notRequired();
@@ -598,9 +642,13 @@ function ManageUserInterfaceUserPersonalInformation() {
 
 			try {
 				// Send the transformed data to the update API
-				await axiosInstance.post("/api/Admin/UpdateUserData", updatedData, {
-					withCredentials: true,
-				});
+				await axiosInstance.post(
+					"/api/Admin/UpdateUserData",
+					updatedData,
+					{
+						withCredentials: true,
+					}
+				);
 				alert(
 					language === "fa"
 						? "اطلاعات کاربر بروزرسانی شد"
@@ -634,7 +682,11 @@ function ManageUserInterfaceUserPersonalInformation() {
 						language === "fa" ? "end" : "start"
 					} shadow rounded-5 px-4 px-md-5 py-4 py-md-5 mb-5`}
 				>
-					<h2>{language === "fa" ? "اطلاعات کاربر" : "User Information "}</h2>
+					<h2>
+						{language === "fa"
+							? "اطلاعات کاربر"
+							: "User Information "}
+					</h2>
 
 					<div
 						className="row row-cols-2 g-4 g-md-5 my-1 pb-5"
@@ -651,25 +703,43 @@ function ManageUserInterfaceUserPersonalInformation() {
 									<div
 										key={index}
 										className="col mb-2"
-										style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+										style={{
+											direction:
+												language === "fa"
+													? "rtl"
+													: "ltr",
+										}}
 									>
-										<label htmlFor={field.name} className="form-label">
-											{language === "fa" ? field.label : field.labelEN}
+										<label
+											htmlFor={field.name}
+											className="form-label"
+										>
+											{language === "fa"
+												? field.label
+												: field.labelEN}
 										</label>
 										{isSelect ? (
 											<select
 												id={field.name}
 												name={field.name}
 												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
+													formik.values[
+														field.name as keyof UserFormData
+													] || ""
 												)}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
 												className={`form-select select-resize text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
+													formik.touched[
+														field.name as keyof UserFormData
+													] &&
+													formik.errors[
+														field.name as keyof UserFormData
+													]
 														? "is-invalid"
 														: ""
 												}`}
@@ -681,13 +751,24 @@ function ManageUserInterfaceUserPersonalInformation() {
 												}
 											>
 												<option value="">...</option>
-												{(language === "fa" ? field.options : field.optionsEN)
+												{(language === "fa"
+													? field.options
+													: field.optionsEN
+												)
 													.split(",")
-													.map((option: string, i: number) => (
-														<option key={i} value={option}>
-															{option}
-														</option>
-													))}
+													.map(
+														(
+															option: string,
+															i: number
+														) => (
+															<option
+																key={i}
+																value={option}
+															>
+																{option}
+															</option>
+														)
+													)}
 											</select>
 										) : (
 											<input
@@ -695,15 +776,23 @@ function ManageUserInterfaceUserPersonalInformation() {
 												id={field.name}
 												name={field.name}
 												value={String(
-													formik.values[field.name as keyof UserFormData] || ""
+													formik.values[
+														field.name as keyof UserFormData
+													] || ""
 												)}
 												onChange={formik.handleChange}
 												onBlur={formik.handleBlur}
 												className={`form-control text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} shadow-sm ${
-													formik.touched[field.name as keyof UserFormData] &&
-													formik.errors[field.name as keyof UserFormData]
+													formik.touched[
+														field.name as keyof UserFormData
+													] &&
+													formik.errors[
+														field.name as keyof UserFormData
+													]
 														? "is-invalid"
 														: ""
 												}`}
@@ -716,14 +805,17 @@ function ManageUserInterfaceUserPersonalInformation() {
 												placeholder={
 													(language === "fa"
 														? field.placeholder
-														: field.placeholderEN) || ""
+														: field.placeholderEN) ||
+													""
 												}
 											/>
 										)}
 										{isCheckbox && (
 											<div
 												className={`text-${
-													language === "fa" ? "end" : "start"
+													language === "fa"
+														? "end"
+														: "start"
 												} mt-2`}
 											>
 												<label
@@ -753,8 +845,12 @@ function ManageUserInterfaceUserPersonalInformation() {
 												/>
 											</div>
 										)}
-										{formik.touched[field.name as keyof UserFormData] &&
-											formik.errors[field.name as keyof UserFormData] && (
+										{formik.touched[
+											field.name as keyof UserFormData
+										] &&
+											formik.errors[
+												field.name as keyof UserFormData
+											] && (
 												<div className="invalid-feedback">
 													{
 														formik.errors[
@@ -771,7 +867,9 @@ function ManageUserInterfaceUserPersonalInformation() {
 
 					<hr className="pt-4" />
 					<h2>
-						{language === "fa" ? "اطلاعات اضافی" : "Additional Information"}
+						{language === "fa"
+							? "اطلاعات اضافی"
+							: "Additional Information"}
 					</h2>
 					<div
 						className="row row-cols-2 g-4 g-md-5 my-1 pb-3"
@@ -779,9 +877,14 @@ function ManageUserInterfaceUserPersonalInformation() {
 					>
 						<div
 							className="col mb-2"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
-							<label htmlFor={String(formik.values.id)} className="form-label">
+							<label
+								htmlFor={String(formik.values.id)}
+								className="form-label"
+							>
 								{language === "fa" ? "شناسه کاربر" : "User ID"}
 							</label>
 							<input
@@ -792,17 +895,26 @@ function ManageUserInterfaceUserPersonalInformation() {
 								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								} shadow-sm ${
-									formik.touched.id && formik.errors.id ? "is-invalid" : ""
+									formik.touched.id && formik.errors.id
+										? "is-invalid"
+										: ""
 								}`}
 								readOnly
 							/>
 						</div>
 						<div
 							className="col mb-2"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
-							<label htmlFor={formik.values.password} className="form-label">
-								{language === "fa" ? "گذرواژه کاربر" : "User Password"}
+							<label
+								htmlFor={formik.values.password}
+								className="form-label"
+							>
+								{language === "fa"
+									? "گذرواژه کاربر"
+									: "User Password"}
 							</label>
 							<input
 								type={"text"}
@@ -812,7 +924,8 @@ function ManageUserInterfaceUserPersonalInformation() {
 								className={`form-control text-${
 									language === "fa" ? "end" : "start"
 								} shadow-sm ${
-									formik.touched.password && formik.errors.password
+									formik.touched.password &&
+									formik.errors.password
 										? "is-invalid"
 										: ""
 								}`}
@@ -821,13 +934,17 @@ function ManageUserInterfaceUserPersonalInformation() {
 						</div>
 						<div
 							className="col mb-2"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<div
 								className={`text-${language === "fa" ? "end" : "start"} mt-2`}
 							>
 								<label
-									htmlFor={String(formik.values.phoneNumberVerified)}
+									htmlFor={String(
+										formik.values.phoneNumberVerified
+									)}
 									className="form-label mx-2"
 								>
 									{language === "fa"
@@ -836,22 +953,32 @@ function ManageUserInterfaceUserPersonalInformation() {
 								</label>
 								<input
 									type="text"
-									id={String(formik.values.phoneNumberVerified)}
-									name={String(formik.values.phoneNumberVerified)}
+									id={String(
+										formik.values.phoneNumberVerified
+									)}
+									name={String(
+										formik.values.phoneNumberVerified
+									)}
 									value={convertYesNoToString(
-										Boolean(formik.values.phoneNumberVerified),
+										Boolean(
+											formik.values.phoneNumberVerified
+										),
 										language
 									)}
 									onChange={(e) => {
 										formik.setFieldValue(
-											String(formik.values.phoneNumberVerified),
+											String(
+												formik.values
+													.phoneNumberVerified
+											),
 											e.target.checked
 										);
 									}}
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} shadow-sm ${
-										formik.touched.password && formik.errors.password
+										formik.touched.password &&
+										formik.errors.password
 											? "is-invalid"
 											: ""
 									}`}
@@ -860,13 +987,17 @@ function ManageUserInterfaceUserPersonalInformation() {
 						</div>
 						<div
 							className="col mb-2"
-							style={{ direction: language === "fa" ? "rtl" : "ltr" }}
+							style={{
+								direction: language === "fa" ? "rtl" : "ltr",
+							}}
 						>
 							<div
 								className={`text-${language === "fa" ? "end" : "start"} mt-2`}
 							>
 								<label
-									htmlFor={String(formik.values.hasCompletedProfile)}
+									htmlFor={String(
+										formik.values.hasCompletedProfile
+									)}
 									className="form-label mx-2"
 								>
 									{language === "fa"
@@ -875,22 +1006,32 @@ function ManageUserInterfaceUserPersonalInformation() {
 								</label>
 								<input
 									type="text"
-									id={String(formik.values.hasCompletedProfile)}
-									name={String(formik.values.hasCompletedProfile)}
+									id={String(
+										formik.values.hasCompletedProfile
+									)}
+									name={String(
+										formik.values.hasCompletedProfile
+									)}
 									value={convertYesNoToString(
-										Boolean(formik.values.hasCompletedProfile),
+										Boolean(
+											formik.values.hasCompletedProfile
+										),
 										language
 									)}
 									onChange={(e) => {
 										formik.setFieldValue(
-											String(formik.values.hasCompletedProfile),
+											String(
+												formik.values
+													.hasCompletedProfile
+											),
 											e.target.checked
 										);
 									}}
 									className={`form-control text-${
 										language === "fa" ? "end" : "start"
 									} shadow-sm ${
-										formik.touched.password && formik.errors.password
+										formik.touched.password &&
+										formik.errors.password
 											? "is-invalid"
 											: ""
 									}`}

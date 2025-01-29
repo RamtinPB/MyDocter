@@ -125,8 +125,13 @@ function GeneralDoctorPrescription() {
 
 	if (loading) {
 		return (
-			<div className="spinner-border text-center my-5" role="status">
-				<span className="visually-hidden">Loading...</span>
+			<div className="d-flex justify-content-center align-items">
+				<div
+					className="spinner-border  text-primary text-center my-5"
+					role="status"
+				>
+					<span className="visually-hidden">Loading...</span>
+				</div>
 			</div>
 		);
 	}
