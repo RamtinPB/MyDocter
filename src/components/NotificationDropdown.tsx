@@ -102,8 +102,6 @@ const NotificationDropdown = () => {
 		fetchNotifications();
 	}, [language]);
 
-	console.log(notifications);
-
 	const handleNotificationClick = (notificationId: number) => {
 		const updatedNotifications = notifications.map((notif) =>
 			notif.id === notificationId ? { ...notif, seen: true } : notif
