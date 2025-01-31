@@ -28,7 +28,7 @@ function Toast({ message, show, onClose, isSuccess, countdown }: ToastProps) {
 						{isSuccess &&
 							countdown > 0 &&
 							(language === "fa"
-								? ` -  انتقال به صفحه اصلی در ${countdown} ثانیه`
+								? ` -  انتقال در ${countdown} ثانیه`
 								: ` - Redirecting in ${countdown}s`)}
 					</p>
 					<button

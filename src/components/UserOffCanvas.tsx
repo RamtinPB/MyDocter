@@ -151,8 +151,6 @@ function UserOffCanvas({ userData, userAccessLevel }: UserOffCanvasProps) {
 		window.location.assign("/"); // Optionally, redirect to the homepage or login page
 	};
 
-	console.log(userAccessLevel);
-
 	return (
 		<div
 			className={`offcanvas ${offcanvasClass}`}

@@ -155,17 +155,17 @@ function SignUp() {
 			);
 
 			if (response.status === 200) {
-				const { jwToken, isAdministrator } = response.data;
+				const { jwToken, accessLevel } = response.data;
 
 				// Store token and admin status in local storage
 				localStorage.setItem("jwToken", jwToken);
 				localStorage.setItem(
-					"isAdministrator",
-					JSON.stringify(isAdministrator)
+					"accessLevel",
+					JSON.stringify(accessLevel)
 				);
 
 				// Update Auth context
-				setAuthData(jwToken, isAdministrator);
+				setAuthData(jwToken, accessLevel);
 
 				setToastMessage(
 					language === "fa"
