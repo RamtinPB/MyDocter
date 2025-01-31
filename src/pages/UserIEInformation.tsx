@@ -836,9 +836,11 @@ function UserIEInformation() {
 									(field) => field.group === group
 								);
 								return (
-									(sampleField.enabled === true ||
-										sampleField.enabled === null ||
-										sampleField.enabled === undefined) &&
+									sampleField.enabled === true &&
+									!(
+										sampleField.enabled === undefined ||
+										sampleField.enabled === null
+									) &&
 									!(
 										sampleField.group === undefined ||
 										sampleField.group === null
