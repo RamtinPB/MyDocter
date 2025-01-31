@@ -682,10 +682,11 @@ export default function ResultsSection({
 			);
 
 			printWindow?.document.write(printableRef.current.innerHTML);
-			//printWindow?.document.write("</body></html>");
-			printWindow?.document.close();
-			printWindow?.focus();
-			printWindow?.print();
+			setTimeout(() => {
+				printWindow?.document.close();
+				printWindow?.focus();
+				printWindow?.print();
+			}, 300);
 		}
 	};
 
