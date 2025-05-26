@@ -105,11 +105,11 @@ function FAQ() {
 								direction: language === "fa" ? "rtl" : "ltr",
 							}}
 						>
-							<h3 className=" mb-0 mx-3 py-2 py-md-0">
+							<h4 className=" mb-0 mx-3 ">
 								{language === "fa"
 									? question.question
 									: question.questionEn}
-							</h3>
+							</h4>
 							<img
 								src="\images\plus-border.png"
 								alt="+"

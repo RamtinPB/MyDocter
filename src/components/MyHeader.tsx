@@ -14,7 +14,7 @@ import UserOffCanvas from "./UserOffCanvas"; // Import the new component
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import axiosInstance from "../myAPI/axiosInstance";
-import axios from "axios";
+//import axios from "axios";
 import { useProfile } from "./ProfileContext";
 // import axios from "axios";
 
@@ -49,30 +49,30 @@ function MyHeader() {
 
 				setUserData(response.data);
 			} catch (err) {
-				let errorMessage = "خطای ناشناخته‌ای رخ داده است";
+				// let errorMessage = "خطای ناشناخته‌ای رخ داده است";
 
-				if (axios.isAxiosError(error)) {
-					// Check for error response and errorCode
-					const errorCode = error.response?.data?.errorCode;
-					const apiErrorMessage = error.response?.data?.message;
+				// if (axios.isAxiosError(error)) {
+				// 	// Check for error response and errorCode
+				// 	const errorCode = error.response?.data?.errorCode;
+				// 	const apiErrorMessage = error.response?.data?.message;
 
-					if (error.response?.status === 400 && errorCode) {
-						// Handle specific error codes
-						switch (errorCode) {
-							case 1007:
-								errorMessage =
-									language === "fa"
-										? apiErrorMessage
-										: "This User was not found.";
+				// 	if (error.response?.status === 400 && errorCode) {
+				// 		// Handle specific error codes
+				// 		switch (errorCode) {
+				// 			case 1007:
+				// 				errorMessage =
+				// 					language === "fa"
+				// 						? apiErrorMessage
+				// 						: "This User was not found.";
 
-								break;
-							case 1010:
-								errorMessage = apiErrorMessage;
-								break;
-						}
-					}
-				}
-				//alert(errorMessage);
+				// 				break;
+				// 			case 1010:
+				// 				errorMessage = apiErrorMessage;
+				// 				break;
+				// 		}
+				// 	}
+				// }
+				// //alert(errorMessage);
 
 				try {
 					const response = await fetch("/UserProfileData.json"); // Adjust path if necessary

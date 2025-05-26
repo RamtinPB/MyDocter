@@ -15,7 +15,7 @@ function MyFooter() {
 	const { language, toggleLanguage } = useLanguage(); // Get language and toggle function from context
 
 	return (
-		<footer className="custom-footer text-white shadow-lg py-3">
+		<footer className="custom-footer text-white shadow-lg pt-4 pb-3">
 			<div className="container">
 				{/* top section */}
 				<div
@@ -34,11 +34,16 @@ function MyFooter() {
 							className="d-flex align-items-center link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
 							<h4 className=" px-2 mb-0">
-								{language === "fa" ? "پشتیبانی 24/7" : "24/7 Support"}
+								{language === "fa"
+									? "پشتیبانی 24/7"
+									: "24/7 Support"}
 							</h4>
 
 							{language === "fa" ? (
-								<FaPhoneAlt className="img-fluid" color="white" />
+								<FaPhoneAlt
+									className="img-fluid"
+									color="white"
+								/>
 							) : (
 								<FaPhone className="img-fluid" color="white" />
 							)}
@@ -85,13 +90,17 @@ function MyFooter() {
 							href="#!"
 							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
-							{language === "fa" ? "سیاست حفظ حریم خصوصی" : "Privacy Policy"}
+							{language === "fa"
+								? "سیاست حفظ حریم خصوصی"
+								: "Privacy Policy"}
 						</a>
 						<a
 							href="#!"
 							className="link-light link-offset-2 link-opacity-50-hover link-underline-opacity-0 link-underline-opacity-100-hover"
 						>
-							{language === "fa" ? "شرایط و ضوابط" : "Terms & Conditions"}
+							{language === "fa"
+								? "شرایط و ضوابط"
+								: "Terms & Conditions"}
 						</a>
 						<a
 							href="#!"
@@ -179,7 +188,9 @@ function MyFooter() {
 										className="dropdown-item"
 										onClick={() => toggleLanguage("en")}
 									>
-										{language === "fa" ? "انگلیسی" : "English"}
+										{language === "fa"
+											? "انگلیسی"
+											: "English"}
 									</button>
 								</li>
 							</ul>

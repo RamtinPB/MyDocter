@@ -216,7 +216,7 @@ const FormRender = forwardRef<FormRenderHandle, any>((_props, ref) => {
 
 			try {
 				// Upload each file in uploadedFiles and update formInputs with the fileId
-				for (const [tag, files] of Object.entries(uploadedFiles)) {
+				for (const [, files] of Object.entries(uploadedFiles)) {
 					for (const file of files) {
 						const formData = new FormData(); // Create a new FormData instance
 

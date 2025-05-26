@@ -255,13 +255,13 @@ function SignUp() {
 									color="black"
 									onClick={handleBackClick}
 								/>
-								<h3
+								<h4
 									className={`col-${language === "fa" ? "10" : "8"} mb-0`}
 								>
 									{language === "fa"
 										? "ثبت نام در پزشک من"
 										: "Signup in My Docter"}
-								</h3>
+								</h4>
 							</div>
 
 							<Formik
